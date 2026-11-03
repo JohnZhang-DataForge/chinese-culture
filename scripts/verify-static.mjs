@@ -28,4 +28,28 @@ function walk(dir) {
 walk(dist);
 assert.ok(count<=20000, "Exceeds Cloudflare Workers Free static asset count");
 assert.ok(readFileSync(join(dist,"index.html"),"utf8").includes("Chinese Culture Atlas"), "Missing home page brand");
-console.log("PASS: "+required.length+" routes, "+count+" static files, no SSR Worker.");
+// Check every local hyperlink in generated HTML, including content collection slugs.
+let linksChecked = 0;
+function inspectLinks(dir) {
+  for (const name of readdirSync(dir)) {
+    const file = join(dir, name);
+    if (statSync(file).isDirectory()) { inspectLinks(file); continue; }
+    if (!name.endsWith(".html")) continue;
+    const html = readFileSync(file, "utf8");
+    for (const match of html.matchAll(/\\bhref=["'](\\/[^"'?#]*)/g)) {
+      const pathname = decodeURIComponent(match[1]);
+      const destination = pathname.endsWith("/")
+        ? join(dist, pathname, "index.html")
+        : join(dist, pathname);
+      assert.ok(existsSync(destination), "Broken internal link from " + file + ": " + pathname);
+      linksChecked++;
+    }
+  }
+}
+inspectLinks(dist);
+const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)=>{
+  const folder=join(dist,section);
+  return total+readdirSync(folder,{withFileTypes:true}).filter((entry)=>entry.isDirectory()).length;
+},0);
+assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
+console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, no SSR Worker.");

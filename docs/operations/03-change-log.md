@@ -30,3 +30,7 @@ At initial commit, source is in a feature branch; build and CI outcomes must be 
 ### Follow-up
 
 Run CI, fix any build problems, review PR, merge, complete cultural/a11y review, assign contact channel and perform an authorized Cloudflare Free preview/release.
+
+### CI verification, first pass
+
+[GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) passed on 2026-11-03 20:59 UTC: npm install, Astro static build (25 pages), and static verifier (12 expected routes, 29 files, no Worker SSR) succeeded. A follow-up patch upgrades GitHub Actions checkout/setup-node to v7 and adds internal-link checks. Merge requires that follow-up run to pass as well.

@@ -1,7 +1,7 @@
 # Implementation Status and Known Gaps
 
 **Updated:** 2026-11-04  
-**Stage:** MVP source implementation, feature branch pending integration and build verification.  
+**Stage:** MVP feature branch built successfully in GitHub Actions; PR integration pending.  
 **Hosting:** Cloudflare Workers Free is the documented deployment target; **no public deployment confirmed**.
 
 ## Implemented in source
@@ -29,7 +29,7 @@ Source files are committed to a feature branch. The project must pass real depen
 
 ## Remaining before public launch
 
-- Verify build and all route outputs in CI.
+- Keep CI passing after any change; verify all internal links in build output.
 - Record dependency lockfile/reproducible installs after the initial build.
 - Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
 - Assign factual/editorial reviewers and check all source links and Chinese terms.

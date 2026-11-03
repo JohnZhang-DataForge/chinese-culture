@@ -1,6 +1,6 @@
 # Test Strategy and Quality Gates
 
-**Status:** Build-time static smoke checks implemented; full browser testing pending.
+**Status:** Initial GitHub Actions build passed, extended internal-link checks added for subsequent runs; full browser testing pending.
 
 ## Automated checks
 
@@ -15,9 +15,10 @@ The verifier asserts:
 - No `dist/_worker.js` exists (unexpected SSR output).
 - Wrangler has the correct `./dist` asset directory and no Worker `main` script.
 - Build includes at most 20,000 files, each at most 25 MiB, within current Free static asset limits.
+- Every local href found in generated HTML points to an existing static file/route; at least 13 guide pages exist.
 - The homepage has expected project branding.
 
-**A workflow file is not proof of a passing run.** Link actual check results in the implementation status document after CI executes.
+**Evidence:** Initial [GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) succeeded (25 pages built; 29 static files; no SSR). Re-run after enhanced internal-link test and action version update; record the new run separately.
 
 ## Manual testing before release
 
