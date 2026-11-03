@@ -38,3 +38,7 @@ Run CI, fix any build problems, review PR, merge, complete cultural/a11y review,
 ### CI validation hardening — final pass
 
 An intermediate CI run [#41717877814](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717877814) exposed a malformed JavaScript regular expression in the new internal-link checker. The checker was rewritten and required a minimum count to prevent silent no-op tests. [Run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724) then passed: **25 static pages, 13 educational guides, 29 assets, 700 local links, zero SSR worker**. This confirms build-time source integrity, **not** browser accessibility or a Cloudflare deployment.
+
+## Integration to main
+
+[PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) was squash-merged after [CI run #41718253670](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718253670) completed successfully. Main commit: [778b5ea](https://github.com/JohnZhang-DataForge/chinese-culture/commit/778b5ea54ee9aec6120524f25aa119c5107191c9). This milestone delivers **source code and documentation**, not a public production deployment.

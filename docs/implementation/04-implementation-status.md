@@ -1,8 +1,9 @@
 # Implementation Status and Known Gaps
 
 **Updated:** 2026-11-04  
-**Stage:** MVP feature branch built successfully in GitHub Actions; PR integration pending.  
+**Stage:** MVP source merged to GitHub main through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after green CI. Production deployment and editorial launch review pending.  
 **Hosting:** Cloudflare Workers Free is the documented deployment target; **no public deployment confirmed**.
+**Merged commit:** [778b5ea](https://github.com/JohnZhang-DataForge/chinese-culture/commit/778b5ea54ee9aec6120524f25aa119c5107191c9).
 
 ## Implemented in source
 
