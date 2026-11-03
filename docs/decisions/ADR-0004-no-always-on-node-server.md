@@ -1,6 +1,6 @@
 # ADR-0004: No Always-On Node.js Server on Cloudflare Free
 
-**Status:** Proposed · **Date:** 2026-11-04
+**Status:** Accepted for initial MVP implementation · **Date:** 2026-11-04
 
 ## Context
 
@@ -19,7 +19,7 @@ Build the content-focused site with Astro and Node.js in a CI/build environment,
 
 ## Non-decisions
 
-No framework dependency version is pinned. No Cloudflare account, deployment token, domain or CI workflow has yet been configured. No paid service is authorized by this ADR.
+Astro and Wrangler dependencies are specified in package.json and build-only CI is configured. No Cloudflare account access, deployment token or custom domain has yet been verified; no public deployment has occurred. No paid service is authorized by this ADR.
 
 ## Consequences
 

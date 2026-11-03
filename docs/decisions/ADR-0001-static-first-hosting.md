@@ -1,6 +1,6 @@
 # ADR-0001: Cloudflare Workers Free, Static-first Hosting
 
-**Status:** Proposed · **Updated:** 2026-11-04
+**Status:** Accepted for initial MVP implementation · **Updated:** 2026-11-04
 
 ## Context
 

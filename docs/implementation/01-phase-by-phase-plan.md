@@ -1,8 +1,8 @@
 # Implementation Plan — Ordered Phases
 
-**Status:** Proposed. This file is a plan, not evidence of implementation.
+**Status:** Active plan. Phase 1 source work has begun. See [implementation status](04-implementation-status.md) for confirmed outcomes; nothing is publicly deployed.
 
-## Phase 0 — Discovery and approval (current)
+## Phase 0 — Discovery and approval (baseline selected, some ownership decisions pending)
 
 - Agree audience, site purpose, content boundaries and launch priorities.
 - Review sitemap, content taxonomy, editorial workflow and wireframe direction.
@@ -12,7 +12,7 @@
 
 **Exit:** one approved MVP baseline and named owners.
 
-## Phase 1 — Site skeleton (future)
+## Phase 1 — Site skeleton (implementation underway)
 
 - Create the Astro **static-prerendered** project and agreed content layout; use Node.js for builds, not for an always-on production server.
 - Implement accessible header/footer, section indexes, page templates and multilingual-ready navigation.
@@ -53,4 +53,4 @@ Review traffic quality, feedback, source updates, event freshness, accessibility
 
 ## Dependency rule
 
-No implementation PR until Phase 0 decisions are accepted. Do not implement deferred APIs/accounts merely because the static site is complete.
+The owner authorized the first implementation pass with the Cloudflare Free static-first architecture. Public deployment remains blocked on CI, review, actual account authorization, copyright/accessibility checks and release sign-off. Do not implement deferred APIs/accounts merely because the static site is complete.

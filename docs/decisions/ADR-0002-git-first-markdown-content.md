@@ -1,6 +1,6 @@
 # ADR-0002: Git-first Markdown Content
 
-**Status:** Proposed
+**Status:** Accepted for initial MVP implementation
 
 ## Context
 

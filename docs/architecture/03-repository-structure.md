@@ -1,41 +1,44 @@
 # Repository and Documentation Structure
 
-**Status:** Proposed
+**Status:** Implemented baseline · **Updated:** 2026-11-04
 
-## Existing planning tree
+The architecture has moved from planning-only to a static Astro application. The exact inventory is maintained in [the repository map](07-implemented-repository-map.md).
 
-- `README.md` — top-level orientation
-- `docs/README.md` — complete documentation navigation
-- `docs/plan/` — mission, audience, scope, measures and outreach
-- `docs/structure/` — information hierarchy, sitemap, pages and metadata
-- `docs/architecture/` — platform, Cloudflare Workers Free hosting, Node.js build/runtime boundaries, releases and future APIs
-- `docs/content/` — publishing, lessons, books and events
-- `docs/design/` — visual design, accessibility and localization
-- `docs/implementation/` — phases, backlog and launch checklist
-- `docs/operations/` — legal, privacy, monitoring and maintenance
-- `docs/decisions/` — ADRs that record changes
-- `docs/templates/` — reusable briefs for planning editorial items
+## Current areas
 
-## Hosting and build design rule
+- `README.md`: project entry point, commands and status
+- `package.json`: Node/Astro/Wrangler dependencies and scripts
+- `astro.config.mjs`: `output: static`, with trailing-slash URLs
+- `wrangler.jsonc`: Cloudflare Workers Free static asset directory, no script `main`
+- `public/`: favicon, robots and HTTP security headers
+- `src/pages/`: homepage, dynamic collection pages and static information pages
+- `src/content/`: original Markdown lessons, articles, festivals and book guides
+- `src/content.config.ts`: shared frontmatter validation
+- `src/layouts/`: common public HTML shell
+- `src/components/`: reusable content card
+- `src/styles/`: color, typography, layout and responsive styles
+- `src/lib/`: section-to-collection route mapping
+- `scripts/`: Node-based static build checks
+- `.github/workflows/`: PR and main branch build CI (no deployment)
+- `docs/`: living requirements, ADRs, status, operations and templates
 
-The future application must prerender normal pages with Astro and build-time Node.js, then publish to Cloudflare Workers Static Assets on Free. Any Worker script or server rendering requires review against [the Cloudflare hosting plan](06-cloudflare-free-node-deployment.md). No continuously running Node.js server will be added.
+## Content routing
 
-## Possible future application areas (not created)
+- `src/content/lessons/*.md` → `/learn/<file-id>/`
+- `src/content/culture/*.md` → `/culture/<file-id>/`
+- `src/content/festivals/*.md` → `/festivals/<file-id>/`
+- `src/content/books/*.md` → `/books/<file-id>/`
 
-A site/application folder for the Astro project, editorial content folders by content type and locale, a controlled media directory, automated checks, and deployment definitions. Concrete layout will be selected in the implementation phase.
+Routes are generated at build time using Astro content collections. No runtime database query is needed. See [metadata and routes](08-content-schema-and-routing.md).
 
-## Rules
+## Design constraints
 
-- Use lowercase kebab-case file names and numbered documents within a series.
-- Use relative internal Markdown links that remain valid in GitHub.
-- Keep one owner document for each policy; link rather than duplicate rules.
-- Do not add placeholder code or folders that imply a working deployment.
-- Every architecture or product change should reference the corresponding decision and acceptance criteria.
+No API/SSR/Node runtime server. Cloudflare serves HTML, CSS, JS and static files from build output. All visitor-facing text lives in source or Markdown; no third-party embedded analytics or image requests.
 
-## Contribution conventions
+## Documentation responsibilities
 
-Changes to accepted plans use a pull request with summary, reason, files impacted and validation checklist. Historical ADRs are preserved; a superseding ADR links back to earlier decisions.
+Plan changes belong under `docs/plan/`. Architecture changes update an ADR and `docs/architecture/`. Code/content changes update [implementation status](../implementation/04-implementation-status.md) and [change log](../operations/03-change-log.md). Do not label unreleased code as publicly deployed.
 
-## Ownership
+## Future additions
 
-Identify a product owner, content editor, technical reviewer and cultural/fact reviewer before starting implementation. One person may take multiple roles for an early project.
+Approved publishing media, client-side search if justified, translation support and verified events. Accounts, forms and dynamic APIs remain deferred pending new design and privacy review.
