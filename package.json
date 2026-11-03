@@ -1,0 +1,16 @@
+{
+  "name": "chinese-culture",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {"node": ">=20.19.0"},
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "verify": "node scripts/verify-static.mjs",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {"astro": "^5.16.0"},
+  "devDependencies": {"wrangler": "^4.34.0"}
+}

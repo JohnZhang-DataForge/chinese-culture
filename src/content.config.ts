@@ -1,0 +1,26 @@
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+
+const schema = z.object({
+  title: z.string(),
+  description: z.string(),
+  category: z.string(),
+  chinese: z.string().optional(),
+  pinyin: z.string().optional(),
+  level: z.string().optional(),
+  order: z.number().optional(),
+  readingMinutes: z.number().int().positive().default(5),
+  featured: z.boolean().default(false)
+});
+function fromFolder(name: string) {
+  return defineCollection({
+    loader: glob({ pattern: "**/*.md", base: "./src/content/" + name }),
+    schema
+  });
+}
+export const collections = {
+  lessons: fromFolder("lessons"),
+  culture: fromFolder("culture"),
+  festivals: fromFolder("festivals"),
+  books: fromFolder("books")
+};
