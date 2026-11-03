@@ -1,6 +1,6 @@
 # Test Strategy and Quality Gates
 
-**Status:** Initial GitHub Actions build passed, extended internal-link checks added for subsequent runs; full browser testing pending.
+**Status:** GitHub Actions build and extended internal-link checks PASS; full browser testing pending.
 
 ## Automated checks
 
@@ -18,7 +18,7 @@ The verifier asserts:
 - Every local href found in generated HTML points to an existing static file/route; at least 13 guide pages exist.
 - The homepage has expected project branding.
 
-**Evidence:** Initial [GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) succeeded (25 pages built; 29 static files; no SSR). Re-run after enhanced internal-link test and action version update; record the new run separately.
+**Evidence:** Initial [GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) succeeded (25 pages built; 29 static files; no SSR). **Latest verified [run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724): 25 static pages, 13 article/lesson guides, 29 static files, 700 local links validated, no SSR Worker.** A prior intermediate run #41717877814 caught a syntax error in the newly added test and was superseded by the corrected passing run.
 
 ## Manual testing before release
 

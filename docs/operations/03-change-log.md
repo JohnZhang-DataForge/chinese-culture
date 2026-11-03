@@ -34,3 +34,7 @@ Run CI, fix any build problems, review PR, merge, complete cultural/a11y review,
 ### CI verification, first pass
 
 [GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) passed on 2026-11-03 20:59 UTC: npm install, Astro static build (25 pages), and static verifier (12 expected routes, 29 files, no Worker SSR) succeeded. A follow-up patch upgrades GitHub Actions checkout/setup-node to v7 and adds internal-link checks. Merge requires that follow-up run to pass as well.
+
+### CI validation hardening — final pass
+
+An intermediate CI run [#41717877814](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717877814) exposed a malformed JavaScript regular expression in the new internal-link checker. The checker was rewritten and required a minimum count to prevent silent no-op tests. [Run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724) then passed: **25 static pages, 13 educational guides, 29 assets, 700 local links, zero SSR worker**. This confirms build-time source integrity, **not** browser accessibility or a Cloudflare deployment.
