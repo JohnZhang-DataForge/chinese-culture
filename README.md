@@ -1,6 +1,6 @@
 # Chinese Culture — Website Planning & Documentation
 
-> **Status:** Planning only · **Site:** Chinese culture education and outreach · **Repository:** Private · **Application code:** Not started
+> **Status:** Planning only · **Site:** Chinese culture education and outreach · **Repository:** Private · **Application code:** Not started · **Hosting target:** Cloudflare Workers Free / Static Assets
 
 A public-facing website that introduces Chinese culture to readers worldwide through approachable lessons, reliable articles, traditional festivals, books and reading guides, and cultural-event announcements.
 
@@ -12,6 +12,7 @@ A public-facing website that introduces Chinese culture to readers worldwide thr
 - [MVP and roadmap](docs/plan/03-scope-and-roadmap.md)
 - [Site sitemap](docs/structure/02-sitemap-and-navigation.md)
 - [Technology selection](docs/architecture/01-technology-selection.md)
+- [Cloudflare Free Node.js-compatible hosting plan](docs/architecture/06-cloudflare-free-node-deployment.md)
 - [System architecture](docs/architecture/02-system-architecture.md)
 - [Editorial strategy](docs/content/01-editorial-strategy.md)
 - [Learning curriculum](docs/content/02-learning-curriculum.md)
@@ -24,8 +25,9 @@ A public-facing website that introduces Chinese culture to readers worldwide thr
 2. **Free-first architecture.** Prefer a static content site on Cloudflare; avoid infrastructure or database charges until justified.
 3. **International audience.** English-first at launch, with Chinese language support and translation-ready content structure.
 4. **Git-first governance.** Markdown plans and editorial proposals reviewed through GitHub pull requests.
-5. **Accessibility and trust.** Responsive reading, accessible navigation, image attribution, copyright checks and editorial review.
-6. **Grow in phases.** Start with lessons, books, festivals and announcements; defer accounts, user uploads, registration and dynamic APIs.
+5. **Cloudflare Workers Free.** Build with Node.js, serve pre-rendered Astro pages as static assets; do not require a permanent Node.js server.
+6. **Accessibility and trust.** Responsive reading, accessible navigation, image attribution, copyright checks and editorial review.
+7. **Grow in phases.** Start with lessons, books, festivals and announcements; defer accounts, user uploads, registration and dynamic APIs.
 
 ## How to work with these documents
 

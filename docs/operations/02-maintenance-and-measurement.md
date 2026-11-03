@@ -6,6 +6,10 @@
 
 Check upcoming event accuracy, broken outbound links, new feedback, publishing requests and failed deploys once technical workflows exist.
 
+## Cloudflare Free service monitoring
+
+Track Static Assets file count and individual asset sizes, deploy/build errors, hostname and HTTPS, and (if ever enabled) Worker script request count, CPU time and 1027/429 quota errors. Ordinary static asset delivery is free and unlimited under current pricing, whereas dynamic Worker usage is capped. No persistent Node.js service should need uptime monitoring. Recheck official [pricing](https://developers.cloudflare.com/workers/platform/pricing/) and [limits](https://developers.cloudflare.com/workers/platform/limits/) before adding features or changing rollout.
+
 ## Monthly
 
 Review popular educational entry points, pages with unanswered reader questions, correction requests, content freshness, hosting consumption and domain/billing status.

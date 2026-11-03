@@ -6,14 +6,15 @@
 
 - Agree audience, site purpose, content boundaries and launch priorities.
 - Review sitemap, content taxonomy, editorial workflow and wireframe direction.
-- Confirm GitHub collaborators, free-hosting constraints, domain/budget owner and legal review needs.
+- Confirm GitHub collaborators, **Cloudflare Workers Free** access, static asset/file limits, `workers.dev` hostname, optional domain/budget owner and legal review needs.
+- Approve [Cloudflare Free Node.js-compatible architecture](../architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](../decisions/ADR-0004-no-always-on-node-server.md); explicitly reject an always-on Node.js production server.
 - Accept or revise initial ADRs and create a prioritized issue backlog.
 
 **Exit:** one approved MVP baseline and named owners.
 
 ## Phase 1 — Site skeleton (future)
 
-- Create the Astro static project and agreed content layout.
+- Create the Astro **static-prerendered** project and agreed content layout; use Node.js for builds, not for an always-on production server.
 - Implement accessible header/footer, section indexes, page templates and multilingual-ready navigation.
 - Add design tokens, responsive image rules and clear metadata handling.
 - Validate sample pages for each type before content expansion.
@@ -31,9 +32,10 @@
 
 ## Phase 3 — Cloudflare release setup
 
-- Confirm supported hosting/CI integration, secure access and domain/HTTPS.
+- Confirm Cloudflare Workers Free + Static Assets, CI Node.js build, restricted deployment access, `workers.dev` hostname and optional domain/HTTPS.
 - Configure preview/production, release gates, build artifact tracking and rollback.
 - Test publishing, updating and withdrawing content.
+- Verify that normal article/lesson requests hit static assets, do **not** invoke Workers, and remain within the free static asset limits.
 
 **Exit:** repeatable verified deployment to a test environment.
 

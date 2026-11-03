@@ -30,6 +30,10 @@ Add on-site search if warranted; quizzes or printable worksheets; additional cou
 
 Consider event submissions, newsletters, registrations, educator collections or user profiles only after demonstrating demand and documenting data retention, moderation and operating cost.
 
+## Mandatory Cloudflare Free hosting constraint
+
+The MVP must run as Astro-generated static assets on Cloudflare Workers Free. Use Node.js for builds, not as a permanent backend server. Do not introduce SSR, always-on Node processes, databases or per-request compute without a separate approved ADR. See [hosting plan](../architecture/06-cloudflare-free-node-deployment.md).
+
 ## Scope-control rules
 
 - New features need a user problem, measurable benefit, owner, cost impact and acceptance criteria.

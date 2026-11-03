@@ -20,12 +20,16 @@ Define actual numeric targets after establishing a baseline; do not fabricate tr
 
 ## Cost assumptions
 
-- **Hosting:** aim for $0/month at low-to-moderate traffic using supported free static hosting, subject to provider limits.
+- **Hosting:** target **Cloudflare Workers Free + Static Assets**, with $0/month for website hosting when all normal page views are static; no always-on Node.js server.
 - **Domain:** optional and generally paid; record annual price and renewal owner.
 - **Repository:** private GitHub repository under plan permissions.
 - **Media:** compress and host responsibly; avoid costly unbounded video storage.
 - **Analytics:** start with privacy-conscious aggregate metrics or no analytics.
 - **Email, search, databases and registrations:** optional future operating costs.
+
+## Cloudflare Free budget baseline (November 2026)
+
+Static asset requests are free and unlimited. Worker script invocations are separately subject to 100,000 requests/day and 10 ms of CPU per request on Workers Free; other limits include 128 MB memory, 50 subrequests per request, 20,000 static files per version and 25 MiB per individual asset. These limits must be rechecked before launch; any future dynamic features may exceed them. Cloudflare hosting is separate from possible domain-registration expenses. See [the detailed Cloudflare plan](../architecture/06-cloudflare-free-node-deployment.md) and [official limits](https://developers.cloudflare.com/workers/platform/limits/).
 
 ## Guardrails
 

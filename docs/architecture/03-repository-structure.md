@@ -8,13 +8,17 @@
 - `docs/README.md` — complete documentation navigation
 - `docs/plan/` — mission, audience, scope, measures and outreach
 - `docs/structure/` — information hierarchy, sitemap, pages and metadata
-- `docs/architecture/` — platform, components, releases and future APIs
+- `docs/architecture/` — platform, Cloudflare Workers Free hosting, Node.js build/runtime boundaries, releases and future APIs
 - `docs/content/` — publishing, lessons, books and events
 - `docs/design/` — visual design, accessibility and localization
 - `docs/implementation/` — phases, backlog and launch checklist
 - `docs/operations/` — legal, privacy, monitoring and maintenance
 - `docs/decisions/` — ADRs that record changes
 - `docs/templates/` — reusable briefs for planning editorial items
+
+## Hosting and build design rule
+
+The future application must prerender normal pages with Astro and build-time Node.js, then publish to Cloudflare Workers Static Assets on Free. Any Worker script or server rendering requires review against [the Cloudflare hosting plan](06-cloudflare-free-node-deployment.md). No continuously running Node.js server will be added.
 
 ## Possible future application areas (not created)
 

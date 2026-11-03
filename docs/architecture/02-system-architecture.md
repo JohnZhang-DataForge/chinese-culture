@@ -1,37 +1,61 @@
-# System Architecture (Target Design, No Code)
+# System Architecture — Cloudflare Free Static-first
 
-**Status:** Proposed
+**Status:** Proposed · **No implementation exists yet.**
 
-## Logical architecture
+## Logical deployment
 
-**Editors and reviewers** → private GitHub Markdown repository → reviewed merge to main → deployment build → static site assets on Cloudflare → readers' browsers.
+```text
+Authors / Editors
+      |
+      v
+Private GitHub (Markdown and image rights + PR reviews)
+      |
+      v
+Node.js + Astro static build (CI runner, not Cloudflare runtime)
+      |
+      v
+Pre-rendered HTML / CSS / client JS / licensed media
+      |
+      v
+Cloudflare Workers Static Assets — Free
+      |
+      v
+Public readers (no database, no app server, no Worker execution for normal pages)
 
-Optional future integrations (not in MVP): contact submission, search API, calendar feeds, email newsletter or event registration.
+Future only: explicitly approved /api/* routes → Workers Free runtime
+```
 
-## Content path
+## Architectural boundaries
 
-1. An editor uses a content brief and selects an existing topic or new content ID.
-2. Editor adds or revises reviewed Markdown and appropriately licensed media.
-3. Reviewers check facts, language, accessibility and references via pull request.
-4. Once accepted, content merges to the default branch.
-5. Deployment workflow builds static pages, validates links and publishes.
-6. Readers receive cached pages and media; no application database is queried.
+- **Build-time compute:** Node.js runs only on developer machine or CI to compile static output.
+- **Delivery-time hosting:** Cloudflare serves static assets and caches them near readers.
+- **Dynamic compute:** optional Worker invocations for future functions; 100,000/day and 10 ms CPU/request on Free.
+- **Content state:** Git-reviewed Markdown is authoritative; no runtime DB.
+- **Security:** private source repository and credentials remain separate from publicly deployed website assets.
+- **External event links:** reference official organizers rather than processing tickets.
+- **Images:** optimize and license them; each static asset must fit current platform limits.
 
-## Boundaries
+## Content publishing flow
 
-- GitHub is the authoritative content/changes source.
-- Hosting serves public compiled assets only; the GitHub repository remains private.
-- Secrets, if ever needed for deployment, stay in authorized secrets storage.
-- Public user-submitted content must not be enabled without anti-abuse measures and moderation.
+1. Editor prepares source-backed content and metadata.
+2. Reviewers validate accuracy, rights, accessibility and source links in a PR.
+3. Accepted changes merge to `main`.
+4. CI builds static Astro output with a pinned supported Node.js version.
+5. Authorized deployment publishes static files to Cloudflare Workers Static Assets.
+6. Readers receive cacheable pages without calling dynamic APIs.
 
-## Reliability
+## Why no Cloudflare runtime Node.js server?
 
-Static pages remain readable if GitHub is temporarily unavailable after deployment. Use cache-conscious updates, predictable URLs, redirects for changed slugs and a rollback-to-last-good-release procedure.
+Workers is an event-driven JavaScript runtime with selective Node compatibility, not a persistent VM. Do not assume a normal Express/PM2 daemon, background queue or writable filesystem. Most reader interactions use client-side scripts or outbound links.
 
-## Scale path
+## Future expansion
 
-Increase content breadth and locale coverage first. Add backend systems only if specific, measurable functions require them. Keep dynamic services decoupled from the editorial content repository.
+If contact forms, search services, accounts or event registration become necessary, create a separate ADR for Worker routes, free-quota fit, security, data storage, deletion, monitoring and failure cases.
 
-## Approval checkpoint
+## Reliability and release
 
-Review site data boundaries, owner access, publishing method, rollback, monitoring, intellectual-property risks and estimated monthly cost before implementation.
+Build once, serve cached assets, test preview URLs, validate 404/redirects, and keep last-known-good assets/releases for rollback. Monitor any Worker invocations; for the MVP there should be none for typical pages.
+
+## Related
+
+[Cloudflare free deployment plan](06-cloudflare-free-node-deployment.md) · [ADR-0004](../decisions/ADR-0004-no-always-on-node-server.md)

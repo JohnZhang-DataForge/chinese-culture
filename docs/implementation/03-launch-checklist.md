@@ -27,7 +27,11 @@
 - [ ] HTTPS, domain redirects, canonical URLs and metadata validated.
 - [ ] Sitemap and search indexing policy verified.
 - [ ] No exposed secrets, unpublished drafts or internal assets.
-- [ ] Hosting limits, domain ownership and recurring charges documented.
+- [ ] Cloudflare Workers Free account, static assets hosting, domain ownership and recurring charges documented.
+- [ ] No always-on Node.js server, accidental SSR or mandatory Worker execution on normal article pages.
+- [ ] Static assets stay within current per-version file count and per-file size limits.
+- [ ] If any Worker script runs, Free CPU/request, request/day, memory and subrequest limits are tested and monitored.
+- [ ] Normal static page requests confirmed to be free asset delivery, not script invocations.
 - [ ] Privacy and cookie behavior match published policies.
 - [ ] Broken links, performance and key accessibility checks passed.
 

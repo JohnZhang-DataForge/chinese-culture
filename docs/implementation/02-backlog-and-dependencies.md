@@ -8,17 +8,18 @@
 - **P0-02** Approve MVP sitemap, categories and page specifications.
 - **P0-03** Decide language rollout, translation ownership and terminology standards.
 - **P0-04** Confirm publishing editors, reviewers and correction contact.
-- **P0-05** Approve static hosting, cost ceiling and domain decision.
+- **P0-05** Approve **Cloudflare Workers Free Static Assets**, zero always-on Node.js servers, domain decision and cost ceiling.
+- **P0-07** Approve the [Cloudflare Free runtime plan](../architecture/06-cloudflare-free-node-deployment.md) and verify current quotas before deployment.
 - **P0-06** Review copyright, privacy, source attribution and accessibility baseline.
 
 ## Priority 1 — foundations, future implementation
 
-- **P1-01** Initialize Astro and site folders after ADR acceptance.
+- **P1-01** Initialize Astro in static-prerendering mode and site folders after ADR acceptance; use Node.js in CI/build only.
 - **P1-02** Build accessible responsive shell and navigation.
 - **P1-03** Define Markdown content metadata and validation.
 - **P1-04** Build article, lesson, festival, book and event templates.
 - **P1-05** Add automated build/link/metadata/accessibility checks.
-- **P1-06** Enable secure preview and release processes.
+- **P1-06** Enable secure preview and Cloudflare Workers Static Assets deployment; confirm ordinary page visits do not invoke Worker scripts.
 
 ## Priority 2 — content and launch
 
