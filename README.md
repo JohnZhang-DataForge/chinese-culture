@@ -1,36 +1,67 @@
-# Chinese Culture — Website Planning & Documentation
+# Chinese Culture Atlas
 
-> **Status:** Planning only · **Site:** Chinese culture education and outreach · **Repository:** Private · **Application code:** Not started · **Hosting target:** Cloudflare Workers Free / Static Assets
+**Status: MVP implementation in progress — not yet deployed publicly.**  
+**Repository:** Private GitHub · **Hosting target:** Cloudflare Workers Free / Static Assets · **Framework:** Astro (static output) + Node.js build tooling.
 
-A public-facing website that introduces Chinese culture to readers worldwide through approachable lessons, reliable articles, traditional festivals, books and reading guides, and cultural-event announcements.
+A welcoming educational website for exploring Chinese culture through beginner lessons, art, traditions, festivals and literary reading guides.
 
-## Documentation
+## Current implementation
 
-- [Documentation index](docs/README.md) — complete navigation
-- [Vision and goals](docs/plan/01-vision-and-goals.md)
-- [Audience and user journeys](docs/plan/02-audience-and-use-cases.md)
-- [MVP and roadmap](docs/plan/03-scope-and-roadmap.md)
-- [Site sitemap](docs/structure/02-sitemap-and-navigation.md)
-- [Technology selection](docs/architecture/01-technology-selection.md)
-- [Cloudflare Free Node.js-compatible hosting plan](docs/architecture/06-cloudflare-free-node-deployment.md)
-- [System architecture](docs/architecture/02-system-architecture.md)
-- [Editorial strategy](docs/content/01-editorial-strategy.md)
-- [Learning curriculum](docs/content/02-learning-curriculum.md)
-- [Implementation phases](docs/implementation/01-phase-by-phase-plan.md)
-- [Launch checklist](docs/implementation/03-launch-checklist.md)
+- Responsive home page and primary navigation.
+- Four content libraries: **Learn**, **Culture**, **Festivals**, **Books**.
+- A beginner curriculum, source-linked editorial articles and reading guides stored as Markdown.
+- **Events** page with an honest empty state: no unverified event listings.
+- About, Contact (public channel pending), editorial policy, privacy, accessibility and 404 pages.
+- Cloudflare Workers Free deployment configuration with static assets only; no server adapter, SSR, database or visitor accounts.
+- GitHub Actions workflow for building and checking static output.
 
-## Project principles
+## Start locally
 
-1. **Education first.** Clear, historically grounded explanations without stereotypes or unsupported claims.
-2. **Free-first architecture.** Prefer a static content site on Cloudflare; avoid infrastructure or database charges until justified.
-3. **International audience.** English-first at launch, with Chinese language support and translation-ready content structure.
-4. **Git-first governance.** Markdown plans and editorial proposals reviewed through GitHub pull requests.
-5. **Cloudflare Workers Free.** Build with Node.js, serve pre-rendered Astro pages as static assets; do not require a permanent Node.js server.
-6. **Accessibility and trust.** Responsive reading, accessible navigation, image attribution, copyright checks and editorial review.
-7. **Grow in phases.** Start with lessons, books, festivals and announcements; defer accounts, user uploads, registration and dynamic APIs.
+Requires a supported Node.js version (CI uses Node 22).
 
-## How to work with these documents
+1. Clone the repository.
+2. Run `npm install`.
+3. Run `npm run dev` to preview locally.
+4. Run `npm run build` to generate `dist/`.
+5. Run `npm run verify` to validate required routes and Cloudflare Free static limits.
 
-Read [vision](docs/plan/01-vision-and-goals.md) → [MVP](docs/plan/03-scope-and-roadmap.md) → [sitemap](docs/structure/02-sitemap-and-navigation.md) → [architecture](docs/architecture/02-system-architecture.md) → [implementation plan](docs/implementation/01-phase-by-phase-plan.md).
+The website is **not deployed** just because the Wrangler configuration exists. Cloudflare account authorization and release checks are still required.
 
-Decisions live under `docs/decisions/`; article, book and event briefs live under `docs/templates/`. This repository currently contains **planning materials only**. No site, deployment, or backend has been implemented.
+## Cloudflare deployment later
+
+After the local/CI build passes and the Cloudflare account is ready, an authorized operator may run `npx wrangler login` then `npm run deploy`. This deploys **static assets** from `dist/` under the Worker name in `wrangler.jsonc`; no permanent Node.js process is created. Confirm the chosen `workers.dev` hostname and account before launching.
+
+See [Developer runbook](docs/implementation/05-developer-runbook.md) for all deployment gates. Do not store tokens or secrets in source control.
+
+## Project map
+
+- `src/pages/` — Astro routes and public informational pages.
+- `src/layouts/` — shared website shell and navigation.
+- `src/components/` — reusable story card.
+- `src/styles/` — responsive, accessible design system.
+- `src/content/` — reviewed Markdown teaching content.
+- `src/content.config.ts` — content metadata definitions.
+- `src/lib/` — section metadata and route mappings.
+- `public/` — favicon, static headers and robots rules.
+- `scripts/` — static-output verification.
+- `.github/workflows/` — build-only CI.
+- `docs/` — product plans, architecture decisions, structure, implementation history and operations.
+
+## Documents
+
+- [Documentation index](docs/README.md)
+- [Implementation status and limitations](docs/implementation/04-implementation-status.md)
+- [Complete repository map](docs/architecture/07-implemented-repository-map.md)
+- [Markdown schema and routing](docs/architecture/08-content-schema-and-routing.md)
+- [Developer and deployment runbook](docs/implementation/05-developer-runbook.md)
+- [Cloudflare Free hosting architecture](docs/architecture/06-cloudflare-free-node-deployment.md)
+- [Test strategy](docs/implementation/06-test-strategy.md)
+- [Change log](docs/operations/03-change-log.md)
+
+## Editorial principles
+
+Culture is diverse and continually changing. Articles should use original prose, distinguish folklore from documented history, acknowledge regional variation and cite reputable educational references. No copyrighted books or photographs are reproduced without permission.
+
+## Not included yet
+
+Public Cloudflare deployment, domain setup, formal accessibility evaluation, public contact details, translated content, ticket registration, accounts, newsletters, dynamic APIs or a database. These must not be presented as complete.

@@ -1,6 +1,6 @@
 # Cloudflare Free Node.js-Compatible Deployment Plan
 
-**Status:** Proposed · **Target:** Cloudflare Workers Free with Static Assets · **Scope:** Architecture and operating plan only, no code.
+**Status:** Architecture accepted for MVP · **Target:** Cloudflare Workers Free with Static Assets · **Implementation:** Astro source and Wrangler configuration added; deployment still pending.
 
 ## What “Cloudflare free Node” means
 
@@ -59,12 +59,12 @@ Limits, billing and supported features change. Revalidate official docs immediat
 7. Use GitHub PRs for editorial review, CI for reproducible builds, and a protected deployment credential for production.
 8. Configure usage monitoring and a clear failure/fallback plan before adding dynamic requests.
 
-## Planned implementation sequence (future only)
+## Implementation state and release sequence
 
 1. Create/verify a Workers Free account and an available `workers.dev` site name; decide on an optional custom domain separately.
-2. Initialize Astro in static rendering mode under a folder approved in the repository-structure document.
-3. Organize Markdown content for lessons, cultural articles, festivals, books and events.
-4. Run Node.js build locally and in CI; validate generated pages and links.
+2. Astro source is now created at the repository root with static rendering; maintain this output mode.
+3. Markdown collections now contain lessons, articles, festivals and book guides. Events are not populated without verification.
+4. Run Node.js builds in CI, validate static routes and resolve reported failures; initial code is not proof of a passing build.
 5. Configure Cloudflare Static Assets deployment with restricted GitHub/Cloudflare access.
 6. Publish to a preview environment; test all routes, HTTPS, images and 404 behavior.
 7. Check that ordinary visits do not execute Worker code; check analytics and account usage limits.
@@ -89,3 +89,7 @@ Limits, billing and supported features change. Revalidate official docs immediat
 - [Node.js runtime compatibility](https://developers.cloudflare.com/workers/runtime-apis/nodejs/)
 - [Astro on Cloudflare](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/)
 - [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/)
+
+## Related current implementation
+
+[Repository map](07-implemented-repository-map.md) · [Developer runbook](../implementation/05-developer-runbook.md) · [Implementation status](../implementation/04-implementation-status.md).

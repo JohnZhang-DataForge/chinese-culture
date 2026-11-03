@@ -1,36 +1,40 @@
 # Documentation Index
 
-This folder holds the **planning baseline** for the Chinese Culture website. All material is Markdown; no website code or infrastructure has been created.
+**Project stage:** Static Astro MVP source and initial editorial content are implemented in a feature branch; a public Cloudflare release is not yet verified. Documentation includes both proposed long-term plans and the concrete implemented baseline.
 
-| Area | Purpose | Start here |
-|---|---|---|
-| [Plan](plan/01-vision-and-goals.md) | Mission, audience, MVP, success measures and outreach | [Vision](plan/01-vision-and-goals.md) |
-| [Structure](structure/01-information-architecture.md) | Navigation, sitemap, page types and content classification | [Information architecture](structure/01-information-architecture.md) |
-| [Architecture](architecture/01-technology-selection.md) | Technical approach, hosting, deployment, repository design and APIs | [Cloudflare Free runtime and deployment](architecture/06-cloudflare-free-node-deployment.md) |
-| [Content](content/01-editorial-strategy.md) | Editorial standards, courses, books, events and publishing | [Editorial strategy](content/01-editorial-strategy.md) |
-| [Design](design/01-experience-and-visual-direction.md) | Appearance, usability, accessibility, search and localization | [Visual direction](design/01-experience-and-visual-direction.md) |
-| [Implementation](implementation/01-phase-by-phase-plan.md) | Phases, prioritized tasks and launch gates | [Phases](implementation/01-phase-by-phase-plan.md) |
-| [Operations](operations/01-security-privacy-and-legal.md) | Rights, privacy, security and ongoing maintenance | [Policy baseline](operations/01-security-privacy-and-legal.md) |
-| [Decisions](decisions/ADR-0001-static-first-hosting.md) | Architectural decision records (ADRs) | [Hosting ADR](decisions/ADR-0001-static-first-hosting.md) |
-| [Templates](templates/article-brief.md) | Briefs for future authors and reviewers | [Article template](templates/article-brief.md) |
+## Start here
 
-## Hosting baseline
+| Area | Contents |
+|---|---|
+| [Implementation status](implementation/04-implementation-status.md) | What exists today, gaps, verification evidence |
+| [Repository map](architecture/07-implemented-repository-map.md) | Files, ownership and how source becomes static HTML |
+| [Content schema and routes](architecture/08-content-schema-and-routing.md) | Metadata requirements and author workflow |
+| [Developer runbook](implementation/05-developer-runbook.md) | Local preview, build, checks and Cloudflare deploy |
+| [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
+| [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
 
-The project explicitly targets **Cloudflare Workers Free**: Astro is built using Node.js, while reader-facing pages are delivered as prerendered static assets. Cloudflare Workers is not an always-on Node.js VPS. Read [the Cloudflare Free hosting plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md) before implementation.
+## Long-term planning areas
 
-## Recommended reading order
+| Folder | Focus |
+|---|---|
+| [plan/](plan/01-vision-and-goals.md) | Mission, audience, scope, budget, outreach |
+| [structure/](structure/01-information-architecture.md) | Sitemap, page types and taxonomy |
+| [architecture/](architecture/01-technology-selection.md) | Technical decisions and deployment |
+| [content/](content/01-editorial-strategy.md) | Editorial policy, learning, books and events |
+| [design/](design/01-experience-and-visual-direction.md) | Visual direction, accessibility and localization |
+| [implementation/](implementation/01-phase-by-phase-plan.md) | Milestones, backlog, quality gates |
+| [operations/](operations/01-security-privacy-and-legal.md) | Copyright, privacy and maintenance |
+| [decisions/](decisions/ADR-0001-static-first-hosting.md) | Architecture decision records |
+| [templates/](templates/article-brief.md) | Content and ADR briefs |
 
-Vision → audiences → MVP → sitemap → content types → technical architecture → editorial workflow → phases → launch checklist.
+## Architecture baseline
 
-## Documentation rules
+**Node.js builds Astro**, which prerenders all normal pages to `dist/`. **Cloudflare Workers Static Assets** will distribute those assets on the Free plan. No server entrypoint, runtime API, database or permanent Node.js process is part of the MVP. See [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
 
-- Mark each specification as **Proposed**, **Accepted** or **Superseded**. All initial architecture choices are proposed pending review.
-- A decision change should update the corresponding ADR, impacted documents and implementation backlog in the same PR.
-- Link to primary sources for historical claims and to official product documentation for technical decisions.
-- No implementation begins until scope, language rollout, ownership and hosting decisions are accepted.
-- Content submitted for public publication must pass factual, image-rights, accessibility and editorial review.
-- Keep the repository private during planning; the eventual public website may be accessible independently.
+## Document conventions
 
-## Current scope
-
-Document the product and how to build it. Do not add application source, infrastructure definitions, workflow automation, API implementations or copyrighted books in this planning phase.
+- Keep accepted architecture decisions as ADRs, with reasons and superseding changes.
+- Update this index, implementation status, repository map and change log in PRs that add or restructure major functionality.
+- Clearly distinguish **written**, **built**, **tested**, **deployed** and **publicly launched**.
+- Keep educational citations and image rights in source Markdown, and never invent event schedules.
+- The private GitHub repository may be the source for a public static site, but private design notes must not be packaged into public assets.

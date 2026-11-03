@@ -1,0 +1,6 @@
+export const sections = [
+  { route: "learn", collection: "lessons", nav: "Learn", eyebrow: "Guided learning", title: "Start with the foundations.", description: "An approachable introduction to language, customs, celebrations and creative traditions — one idea at a time.", note: "Read in order or choose any starting point." },
+  { route: "culture", collection: "culture", nav: "Culture", eyebrow: "Explore by curiosity", title: "Many traditions. Many perspectives.", description: "Discover objects, ideas and creative practices that connect past and present.", note: "Each story offers a starting point for further discovery." },
+  { route: "festivals", collection: "festivals", nav: "Festivals", eyebrow: "The calendar of culture", title: "Moments worth sharing.", description: "Explore the stories and community customs around celebrations across the year.", note: "Many festivals follow a traditional lunisolar calendar; their Gregorian dates change." },
+  { route: "books", collection: "books", nav: "Books", eyebrow: "The reading room", title: "A good story opens a door.", description: "Reading guides to classic works, ideas and the many worlds of Chinese literature.", note: "These are original guides, not unauthorized downloads of books." }
+] as const;

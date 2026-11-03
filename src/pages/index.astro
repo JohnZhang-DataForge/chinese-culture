@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StoryCard from "../components/StoryCard.astro";
+import { getCollection } from "astro:content";
+
+const lessons = (await getCollection("lessons")).sort((a,b)=>(a.data.order??99)-(b.data.order??99)).slice(0,3);
+const traditions = (await getCollection("culture")).slice(0,3);
+const festivals = (await getCollection("festivals")).slice(0,3);
+---
+<BaseLayout>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Stories · traditions · connections</span>
+        <h1>A culture with a thousand doorways. <em>Find yours.</em></h1>
+        <p class="lead">From the rhythms of festivals to the art of a single brushstroke, discover Chinese culture with clear, thoughtful guides made for curious minds.</p>
+        <div class="hero-actions"><a class="button" href="/learn/">Start exploring <span aria-hidden="true">↗</span></a><a class="button button-outline" href="/culture/">Browse the library</a></div>
+      </div>
+      <div class="hero-art" aria-label="Decorative print with the Chinese characters for culture and tradition">
+        <div class="art-paper" aria-hidden="true"><div class="art-circle"></div><div class="art-text">文 化</div><div class="art-lines"></div><div class="art-stamp">知行</div><div class="art-side-note">THE ART OF DISCOVERY</div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">01 / A good place to start</span>
+      <div class="section-heading"><h2>Small lessons.<br />Lasting discoveries.</h2><p>New to Chinese culture? Begin here. Each guide offers a clear idea, useful context, and a path to explore further.</p></div>
+      <div class="cards">{lessons.map((item,i)=><StoryCard href={"/learn/"+item.id+"/"} title={item.data.title} description={item.data.description} category={"Lesson "+String(i+1).padStart(2,"0")} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
+      <p style="margin-top:1.8rem"><a class="text-link" href="/learn/">Explore the complete learning path ↗</a></p>
+    </div>
+  </section>
+  <section class="section section-soft">
+    <div class="wrap">
+      <span class="eyebrow">02 / Culture in focus</span>
+      <div class="section-heading"><h2>Every object holds a story.</h2><p>Art, ideas, crafts and ordinary rituals reveal many ways of seeing the world.</p></div>
+      <div class="cards">{traditions.map((item)=><StoryCard href={"/culture/"+item.id+"/"} title={item.data.title} description={item.data.description} category={item.data.category} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
+      <p style="margin-top:1.8rem"><a class="text-link" href="/culture/">Discover more culture ↗</a></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">03 / Across the calendar</span>
+      <div class="section-heading"><h2>Traditions that bring people together.</h2><p>Explore how annual celebrations connect stories, food, family and community.</p></div>
+      <div class="cards">{festivals.map((item)=><StoryCard href={"/festivals/"+item.id+"/"} title={item.data.title} description={item.data.description} category="Festival guide" readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
+      <p style="margin-top:1.8rem"><a class="text-link" href="/festivals/">Explore festivals ↗</a></p>
+    </div>
+  </section>
+  <section class="section section-soft">
+    <div class="wrap feature-band">
+      <div aria-hidden="true" class="feature-kicker">知 · 行</div>
+      <div><span class="eyebrow">An invitation to be curious</span><h2>Learn with care.<br />Stay for the stories.</h2><p>Chinese culture has never been a single, unchanging story. We aim to introduce its many voices with context, respect and sources you can explore.</p><a class="text-link" href="/about/">About our approach ↗</a></div>
+    </div>
+  </section>
+</BaseLayout>
