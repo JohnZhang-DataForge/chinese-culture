@@ -36,8 +36,12 @@ function inspectLinks(dir) {
     if (statSync(file).isDirectory()) { inspectLinks(file); continue; }
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
-    for (const match of html.matchAll(/\\bhref=["'](\\/[^"'?#]*)/g)) {
-      const pathname = decodeURIComponent(match[1]);
+    // Astro emits double-quoted hrefs; inspect each local link without an HTML parser.
+    for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
+      const href = fragment.split('"')[0];
+      if (!href.startsWith("/")) continue;
+      const pathname = decodeURIComponent(href.split("?")[0].split("#")[0]);
+      if (!pathname) continue;
       const destination = pathname.endsWith("/")
         ? join(dist, pathname, "index.html")
         : join(dist, pathname);
@@ -51,5 +55,6 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
   const folder=join(dist,section);
   return total+readdirSync(folder,{withFileTypes:true}).filter((entry)=>entry.isDirectory()).length;
 },0);
+assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
 console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, no SSR Worker.");
