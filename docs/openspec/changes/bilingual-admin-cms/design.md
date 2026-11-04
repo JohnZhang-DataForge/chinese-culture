@@ -8,7 +8,7 @@
 - Preserve the current Astro 5 public website and its visual design.
 - Keep public pages statically generated and cacheable.
 - Treat the private GitHub repository as the authoritative content store and audit trail.
-- Use Cloudflare Access for identity enforcement and a Worker for server-side authorization and GitHub access.
+- Use Cloudflare Access for identity enforcement and Pages Functions for server-side authorization and GitHub access.
 - Use one shared content contract and one OpenAPI contract across agents.
 - Never allow a CMS browser session to write directly to main.
 - Prefer simple Git-backed persistence over a new database.
@@ -36,7 +36,7 @@ Cloudflare Access policy (email/group allowlist)
   |
   +--> /admin/*             protected static Admin UI
   |
-  +--> /api/admin/v1/*      protected Worker route
+  +--> /api/admin/v1/*      protected Pages Functions route
                                 |
                                 v
                          Access JWT verification
@@ -61,7 +61,7 @@ Cloudflare Access policy (email/group allowlist)
                          Cloudflare Pages deployment
 ~~~
 
-The public Pages origin and the Admin API share the production hostname. Cloudflare Worker route precedence handles /api/admin/*; Cloudflare Access protects both /admin/* and /api/admin/* before traffic reaches the application.
+The public Pages origin and Admin API share the production hostname. Pages Functions file-based routing handles /api/admin/v1/*; Cloudflare Access protects both /admin/* and /api/admin/* before requests reach the application.
 
 ## 3. Runtime boundaries
 
@@ -71,13 +71,13 @@ Astro builds all public routes at build time. It reads the shared content collec
 
 ### Admin UI
 
-The Admin UI is a static Astro route under /admin/. It is not secret merely because it is hidden; authorization is enforced at the Cloudflare Access edge and again by the Worker API. The UI stores only short-lived display state and the CSRF token in memory. It does not store GitHub tokens.
+The Admin UI is a static Astro route under /admin/. It is not secret merely because it is hidden; authorization is enforced at the Cloudflare Access edge and again by the Pages Functions API. The UI stores only short-lived display state and the CSRF token in memory. It does not store GitHub tokens.
 
-### Admin Worker
+### Admin API (Pages Functions)
 
-Deploy as an independent Worker with route /api/admin/v1/*. Keep its package and configuration separate from the Astro Pages project, for example workers/admin/package.json and workers/admin/wrangler.jsonc. Do not add Pages Functions or SSR to the public site.
+Implement the API under functions/api/admin/v1/ with shared middleware at functions/api/admin/_middleware.js. The existing Pages Direct Upload workflow runs Wrangler from the repository root, which discovers and bundles the root functions/ directory. Keep Astro output static; do not add SSR, a second Cloudflare deployment or a separate Worker route.
 
-The Worker:
+The Pages Functions runtime:
 - Verifies CF-Access-Jwt-Assertion using the configured Access issuer/JWKS.
 - Checks issuer, audience, signature, exp/nbf and email.
 - Maps the verified email to a configured role.
@@ -99,7 +99,7 @@ Only named editor/admin identities or an explicitly approved Access group can en
 
 ### Application verification
 
-The Worker must not trust the edge policy alone. It verifies the signed JWT in CF-Access-Jwt-Assertion against Cloudflare's public signing keys. Required checks include:
+The Pages Functions middleware must not trust the edge policy alone. It verifies the signed JWT in CF-Access-Jwt-Assertion against Cloudflare's public signing keys. Required checks include:
 - Expected issuer for the configured Access team.
 - Expected audience for this application policy.
 - Valid signature and supported algorithm.
@@ -123,7 +123,7 @@ Because Access may authenticate with browser cookies, every mutation must requir
 - Expected Content-Type and method.
 - No permissive CORS response.
 
-The Worker should use a short-lived signed CSRF token or another reviewed double-submit design. GET requests must not mutate state.
+The Pages Functions middleware should use a short-lived signed CSRF token or another reviewed double-submit design. GET requests must not mutate state.
 
 ## 5. GitHub App integration
 
@@ -135,7 +135,7 @@ Create a GitHub App installed only on JohnZhang-DataForge/chinese-culture. Minim
 
 No organization administration, Actions administration, secrets, workflow write, issues write or repository administration permission is required for content editing.
 
-Store App ID, installation ID and private key as Worker secrets. The Worker signs a short-lived App JWT, exchanges it for an installation access token and keeps the token only in server-side ephemeral memory until expiry. Never return it to the browser or include it in logs.
+Store App ID, installation ID and private key as Pages Functions secrets. The Worker signs a short-lived App JWT, exchanges it for an installation access token and keeps the token only in server-side ephemeral memory until expiry. Never return it to the browser or include it in logs.
 
 ## 6. Content source layout
 
@@ -210,7 +210,7 @@ Allowed file types:
 - image/webp
 - image/avif
 
-Maximum size: 8 MiB per file. SVG and HTML are rejected. The Worker validates actual file signatures rather than trusting the browser Content-Type, generates a safe filename, prevents path traversal and commits the asset to the same CMS branch as the content. The response includes the committed path, public URL, content type, size and blob SHA.
+Maximum size: 8 MiB per file. SVG and HTML are rejected. The Pages Functions API validates actual file signatures rather than trusting the browser Content-Type, generates a safe filename, prevents path traversal and commits the asset to the same CMS branch as the content. The response includes the committed path, public URL, content type, size and blob SHA.
 
 Each use of an image in content must have meaningful alt text and a rights record (original, licensed with terms, public domain with evidence, or other documented permission). Store credit/license/source URL in the content media metadata. Do not accept uploads without alt text or rights classification.
 
@@ -236,7 +236,7 @@ The API contract is contracts/admin-api.openapi.yaml. Its base path is /api/admi
 
 Mutations use If-Match with the last-seen Git blob/commit SHA. A stale revision returns 409 Conflict with current revision information. Do not silently retry a conflicting overwrite.
 
-The Worker maps application operations to GitHub:
+The Pages Functions API maps application operations to GitHub:
 - Read content and branch state.
 - Create/update a CMS branch from current main or an existing branch.
 - Commit Markdown/media to that branch.
@@ -256,12 +256,12 @@ Required checks before merge:
 - Astro build and static verifier.
 - Content schema and translation-pair validation.
 - Locale route and redirect tests.
-- Worker unit/security tests.
+- Pages Functions unit/security tests.
 - OpenAPI lint and frontend/backend contract tests.
 - Media upload validation tests.
 - Accessibility/link/SEO smoke tests.
 
-The Pages workflow deploys only after main receives a reviewed merge. The Worker deployment is a separate workflow and must use least-privilege Cloudflare credentials. A Worker release must not modify Pages production assets unless the same reviewed change requires it.
+The Pages workflow deploys only after main receives a reviewed merge. Pages Functions are bundled and deployed with the existing Pages Direct Upload workflow through Wrangler. The same reviewed main merge deploys static assets and the API functions together; keep function secrets separately scoped.
 
 ## 13. Key risks and mitigations
 
@@ -281,7 +281,7 @@ The Pages workflow deploys only after main receives a reviewed merge. The Worker
 ## 14. Explicit architectural decisions
 
 1. **Static-first remains:** Astro Pages stays static; no SSR migration.
-2. **Separate Worker:** Admin API is a standalone Worker, not Pages Functions.
+2. **Pages Functions API:** Admin endpoints execute as Pages Functions on the Workers runtime and are deployed with the existing Pages Direct Upload workflow.
 3. **GitHub as CMS database:** Git branches/commits/PRs store content and audit trail.
 4. **Cloudflare Access:** no custom password/session database.
 5. **GitHub App:** no browser PAT and no direct browser-to-GitHub writes.

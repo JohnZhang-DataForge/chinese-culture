@@ -9,7 +9,7 @@
 - [ ] P0.2 Freeze locale URL contract and legacy redirect policy.
 - [ ] P0.3 Freeze shared content schema and migration layout.
 - [ ] P0.4 Freeze OpenAPI 3.1 Admin API contract and RFC 9457 error shape.
-- [ ] P0.5 Freeze Cloudflare Access + Worker + GitHub App security design.
+- [ ] P0.5 Freeze Cloudflare Access + Pages Functions + GitHub App security design.
 - [ ] P0.6 Publish ownership matrix and integration protocol.
 - [ ] P0.7 Merge the architecture/contracts PR after CI and review pass.
 
@@ -28,7 +28,7 @@
 ### Agent 5 — security/backend
 - [ ] P1.7 Create and install least-privilege GitHub App.
 - [ ] P1.8 Configure Cloudflare Access policy for /admin/* and /api/admin/*.
-- [ ] P1.9 Configure Worker secrets and role mapping without committing secrets.
+- [ ] P1.9 Configure Pages Functions secrets and role mapping without committing secrets.
 - [ ] P1.10 Verify Access JWT validation and deny-by-default behavior.
 
 **Exit:** Domain is reachable over HTTPS; unauthenticated CMS access is denied; GitHub App can access only required repository operations.
@@ -60,7 +60,7 @@
 
 ## P4 — Admin backend and security (Agent 5)
 
-- [ ] P4.1 Create separate Worker package/config under workers/admin/.
+- [ ] P4.1 Implement Pages Functions routes under functions/api/admin/v1/ and shared middleware under functions/api/admin/_middleware.js.
 - [ ] P4.2 Implement Access JWT, issuer/audience/signature/expiry and role checks.
 - [ ] P4.3 Implement CSRF, Origin, request validation and RFC 9457 errors.
 - [ ] P4.4 Implement GitHub App installation-token exchange and secret handling.
@@ -70,7 +70,7 @@
 - [ ] P4.8 Implement secure media upload and metadata response.
 - [ ] P4.9 Implement submit-review, publish and unpublish PR operations.
 - [ ] P4.10 Add backend unit, integration, permission and abuse tests.
-- [ ] P4.11 Verify the Worker never writes to main or merges PRs.
+- [ ] P4.11 Verify the Pages Functions API never writes to main or merges PRs.
 
 **Exit:** Contract tests pass; unauthorized, stale-write, oversized-media and GitHub-failure cases are demonstrated.
 
@@ -93,11 +93,11 @@
 - [ ] P6.1 Add content schema and translation-pair CI validation.
 - [ ] P6.2 Add OpenAPI lint and contract drift checks.
 - [ ] P6.3 Add Astro locale route, redirect, sitemap and draft-exclusion tests.
-- [ ] P6.4 Add Worker security and GitHub API mock/integration tests.
+- [ ] P6.4 Add Pages Functions security and GitHub API mock/integration tests.
 - [ ] P6.5 Add media validation tests.
 - [ ] P6.6 Add preview deployment/browser smoke tests.
 - [ ] P6.7 Add required PR status checks and protect main.
-- [ ] P6.8 Verify Pages and Worker deploy workflows are separate and secret-safe.
+- [ ] P6.8 Verify Wrangler Direct Upload bundles the Pages Functions directory and keeps secrets out of source.
 
 **Exit:** All required CI checks pass on a clean PR and main branch policy requires them.
 
@@ -119,7 +119,7 @@
 - [ ] P8.1 Re-read latest main and all open PRs; update each PR against current main.
 - [ ] P8.2 Review file ownership, contracts, tests, security and deployment compatibility.
 - [ ] P8.3 Merge in dependency order documented in integration-protocol.md.
-- [ ] P8.4 Verify Pages and Worker production deployments.
+- [ ] P8.4 Verify Pages production deployment includes the Pages Functions API.
 - [ ] P8.5 Verify chinese-culture.site and canonical redirects.
 - [ ] P8.6 Run bilingual route, CMS auth, content edit, media, preview, PR publish and unpublish smoke tests.
 - [ ] P8.7 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.

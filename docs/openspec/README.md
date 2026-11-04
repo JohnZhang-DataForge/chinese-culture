@@ -3,7 +3,7 @@
 **Program:** Bilingual public site + GitHub-backed Admin CMS  
 **Production target:** https://chinese-culture.site  
 **Status:** Architecture proposal and shared contracts prepared for review  
-**Architecture baseline:** Astro 5 static public site + Cloudflare Pages + separately deployed Cloudflare Worker for authenticated administration.
+**Architecture baseline:** Astro 5 static public site + Cloudflare Pages + Cloudflare Pages Functions (Workers runtime) for authenticated administration.
 
 ## Source-of-truth rules
 
@@ -20,7 +20,7 @@
 - [Architecture and design](changes/bilingual-admin-cms/design.md) — target topology, identity, content lifecycle, media and deployment.
 - [Implementation tasks](changes/bilingual-admin-cms/tasks.md) — sequenced work and exit gates.
 - [Content contract](contracts/content-schema.md) — locale, stable IDs, Markdown frontmatter, translations and status.
-- [Admin API contract](contracts/admin-api.openapi.yaml) — OpenAPI 3.1 interface shared by Admin UI and Worker.
+- [Admin API contract](contracts/admin-api.openapi.yaml) — OpenAPI 3.1 interface shared by Admin UI and Pages Functions.
 - [Agent ownership](contracts/agent-ownership.md) — file ownership, responsibilities and dependency gates.
 - [Integration protocol](contracts/integration-protocol.md) — branch rules, review, merge order and production acceptance.
 

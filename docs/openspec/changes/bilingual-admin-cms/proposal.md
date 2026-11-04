@@ -31,7 +31,7 @@ The next increment must add those capabilities without replacing the current des
 - Public language switcher, localized navigation, metadata, canonical URLs and hreflang.
 - A browser Admin CMS with content list, editor, preview, translation status, media upload and publishing actions.
 - Cloudflare Access protection for admin pages and API routes.
-- A Cloudflare Worker Admin API that validates Access JWTs and calls GitHub through a least-privilege GitHub App.
+- A Cloudflare Pages Functions Admin API that validates Access JWTs and calls GitHub through a least-privilege GitHub App.
 - Git-backed draft branches, pull requests, review, publish and unpublish operations.
 - Shared API and content contracts, automated validation, security checks and operational documentation.
 - Cloudflare Pages custom-domain and DNS configuration.
@@ -73,10 +73,10 @@ The next increment must add those capabilities without replacing the current des
 ### Admin security
 
 - **SEC-001:** Admin pages and Admin API SHALL be protected by Cloudflare Access.
-- **SEC-002:** The Worker SHALL independently verify the Cloudflare Access JWT signature, issuer, audience, expiry and identity; trusting the presence of a header alone is prohibited.
-- **SEC-003:** The Worker SHALL enforce an explicit administrator/editor allowlist or role mapping.
+- **SEC-002:** The Pages Functions middleware SHALL independently verify the Cloudflare Access JWT signature, issuer, audience, expiry and identity; trusting the presence of a header alone is prohibited.
+- **SEC-003:** The Pages Functions middleware SHALL enforce an explicit administrator/editor allowlist or role mapping.
 - **SEC-004:** GitHub App credentials SHALL remain in Worker secrets. No GitHub token or private key may reach browser code, HTML, local storage or logs.
-- **SEC-005:** The Worker SHALL validate request origin, CSRF protection, input schema, media type, media size and path safety.
+- **SEC-005:** The Pages Functions API SHALL validate request origin, CSRF protection, input schema, media type, media size and path safety.
 - **SEC-006:** The GitHub App SHALL have only repository metadata read, contents read/write and pull-request read/write permissions required by the workflow.
 - **SEC-007:** The API SHALL use optimistic concurrency and return 409 on stale content revisions.
 - **SEC-008:** Security-relevant actions SHALL be auditable through Git commits, PR history and structured request logs without logging secrets or full sensitive payloads.
@@ -97,11 +97,11 @@ The next increment must add those capabilities without replacing the current des
 ### Platform and deployment
 
 - **PLT-001:** The public site SHALL remain Astro static output on Cloudflare Pages.
-- **PLT-002:** Admin operations SHALL execute in a separately deployed Cloudflare Worker route under /api/admin/*.
-- **PLT-003:** The public website SHALL not require a Worker invocation for normal reading.
+- **PLT-002:** Admin operations SHALL execute in Cloudflare Pages Functions under /api/admin/v1/*, deployed with the existing Pages Direct Upload workflow through Wrangler.
+- **PLT-003:** The public website SHALL not require a Pages Function invocation for normal reading.
 - **PLT-004:** A merge to main SHALL trigger build, validation and Pages deployment.
 - **PLT-005:** The custom domain SHALL resolve to the Pages project, use HTTPS and have a documented canonical-host/redirect policy.
-- **PLT-006:** CI SHALL validate content schema, translation relationships, public route output, API contract compatibility and Worker tests.
+- **PLT-006:** CI SHALL validate content schema, translation relationships, public route output, API contract compatibility and Pages Functions tests.
 - **PLT-007:** Secrets and private documentation SHALL never be included in dist/.
 
 ## Acceptance criteria
@@ -143,7 +143,7 @@ The release is accepted only when all of the following are demonstrated:
 2. **P1 — Domain and security foundation:** verify custom domain, configure Access, install GitHub App and enable main protection.
 3. **P2 — Bilingual public frontend:** locale routes, metadata, language switch, compatibility redirects and content filtering.
 4. **P3 — Content migration:** stable IDs, English migration, Chinese translations, source/rights metadata and translation coverage report.
-5. **P4 — Admin backend:** Worker authentication, GitHub App token exchange, content/branch/PR operations, preview and media upload.
+5. **P4 — Admin backend:** Pages Functions authentication, GitHub App token exchange, content/branch/PR operations, preview and media upload.
 6. **P5 — Admin frontend:** dashboard, editor, translation management, preview, media and PR state.
 7. **P6 — QA and hardening:** CI gates, contract tests, security tests, browser/a11y testing and operational drills.
 8. **P7 — Integration and release:** ordered PR merges, production deployment, custom-domain validation and acceptance report.

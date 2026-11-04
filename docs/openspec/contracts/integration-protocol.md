@@ -49,7 +49,7 @@ Each PR must:
 
 ### Architecture
 - Does it preserve Astro static output for public routes?
-- Is Admin API isolated in the separate Worker?
+- Is Admin API isolated to the Pages Functions routes while public pages remain static?
 - Are public pages independent of Admin API availability?
 - Is the existing design preserved?
 - Are locale prefixes, legacy redirects and translation lookup consistent?
@@ -63,19 +63,19 @@ Each PR must:
 
 ### API and security
 - Does implementation match OpenAPI without undocumented fields/paths?
-- Is Access JWT cryptographically verified in the Worker?
+- Is Access JWT cryptographically verified in the Pages Functions middleware?
 - Are issuer, audience, signature, expiry and role checked?
 - Are mutations protected by CSRF and exact Origin validation?
 - Are GitHub App credentials server-only?
 - Are optimistic concurrency and 409 behavior implemented?
 - Are errors RFC 9457 and do they avoid leaking secrets?
-- Is the Worker unable to write main or merge PRs?
+- Is the API unable to write main or merge PRs?
 
 ### Quality and operations
 - Do all required checks pass?
 - Are mobile/keyboard/screen-reader/browser checks evidenced?
 - Are domain/DNS/HTTPS and canonical redirects verified?
-- Are Pages and Worker deployments separate?
+- Are Pages static assets and Pages Functions deployed together through the intended Wrangler workflow?
 - Is rollback documented and exercised?
 - Are docs and current status accurate?
 
@@ -83,7 +83,7 @@ Each PR must:
 
 1. **Agent 0 — contracts:** merge the OpenSpec/contracts PR after documentation/structure checks.
 2. **Agent 6 — CI foundations:** add contract lint, schema validation scaffolding and required check names. Do not make the checks permanently required until they exist and have passed at least once.
-3. **Agent 5 — security/backend foundation:** Worker skeleton, Access JWT validation, GitHub App auth, error/CSRF middleware and API tests.
+3. **Agent 5 — security/backend foundation:** Pages Functions routes, Access JWT validation, GitHub App auth, error/CSRF middleware and API tests.
 4. **Agent 2 — public locale framework:** locale config, routing, layout, language switch, redirects and status filtering.
 5. **Agent 3 — content migration:** merge after Agent 2 confirms the target content path/schema implementation is ready. Agent 2 and Agent 3 may develop in parallel after contract freeze, but migration should merge only when frontend route support exists.
 6. **Agent 4 — Admin UI:** merge after backend endpoints are available in a test environment or a contract-faithful mock. Agent 4 and Agent 5 may develop in parallel.
@@ -102,14 +102,14 @@ If a dependency is blocked, do not merge a broken stub merely to preserve the or
 - No PR is merged if the head SHA changed after review; re-check the current diff and checks.
 - Prefer squash merge for isolated agent PRs unless repository policy or history requirements dictate otherwise.
 - Main branch must require PRs and required status checks before feature integration begins. The inspected baseline reported main as unprotected; Agent 6 must coordinate enabling protection with the repository owner.
-- The Admin Worker must never merge PRs. Publishing is a reviewed GitHub merge, not an API side effect.
+- The Admin API must never merge PRs. Publishing is a reviewed GitHub merge, not an API side effect.
 
 ## 7. Release sequence
 
 1. Confirm latest main SHA and merged PR list.
 2. Confirm all CI checks pass on the exact main SHA.
 3. Confirm Pages production deployment succeeds.
-4. Deploy Worker with separately scoped Cloudflare credentials.
+4. Verify Pages Functions are bundled in the Pages deployment and configure their secrets with least-privilege access.
 5. Verify Access policies and unauthenticated denial.
 6. Verify custom domain HTTPS, apex/www policy and canonical URL.
 7. Verify English and Chinese home/collection/detail pages.
@@ -120,14 +120,14 @@ If a dependency is blocked, do not merge a broken stub merely to preserve the or
 12. Merge a test publish PR through the normal review/check process; verify Pages publishes the route.
 13. Merge a test unpublish PR; verify route removal and Git retention.
 14. Verify 404, redirects, sitemap, headers, mobile, keyboard and screen reader.
-15. Test rollback to a known-good Pages deployment and Worker version.
+15. Test rollback to a known-good Pages deployment including the Pages Functions API version.
 
 ## 8. Final production acceptance report template
 
 The final report must include:
 - Release date/time and production URL.
 - Main commit SHA and merged PR numbers.
-- Pages deployment ID/URL and Worker version/deployment ID.
+- Pages deployment ID/URL and the deployed Pages Functions API revision.
 - Custom domain DNS, certificate and redirect evidence.
 - CI run URLs and check conclusions.
 - Bilingual route/translation coverage counts.

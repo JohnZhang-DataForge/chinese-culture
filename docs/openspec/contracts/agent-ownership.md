@@ -19,22 +19,22 @@
 | Agent | Responsibility | Owned paths / resources | Must not change |
 |---|---|---|---|
 | Agent 0 | Chief architect, shared contracts, integration | docs/openspec/**; integration PRs; cross-agent review and release record | Feature implementation owned by agents 1–7 |
-| Agent 1 | Cloudflare domain and DNS | Cloudflare zone/registrar/Pages custom-domain and DNS settings; provide evidence and rollback notes | GitHub source files, Worker/API, Access policy, Pages workflow |
-| Agent 2 | Localization and public frontend | src/pages/** except src/pages/admin/**; src/layouts/** except AdminLayout; src/components/** except admin/**; src/styles/** except admin.css; src/lib/locale/**; src/content.config.ts; src/lib/sections.ts; astro.config.mjs; public/_redirects | src/content/**; workers/**; API contract; admin UI |
-| Agent 3 | Content migration and translation | src/content/** only; migration/translation content records and content-specific media metadata | src/content.config.ts; routes/layouts; shared contracts; workflows |
-| Agent 4 | Admin frontend | src/pages/admin/**; src/layouts/AdminLayout.astro; src/components/admin/**; src/styles/admin.css; src/lib/admin-client/** | Worker implementation; OpenAPI contract; public site shell; content files |
-| Agent 5 | Admin backend and security | workers/admin/**; workers/admin/wrangler.jsonc; Worker-specific tests; Cloudflare Access/GitHub App configuration and secrets (not values in Git) | Astro public frontend; content schema contract; CI workflow; GitHub Actions deployment to Pages |
-| Agent 6 | QA and CI | tests/**; scripts/** test tooling; .github/workflows/**; root package.json test scripts/development dependencies; branch protection configuration | Production content, public UI, Admin UI, Worker business logic |
-| Agent 7 | Documentation | README.md; docs/** excluding docs/openspec/**; operational/admin/editor guides and release notes | Shared OpenSpec contracts; application code; content Markdown |
+| Agent 1 | Cloudflare domain and DNS | Cloudflare zone/registrar/Pages custom-domain and DNS settings; `docs/operations/05-production-domain-cutover.md`; provide evidence and rollback notes | GitHub application code, API, Access policy, Pages workflow |
+| Agent 2 | Localization and public frontend | src/pages/** except src/pages/admin/**; src/layouts/** except AdminLayout; src/components/** except admin/**; src/styles/** except admin.css; src/lib/locale/**; src/content.config.ts; src/lib/sections.ts; astro.config.mjs; public/_redirects | src/content/**; functions/**; API contract; admin UI |
+| Agent 3 | Content migration and translation | src/content/**; `docs/content/06-content-inventory.md`; `docs/content/07-simplified-chinese-localization-style-guide.md` | src/content.config.ts; routes/layouts; shared contracts; workflows |
+| Agent 4 | Admin frontend | src/pages/admin/**; src/layouts/AdminLayout.astro; src/components/admin/**; src/styles/admin.css; src/lib/admin-*.mjs; src/scripts/admin.mjs; tests/admin-ui.test.mjs | Pages Functions implementation; OpenAPI contract; public site shell; content files; package.json and workflows |
+| Agent 5 | Admin backend and security | functions/**; tests/admin-security.test.mjs; Cloudflare Access/GitHub App configuration and secrets (not values in Git) | Astro public frontend; content schema contract; CI workflows; root package.json; Pages deployment workflow |
+| Agent 6 | QA and CI | .github/workflows/**; scripts/**; package.json; playwright.config.ts; tests/e2e/**; tests/unit/**; tests/contracts/**; branch protection configuration | Production content, public UI, Admin UI, Pages Functions business logic |
+| Agent 7 | Documentation | README.md; docs/** excluding docs/openspec/**, docs/operations/05-production-domain-cutover.md and the two Agent 3 content inventory/style-guide documents | Shared OpenSpec contracts; application code; content Markdown |
 
 ### Boundary clarifications
 
-1. Agent 2 owns src/content.config.ts, which implements the schema contract. Agent 3 supplies records only. If a record cannot satisfy the schema, Agent 3 asks Agent 0/2 for a contract or implementation change; it does not weaken the schema.
+1. Agent 2 owns src/content.config.ts, which implements the schema contract. Agent 3 supplies records only; its inventory and localization style guide are explicit documentation ownership exceptions. If a record cannot satisfy the schema, Agent 3 asks Agent 0/2 for a contract or implementation change; it does not weaken the schema.
 2. Agent 2 owns locale routing and public rendering. Agent 3 may change content file paths and frontmatter only after the locale schema is Ready.
 3. Agent 4 consumes admin-api.openapi.yaml. Agent 5 implements it. Neither may change the API contract unilaterally.
-4. Agent 5's Worker uses a separate package/config so it does not compete with Agent 2's Astro configuration or Agent 6's root package/CI ownership.
-5. Agent 1's DNS/custom-domain work is Cloudflare account configuration, not code. Agent 5 owns Access and Worker route configuration.
-6. Agent 6 owns tests and workflows. Feature agents may add tests only in their owned subtree (for example workers/admin/test fixtures); Agent 6 integrates the CI entry points.
+4. Agent 5's Pages Functions live under functions/ and use the existing Pages Wrangler deployment. Agent 5 must not change root package.json or workflows; Agent 6 owns those integration points.
+5. Agent 1's DNS/custom-domain work is Cloudflare account configuration, not code; its cutover evidence document is an explicit ownership exception. Agent 5 owns Access and Pages Functions route configuration.
+6. Agent 4 owns tests/admin-ui.test.mjs and Agent 5 owns tests/admin-security.test.mjs. Agent 6 owns E2E, unit, contract tests and all workflow/package integration points.
 7. Agent 7 updates existing status/deployment documentation only after checking current Actions and Cloudflare evidence. It must not repeat old "deployment pending token" statements after a successful deployment.
 
 ## 3. Dependency readiness
