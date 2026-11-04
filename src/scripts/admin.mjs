@@ -1,6 +1,6 @@
 import { filterContent, paginate, parseTags, translationStatus, wordCount } from "../lib/admin-ui.mjs";
 import {
-  ADMIN_API_BASE, AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
+  AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
   getContent, createContent, createTranslation, saveDraft, previewContent,
   uploadMedia, submitContent, discardDraft
 } from "../lib/admin-api.mjs";
@@ -138,7 +138,6 @@ if (root) {
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
   const formChecked = (name) => Boolean(form.elements.namedItem(name)?.checked);
   const uiLocale = (locale) => locale === "zh-CN" ? "zh" : "en";
-  const apiLocale = (locale) => locale === "zh" ? "zh-CN" : locale;
   const showAdminBanner = (message, kind = "warning") => {
     const banner = $("[data-admin-banner]");
     banner.hidden = !message;
@@ -316,7 +315,6 @@ if (root) {
       setField("mediaSource." + suffix,variant?.media?.[0]?.sourceUrl ?? demo?.mediaSource ?? "");
       if (locale === "en") { setField("chinese.en",variant?.chinese ?? demo?.chinese ?? ""); setField("pinyin.en",variant?.pinyin ?? demo?.pinyin ?? ""); }
     });
-    setField("tags",(value.tags || []).join(", "));
     setField("status","draft");
   };
   const updateStatusControls = () => {
@@ -511,6 +509,7 @@ if (root) {
           description:variant.description,
           category:variant.category,
           featured:!variant.featured,
+          tags:variant.tags || [],
           bodyMarkdown:variant.bodyMarkdown,
           readingMinutes:variant.readingMinutes || 5,
           media:variant.media || [],
