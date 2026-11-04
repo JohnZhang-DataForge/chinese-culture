@@ -1,7 +1,7 @@
 # Simplified Chinese Localization Style Guide
 
 **Status:** Working editorial guide for Agent 3; subject to the shared bilingual content contract and Agent 0's final editorial decisions.  
-**Locale:** Simplified Chinese (`zh-Hans`)  
+**Language:** Simplified Chinese; locale code follows Agent 0's approved contract.  
 **Audience:** Native and fluent Simplified Chinese readers, including families and international learners.
 
 ## Voice and tone
