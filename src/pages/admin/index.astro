@@ -38,7 +38,7 @@ const demo = import.meta.env.DEV;
         </nav>
         <div class="sidebar-bottom">
           <div class="sidebar-help"><span class="help-icon">?</span><div><strong>Need a hand?</strong><small>Editorial workspace guide</small></div><span aria-hidden="true">↗</span></div>
-          <div class="admin-profile"><span class="profile-avatar">E</span><span><strong>Editorial team</strong><small>Administrator</small></span><span class="profile-menu" aria-hidden="true">•••</span></div>
+          <div class="admin-profile"><span class="profile-avatar">E</span><span><strong data-session-email>Editorial team</strong><small data-session-role>Administrator</small></span><span class="profile-menu" aria-hidden="true">•••</span></div>
         </div>
       </aside>
 
@@ -107,21 +107,32 @@ const demo = import.meta.env.DEV;
 
           <section class="admin-page editor-page" data-page="editor" hidden>
             <div class="editor-topline"><button class="back-link" type="button" data-action="back-to-list">← Back to <span data-editor-back>articles</span></button><span class="editor-save-state" data-save-state>All changes saved</span></div>
-            <div class="page-heading editor-heading"><div><p class="eyebrow-admin">CONTENT EDITOR</p><h1 data-editor-heading>New article</h1><p class="page-subtitle">Edit each language independently, then preview them side by side.</p></div><div class="editor-actions"><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Publish <span>→</span></button></div></div>
+            <div class="page-heading editor-heading"><div><p class="eyebrow-admin">CONTENT EDITOR</p><h1 data-editor-heading>New article</h1><p class="page-subtitle">Edit each language independently, then preview them side by side.</p></div><div class="editor-actions"><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish <span>→</span></button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>
             <form class="content-form" data-content-form>
               <div class="editor-languages">
                 <section class="language-editor">
                   <div class="language-heading"><div class="language-title"><span class="language-badge">EN</span><div><strong>English</strong><small>Primary language</small></div></div><span class="translation-state" data-language-state="en">Not started</span></div>
-                  <label>Title <span class="required">*</span><input name="title.en" required maxlength="160" placeholder="Give your story a clear title" /></label>
-                  <label>Short description <span class="required">*</span><textarea name="description.en" required rows="3" maxlength="320" placeholder="A short introduction for readers and search results"></textarea></label>
-                  <label>Article body <span class="required">*</span><textarea class="body-editor" name="body.en" required rows="15" placeholder="Write your article in Markdown…"></textarea><small class="field-hint">Markdown supported. Use headings, lists, links and emphasis.</small></label>
+                  <label>Title<input name="title.en" maxlength="180" placeholder="Give your story a clear title" /></label>
+                  <label>URL slug<input name="slug.en" maxlength="120" placeholder="your-story-slug" /></label>
+                  <label>Short description<textarea name="description.en" rows="3" maxlength="500" placeholder="A short introduction for readers and search results"></textarea></label>
+                  <label>Category<input name="category.en" maxlength="100" placeholder="Arts &amp; traditions" /></label>
+                  <label>Article body<textarea class="body-editor" name="body.en" rows="15" maxlength="200000" placeholder="Write your article in Markdown…"></textarea><small class="field-hint">Markdown supported. Use headings, lists, links and emphasis.</small></label>
+                  <div class="form-grid variant-meta"><label>Reading time (minutes)<input type="number" name="readingMinutes.en" min="1" max="240" value="5" /></label><label>Learning level<input name="level.en" maxlength="80" placeholder="Beginner" /></label></div>
+                  <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.en" /> <span>Feature this English version</span></label>
+                  <details class="variant-details"><summary>Chinese term and pronunciation</summary><label>Chinese term<input name="chinese.en" maxlength="120" placeholder="汉字" /></label><label>Pinyin<input name="pinyin.en" maxlength="120" placeholder="Hànzì" /></label></details>
+                  <details class="variant-details"><summary>Cover image and rights metadata</summary><label>Image path<input name="mediaSrc.en" placeholder="/media/content-id/image.webp" /></label><label>Alternative text<input name="mediaAlt.en" maxlength="300" placeholder="Describe the image for screen readers" /></label><label>Credit<input name="mediaCredit.en" maxlength="300" placeholder="Photographer or source" /></label><label>License<input name="mediaLicense.en" maxlength="160" placeholder="original, CC BY 4.0, permission-granted…" /></label><label>Source URL<input name="mediaSource.en" type="url" placeholder="https://…" /></label></details>
                   <div class="editor-word-count"><span data-word-count="en">0 words</span><span>English content</span></div>
                 </section>
                 <section class="language-editor chinese-editor">
                   <div class="language-heading"><div class="language-title"><span class="language-badge zh-badge">中文</span><div><strong>简体中文</strong><small>Translation</small></div></div><span class="translation-state is-missing" data-language-state="zh">Not started</span></div>
-                  <label>标题<input name="title.zh" maxlength="160" placeholder="输入中文标题" /></label>
-                  <label>简短介绍<textarea name="description.zh" rows="3" maxlength="320" placeholder="为读者和搜索结果提供简短介绍"></textarea></label>
-                  <label>正文<textarea class="body-editor" name="body.zh" rows="15" placeholder="使用 Markdown 编写中文内容…"></textarea><small class="field-hint">中文内容独立保存，不会覆盖英文版本。</small></label>
+                  <label>标题<input name="title.zh" maxlength="180" placeholder="输入中文标题" /></label>
+                  <label>URL slug<input name="slug.zh" maxlength="120" placeholder="wenhua-gushi" /></label>
+                  <label>简短介绍<textarea name="description.zh" rows="3" maxlength="500" placeholder="为读者和搜索结果提供简短介绍"></textarea></label>
+                  <label>分类<input name="category.zh" maxlength="100" placeholder="文化与传统" /></label>
+                  <label>正文<textarea class="body-editor" name="body.zh" rows="15" maxlength="200000" placeholder="使用 Markdown 编写中文内容…"></textarea><small class="field-hint">中文内容独立保存，不会覆盖英文版本。</small></label>
+                  <div class="form-grid variant-meta"><label>阅读时间（分钟）<input type="number" name="readingMinutes.zh" min="1" max="240" value="5" /></label><label>学习级别<input name="level.zh" maxlength="80" placeholder="入门" /></label></div>
+                  <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.zh" /> <span>在首页推荐此中文版本</span></label>
+                  <details class="variant-details"><summary>封面图片与版权信息</summary><label>图片路径<input name="mediaSrc.zh" placeholder="/media/content-id/image.webp" /></label><label>替代文本<input name="mediaAlt.zh" maxlength="300" placeholder="描述图片内容，便于辅助技术阅读" /></label><label>图片来源<input name="mediaCredit.zh" maxlength="300" placeholder="摄影者或来源" /></label><label>授权许可<input name="mediaLicense.zh" maxlength="160" placeholder="原创、CC BY 4.0、已获授权…" /></label><label>来源网址<input name="mediaSource.zh" type="url" placeholder="https://…" /></label></details>
                   <div class="editor-word-count"><span data-word-count="zh">0 字</span><span>中文内容</span></div>
                 </section>
               </div>
@@ -130,27 +141,26 @@ const demo = import.meta.env.DEV;
                   <div class="panel-heading"><div><h2>Publishing details</h2><p>Organize and prepare this content</p></div></div>
                   <div class="form-grid">
                     <label>Content ID<input name="id" readonly placeholder="Assigned by the content service" /><small class="field-hint">Stable ID is managed by the backend.</small></label>
-                    <label>URL slug<input name="slug" maxlength="120" placeholder="your-story-slug" /></label>
+                    <label>Content ID<input name="id" readonly placeholder="Assigned by the content service" /></label>
                     <label>Collection<select name="type"><option value="articles">Article</option><option value="lessons">Learning guide</option><option value="festivals">Festival</option><option value="books">Book</option><option value="events">Event</option></select></label>
-                    <label>Category<input name="category" maxlength="80" placeholder="Arts &amp; traditions" /></label>
-                    <label class="full-field">Tags<input name="tags" placeholder="calligraphy, history, art" /><small class="field-hint">Separate tags with commas.</small></label>
-                    <label class="checkbox-field"><input type="checkbox" name="featured" /> <span>Feature this content on the homepage</span></label>
-                    <label>Publication status<select name="status"><option value="draft">Draft</option><option value="published">Published</option><option value="unpublished">Unpublished</option></select></label>
+                    <label>Collection<select name="type"><option value="articles">Article</option><option value="lessons">Learning guide</option><option value="festivals">Festival</option><option value="books">Book</option><option value="events">Event</option></select></label>
+                    <label class="full-field">Tags<input name="tags" disabled placeholder="Waiting for the approved API contract" /><small class="field-hint">The shared content model defines tags, but the current API write schema does not expose them yet.</small></label>
+                    <label>Publication workflow<select name="status" disabled><option value="draft">Save creates a draft</option><option value="published">Publish through a review PR</option><option value="unpublished">Unpublish through a review PR</option></select><small class="field-hint">Publishing never merges a pull request automatically.</small></label>
                   </div>
                 </section>
                 <section class="panel form-panel seo-panel">
                   <div class="panel-heading"><div><h2>Search appearance</h2><p>SEO metadata for both languages</p></div><span class="seo-icon">⌕</span></div>
-                  <label>English SEO title<input name="seoTitle.en" maxlength="70" placeholder="Search title in English" /></label>
-                  <label>English meta description<textarea name="seoDescription.en" rows="2" maxlength="160" placeholder="A clear search description"></textarea></label>
+                  <label>English SEO title<input name="seoTitle.en" maxlength="70" disabled placeholder="Awaiting SEO fields in the API contract" /></label>
+                  <label>English meta description<textarea name="seoDescription.en" rows="2" maxlength="160" disabled placeholder="Awaiting SEO fields in the API contract"></textarea></label>
                   <div class="form-divider"></div>
-                  <label>中文 SEO 标题<input name="seoTitle.zh" maxlength="70" placeholder="中文搜索标题" /></label>
-                  <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="160" placeholder="中文搜索摘要"></textarea></label>
+                  <label>中文 SEO 标题<input name="seoTitle.zh" maxlength="70" disabled placeholder="等待 API 合同增加 SEO 字段" /></label>
+                  <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="160" disabled placeholder="等待 API 合同增加 SEO 字段"></textarea></label>
                   <div class="form-divider"></div>
-                  <label>Cover image URL<input name="coverImage" placeholder="Select an image from Media Library" /></label>
-                  <button class="text-button media-select-button" type="button" data-action="open-media">Choose from media library →</button>
+                  <p class="field-hint contract-note">Media upload is available per content variant. A global searchable media library needs an additional API endpoint.</p>
+                  <button class="text-button media-select-button" type="button" data-action="open-media">Open media uploader →</button>
                 </section>
               </div>
-              <div class="editor-bottom-actions"><button class="danger-text-button" type="button" data-action="delete-current" hidden>Delete content</button><span>Changes are not public until published.</span><div><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Publish →</button></div></div>
+              <div class="editor-bottom-actions"><button class="danger-text-button" type="button" data-action="delete-current" hidden>Delete content</button><span>Changes are not public until published.</span><div><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish →</button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>
             </form>
           </section>
 
@@ -174,8 +184,8 @@ const demo = import.meta.env.DEV;
             <div class="page-heading"><div><p class="eyebrow-admin">ASSET LIBRARY</p><h1>Media library</h1><p class="page-subtitle">Upload and organize approved images for your stories.</p></div><div class="editor-actions"><button class="secondary-button" type="button" data-action="back-to-editor" hidden>← Back to editor</button><button class="primary-button" type="button" data-action="choose-upload">＋ Upload media</button></div></div>
             <section class="panel media-panel">
               <label class="upload-dropzone" data-dropzone><input type="file" accept="image/png,image/jpeg,image/webp,image/avif" multiple data-media-input hidden /><span class="upload-icon">↑</span><strong>Drop images here, or <u>browse files</u></strong><small>PNG, JPG, WebP or AVIF · Maximum size depends on media service policy</small></label>
-              <div class="media-toolbar"><span data-media-count>Media assets</span><label class="table-search"><span>⌕</span><input type="search" placeholder="Search media..." data-media-search /></label><select aria-label="Filter media type"><option>All media</option><option>Images</option></select></div>
-              <div class="media-grid" data-media-grid><div class="media-empty"><span>▧</span><strong>Your media library is ready</strong><p>Uploaded assets will appear here after the media API is connected.</p></div></div>
+              <div class="media-toolbar"><span data-media-count>Media assets</span><label class="media-locale-label">Upload language <select data-media-locale aria-label="Upload language"><option value="en">English</option><option value="zh-CN">简体中文</option></select></label><label class="table-search"><span>⌕</span><input type="search" placeholder="Search media..." data-media-search /></label><select aria-label="Filter media type"><option>All media</option><option>Images</option></select></div>
+              <p class="field-hint contract-note" data-media-contract-note>Existing media search/listing is not yet in the API contract. Uploads will attach to the selected content and language.</p><div class="media-grid" data-media-grid><div class="media-empty"><span>▧</span><strong>Choose a content item to manage its images</strong><p>Media is stored with the selected locale variant.</p></div></div>
             </section>
           </section>
 
@@ -192,7 +202,7 @@ const demo = import.meta.env.DEV;
     <dialog class="preview-dialog" data-preview-dialog>
       <div class="dialog-header"><div><p class="eyebrow-admin">CONTENT PREVIEW</p><h2>Reader preview</h2></div><button class="icon-button" type="button" data-action="close-preview" aria-label="Close preview">×</button></div>
       <div class="preview-language-switch"><button type="button" class="is-selected" data-preview-language="en">English</button><button type="button" data-preview-language="zh">简体中文</button><span data-preview-language-status></span></div>
-      <article class="reader-preview"><p class="preview-category" data-preview-category>Culture</p><h1 data-preview-title>Untitled story</h1><p class="preview-description" data-preview-description></p><div class="preview-body" data-preview-body></div></article>
+      <article class="reader-preview"><p class="preview-category" data-preview-category>Culture</p><h1 data-preview-title>Untitled story</h1><p class="preview-description" data-preview-description></p><iframe class="preview-frame" data-preview-frame sandbox title="Sanitized article preview" hidden></iframe><div class="preview-body" data-preview-body></div></article>
     </dialog>
     <dialog class="confirm-dialog" data-confirm-dialog>
       <div class="confirm-symbol">!</div><h2>Delete this content?</h2><p>This action cannot be undone. The content will be removed from the editorial library.</p><div class="confirm-actions"><button class="secondary-button" type="button" data-action="cancel-delete">Cancel</button><button class="danger-button" type="button" data-action="confirm-delete">Delete content</button></div>
