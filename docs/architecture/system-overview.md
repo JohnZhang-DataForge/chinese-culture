@@ -1,11 +1,12 @@
 # System Overview
 
-**Status:** Implemented baseline, with localization and CMS work not yet present in the inspected source.  
-**Verified against:** \`main\` at \`539b37c9bfa5363f7149c95563bd549957eeff3d\` (2026-11-05).
+**Current implementation:** English-only static Astro site on Cloudflare Pages.  
+**Source snapshot:** \`main\` at \`539b37c9bfa5363f7149c95563bd549957eeff3d\` (2026-11-05).  
+**Future architecture:** Agent 0 OpenSpec PR #3 — Proposed, not yet Ready or merged.
 
 ## What exists today
 
-Chinese Culture Atlas is an English-language, statically generated educational website. Astro 5 reads Markdown content from the private GitHub repository and generates static HTML into \`dist/\`. GitHub Actions validates the build and uses Wrangler Direct Upload to publish it to Cloudflare Pages Free.
+Astro 5 reads Markdown content from the private GitHub repository and generates static HTML into \`dist/\`. GitHub Actions validates the build and uses Wrangler Direct Upload to publish it to Cloudflare Pages Free.
 
 ~~~mermaid
 flowchart TD
@@ -18,11 +19,10 @@ flowchart TD
   G --> H[Wrangler Direct Upload]
   H --> I[Cloudflare Pages Free]
   I --> J[Readers]
-  K[chinese-culture.site DNS] --> I
-  L[www to apex 301 rule] --> K
+  K[Cloudflare DNS] --> I
 ~~~
 
-## Components and responsibilities
+## Current components
 
 | Component | Current responsibility |
 |---|---|
@@ -32,37 +32,53 @@ flowchart TD
 | GitHub Actions | Pull-request CI and main-branch deployment |
 | Wrangler | Uploads the prebuilt \`dist/\` directory to Pages |
 | Cloudflare Pages | Serves static site assets |
-| Cloudflare DNS and Rules | Resolves the custom hostnames and redirects \`www\` to the apex |
+| Cloudflare DNS and Rules | Resolves apex and \`www\`; canonical redirects |
 
-The public site currently has no database, server-side rendering, Pages Functions, runtime API, user accounts, admin dashboard, newsletter, contact form or dynamic event service.
+The public site currently has no production CMS, Admin API, user accounts, database, Pages Functions, separate Admin Worker or runtime event service in the inspected \`main\` source.
 
 ## Current public routes
 
-- \`/\` — homepage
+- \`/\` — English homepage
 - \`/learn/\`, \`/culture/\`, \`/festivals/\`, \`/books/\` — collection indexes and generated detail pages
 - \`/events/\` — static empty state; no event collection exists
 - \`/about/\`, \`/contact/\`, \`/editorial-policy/\`, \`/privacy/\`, \`/accessibility/\`, \`/404\`
 
-All current public pages use English route names and the shared layout emits \`<html lang="en">\`. Chinese characters may appear as terms within English content; that is not a Chinese-language site.
+All current pages use English routes and the shared layout emits \`<html lang="en">\`. Chinese characters may appear as terms within English content; that is not a Chinese-language site.
 
-## Deployment evidence
+## Verified production state
 
-- GitHub Pages deployment workflow run: [#41932129872](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872), completed successfully.
-- CI run: [#41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795), completed successfully.
+- GitHub Pages deployment run [#41932129872](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872): success.
+- Static CI run [#41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795): success.
 - Cloudflare production deployment: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
 - Deployed source commit: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
 - Pages project: \`chinese-culture\`; \`uses_functions=false\`.
-- The apex custom domain is active. The \`www\` custom-domain validation was still pending at the latest individual domain read.
+- Apex and \`www\` Pages custom-domain APIs now report both domains active, with HTTP validation active.
+- Cloudflare configuration is verified; external HTTP/TLS smoke tests remain unverified from the current execution environment.
 
-A successful Actions run and Pages deployment record establish deployment success; they do not substitute for browser-based accessibility, functional or domain smoke tests.
+## Proposed target architecture — not yet frozen
 
-## Planned capabilities are not current components
+Agent 0's open PR #3 proposes:
+- Public static Astro pages with \`/en/\` and \`/zh-cn/\` locale prefixes.
+- A static Admin UI under \`/admin/*\`, protected by Cloudflare Access.
+- A **separately deployed Cloudflare Worker** serving \`/api/admin/v1/*\`.
+- Worker-side Access JWT verification, role checks, CSRF/origin validation and GitHub App token exchange.
+- Git-backed content/media branches and PR-based publication.
+- Human-reviewed merges to \`main\`, followed by the existing Pages deployment.
 
-Bilingual routes, translation relationships, browser-based CMS, Cloudflare Access/JWT authentication, GitHub API write operations and media upload are not present in the inspected \`main\` source. They must be documented as implemented only after their code, configuration and verification are merged. Agent 0's \`docs/openspec/\` contracts were not present on this inspected \`main\`; this document does not define or replace those contracts.
+The contract PR is marked Proposed and explicitly says it is not Ready until merged and announced by Agent 0. Do not treat the target topology as deployed.
+
+## Cross-agent integration risks observed
+
+At this snapshot:
+- Agent 5's backend branch contains Cloudflare Pages Functions under \`functions/\`, which conflicts with Agent 0's proposed separate Worker architecture. Resolve this before backend integration.
+- Agent 6's conditional localization tests currently refer to \`/zh/\`, while Agent 0's proposed route segment is \`/zh-cn/\`. Align the tests before enabling the release gate.
+- Agent 4's admin frontend PR is draft and uses development-only mock records; its PR states real API integration is pending Agent 0/5 contracts.
 
 ## Source of truth
 
-- Application and editorial source: this private repository.
-- Build output: generated \`dist/\`; it is not the editable content source.
+- Current public source: this private repository's \`main\`.
+- Future shared interfaces: Agent 0's \`docs/openspec/\` after merge and Ready announcement.
+- Build output: generated \`dist/\`; not the editable content source.
 - Hosting and DNS state: Cloudflare account configuration.
-- Current operational snapshot: [implementation status](../implementation/implementation-status.md) and [Cloudflare configuration](../operations/cloudflare-configuration.md).
+
+See [implementation status](../implementation/implementation-status.md), [Cloudflare Pages architecture](cloudflare-pages-architecture.md) and [Cloudflare configuration](../operations/cloudflare-configuration.md).

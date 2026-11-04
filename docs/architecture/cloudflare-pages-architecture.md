@@ -3,7 +3,7 @@
 **Status:** Implemented — static Pages Direct Upload.  
 **Last verified:** 2026-11-05.
 
-## Build and delivery model
+## Current build and delivery model
 
 ~~~mermaid
 flowchart LR
@@ -17,7 +17,7 @@ flowchart LR
   H --> I[Static asset delivery]
 ~~~
 
-Node.js is used on a developer machine or GitHub-hosted runner during the build. It is not a permanent production server. Cloudflare Pages serves prebuilt static assets.
+Node.js runs on a developer machine or GitHub-hosted runner during the build. Cloudflare Pages serves prebuilt static assets. The project reports \`uses_functions=false\`.
 
 ## Repository configuration
 
@@ -33,17 +33,9 @@ The repository currently has no committed npm lockfile. CI uses \`npm install\`,
 
 ## Deployment behavior
 
-The deployment workflow:
+The Pages deployment workflow checks out the selected \`main\` source, installs dependencies, builds and verifies the site, checks repository Actions secret \`CLOUDFLARE_API_TOKEN\`, then runs Wrangler Direct Upload to project \`chinese-culture\` on branch \`main\`.
 
-1. Checks out the selected \`main\` source.
-2. Sets up Node.js 22.
-3. Installs dependencies with \`npm install --no-audit --no-fund\`.
-4. Runs \`npm run build\` and \`npm run verify\`.
-5. Fails early if repository Actions secret \`CLOUDFLARE_API_TOKEN\` is missing.
-6. Runs \`cloudflare/wrangler-action@v4\` with the token and the account ID embedded in the workflow.
-7. Executes \`pages deploy dist --project-name=chinese-culture --branch=main\`.
-
-Pull requests run CI but do not deploy to production. A push to \`main\` triggers both the CI workflow and the Pages deployment workflow.
+Pull requests run CI but do not deploy to production. A push to \`main\` triggers both CI and the Pages deployment workflow.
 
 ## Cloudflare resource snapshot
 
@@ -57,13 +49,19 @@ Pull requests run CI but do not deploy to production. A push to \`main\` trigger
 
 ## Static verification
 
-\`npm run verify\` runs \`scripts/verify-static.mjs\`. It checks required generated routes, absence of \`dist/_worker.js\`, the Wrangler output directory and project name, the absence of a Worker entrypoint, Pages file-count and file-size limits, homepage branding, local links and a minimum number of educational content pages.
+\`npm run verify\` runs \`scripts/verify-static.mjs\`. It checks required generated routes, absence of \`dist/_worker.js\`, the Wrangler output directory and project name, absence of a Worker entrypoint, Pages file-count and file-size limits, homepage branding, local links and a minimum number of educational content pages.
 
-The verifier is a static-output guardrail. It is not a browser E2E test, an accessibility audit, a security penetration test or proof that custom domains have finished certificate validation.
+The verifier is not a browser E2E test, accessibility audit, penetration test or proof of a client-side HTTPS handshake.
 
-## Deliberate exclusions
+## Proposed separate Admin Worker — not deployed
 
-No Pages Functions, SSR adapter, Worker entrypoint, database, D1, KV, R2, queue, persistent Node process or runtime API is part of the current public-site implementation. Adding one changes the security, cost and operational model and requires an approved design update.
+Agent 0's Proposed OpenSpec keeps the public Pages project static and adds a **separate Cloudflare Worker** for \`/api/admin/v1/*\`. The Worker would use Cloudflare Access and GitHub App credentials stored server-side. This must not be implemented as Pages Functions or SSR if Agent 0's contract is accepted.
+
+Agent 5's current backend branch instead adds \`functions/\` Pages Functions middleware and helpers. That branch conflicts with the proposed architecture and must be reconciled before merge. The current production Pages project still reports \`uses_functions=false\`.
+
+## Deliberate exclusions today
+
+No Pages Functions, SSR adapter, Worker entrypoint, database, D1, KV, R2, queue, persistent Node process or runtime API is part of the current public-site implementation.
 
 ## Operations
 

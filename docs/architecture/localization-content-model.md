@@ -1,55 +1,63 @@
 # Localization Content Model
 
-**Current status:** English-only Markdown collections with optional Chinese terminology; full translation relationships are not implemented.
+**Current status:** English-only Markdown collections in \`main\`.  
+**Target contract:** CC-CONTENT-001 v1.0.0 in Agent 0 PR #3 — Proposed, not yet Ready or merged.
 
 ## Current schema
 
-\`src/content.config.ts\` defines four Astro content collections using Markdown files loaded from \`src/content/<collection>/\`:
+\`src/content.config.ts\` currently defines four Astro Markdown collections: \`lessons\`, \`culture\`, \`festivals\` and \`books\`.
 
-- \`lessons\`
-- \`culture\`
-- \`festivals\`
-- \`books\`
-
-The shared Zod schema currently contains:
+Current fields:
 
 | Field | Required | Current meaning |
 |---|---:|---|
 | \`title\` | Yes | English title |
 | \`description\` | Yes | English summary |
 | \`category\` | Yes | English category label |
-| \`chinese\` | No | Chinese term/characters displayed within an English page |
+| \`chinese\` | No | Chinese term/characters within an English page |
 | \`pinyin\` | No | Optional pronunciation metadata |
 | \`level\` | No | Optional learning level |
 | \`order\` | No | Optional ordering value |
 | \`readingMinutes\` | No | Positive integer, default 5 |
-| \`featured\` | No | Boolean, default false; current homepage code does not use it to select featured content |
+| \`featured\` | No | Boolean, default false; not currently used for homepage selection |
 
-The Markdown filename becomes the Astro collection entry ID and is used as the public slug. The current schema has no locale field, stable cross-language content ID, translation relation, localized slug, publication state, author/reviewer metadata or cover-image field.
+The current schema has no locale, stable cross-language content ID, translation relation, localized slug, publication state, sources array, media metadata or tags.
 
-## What the Chinese field does not mean
+## Proposed CC-CONTENT-001 v1.0.0
 
-The optional \`chinese\` field is not a Chinese translation of the article. It stores a Chinese term or characters shown inside an English article/card. Current pages do not have paired English and Simplified Chinese bodies.
+The contract in Agent 0 PR #3 proposes:
 
-## Future model requirements
+- Locale identifiers: \`en\` and \`zh-CN\`; URL segments \`en\` and \`zh-cn\`.
+- Content path: \`src/content/{collection}/{locale}/{slug}.md\`.
+- Media path: \`public/media/{contentId}/{safeFileName}\`.
+- Immutable UUID \`contentId\`, shared by all locale variants of the same conceptual item.
+- Unique key \`(contentId, locale)\`; localized slugs may differ.
+- Required fields: \`contentId\`, \`locale\`, \`slug\`, \`title\`, \`description\`, \`category\`, \`status\`, \`featured\`, \`updatedAt\`.
+- Optional fields: \`publishedAt\`, \`order\`, \`readingMinutes\`, \`level\`, \`chinese\`, \`pinyin\`, \`sources\`, \`media\`, \`tags\`.
+- Status values: \`draft\`, \`published\`, \`unpublished\`.
+- A published record requires \`publishedAt\`.
+- Only \`status=published\` is eligible for public routes, sitemap, search or featured placement.
+- \`featured\` is independent of status.
+- Existing English slugs must be preserved during migration.
 
-Agent 0 must approve the content contract before localization code or CMS integration is documented as final. At minimum, that contract should define:
+The \`chinese\` field remains an annotation, not a substitute for a \`zh-CN\` article.
 
-- Stable content identity independent of translated filenames.
-- Locale identifiers and supported locales.
-- English/Chinese relationship and translation completeness.
-- Locale-specific title, summary, body, slug and SEO metadata.
-- Draft/published/unpublished semantics and default behavior.
-- Validation for missing or malformed translations.
-- How the public site behaves when one locale is absent.
-- How the admin CMS reads and writes the same model.
+## Proposed source and media metadata
 
-Do not invent a field naming convention or publish a second schema here that conflicts with Agent 0's contract.
+A source record requires a title and HTTPS URL; publisher and accessed date are optional.
 
-## Current authoring location
+A media record requires:
+- Root-relative \`src\` beginning with \`/media/\`.
+- Accessible \`alt\` text (empty only for explicitly decorative media).
+- \`credit\` and \`license\`.
+- Optional HTTPS \`sourceUrl\` when needed to evidence rights.
 
-Add or edit English Markdown in the matching collection folder. Use the existing schema exactly; invalid required metadata causes the Astro build to fail. See [content management guide](../implementation/content-management-guide.md).
+Every image in a published article must have alt and rights metadata.
 
-## Migration caution
+## Proposed migration
 
-Keep current file IDs and English URLs stable until the approved localization plan defines route redirects. Preserve the existing English prose and citations during translation work.
+Agent 3's contract task is to move current English entries into \`src/content/{collection}/en/{existing-slug}.md\`, preserve the current slug, assign a stable UUID, add locale/status/timestamps and create reviewed \`zh-CN\` variants sharing the same \`contentId\`. Migration is not present in current \`main\`.
+
+## Change control
+
+Do not add a parallel schema or independently rename fields. Agent 0 must freeze the contract before Agent 2/3 implement against it. A schema change requires a versioned contract update and coordinated changes to Astro validation, CMS forms, Worker validation, fixtures and tests.

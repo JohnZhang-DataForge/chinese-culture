@@ -1,20 +1,14 @@
 # Backup and Recovery
 
-## Current data model
+## Current source of truth
 
-The private GitHub repository is the editable source of truth for:
+The private GitHub repository is the editable source of truth for Astro application source, Markdown content, static assets, workflows and documentation.
 
-- Astro application source.
-- Markdown teaching content.
-- Static public assets.
-- Build and deployment workflows.
-- Technical documentation.
+The deployed \`dist/\` directory is generated output. The current main branch has no CMS database, event database, user-account store, external media object store or runtime upload area.
 
-The deployed \`dist/\` directory is generated output. The current website has no CMS database, event database, user-account store, media object store or runtime file upload area.
+## What Git protects
 
-## What is protected by Git history
-
-Git records committed source and content changes. Pull requests provide review context. Deleted or overwritten Markdown can usually be recovered from a previous commit as long as repository history remains available.
+Git history records committed source/content changes. Pull requests preserve review context. Deleted or overwritten Markdown can usually be restored from an earlier commit as long as repository history remains available.
 
 Git history is not an independent backup. Repository deletion, account compromise or destructive administrative actions can affect the primary copy.
 
@@ -28,7 +22,7 @@ cd chinese-culture.git
 git remote update --prune
 ~~~
 
-Store the mirror outside the same GitHub organization/account security boundary. Protect access with MFA and least privilege. Do not place a credential in the command text or save it in shell history.
+Store the mirror outside the same GitHub organization/account security boundary. Protect access with MFA and least privilege. Do not place credentials in command text or shell history.
 
 ## Recover a file
 
@@ -38,30 +32,33 @@ Store the mirror outside the same GitHub organization/account security boundary.
 4. Run CI and review the restored content.
 5. Merge and confirm the Pages deployment.
 
-For a full source rollback, use the reviewed Git revert process in [rollback procedure](rollback-procedure.md).
+For a full source rollback, use the reviewed Git revert process in [Rollback Procedure](rollback-procedure.md).
 
-## Static assets
+## Proposed CMS drafts and media
 
-Current public assets are stored in Git under \`public/\`. There is no external media upload store to back up. If an approved media store is introduced later, document object versioning, deletion protection, retention, export and recovery before enabling uploads.
+Agent 0's Proposed design stores drafts on \`cms/<contentId>/<locale>\` branches and Git-backed media under \`public/media/<contentId>/\`. Published/unpublished content remains in Git history. These branches and paths are not yet implemented in current main.
+
+If the CMS is delivered, include draft branches and media commits in the independent Git mirror and test restoration of both Markdown and image metadata.
 
 ## Cloudflare configuration backup
 
-The Cloudflare configuration is external to the Git repository. Before changing DNS, Pages domains or redirect rules, record the current state in:
+Cloudflare DNS, Pages custom-domain associations, redirect rules and SSL settings are external to the Git repository. Before changing them, record the current state in:
 
 - [Cloudflare configuration](cloudflare-configuration.md)
 - [Domain DNS change log](domain-dns-change-log.md)
 
-For a significant change, capture an authorized configuration export or dashboard evidence in the approved private operations location. Do not store API tokens or private keys with the export.
+For significant changes, capture an authorized configuration export or dashboard evidence in the approved private operations location. Never store API tokens or private keys with the export.
 
 ## Recovery priorities
 
 1. Restore private repository access.
 2. Recover the source branch/commit.
 3. Verify dependencies and run build/static checks.
-4. Restore Cloudflare Pages deployment using the protected deployment workflow.
-5. Restore or verify DNS and custom-domain settings.
-6. Test the public site and record the recovery SHA and deployment ID.
+4. Restore Pages deployment through the protected workflow.
+5. Verify DNS, Pages domains, certificate and redirects.
+6. If the Admin Worker is deployed, recover/rollback it independently.
+7. Test the public site and record recovery SHA/deployment IDs.
 
 ## Backup gaps
 
-No scheduled independent Git mirror, automated DNS export or external media backup job is verified in the current implementation. Do not claim those backups exist until they are configured and tested.
+No scheduled independent Git mirror, automated DNS export or external media backup job is verified in current implementation. Do not claim these backups exist until configured and tested.

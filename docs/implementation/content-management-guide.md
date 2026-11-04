@@ -1,24 +1,24 @@
 # Content Management Guide
 
-This guide describes the content workflow implemented in the current repository. It does not assume an Admin CMS exists.
+This guide separates the current GitHub editing workflow from the proposed future Admin CMS. It does not assume that a browser CMS is already available.
 
-## Where content lives
+## Current content locations
 
-| Content type | Folder or file | Public URL |
+| Content type | Current folder or file | Current public URL |
 |---|---|---|
-| Learning lessons | \`src/content/lessons/\` | \`/learn/<filename>/\` |
-| Culture articles | \`src/content/culture/\` | \`/culture/<filename>/\` |
-| Festival guides | \`src/content/festivals/\` | \`/festivals/<filename>/\` |
-| Book guides | \`src/content/books/\` | \`/books/<filename>/\` |
-| Events page | \`src/pages/events/index.astro\` | \`/events/\` |
+| Learning lessons | \`src/content/lessons/\` | \`/learn/<slug>/\` |
+| Culture articles | \`src/content/culture/\` | \`/culture/<slug>/\` |
+| Festival guides | \`src/content/festivals/\` | \`/festivals/<slug>/\` |
+| Book guides | \`src/content/books/\` | \`/books/<slug>/\` |
+| Events | \`src/pages/events/index.astro\` | \`/events/\` |
 | Homepage | \`src/pages/index.astro\` | \`/\` |
-| Header/footer navigation | \`src/layouts/BaseLayout.astro\` | Shared site shell |
+| Header/footer navigation | \`src/layouts/BaseLayout.astro\` | Shared shell |
 
-The filename without \`.md\` becomes the route slug. Use lowercase kebab-case names and avoid renaming published files unless redirects are planned.
+The filename without \`.md\` becomes the current Astro entry ID and public slug.
 
-## Required Markdown metadata
+## Current Markdown metadata
 
-Every content file must include \`title\`, \`description\` and \`category\`.
+The current schema requires \`title\`, \`description\` and \`category\`.
 
 ~~~yaml
 ---
@@ -34,50 +34,57 @@ featured: false
 ---
 ~~~
 
-Only the first three fields are required. \`readingMinutes\` defaults to 5 and must be a positive integer. \`order\` is used for ordering in collection indexes and the lesson homepage list. \`featured\` is in the schema but is not currently used by homepage selection logic.
+\`readingMinutes\` defaults to 5 and must be a positive integer. \`order\` is used for collection index ordering and lesson homepage ordering. \`featured\` is defined but current homepage code does not use it as a filter.
 
-## Add an article or lesson
+## Add an article or lesson today
 
-1. Choose the right folder: lessons, culture, festivals or books.
-2. Create a new Markdown file with a unique kebab-case filename.
-3. Add valid frontmatter using the schema above.
-4. Write original, well-sourced Markdown content.
-5. Add links to reputable references and check all URLs.
-6. Check that any Chinese characters and pinyin are correct.
-7. Open a pull request and wait for CI.
-8. After merge, confirm the Pages deployment succeeds and check the public route.
+1. Choose the correct current folder.
+2. Create a unique lowercase kebab-case Markdown filename.
+3. Add valid frontmatter.
+4. Write original, well-sourced content.
+5. Check references, Chinese terms, internal links and image rights.
+6. Open a pull request.
+7. Wait for CI and human review.
+8. Merge to \`main\`; verify the Pages deployment before announcing publication.
 
-A lesson goes in \`src/content/lessons/\`; its public route uses \`/learn/\`, not \`/lessons/\`.
+Lessons go in \`src/content/lessons/\`; their public path is \`/learn/\`.
 
 ## Add a festival
 
-Create a Markdown file in \`src/content/festivals/\`. Describe the tradition as an evergreen cultural guide. Do not use this collection to publish a dated local event announcement unless the content model and editorial process have been deliberately extended.
+Create a Markdown file in \`src/content/festivals/\`. Keep it an evergreen cultural guide. Do not use this folder for dated local event announcements.
 
 ## Manage books
 
-Book guides belong in \`src/content/books/\`. The site publishes original reading guidance; do not upload or reproduce copyrighted full texts, modern translations or scans without appropriate rights.
+Book guides belong in \`src/content/books/\`. Publish original reading guidance. Do not upload or reproduce copyrighted full texts, modern translations or scans without rights.
 
 ## Publish an event
 
-There is no event collection or event editor today. \`src/pages/events/index.astro\` is a hard-coded empty state. Adding an arbitrary Markdown file under \`src/content/events/\` will not create an event page. A future event feature needs an approved schema, date/time zone handling, organizer verification, registration-link review, expiry behavior and route generation.
+There is no event collection or event editor. \`src/pages/events/index.astro\` is a hard-coded empty state. Adding a file under a new \`src/content/events/\` folder will not create a route today.
+
+Agent 0's proposed future content contract includes an \`events\` collection, but it is not implemented in \`main\`. A future event feature needs verified organizer, date/time zone, location, registration link and expiry handling.
 
 ## Modify homepage sections
 
-The homepage is authored in \`src/pages/index.astro\`. It currently selects the first three lessons sorted by \`order\`, then takes the first three culture and festival entries returned by Astro. The homepage does not use the \`featured\` field as a filter. Changing section headings, layout or selection rules requires an Astro source change and a pull request.
+The homepage is authored in \`src/pages/index.astro\`. It currently selects the first three lessons sorted by \`order\`, then takes the first three culture and festival entries returned by Astro. It does not filter by \`featured\`. Changes require an Astro source PR.
 
 ## Update navigation
 
-The header and footer links are currently hard-coded in \`src/layouts/BaseLayout.astro\`. Content collection routes are defined in \`src/lib/sections.ts\`. Changing navigation requires a source-code change. There is no navigation settings screen.
+Header/footer links are hard-coded in \`src/layouts/BaseLayout.astro\`. Section route mappings are in \`src/lib/sections.ts\`. There is no navigation settings screen in current \`main\`.
 
-## Upload an image
+## Images today
 
-There is no upload interface or media library. Static assets can be added to \`public/\` through a reviewed Git change and referenced by their public path. The current content schema has no cover-image field, and the current story cards do not display cover images. Verify image rights, attribution, alternative text, file size and mobile rendering.
+There is no upload interface or media library. Static files can be added to \`public/\` through GitHub and referenced by public path. The current schema has no cover-image/media field and StoryCard does not render cover images.
 
-## Publish and unpublish
+## Proposed future CMS content contract
 
-- **Publish:** merge the reviewed change to \`main\`; the Pages workflow deploys on a main push.
-- **Unpublish a content entry:** remove its Markdown file through a reviewed PR. Plan a redirect if the URL has already been shared or indexed.
-- **Draft:** keep unfinished content on a non-main branch or in a pull request. The current schema has no draft status field.
-- **Unpublish an event:** not applicable; event management is not implemented.
+Agent 0 PR #3 proposes content files at:
 
-See [content publishing workflow](../architecture/content-publishing-workflow.md) and [deployment guide](deployment-guide.md).
+\`src/content/{collection}/{locale}/{slug}.md\`
+
+Supported locale IDs are \`en\` and \`zh-CN\`; URL segments are \`en\` and \`zh-cn\`. Every language variant shares an immutable UUID \`contentId\`. Required fields include locale, slug, title, description, category, status, featured and timestamps. Status values are \`draft\`, \`published\`, \`unpublished\`.
+
+The same proposal defines Git-backed media under \`public/media/{contentId}/\`, with JPEG/PNG/WebP/AVIF only and an 8 MiB maximum. Every published image requires alt, credit and license metadata.
+
+This contract is Proposed, not Ready. Do not migrate current files or create a parallel schema before Agent 0 announces the contract freeze.
+
+See [Content Publishing Workflow](../architecture/content-publishing-workflow.md).

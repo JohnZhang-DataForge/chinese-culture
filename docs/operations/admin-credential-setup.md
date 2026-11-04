@@ -1,32 +1,54 @@
 # Admin Credential Setup
 
-**Status:** Not applicable to the current implementation. No admin login or CMS credential exists in the application.
+**Status:** No production Admin CMS credential is configured by the current \`main\` application.
 
 ## Current state
 
-The inspected repository has no \`/admin/\` route, \`/api/admin/*\` endpoint, Pages Functions, Cloudflare Access application configuration, server-side JWT validation code or CMS GitHub credential. There is no admin username, password, owner email or API token to configure for the website.
+The inspected \`main\` source has no production \`/admin/\` workflow, Admin API, Access JWT validation or GitHub App integration. Agent 4's open draft UI PR is mock-only in development; it is not a production CMS. Agent 5's backend branch is not merged and its Pages Functions runtime conflicts with Agent 0's Proposed separate Worker architecture.
 
-The only application deployment credential is \`CLOUDFLARE_API_TOKEN\`, which is used by GitHub Actions to deploy static assets. It is not an admin login credential. See [GitHub token setup](github-token-setup.md).
+The current deployment credential \`CLOUDFLARE_API_TOKEN\` is for GitHub Actions → Pages deployment. It is not an admin login.
 
-## Before admin credentials can be configured
+## Proposed future security model
 
-Wait for the approved Agent 0 architecture, API and content contracts and the merged Agent 4/5 implementation. Then verify the actual code and Cloudflare configuration before documenting setup.
+Agent 0 PR #3 proposes:
 
-The future setup process must:
+1. Cloudflare Access protects \`/admin/*\` and \`/api/admin/*\`.
+2. A separate Worker serves \`/api/admin/v1/*\`.
+3. The Worker verifies \`CF-Access-Jwt-Assertion\` signature against trusted Access signing keys.
+4. The Worker checks issuer, audience, expiry, not-before, identity and configured role.
+5. Mutations require exact Origin validation and short-lived \`X-CSRF-Token\`.
+6. The Worker uses a short-lived GitHub App installation token stored server-side.
 
-1. Identify the authorized owner identity from the owner through a secure configuration process. Do not guess or invent an email address.
-2. Configure Cloudflare Access for the approved admin paths.
-3. Confirm the backend validates the Access JWT signature, issuer, audience and expiration server-side.
-4. Configure only the secret names required by the merged implementation.
-5. Store secrets in the approved secret manager or GitHub Actions/Cloudflare secret store, not in Git.
-6. Verify unauthorized requests fail even when the frontend is bypassed.
-7. Verify authorized users can access only the intended administrative functions.
-8. Record rotation and recovery procedures without recording secret values.
+Proposed roles are \`admin\` and \`editor\`; public readers have no CMS API access. The owner identity must be supplied by the owner through a secure setup process. Do not guess or hard-code an email address.
 
-## Placeholder policy
+## Future secret/configuration placeholders
 
-When the implementation defines secret names, document names only, for example \`<FUTURE_ADMIN_SECRET_NAME>\`. Do not create or publish credentials in this document. Never paste passwords, JWT signing material, private keys or access tokens into chat, Markdown, source code or logs.
+Use the actual names approved by Agent 0/5 after the Worker implementation is reconciled. Until then, document only placeholders:
+
+- \`<ACCESS_TEAM_DOMAIN>\`
+- \`<ACCESS_APPLICATION_AUDIENCE>\`
+- \`<AUTHORIZED_EDITOR_IDENTITIES>\`
+- \`<GITHUB_APP_ID>\`
+- \`<GITHUB_APP_INSTALLATION_ID>\`
+- \`<GITHUB_APP_PRIVATE_KEY>\`
+- \`<ADMIN_ORIGIN>\`
+
+These are placeholders, not current repository variables or secrets. Never add values to Markdown, Git, HTML, client JavaScript or logs.
+
+## Setup checklist after the Worker is accepted
+
+1. Confirm Agent 0 has marked the OpenSpec and API/auth contracts Ready.
+2. Deploy the separate Worker to an isolated test environment.
+3. Configure Cloudflare Access applications/policies for the exact admin paths.
+4. Confirm the Access audience and issuer against the live Access configuration.
+5. Create/install the GitHub App only on the private site repository with least privilege.
+6. Store App private key and installation configuration as Worker secrets.
+7. Configure the owner/editor allowlist securely.
+8. Test anonymous, invalid JWT, wrong audience, expired JWT and unauthorized identity requests.
+9. Test CSRF and cross-origin mutation rejection.
+10. Verify no token reaches browser bundles, responses or logs.
+11. Document actual secret names and rotation steps without secret values.
 
 ## Owner action today
 
-No admin credential setup is required or possible for the current static website. Use the GitHub-based publishing workflow described in [Administrator User Guide](../implementation/admin-user-guide.md).
+No Admin credential setup is required for the current static site. Use the GitHub publishing process in [Administrator User Guide](../implementation/admin-user-guide.md).

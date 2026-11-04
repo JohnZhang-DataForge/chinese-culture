@@ -1,6 +1,7 @@
 # Content Publishing Workflow
 
-**Current status:** GitHub-based static publishing is implemented; browser CMS publishing is not.
+**Current status:** GitHub-based static publishing is implemented.  
+**Future workflow:** Git-backed Admin CMS proposed in Agent 0 PR #3.
 
 ## Current workflow
 
@@ -16,32 +17,52 @@ flowchart TD
   G --> H[Cloudflare Pages production]
 ~~~
 
-## Current content source
+Current collection folders:
 
-| Collection | Source directory | Public route |
+| Collection | Current source directory | Current route |
 |---|---|---|
 | Lessons | \`src/content/lessons/\` | \`/learn/<slug>/\` |
 | Culture | \`src/content/culture/\` | \`/culture/<slug>/\` |
 | Festivals | \`src/content/festivals/\` | \`/festivals/<slug>/\` |
 | Books | \`src/content/books/\` | \`/books/<slug>/\` |
 
-Astro reads Markdown at build time. The filename becomes the collection entry ID and public slug. Required frontmatter is \`title\`, \`description\` and \`category\`.
+A file in one of these collections is included in the build. There is no draft status field or scheduling mechanism. The homepage currently does not use \`featured\` to select content. Events are a hard-coded empty state.
 
-## Publication semantics
+## Proposed CMS workflow
 
-- A content file in one of the four collections is included in the static build.
-- The repository has no \`status: draft\` field or scheduling mechanism.
-- A pull request is a review boundary; merging to \`main\` makes the content eligible for the next production deployment.
-- Removing a content file through a reviewed PR removes its generated page from the next deployment. Preserve Git history and plan redirects before removing a published slug.
-- The schema includes \`featured\`, but the current homepage does not use it as a selection rule.
-- Events are a hard-coded empty state in \`src/pages/events/index.astro\`; there is no event content collection or event publishing UI.
+The Agent 0 contract proposes:
 
-## Review responsibilities
+~~~mermaid
+flowchart TD
+  A[Admin saves draft] --> B[cms/contentId/locale branch]
+  B --> C[Private preview]
+  C --> D[Submit for review]
+  D --> E[Pull request to main]
+  E --> F[Human review and required CI]
+  F --> G{Approved?}
+  G -- No --> E
+  G -- Yes --> H[Human merges PR]
+  H --> I[Pages build includes published content]
+~~~
 
-Before merging, check source quality, factual nuance, references, copyright and image rights, metadata, Chinese terms, internal links and mobile readability. Keep event listings empty until there is a verified event workflow.
+- Save Draft writes \`status=draft\` to a CMS-owned branch.
+- Submit for review creates/updates a PR while keeping draft status.
+- Publish changes the PR branch to \`status=published\`; the content becomes public only after human merge and successful Pages deployment.
+- Unpublish changes the PR branch to \`status=unpublished\`; the public route is removed only after merge and deployment.
+- The Worker API never merges PRs or writes directly to \`main\`.
 
-## Future CMS workflow
+## Proposed status semantics
 
-The admin CMS is not implemented. Its future draft, preview, publish and unpublish behavior must follow Agent 0's approved content/API contracts and be verified against the actual backend before this document is revised.
+| State | Public build | Source retention |
+|---|---|---|
+| \`draft\` | Excluded | CMS branch |
+| \`published\` | Included | \`main\` after reviewed merge |
+| \`unpublished\` | Excluded | Retained in \`main\` after reviewed merge |
 
-See [content management guide](../implementation/content-management-guide.md).
+\`featured\` is independent of status. Only published content can appear in public featured placements.
+
+## Review requirements
+
+Check factual accuracy, cultural nuance, sources, image rights, accessible alt text, metadata, locale completeness, internal links, route compatibility and generated public output. Draft and unpublished content must not appear in routes, sitemap, public search or featured modules.
+
+The CMS workflow is proposed, not implemented in current \`main\`. See [content management guide](../implementation/content-management-guide.md).

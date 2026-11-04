@@ -1,64 +1,69 @@
 # Testing Guide
 
-## Automated CI
+## Current main CI
 
-The repository has two workflows:
+The repository has two current workflows:
 
 - \`.github/workflows/site-ci.yml\`: pull requests and pushes to \`main\`.
 - \`.github/workflows/pages-deploy.yml\`: pushes to \`main\` and manual dispatch.
 
-Both workflows use Node.js 22, \`npm install\`, \`npm run build\` and \`npm run verify\`. The deployment workflow additionally checks \`CLOUDFLARE_API_TOKEN\` and publishes with Wrangler.
+They use Node.js 22, \`npm install\`, \`npm run build\` and \`npm run verify\`. The deployment workflow additionally checks \`CLOUDFLARE_API_TOKEN\` and publishes with Wrangler.
 
 ## Static verifier coverage
 
 \`scripts/verify-static.mjs\` checks:
 
-- The build output directory exists.
+- Build output directory exists.
 - Required public route files exist.
 - No \`dist/_worker.js\` is emitted.
-- \`wrangler.jsonc\` points to the correct Pages project and \`./dist\`.
-- No Worker entrypoint is configured in the Wrangler file.
-- Generated file count and individual asset size remain within the checked Pages Free limits.
+- \`wrangler.jsonc\` points to the expected Pages project and \`./dist\`.
+- No Worker entrypoint is configured in the Pages project config.
+- Generated file count and individual asset size remain within checked Pages limits.
 - Homepage branding exists.
-- Local links in generated HTML resolve to a generated file/route.
+- Local links in generated HTML resolve to generated files/routes.
 - At least 13 educational content pages are generated.
 
-The verifier is a Node script over static build output. It does not launch a browser.
+This is a static-output check, not a browser test.
 
-## Latest CI evidence
+## Latest evidence
 
-- [Run #41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795): completed successfully on main commit \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
-- Earlier detailed verifier evidence recorded 25 generated pages, 13 educational guides, 29 static files and 700 checked local links in run [#41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724).
+- [CI run #41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795): success on main commit \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+- [Pages deployment run #41932129872](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872): success.
+- Detailed prior verifier output: 25 generated pages, 13 guides, 29 files and 700 local links in [run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724).
 
-Do not infer that a later run performed a browser test merely because the build workflow passed.
+## Agent 6 QA PR — not yet merged
 
-## Not currently automated
+Agent 6 PR #6 adds a separate Playwright/Chromium workflow, public-route smoke tests, unit tests for a CMS mutation safety gate, and conditional bilingual/Admin API tests. The PR states that feature-specific tests are skipped until the corresponding implementations are integrated. CMS mutations are disabled by default and block production hostnames.
 
-- Playwright or other browser E2E tests.
-- Language switcher and translated-route tests.
-- Admin UI, authentication or API tests.
+Important integration mismatch: current Agent 6 localization tests refer to \`/zh/\`, while Agent 0's Proposed contract specifies \`/zh-cn/\`. Align tests before the bilingual acceptance gate is enabled. Do not report conditional or skipped tests as PASS.
+
+## Not currently automated in main
+
+- Playwright/browser E2E.
+- Bilingual route and switcher tests.
+- Admin UI/API/auth tests.
 - Media upload tests.
 - Browser-level custom-domain smoke tests.
-- Screen-reader testing or a formal accessibility audit.
-- Full visual regression testing.
+- Formal screen-reader/accessibility audit.
+- Visual regression tests.
 
 ## Manual pre-release checklist
 
-- [ ] Home page, all four collection indexes and representative detail pages load.
+- [ ] Home, collection indexes and representative detail pages load.
 - [ ] Events page displays its honest empty state.
 - [ ] About, Contact, Editorial Policy, Privacy and Accessibility pages load.
 - [ ] 404 behavior is correct.
-- [ ] Header and mobile navigation work with mouse, touch and keyboard.
-- [ ] Focus indicators and skip link are visible and usable.
+- [ ] Header/mobile navigation work with mouse, touch and keyboard.
+- [ ] Focus indicators and skip link are usable.
 - [ ] Text remains readable at mobile widths and 200% zoom.
-- [ ] Color contrast and headings are reviewed.
+- [ ] Contrast and heading hierarchy are reviewed.
 - [ ] Chinese characters display correctly.
 - [ ] External sources and image rights are checked.
-- [ ] No unexpected console errors, third-party trackers or network calls appear.
-- [ ] Apex domain is active; \`www\` is tested after validation completes.
-- [ ] Deployment commit SHA matches the intended \`main\` commit.
+- [ ] No unexpected console errors or third-party trackers appear.
+- [ ] Apex and www HTTPS/redirect behavior is tested externally.
+- [ ] Deployment commit SHA matches intended \`main\`.
 
-## Run locally
+## Run current checks locally
 
 ~~~bash
 npm install
@@ -67,4 +72,4 @@ npm run verify
 npm run preview
 ~~~
 
-See [development guide](development-guide.md) and [deployment guide](deployment-guide.md).
+After Agent 6's QA PR is merged, follow its test commands and reports in addition to the static verifier.

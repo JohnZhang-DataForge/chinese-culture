@@ -1,6 +1,6 @@
 # Custom Domain Architecture
 
-**Status:** DNS and Pages domain configuration exist; apex is active and \`www\` validation remains pending.  
+**Status:** Cloudflare configuration and Pages domain validation active; external HTTP/TLS smoke test not yet evidenced.  
 **Last checked:** 2026-11-05.
 
 ## Hostname design
@@ -8,17 +8,16 @@
 - Canonical hostname: \`https://chinese-culture.site\`.
 - Alternate hostname: \`https://www.chinese-culture.site\`.
 - Pages origin hostname: \`chinese-culture-79h.pages.dev\`.
-- \`www\` is intended to redirect permanently to the apex hostname.
+- \`www\` permanently redirects to the apex.
+- HTTP requests to the apex redirect to HTTPS.
 
 ~~~mermaid
 flowchart TD
-  A[Reader requests www.chinese-culture.site] --> B[Cloudflare DNS]
-  B --> C[Proxied CNAME to Pages hostname]
-  C --> D[Enabled 301 redirect rule]
-  D --> E[https://chinese-culture.site plus same path and query]
-  F[Reader requests apex] --> G[Cloudflare DNS]
-  G --> H[Proxied CNAME to Pages hostname]
-  H --> I[Cloudflare Pages project]
+  A[Reader requests www] --> B[Cloudflare DNS]
+  B --> C[Proxied CNAME to Pages]
+  C --> D[301 to HTTPS apex]
+  E[Reader requests apex over HTTP] --> F[301 to HTTPS apex]
+  G[Reader requests apex over HTTPS] --> H[Cloudflare Pages project]
 ~~~
 
 ## Verified Cloudflare configuration
@@ -28,50 +27,44 @@ flowchart TD
 | Zone | \`chinese-culture.site\` |
 | Zone ID | \`e45789915a45279977315fb99f1fae11\` |
 | Zone status | \`active\` |
+| Nameservers | \`aleena.ns.cloudflare.com\`, \`trevor.ns.cloudflare.com\` |
 | Pages project | \`chinese-culture\` |
+| Pages hostname | \`chinese-culture-79h.pages.dev\` |
 | Apex CNAME | \`chinese-culture.site → chinese-culture-79h.pages.dev\` |
 | WWW CNAME | \`www.chinese-culture.site → chinese-culture-79h.pages.dev\` |
 | DNS proxy | Both CNAME records report \`proxied=true\` |
-| Nameservers | \`aleena.ns.cloudflare.com\`, \`trevor.ns.cloudflare.com\` |
-
-The apex and \`www\` CNAME records were created on 2026-11-04 at approximately 23:33 UTC. The Pages custom-domain records were created shortly beforehand.
 
 ## Current Pages validation state
 
-The latest individual Pages domain reads returned:
+The latest Cloudflare Pages custom-domain API read returned:
 
 | Hostname | Pages status | Verification | HTTP validation |
 |---|---|---|---|
 | \`chinese-culture.site\` | \`active\` | \`active\` | \`active\` |
-| \`www.chinese-culture.site\` | \`pending\` | \`active\` | \`pending\` |
+| \`www.chinese-culture.site\` | \`active\` | \`active\` | \`active\` |
 
-Do not describe both hostnames as fully active until the \`www\` validation completes. The Pages project itself has a successful production deployment on the \`pages.dev\` hostname.
+Cloudflare's Universal SSL certificate pack is also active and covers \`chinese-culture.site\` and \`*.chinese-culture.site\`. The primary certificate issuer is Let's Encrypt; the current certificate expiry reported by the API is \`2027-02-01T12:18:46Z\`. Zone SSL mode is \`Full\`.
 
-## WWW redirect rule
+## Redirect ruleset
 
 Cloudflare zone ruleset:
 
 - Name: \`Chinese Culture hostname redirects\`.
+- ID: \`cd7bbdc493d24ff4a73fd0d1c5e8aaae\`.
 - Phase: \`http_request_dynamic_redirect\`.
-- Rule: \`http.host eq "www.chinese-culture.site"\`.
-- Action: 301 redirect to \`https://chinese-culture.site\` plus the original URI path.
-- Query string: preserved.
-- Rule enabled: yes.
+- Version: \`4\`.
 
-The rule was read from the Cloudflare API; a DNS record comment alone would not prove that a redirect exists.
+Enabled rules:
 
-## Validation troubleshooting
+1. \`www_to_apex_chinese_culture\`: host \`www.chinese-culture.site\` → 301 to HTTPS apex; preserves path and query.
+2. \`apex_http_to_https_chinese_culture\`: HTTP apex → HTTPS apex; preserves path and query.
 
-Cloudflare Pages uses HTTP validation for these custom domains. Cloudflare's Pages troubleshooting guidance notes that Access policies, redirects, Workers or WAF rules can interfere with HTTP validation. Because the \`www\` hostname has a redirect rule and remains pending, investigate rather than assume the cause:
+Both rules explicitly exclude \`/.well-known/acme-challenge/\* \` so Pages HTTP certificate validation requests are not redirected.
 
-1. Read the current Pages domain status again.
-2. Test the HTTP validation path for the pending hostname, for example \`curl -s -o /dev/null -D - https://www.chinese-culture.site/.well-known/acme-challenge/randomstring\`.
-3. Check the response status and \`Location\` header. Confirm whether the validation request is being redirected.
-4. Coordinate any temporary rule adjustment with the Cloudflare infrastructure owner. Do not disable or delete the rule speculatively.
-5. Re-check Pages validation and certificate status after any approved change.
+## External verification limitation
 
-Official guidance: [Cloudflare Pages custom-domain troubleshooting](https://developers.cloudflare.com/pages/configuration/debugging-pages/) and [custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/).
+Cloudflare's API confirms domain validation and active certificate provisioning. The execution environment could not resolve the hostnames for an independent HTTP request, so no external HTTP 200/301 response or client TLS handshake is claimed. Complete the workstation smoke tests in [domain DNS change log](../operations/domain-dns-change-log.md) before marking the public cutover fully externally verified.
 
 ## Change safety
 
-Before changing DNS, export or record existing records, confirm the Pages project and custom-domain mapping, and change only the intended hostname. Do not replace nameservers or delete unrelated records as a routine troubleshooting step.
+Before changing DNS, export or record existing records, confirm the Pages project and custom-domain mapping, and change only the intended hostname. Do not replace nameservers or delete unrelated records as routine troubleshooting.

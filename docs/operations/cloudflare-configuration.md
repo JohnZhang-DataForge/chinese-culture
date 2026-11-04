@@ -1,7 +1,7 @@
 # Cloudflare Configuration
 
 **Last verified:** 2026-11-05.  
-**Purpose:** Record the actual Cloudflare resources used by the site. Identifiers are not secrets; token values must never be documented.
+**Purpose:** Record actual Cloudflare resources used by the site. Identifiers are not secrets; token values must never be documented.
 
 ## Account and zone
 
@@ -11,7 +11,8 @@
 | Zone | \`chinese-culture.site\` |
 | Zone ID | \`e45789915a45279977315fb99f1fae11\` |
 | Zone status | \`active\` |
-| Cloudflare nameservers | \`aleena.ns.cloudflare.com\`, \`trevor.ns.cloudflare.com\` |
+| Zone plan | Free Website |
+| Nameservers | \`aleena.ns.cloudflare.com\`, \`trevor.ns.cloudflare.com\` |
 | Registrar reported by Cloudflare | GoDaddy |
 
 ## Pages project
@@ -28,8 +29,6 @@
 | Pages Functions | Disabled (\`uses_functions=false\`) |
 | Compatibility date | \`2026-11-04\` |
 
-The successful deployment was created at \`2026-11-04T23:15:15Z\`; its deploy stage completed successfully at \`2026-11-04T23:15:17Z\`.
-
 ## DNS records
 
 | Name | Type | Target | Proxy |
@@ -37,21 +36,51 @@ The successful deployment was created at \`2026-11-04T23:15:15Z\`; its deploy st
 | \`chinese-culture.site\` | CNAME | \`chinese-culture-79h.pages.dev\` | Proxied |
 | \`www.chinese-culture.site\` | CNAME | \`chinese-culture-79h.pages.dev\` | Proxied |
 
-## Custom-domain status
+## Pages custom-domain status
 
-- \`chinese-culture.site\`: Pages domain status \`active\`; verification \`active\`; HTTP validation \`active\`.
-- \`www.chinese-culture.site\`: Pages domain status \`pending\`; verification \`active\`; HTTP validation \`pending\`.
+Both custom domains now report active status:
 
-The enabled redirect ruleset \`Chinese Culture hostname redirects\` returns 301 from \`www\` to the apex, preserving path and query string. Cloudflare's Pages troubleshooting guidance notes that redirects can interfere with HTTP validation. If \`www\` remains pending, inspect the ACME HTTP validation response and coordinate with the infrastructure owner before changing the rule.
+| Hostname | Pages status | Verification | HTTP validation |
+|---|---|---|---|
+| \`chinese-culture.site\` | \`active\` | \`active\` | \`active\` |
+| \`www.chinese-culture.site\` | \`active\` | \`active\` | \`active\` |
+
+## TLS / SSL
+
+- Zone SSL mode: \`Full\`.
+- Universal SSL enabled: yes.
+- Certificate pack ID: \`77a41fd9-ed00-4e22-8b23-9ccfbf111a1c\`.
+- Certificate pack status: \`active\`.
+- Covered hosts: \`chinese-culture.site\`, \`*.chinese-culture.site\`.
+- Primary issuer: Let's Encrypt.
+- Certificate expiry returned by API: \`2027-02-01T12:18:46Z\`.
+
+A Google Trust Services backup pack was not needed to establish the active primary certificate status. Re-check live API state before certificate renewal or DNS work.
+
+## Redirect ruleset
+
+Ruleset \`Chinese Culture hostname redirects\` (\`cd7bbdc493d24ff4a73fd0d1c5e8aaae\`) is enabled at version 4:
+
+- \`www_to_apex_chinese_culture\`: 301 from www to HTTPS apex, preserving path and query.
+- \`apex_http_to_https_chinese_culture\`: 301 from HTTP apex to HTTPS apex, preserving path and query.
+- Both rules exclude \`/.well-known/acme-challenge/\* \`.
 
 ## Repository deployment settings
 
 - GitHub Actions secret: \`CLOUDFLARE_API_TOKEN\`.
-- The workflow embeds the account ID; it is not a secret.
+- Account ID is embedded in the workflow; it is not a secret.
 - Wrangler action: \`cloudflare/wrangler-action@v4\`.
 - Deploy command: \`pages deploy dist --project-name=chinese-culture --branch=main\`.
-- Build output directory: \`./dist\`.
-- No Pages Functions, database bindings or Worker entrypoint are configured.
+- Build output: \`./dist\`.
+- No Pages Functions, database bindings or Worker entrypoint are configured in current main.
+
+## Verification caveat
+
+Cloudflare API confirms Pages domain validation and active Universal SSL provisioning. Agent 1's cutover report could not complete independent HTTP/TLS checks because its execution environment could not resolve the tested hosts, including the existing pages.dev hostname. Complete external workstation smoke tests before claiming public response-chain verification.
+
+## Future Admin Worker
+
+Agent 0's Proposed architecture specifies a separate Worker for \`/api/admin/v1/*\`; it is not part of the current Pages project. Agent 5's backend branch currently contains Pages Functions, which conflicts with the proposal and must be reconciled before deployment.
 
 ## Operational links
 
@@ -61,4 +90,4 @@ The enabled redirect ruleset \`Chinese Culture hostname redirects\` returns 301 
 - [DNS change log](domain-dns-change-log.md)
 - [Deployment guide](../implementation/deployment-guide.md)
 
-Re-read the live Cloudflare configuration before making a change. Do not assume this snapshot remains current indefinitely.
+Re-read live Cloudflare configuration before making changes.

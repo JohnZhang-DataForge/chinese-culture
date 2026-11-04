@@ -1,49 +1,46 @@
 # Bilingual Routing
 
-**Current status:** Not implemented in the inspected \`main\` source.  
-**Contract status:** Agent 0's approved localization/OpenSpec contract was not present on \`main\` at the time of this documentation snapshot.
+**Current status:** Not implemented in \`main\`.  
+**Target contract:** Agent 0 OpenSpec PR #3, Proposed (not yet Ready or merged).
 
 ## Current behavior
 
-The site currently has one English route tree:
+The current source has one English route tree:
 
 - \`/\`
 - \`/learn/\` and \`/learn/<slug>/\`
 - \`/culture/\` and \`/culture/<slug>/\`
 - \`/festivals/\` and \`/festivals/<slug>/\`
 - \`/books/\` and \`/books/<slug>/\`
-- \`/events/\` and the English information pages
+- \`/events/\` and English information pages
 
-\`src/layouts/BaseLayout.astro\` emits \`<html lang="en">\`. Navigation links are hard-coded English paths. There is no locale switcher, locale preference storage, \`/en/\` or \`/zh/\` route tree, language-aware route resolver, canonical link or \`hreflang\` output in the inspected layout.
+\`src/layouts/BaseLayout.astro\` emits \`<html lang="en">\`. Navigation is hard-coded in English. There is no locale switcher, locale resolver, \`/en/\` or \`/zh-cn/\` route tree, canonical URL or \`hreflang\` output in the inspected main source.
 
-## Required design contract before implementation
+## Agent 0 proposed route contract
 
-The final routing rules must come from Agent 0's approved contract. This document intentionally does not establish a competing route contract. The contract must settle:
+The Proposed locale contract in PR #3 defines:
 
-- Whether \`/en/\` and \`/zh/\` are the canonical localized prefixes.
-- What the root path \`/\` does for first-time and returning visitors.
-- How existing unprefixed English URLs are preserved or redirected.
-- How a language switch maps to the equivalent content page.
-- What happens when a translation is missing.
-- Whether and how language preference is remembered.
-- Canonical URLs, alternate-language links, and HTML \`lang\` values.
-- Trailing-slash and 404 behavior for each locale.
+- Locale identifiers: \`en\` and \`zh-CN\`.
+- URL segments: \`en\` and \`zh-cn\`.
+- Public route pattern: \`/{localeSegment}/{section}/{slug}/\`.
+- Sections: \`learn\`, \`culture\`, \`festivals\`, \`books\`, \`events\`.
+- Root \`/\` redirects to \`/en/\`.
+- Existing unprefixed routes redirect to the matching \`/en/\` route.
+- Existing English content slugs remain stable during the initial migration.
+- Language switching resolves the counterpart using shared \`contentId\`, never by assuming slugs match.
+- If a translation is not published, do not link to a broken/draft URL; show the language as unavailable or fall back to the locale index.
+- Localized pages emit correct \`lang\`, canonical and alternate \`hreflang\` metadata.
 
-The Agent 2 task brief proposes \`/en/\` and \`/zh/\`, English as the root default and preservation of existing English URLs. Treat those as implementation requirements to reconcile with Agent 0, not as behavior that exists today.
+The contract is Proposed, not Ready. Use it as the integration target only after Agent 0 merges it and announces the freeze.
 
-## Current compatibility rule
+## Cross-agent mismatch to resolve
 
-Do not rename or move existing content files merely to simulate localization. Existing public URLs are live on the Pages deployment. Any route migration must include explicit redirects and tests for the old URLs.
+Agent 6's current QA PR #6 refers to \`/zh/\` in its conditional tests. Agent 0's proposed contract uses \`/zh-cn/\`. The QA tests must be updated to the agreed path before the bilingual release gate is enabled. Agent 2 must also align its implementation with the frozen contract.
 
-## Verification expected after implementation
+## Compatibility requirements
 
-The routing implementation should be documented only after source inspection and tests prove:
+Do not rename existing English content slugs without explicit redirects. Verify every legacy unprefixed route redirects to its equivalent \`/en/\` route without loops. Do not silently serve an English page under a Chinese URL.
 
-- Both locale home pages render with correct \`lang\`.
-- Every translated content pair resolves to the intended equivalent page.
-- The switcher preserves page context where a translation exists.
-- Missing translations have the contract-defined fallback.
-- Old URLs resolve as specified.
-- Canonical and alternate-language metadata match actual routes.
+## Verification after implementation
 
-See [localization guide](../implementation/localization-guide.md) and [localization content model](localization-content-model.md).
+Test both locale home pages, collection/detail pages, equivalent-page switching, missing translation behavior, root redirect, legacy redirects, trailing slashes, 404s, HTML \`lang\`, canonical URLs and reciprocal \`hreflang\`.
