@@ -3,7 +3,7 @@
 **Updated:** 2026-11-04  
 **Stage:** MVP source merged to `main`; Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits a one-time dashboard upload or protected API token.  
 **Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
-**Latest main:** [791b1dc](https://github.com/JohnZhang-DataForge/chinese-culture/commit/658088da09400449d09a0fdcbe1111a09efa724a).
+**Main branch:** [main](https://github.com/JohnZhang-DataForge/chinese-culture/tree/main).
 
 ## Implemented in source
 
