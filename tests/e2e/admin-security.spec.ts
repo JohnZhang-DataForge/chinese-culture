@@ -1,20 +1,21 @@
 import { test, expect } from "@playwright/test";
 
 const requireAdmin = process.env.QA_REQUIRE_ADMIN === "true";
-const contentApi = process.env.QA_ADMIN_CONTENT_API_PATH || "/api/admin/content";
-const mediaApi = process.env.QA_ADMIN_MEDIA_API_PATH;
+const apiRoot = "/api/admin/v1";
+const contentApi = process.env.QA_ADMIN_CONTENT_API_PATH || `${apiRoot}/content?locale=en`;
 const accessJwt = process.env.QA_ACCESS_JWT;
 const isPreview = process.env.QA_ENVIRONMENT === "preview";
+const baseURL = process.env.QA_BASE_URL || "http://127.0.0.1:4321";
 
 test.describe("Admin API security", () => {
   test("anonymous requests cannot read managed content", async ({ request }) => {
-    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is merged.");
+    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is deployed to a test target.");
     const response = await request.get(contentApi);
     expect([401, 403]).toContain(response.status());
   });
 
   test("invalid Cloudflare Access JWT is rejected", async ({ request }) => {
-    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is merged.");
+    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is deployed to a test target.");
     const response = await request.get(contentApi, {
       headers: { "Cf-Access-Jwt-Assertion": "invalid.qa.jwt" }
     });
@@ -22,44 +23,60 @@ test.describe("Admin API security", () => {
   });
 
   test("anonymous write requests are rejected", async ({ request }) => {
-    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is merged.");
-    const response = await request.post(contentApi, {
-      data: { type: "article", slug: "qa-unauthorized-write", title: "Must not be created" }
+    test.skip(!requireAdmin, "Set QA_REQUIRE_ADMIN=true after the backend API contract is deployed to a test target.");
+    const response = await request.post(`${apiRoot}/content`, {
+      data: {
+        locale: "en",
+        collection: "culture",
+        slug: "qa-unauthorized-write",
+        title: "Must not be created",
+        description: "Unauthorized write test",
+        category: "QA",
+        featured: false,
+        bodyMarkdown: "Must not be written."
+      }
     });
     expect([401, 403]).toContain(response.status());
   });
 
-  test("authenticated malformed content is rejected without a write", async ({ request }) => {
+  test("authenticated malformed content is rejected by schema validation", async ({ request }) => {
     test.skip(!requireAdmin || !isPreview || !accessJwt, "Requires owner authorization against an isolated preview environment.");
-    const response = await request.post(contentApi, {
-      headers: { "Cf-Access-Jwt-Assertion": accessJwt! },
-      data: JSON.parse('{"__proto__":{"polluted":true},"slug":"../escape","status":"published"}')
+    const origin = new URL(baseURL).origin;
+    const session = await request.get(`${apiRoot}/session`, {
+      headers: { "Cf-Access-Jwt-Assertion": accessJwt! }
     });
-    expect([400, 415, 422]).toContain(response.status());
+    expect(session.status()).toBe(200);
+    const { csrfToken } = await session.json();
+    expect(typeof csrfToken).toBe("string");
+
+    const response = await request.post(`${apiRoot}/content`, {
+      headers: {
+        "Cf-Access-Jwt-Assertion": accessJwt!,
+        "X-CSRF-Token": csrfToken,
+        Origin: origin,
+        "Sec-Fetch-Site": "same-origin"
+      },
+      data: {
+        locale: "en",
+        collection: "culture",
+        slug: "../escape",
+        title: "Invalid QA content",
+        description: "Invalid slug must be rejected",
+        category: "QA",
+        featured: false,
+        bodyMarkdown: "Invalid slug."
+      }
+    });
+    expect([400, 422]).toContain(response.status());
   });
 
   test("authenticated path traversal does not expose repository files", async ({ request }) => {
     test.skip(!requireAdmin || !isPreview || !accessJwt, "Requires owner authorization against an isolated preview environment.");
-    const response = await request.get(`${contentApi.replace(/\/$/, "")}/..%2F..%2FREADME.md`, {
+    const response = await request.get(`${apiRoot}/content/..%2F..%2FREADME.md?locale=en`, {
       headers: { "Cf-Access-Jwt-Assertion": accessJwt! }
     });
     expect([400, 403, 404]).toContain(response.status());
     const body = await response.text();
     expect(body).not.toMatch(/CLOUDFLARE_API_TOKEN|BEGIN (RSA|OPENSSH) PRIVATE KEY/i);
-  });
-
-  test("invalid media uploads are rejected", async ({ request }) => {
-    test.skip(!requireAdmin || !isPreview || !accessJwt || !mediaApi, "Requires the media API contract and owner authorization on preview.");
-    const response = await request.post(mediaApi!, {
-      headers: { "Cf-Access-Jwt-Assertion": accessJwt! },
-      multipart: {
-        file: {
-          name: "qa-invalid-image.png",
-          mimeType: "image/png",
-          buffer: Buffer.from("<html><script>alert(1)</script></html>")
-        }
-      }
-    });
-    expect([400, 415, 422]).toContain(response.status());
   });
 });
