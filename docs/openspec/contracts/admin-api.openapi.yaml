@@ -39,6 +39,12 @@ paths:
       operationId: listContent
       summary: List conceptual content items, their locale variants and CMS drafts
       parameters:
+        - name: locale
+          in: query
+          required: false
+          description: Filter to groups containing this locale; each returned group still includes all available locale summaries.
+          schema:
+            $ref: '#/components/schemas/Locale'
         - name: collection
           in: query
           schema:
