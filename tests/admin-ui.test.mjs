@@ -16,6 +16,7 @@ test("filters content by title, ID, status and translation completeness", () => 
   assert.equal(filterContent(records,{query:"brush"}).length,1);
   assert.equal(filterContent(records,{query:"two"}).length,1);
   assert.equal(filterContent(records,{status:"draft"}).length,1);
+  assert.equal(filterContent([{...records[0],status:"mixed",statuses:["published","draft"]}],{status:"published"}).length,1);
   assert.equal(filterContent(records,{language:"complete"}).length,2);
   assert.equal(filterContent(records,{language:"missing-zh"}).length,1);
 });

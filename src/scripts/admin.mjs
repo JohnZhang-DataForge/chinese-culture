@@ -300,7 +300,7 @@ if (root) {
       const variant = value.variants?.[locale] || null;
       const demo = value.locales?.[locale] || null;
       setField("title." + suffix,variant?.title ?? demo?.title ?? value.title?.[suffix] ?? "");
-      setField("slug." + suffix,variant?.slug ?? demo?.slug ?? (locale === "en" ? value.slug : "") ?? "");
+      setField("slug." + suffix,variant?.slug ?? demo?.slug ?? value.slug ?? "");
       setField("description." + suffix,variant?.description ?? demo?.description ?? value.description?.[suffix] ?? "");
       setField("body." + suffix,variant?.bodyMarkdown ?? demo?.bodyMarkdown ?? value.body?.[suffix] ?? "");
       setField("category." + suffix,variant?.category ?? demo?.category ?? value.categories?.[suffix] ?? value.category ?? "");
@@ -343,6 +343,8 @@ if (root) {
     const editorItem = item ? {...item,variants:state.variants} : null;
     populateEditor(editorItem);
     state.submissions = [];
+    const prLink=$("[data-pr-link]");
+    if(prLink){prLink.hidden=true;prLink.removeAttribute("href");}
     $("[data-editor-heading]").textContent = item ? "Edit content" : "Create " + collectionNames[state.collection].singular;
     updateTranslationIndicators();
     updateStatusControls();
