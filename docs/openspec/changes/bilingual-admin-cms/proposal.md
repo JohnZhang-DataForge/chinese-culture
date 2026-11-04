@@ -75,7 +75,7 @@ The next increment must add those capabilities without replacing the current des
 - **SEC-001:** Admin pages and Admin API SHALL be protected by Cloudflare Access.
 - **SEC-002:** The Pages Functions middleware SHALL independently verify the Cloudflare Access JWT signature, issuer, audience, expiry and identity; trusting the presence of a header alone is prohibited.
 - **SEC-003:** The Pages Functions middleware SHALL enforce an explicit administrator/editor allowlist or role mapping.
-- **SEC-004:** GitHub App credentials SHALL remain in Worker secrets. No GitHub token or private key may reach browser code, HTML, local storage or logs.
+- **SEC-004:** GitHub App credentials SHALL remain in Pages Functions secrets. No GitHub token or private key may reach browser code, HTML, local storage or logs.
 - **SEC-005:** The Pages Functions API SHALL validate request origin, CSRF protection, input schema, media type, media size and path safety.
 - **SEC-006:** The GitHub App SHALL have only repository metadata read, contents read/write and pull-request read/write permissions required by the workflow.
 - **SEC-007:** The API SHALL use optimistic concurrency and return 409 on stale content revisions.

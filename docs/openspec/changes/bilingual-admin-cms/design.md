@@ -135,7 +135,7 @@ Create a GitHub App installed only on JohnZhang-DataForge/chinese-culture. Minim
 
 No organization administration, Actions administration, secrets, workflow write, issues write or repository administration permission is required for content editing.
 
-Store App ID, installation ID and private key as Pages Functions secrets. The Worker signs a short-lived App JWT, exchanges it for an installation access token and keeps the token only in server-side ephemeral memory until expiry. Never return it to the browser or include it in logs.
+Store App ID, installation ID and private key as Pages Functions secrets. The Pages Functions runtime signs a short-lived App JWT, exchanges it for an installation access token and keeps the token only in server-side ephemeral memory until expiry. Never return it to the browser or include it in logs.
 
 ## 6. Content source layout
 
@@ -268,12 +268,12 @@ The Pages workflow deploys only after main receives a reviewed merge. Pages Func
 | Risk | Mitigation |
 |---|---|
 | Draft content leaks | Build includes only status=published; tests assert draft/unpublished absent |
-| GitHub credential exposure | GitHub App private key and tokens are Worker secrets only |
-| Unauthorized CMS access | Access edge policy plus Worker JWT verification and role checks |
+| GitHub credential exposure | GitHub App private key and tokens are Pages Functions secrets only |
+| Unauthorized CMS access | Access edge policy plus Pages Functions JWT verification and role checks |
 | Concurrent edits overwrite each other | If-Match SHA and 409 conflict handling |
 | Translation routes mismatch | Shared contentId and translation validation |
 | Malicious media upload | MIME signature checks, strict allowlist, 8 MiB limit, SVG rejected |
-| PR merge bypass | Worker has no merge endpoint; main protection and required checks |
+| PR merge bypass | Pages Functions have no merge endpoint; main protection and required checks |
 | Existing links break | Legacy redirects and route compatibility tests |
 | Cloudflare cost grows unexpectedly | Static public pages, admin-only Worker execution, no database/R2 in MVP |
 | Documentation becomes stale | Agent 7 updates status/change log; Agent 0 signs off integration |

@@ -105,10 +105,10 @@
 
 - [ ] P7.1 Update README and documentation index to reflect actual bilingual/CMS architecture.
 - [ ] P7.2 Update repository map, content authoring guide and localization guide.
-- [ ] P7.3 Document Access, GitHub App, Worker secret setup without exposing values.
+- [ ] P7.3 Document Access, GitHub App, Pages Functions secret setup without exposing values.
 - [ ] P7.4 Document CMS user guide and editorial publishing lifecycle.
 - [ ] P7.5 Document media rights/alt text policy and upload constraints.
-- [ ] P7.6 Document domain, DNS, Pages/Worker deployment and rollback.
+- [ ] P7.6 Document domain, DNS, Pages/Functions deployment and rollback.
 - [ ] P7.7 Reconcile stale statements in existing status and deployment docs.
 - [ ] P7.8 Publish release evidence and known limitations.
 

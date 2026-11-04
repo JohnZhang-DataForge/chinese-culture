@@ -68,7 +68,7 @@ paths:
             default: 25
       responses:
         '200':
-          description: Paged content variants
+          description: Paged conceptual content groups with locale variants
           content:
             application/json:
               schema:
@@ -249,7 +249,7 @@ paths:
       summary: Upload an image to the current CMS branch
       description: >
         Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and
-        AVIF. SVG, HTML and other formats are rejected. The Worker validates
+        AVIF. SVG, HTML and other formats are rejected. The Pages Function validates
         file signatures and commits the asset to the CMS branch.
       security:
         - CloudflareAccess: []
