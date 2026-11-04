@@ -24,6 +24,11 @@ jobs:
       QA_REQUIRE_BILINGUAL: ${{ vars.QA_REQUIRE_BILINGUAL || 'false' }}
       QA_REQUIRE_ADMIN: ${{ vars.QA_REQUIRE_ADMIN || 'false' }}
       QA_ENVIRONMENT: ${{ vars.QA_ENVIRONMENT || 'ci' }}
+      QA_BASE_URL: ${{ vars.QA_BASE_URL }}
+      QA_ACCESS_JWT: ${{ secrets.QA_ACCESS_JWT }}
+      QA_TEST_CONTENT_PREFIX: ${{ vars.QA_TEST_CONTENT_PREFIX || 'qa-ci' }}
+      QA_ENABLE_CMS_MUTATIONS: ${{ vars.QA_ENABLE_CMS_MUTATIONS || 'false' }}
+      QA_ADMIN_CONTENT_API_PATH: /api/admin/v1/content?locale=en
     steps:
       - name: Check out source
         uses: actions/checkout@v7
