@@ -1,7 +1,7 @@
 # Shared Content Contract v1
 
 **Contract ID:** CC-CONTENT-001  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Owner:** Agent 0  
 **Consumers:** Agent 2 (Astro schema/routing), Agent 3 (migration/translation), Agent 4 (CMS forms), Agent 5 (API validation), Agent 6 (tests).
 
@@ -35,6 +35,8 @@ A locale variant is a full editorial document, not a machine-generated runtime o
 | slug | string | yes | Locale-specific kebab-case slug; unique per collection/locale |
 | title | string | yes | Non-empty localized title |
 | description | string | yes | Non-empty localized summary; plain text |
+| seoTitle | string | no | Localized SEO title; falls back to title |
+| seoDescription | string | no | Localized SEO description; falls back to description |
 | category | string | yes | Localized display label |
 | status | enum | yes | draft, published, unpublished |
 | featured | boolean | yes | Defaults false; only public when status=published |
@@ -134,12 +136,13 @@ Save Draft always persists status=draft on the CMS branch. Submit-for-review cre
 6. featured must be a boolean.
 7. publishedAt is required when status is published.
 8. updatedAt must parse as ISO 8601.
-9. contentId/locale must be unique across the repository.
-10. collection/locale/slug must be unique.
-11. zh-CN records must contain Simplified Chinese content; en records use English as the primary language.
-12. Every image in a published record must have alt and rights metadata.
-13. No draft or unpublished record may generate a public route, sitemap entry, public search record or featured card.
-14. Content source links must be HTTPS; redirects and external URL status are checked by QA where feasible.
+9. seoTitle and seoDescription, when present, must be non-empty plain text within API length limits; otherwise public metadata falls back to title and description.
+10. contentId/locale must be unique across the repository.
+11. collection/locale/slug must be unique.
+12. zh-CN records must contain Simplified Chinese content; en records use English as the primary language.
+13. Every image in a published record must have alt and rights metadata.
+14. No draft or unpublished record may generate a public route, sitemap entry, public search record or featured card.
+15. Content source links must be HTTPS; redirects and external URL status are checked by QA where feasible.
 
 ## 8. Migration from current main
 

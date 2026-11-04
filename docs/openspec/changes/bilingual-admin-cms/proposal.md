@@ -46,6 +46,9 @@ The next increment must add those capabilities without replacing the current des
 - Replacing the existing visual identity or rewriting existing editorial content without review.
 - General-purpose public content APIs.
 - R2 as the primary media store in this increment. Git-backed media is the agreed MVP path; R2 requires a separate decision if repository/Pages limits become a real constraint.
+- Global media-library search, homepage configuration and navigation/site-settings editing in the first release; uploaded media is inserted into the current content variant, and these broader screens remain deferred.
+- Hard deletion of published content; published records are removed from public output through the reviewed unpublish workflow and retained in Git history.
+- Admin-managed category/tag taxonomy; categories remain localized content metadata and tags are simple per-variant strings in this release.
 
 ## Normative requirements
 
@@ -93,6 +96,7 @@ The next increment must add those capabilities without replacing the current des
 - **CMS-008:** Unpublish SHALL submit a PR revision with status unpublished. The page disappears from the public build only after merge and deployment.
 - **CMS-009:** No endpoint SHALL merge a PR or bypass GitHub branch protection.
 - **CMS-010:** The CMS SHALL show the branch, commit SHA, PR URL and publishing state so editors can see what is saved, under review or live.
+- **CMS-011:** Published or unpublished content SHALL NOT be hard-deleted through the CMS; removal from public pages SHALL use a reviewed unpublish PR and preserve Git history.
 
 ### Platform and deployment
 

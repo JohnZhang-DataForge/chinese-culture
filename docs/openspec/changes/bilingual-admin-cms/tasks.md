@@ -85,6 +85,7 @@
 - [ ] P5.7 Implement save draft and submit-review/publish/unpublish actions.
 - [ ] P5.8 Display revision SHA, PR link, checks and publication status.
 - [ ] P5.9 Add keyboard, responsive and accessibility tests.
+- [ ] P5.10 Hide or disable homepage settings, navigation settings and global media-library screens until their APIs are separately specified and implemented; keep media upload available in the content editor.
 
 **Exit:** End-to-end browser workflow works against the Agent 5 API in a non-production environment.
 

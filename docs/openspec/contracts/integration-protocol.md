@@ -19,8 +19,8 @@
 ## 2. Contract freeze and change control
 
 Shared contracts:
-- CC-CONTENT-001 v1.0.0: contracts/content-schema.md.
-- Admin API OpenAPI 3.1.0 v1.0.0: contracts/admin-api.openapi.yaml.
+- CC-CONTENT-001 v1.1.0: contracts/content-schema.md.
+- Admin API OpenAPI 3.1.0 v1.1.0: contracts/admin-api.openapi.yaml.
 - Locale URL contract: proposal.md and design.md.
 
 Agents 2/3 and 4/5 must consume the exact versions above. If an implementation requirement conflicts:

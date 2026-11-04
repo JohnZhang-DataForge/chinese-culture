@@ -66,8 +66,8 @@ The PR must not claim a production feature is complete based only on source code
 ## 5. Contract readiness announcement
 
 Agent 0 will publish a GitHub issue/comment and update this document when:
-- Content Contract CC-CONTENT-001 v1.0.0 is frozen for Agents 2 and 3.
-- Admin API OpenAPI v1.0.0 is frozen for Agents 4 and 5.
+- Content Contract CC-CONTENT-001 v1.1.0 is frozen for Agents 2 and 3.
+- Admin API OpenAPI v1.1.0 is frozen for Agents 4 and 5.
 - Ownership and merge gates are active.
 
 Until that announcement, agents may inspect and prepare but must not implement against guessed interfaces.
