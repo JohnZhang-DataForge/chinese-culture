@@ -7,18 +7,18 @@
     Private GitHub PR → editorial/code review → main
       → CI with Node.js 22 → Astro static build
       → dist/ static HTML, CSS and public assets
-      → manual future Wrangler deploy
-      → Cloudflare Workers Free Static Assets
+      → Wrangler Direct Upload
+      → Cloudflare Pages Free
       → readers (no live Node.js server)
 
 ## Concrete file and folder inventory
 
 | Location | Responsibility |
 |---|---|
-| `package.json` | Astro dependency, Wrangler CLI and dev/build/verify/deploy scripts |
+| `package.json` | Astro dependency, Wrangler CLI and dev/build/verify/Pages deploy scripts |
 | `astro.config.mjs` | Forces static output and trailing-slash URLs |
-| `wrangler.jsonc` | Cloudflare asset directory `./dist`, no `main` worker script |
-| `.github/workflows/site-ci.yml` | Install, build and verify on PR and main |
+| `wrangler.jsonc` | Cloudflare Pages build output directory `./dist` |
+| `.github/workflows/site-ci.yml` | Install, build, verify and publish a short-lived static artifact |
 | `public/favicon.svg` | Original project mark; no external image source |
 | `public/_headers` | Basic security-related response headers |
 | `public/robots.txt` | Robot instructions; indexing policy requires launch review |
@@ -41,7 +41,7 @@
 | `src/content/culture/` | Three cultural introductions |
 | `src/content/festivals/` | Three evergreen festival explainers |
 | `src/content/books/` | Two reading guides to classical works |
-| `scripts/verify-static.mjs` | Ensures expected static routes, no SSR Worker and Free file limits |
+| `scripts/verify-static.mjs` | Ensures expected static routes, no SSR Worker and Pages Free file limits |
 
 ## Current pages
 
@@ -53,4 +53,4 @@ Every PR that moves a source directory, adds a new route/data type, changes depl
 
 ## Architecture exclusions
 
-No `@astrojs/cloudflare` adapter, `src/worker` entrypoint, D1/KV/R2 database, account management, paid API, deployed Cloudflare site or continuous background jobs.
+No `@astrojs/cloudflare` adapter, Pages Functions, `src/worker` entrypoint, D1/KV/R2 database, account management, paid API or continuous background jobs.

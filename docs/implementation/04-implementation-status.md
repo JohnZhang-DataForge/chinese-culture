@@ -1,8 +1,8 @@
 # Implementation Status and Known Gaps
 
 **Updated:** 2026-11-04  
-**Stage:** MVP source merged to GitHub main through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after green CI. Embedded Worker fallback is now part of the build; public deployment and editorial launch review are the remaining gates.  
-**Hosting:** Cloudflare Workers Free. Preferred native Static Assets config remains available; an embedded-script fallback is provided for the initial deployment. Worker fallback is subject to 100,000 requests/day across the account.
+**Stage:** MVP source merged to GitHub main through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after green CI. Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits the protected API token.  
+**Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at `chinese-culture-79h.pages.dev`; no production deployment has yet been published.
 **Merged commit:** [778b5ea](https://github.com/JohnZhang-DataForge/chinese-culture/commit/778b5ea54ee9aec6120524f25aa119c5107191c9).
 
 ## Implemented in source
@@ -10,9 +10,8 @@
 | Area | Source status | Notes |
 |---|---|---|
 | Astro static project | Added | Node build time, no adapter/SSR |
-| Cloudflare static-assets config | Added | Preferred path: `dist/`, custom 404 handling, no Worker entrypoint |
-| Embedded Worker fallback | Added | Gzip-compressed static build, GET/HEAD routing, 404 and security headers |
-| Worker fallback tests | Added | Node runtime smoke checks for home, content, CSS, 404, HEAD and method rejection |
+| Cloudflare Pages config | Added | `pages_build_output_dir: ./dist`; no Functions or SSR |
+| Pages Direct Upload project | Provisioned | `chinese-culture`, production branch `main`; first upload pending token |
 | Shared layout and navigation | Added | Desktop and mobile using native HTML details |
 | Landing page | Added | Curated starter learning, articles and festivals |
 | Collection index and detail routes | Added | Generated from Markdown during build |
@@ -24,7 +23,7 @@
 | Informational pages | Added | About, contact-status, privacy, accessibility, editorial policy |
 | Responsive styles | Added | Mobile layout, focus, reduced motion |
 | Build CI | Added | GitHub Actions install/build/static verifier |
-| Public hosting | Deployment in progress | Requires live URL and browser-level smoke verification |
+| Public hosting | Project provisioned; deployment pending | Requires GitHub API token secret, first Pages deployment and browser smoke verification |
 
 ## Validation state
 
@@ -33,14 +32,14 @@ Source files are committed to a feature branch. The project must pass real depen
 ## Remaining before public launch
 
 - Keep CI passing after any change; verify all internal links in build output.
-- Publish one-day GitHub Actions artifacts for the static build and fallback Worker bundle.
+- Keep the build-only CI green and publish the one-day static build artifact.
 - Record dependency lockfile/reproducible installs after the initial build.
 - Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
 - Assign factual/editorial reviewers and check all source links and Chinese terms.
 - Replace pending public contact details with a verified method and approve privacy notice.
 - Add only real, source-verified events, or keep the empty state.
-- Establish Cloudflare Workers Free account and deploy through the embedded fallback or native Static Assets path without committing secrets.
-- Preview, validate domain/HTTPS, verify page routes and response headers, and sign off production launch.
+- Add a least-privilege Cloudflare Pages API token and account ID to GitHub Actions secrets; never commit credentials.
+- Trigger Pages Direct Upload, validate `chinese-culture-79h.pages.dev`, HTTPS, page routes and response headers, then sign off production launch.
 
 ## Explicit exclusions
 

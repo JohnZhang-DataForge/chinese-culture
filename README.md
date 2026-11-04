@@ -1,7 +1,7 @@
 # Chinese Culture Atlas
 
-**Status: MVP implementation in progress — not yet deployed publicly.**  
-**Repository:** Private GitHub · **Hosting target:** Cloudflare Workers Free / Static Assets · **Framework:** Astro (static output) + Node.js build tooling.
+**Status: MVP implementation merged; Cloudflare Pages project provisioned; first deployment awaits a protected API token.**  
+**Repository:** Private GitHub · **Hosting target:** Cloudflare Pages Free (Direct Upload) · **Framework:** Astro (static output) + Node.js build tooling.
 
 A welcoming educational website for exploring Chinese culture through beginner lessons, art, traditions, festivals and literary reading guides.
 
@@ -12,7 +12,7 @@ A welcoming educational website for exploring Chinese culture through beginner l
 - A beginner curriculum, source-linked editorial articles and reading guides stored as Markdown.
 - **Events** page with an honest empty state: no unverified event listings.
 - About, Contact (public channel pending), editorial policy, privacy, accessibility and 404 pages.
-- Cloudflare Workers Free deployment configuration with static assets only; no server adapter, SSR, database or visitor accounts.
+- Cloudflare Pages Direct Upload configuration; static assets only, no server adapter, SSR, database or visitor accounts.
 - GitHub Actions workflow for building and checking static output.
 
 ## Start locally
@@ -25,11 +25,11 @@ Requires a supported Node.js version (CI uses Node 22).
 4. Run `npm run build` to generate `dist/`.
 5. Run `npm run verify` to validate required routes and Cloudflare Free static limits.
 
-The website is **not deployed** just because the Wrangler configuration exists. Cloudflare account authorization and release checks are still required.
+The Pages project `chinese-culture` has been created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but it has no deployment yet. Add the protected GitHub Actions secrets described in the runbook, then trigger the deployment workflow.
 
-## Cloudflare deployment later
+## Cloudflare Pages deployment
 
-After the local/CI build passes and the Cloudflare account is ready, an authorized operator may run `npx wrangler login` then `npm run deploy`. This deploys **static assets** from `dist/` under the Worker name in `wrangler.jsonc`; no permanent Node.js process is created. Confirm the chosen `workers.dev` hostname and account before launching.
+Run `npm run deploy` with a least-privilege Cloudflare API token, or trigger the `Deploy Chinese Culture Atlas to Cloudflare Pages` GitHub Actions workflow after adding the repository secrets. Wrangler Direct Upload publishes only `dist/` to the existing Pages project; no Worker Functions or permanent Node.js process are deployed.
 
 See [Developer runbook](docs/implementation/05-developer-runbook.md) for all deployment gates. Do not store tokens or secrets in source control.
 
@@ -44,7 +44,7 @@ See [Developer runbook](docs/implementation/05-developer-runbook.md) for all dep
 - `src/lib/` — section metadata and route mappings.
 - `public/` — favicon, static headers and robots rules.
 - `scripts/` — static-output verification.
-- `.github/workflows/` — build-only CI.
+- `.github/workflows/` — build/test CI and credential-gated Pages deployment.
 - `docs/` — product plans, architecture decisions, structure, implementation history and operations.
 
 ## Documents

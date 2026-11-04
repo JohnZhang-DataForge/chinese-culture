@@ -11,10 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
-    "deploy": "npm run build && wrangler deploy",
-    "build:worker": "node scripts/build-embedded-worker.mjs",
-    "test:worker": "node scripts/test-embedded-worker.mjs",
-    "deploy:embedded": "npm run build && npm run verify && npm run build:worker && npm run test:worker && wrangler deploy --config wrangler.embedded.jsonc"
+    "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main"
   },
   "dependencies": {
     "astro": "^5.16.0"

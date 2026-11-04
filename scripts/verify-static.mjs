@@ -15,7 +15,8 @@ assert.ok(existsSync(dist), "Build output missing. Run npm run build.");
 for (const path of required) assert.ok(existsSync(join(dist,path)), "Missing page " + path);
 assert.ok(!existsSync(join(dist,"_worker.js")), "Detected SSR Worker output; must remain static.");
 const wrangler = readFileSync(join(root,"wrangler.jsonc"),"utf8");
-assert.ok(wrangler.includes('"directory": "./dist"'), "Wrong assets directory");
+assert.ok(wrangler.includes('"pages_build_output_dir": "./dist"'), "Wrong Pages build output directory");
+assert.ok(wrangler.includes('"name": "chinese-culture"'), "Wrong Pages project name");
 assert.ok(!/"main"\s*:/.test(wrangler), "Unexpected Worker entrypoint");
 let count=0;
 function walk(dir) {
@@ -26,7 +27,7 @@ function walk(dir) {
   }
 }
 walk(dist);
-assert.ok(count<=20000, "Exceeds Cloudflare Workers Free static asset count");
+assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
 assert.ok(readFileSync(join(dist,"index.html"),"utf8").includes("Chinese Culture Atlas"), "Missing home page brand");
 // Check every local hyperlink in generated HTML, including content collection slugs.
 let linksChecked = 0;

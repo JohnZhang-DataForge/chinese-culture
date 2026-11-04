@@ -1,4 +1,4 @@
-# ADR-0001: Cloudflare Workers Free, Static-first Hosting
+# ADR-0001: Cloudflare Pages Free, Static-first Hosting
 
 **Status:** Accepted for initial MVP implementation · **Updated:** 2026-11-04
 
@@ -8,7 +8,7 @@ The Chinese Culture website primarily offers lessons, articles, books, festivals
 
 ## Decision
 
-Use **Astro static prerendering** with Node.js in development/CI, then publish output to **Cloudflare Workers Static Assets (Workers Free)**. Ordinary content pages must not require Cloudflare Worker script invocations. Do not deploy a permanently running Node.js/Express server, SSR-first app, CMS database or paid add-on for MVP.
+Use **Astro static prerendering** with Node.js in development/CI, then publish output to **Cloudflare Pages Free using Wrangler Direct Upload**. Ordinary content pages must remain static assets; no Pages Functions are enabled. Do not deploy a permanently running Node.js/Express server, SSR-first app, CMS database or paid add-on for MVP.
 
 ## Cloudflare runtime interpretation
 
@@ -16,7 +16,7 @@ Cloudflare Workers supports JavaScript and a subset of Node.js APIs, but it is a
 
 ## Advantages
 
-- Free and unlimited normal static asset requests under current Cloudflare pricing.
+- Free and unlimited normal static asset requests under current Cloudflare Pages pricing.
 - No per-reader application compute for educational pages.
 - Low deployment overhead and no runtime database.
 - Source and publishing decisions remain reviewable in GitHub.
@@ -25,12 +25,12 @@ Cloudflare Workers supports JavaScript and a subset of Node.js APIs, but it is a
 
 - Editors publish through PR/build/release rather than an on-site CMS.
 - Dynamic API routes, authentication, SSR and personalized learning require later design, monitoring and budget review.
-- Free Worker script quotas are not unlimited: currently 100,000/day and 10 ms CPU/request, alongside other limits.
+- Pages Functions, if introduced later, would consume Workers Free quota (currently 100,000 requests/day). They are excluded from MVP.
 - Custom domain registration may incur cost even if the hosting plan remains free.
 
 ## Alternatives
 
-Workers runtime SSR for every page: not selected due to CPU/request budget. Traditional Node.js server/VPS: not available as a standard Workers Free service. Database-backed CMS: unnecessary at MVP. Cloudflare Pages static hosting: a possible implementation-time fallback, but Workers Static Assets is the documented primary target.
+Workers runtime SSR for every page: not selected due to CPU/request budget. Traditional Node.js server/VPS: not available as a standard Workers Free service. Database-backed CMS: unnecessary at MVP. Cloudflare Workers Static Assets: a technically viable alternative, but Pages Direct Upload was selected because the Pages project is provisioned and Wrangler's CI deployment path is documented.
 
 ## Review triggers
 

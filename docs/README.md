@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Project stage:** Static Astro MVP source and initial editorial content were merged into **main** through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after passing build checks. No public Cloudflare deployment is verified. Documentation includes both proposed long-term plans and the concrete implemented baseline.
+**Project stage:** Static Astro MVP source and initial editorial content were merged into **main** through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after passing build checks. Cloudflare Pages project is provisioned; first public deployment awaits protected API credentials. Documentation includes both proposed long-term plans and the concrete implemented baseline.
 
 ## Start here
 
@@ -29,7 +29,7 @@
 
 ## Architecture baseline
 
-**Node.js builds Astro**, which prerenders all normal pages to `dist/`. **Cloudflare Workers Static Assets** will distribute those assets on the Free plan. No server entrypoint, runtime API, database or permanent Node.js process is part of the MVP. See [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
+**Node.js builds Astro**, which prerenders all normal pages to `dist/`. **Cloudflare Pages Free Direct Upload** distributes those assets. No Pages Functions, runtime API, database or permanent Node.js process is part of the MVP. See [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
 
 ## Document conventions
 

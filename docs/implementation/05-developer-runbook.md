@@ -1,6 +1,6 @@
-# Developer Runbook — Astro and Cloudflare Workers Free
+# Developer Runbook — Astro and Cloudflare Pages Free
 
-**Status:** Astro source and a free-tier Worker fallback are implemented; the initial public deployment is being completed through the Cloudflare account connection.
+**Status:** Astro static site is implemented and CI-tested. Cloudflare Pages Direct Upload project exists; first public deployment is waiting for a protected GitHub Actions API token.
 
 ## Prerequisites
 
@@ -24,30 +24,50 @@ Do not commit `node_modules/`, `dist/`, `.env` files or Cloudflare credentials.
 
 `.github/workflows/site-ci.yml` runs on pull requests and pushes to main. It installs dependencies with npm, builds and runs the static verifier. **It does not deploy** and does not set Cloudflare secrets. On main pushes, CI also packages the verified `dist/` folder as a short-lived `chinese-culture-dist` artifact for an authorized deployment step. The project needs a committed lockfile and `npm ci` conversion for tighter reproducibility after initial build verification.
 
-## Current deployment mode — embedded static-site Worker
+## Cloudflare Pages Direct Upload
 
-The preferred architecture remains Cloudflare Workers Static Assets (`wrangler.jsonc`): it serves prerendered files without invoking Worker code and static asset requests are free and unlimited. The Cloudflare connection available to this session can create an asset manifest but cannot pass the short-lived upload JWT required by the direct asset-upload endpoint. Cloudflare Pages Git integration also returned an account-side installation error. To complete the initial launch without exposing or requesting credentials, the project includes a fallback that embeds the compressed static build in a small Worker script.
+The Cloudflare Pages project has already been created:
 
-- Build the site with `npm run build`, verify it with `npm run verify`, generate the fallback with `npm run build:worker`, and run `npm run test:worker`.
-- Deploy the fallback with `npm run deploy:embedded` after authenticating Wrangler.
-- The fallback serves only GET/HEAD, supports directory index routes and a 404 page, and applies the security headers from the site's `_headers` file.
-- **Free-plan trade-off:** requests execute Worker code and count against the account-wide Workers Free allowance of 100,000 requests per UTC day (10 ms CPU per request). This is not the unlimited static-asset request path. If traffic grows, switch back to native Workers Static Assets or Pages once the direct-upload authorization or GitHub integration path is available.
-- On main pushes, CI publishes one-day `chinese-culture-dist` and `chinese-culture-worker-fallback` artifacts. The latter contains the deployable script only.
+- Project: \`chinese-culture\`
+- Production branch: \`main\`
+- Public hostname: [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev)
+- Upload mode: Direct Upload (Wrangler). This project cannot later be converted to Git integration; that is acceptable because GitHub Actions performs the build and deployment.
 
-## Cloudflare preview / deployment
+The Cloudflare Git integration attempt returned an account-side installation error. The Direct Upload path avoids that integration and keeps the site fully static. Pages static asset requests are free and unlimited when no Pages Functions are invoked.
 
-1. Confirm correct Cloudflare account and Workers Free subscription.
-2. For the preferred static-assets deployment, validate that `wrangler.jsonc` points to `./dist` and contains no server entrypoint. For the current fallback, use `wrangler.embedded.jsonc` and the generated `dist-worker/index.js`.
-3. Confirm `name: chinese-culture` does not collide with another Worker.
-4. With authorized access, run `npx wrangler login` for local interactive authorization, or configure a least-privilege deployment token through approved CI secrets management.
-5. Run `npm run build` and `npm run verify`.
-6. Run `npx wrangler dev` for local Cloudflare-style preview as needed.
-7. Run `npm run deploy` for native Static Assets, or `npm run deploy:embedded` for the current Free fallback, only after content review and a release decision.
-8. Visit the reported `*.workers.dev` URL; verify navigation, 404, HTTPS, media and browser behavior.
-9. Confirm page routes, CSS, 404, HTTPS and response headers. In fallback mode, each request invokes the Worker; in native Static Assets mode, requests bypass Worker code.
-10. Record date, source commit, operator, deployed URL, verified account and rollback procedure in the change log.
+### One-time credential setup
 
-**Important:** Creating `wrangler.jsonc` is not a Cloudflare deployment. GitHub CI is intentionally build-only; an operator must supply Cloudflare authorization.
+1. In Cloudflare Dashboard, open **Account API Tokens** and choose **Create Token → Custom Token**.
+2. Add only the account permission **Cloudflare Pages → Edit** for the intended Cloudflare account.
+3. Create the token. Do not paste it into chat or commit it to the repository.
+4. In GitHub, open \`JohnZhang-DataForge/chinese-culture → Settings → Secrets and variables → Actions → New repository secret\`.
+5. Add:
+   - \`CLOUDFLARE_API_TOKEN\` — the token just created.
+   - \`CLOUDFLARE_ACCOUNT_ID\` — the account ID supplied by Cloudflare.
+6. To enable automatic deployment on future pushes to \`main\`, add repository variable \`CLOUDFLARE_DEPLOY_ENABLED\` with value \`true\`. Otherwise, use the workflow's manual \`workflow_dispatch\` after the secrets exist.
+
+### Deploy
+
+- Local: \`npm run deploy\` (requires Wrangler authentication through \`CLOUDFLARE_API_TOKEN\` and \`CLOUDFLARE_ACCOUNT_ID\`).
+- GitHub Actions: run **Deploy Chinese Culture Atlas to Cloudflare Pages** from the Actions tab on branch \`main\`.
+- The workflow rebuilds, runs \`npm run verify\`, then executes \`wrangler pages deploy dist --project-name=chinese-culture --branch=main\`.
+
+### Verify release
+
+1. Open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
+2. Check home, Learn, Culture, Festivals, Books, Events, About, Privacy, Accessibility and a missing route.
+3. Check CSS, favicon, HTTPS, mobile navigation and the \`_headers\` security policy.
+4. Confirm the deployment appears as the production deployment for branch \`main\`.
+5. Record deployment ID, source SHA, timestamp and rollback target in the change log.
+
+### Free-plan boundaries
+
+- Static asset requests are free and unlimited when no Pages Functions are invoked.
+- Free plan: 500 builds/month, one concurrent build, 20,000 files per site and 25 MiB maximum per file.
+- The current build contains 29 files and is comfortably below those limits.
+- Do not add a \`functions/\` directory or Pages Function without a separate cost/privacy review.
+
+Official references: [Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/), [Direct Upload CI](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/), [Pages limits](https://developers.cloudflare.com/pages/platform/limits/), [Pages Functions pricing](https://developers.cloudflare.com/pages/functions/pricing/).
 
 ## Failure and rollback
 
