@@ -5,7 +5,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | Requirement | Automated coverage | Execution condition | Current status |
 |---|---|---|---|
 | English public routes | `tests/e2e/public.spec.ts` | Default CI | Implemented; CI execution pending |
-| Chinese public routes | `tests/e2e/localization.spec.ts` | `/zh/` exists | Conditional |
+| Chinese public routes | `tests/e2e/localization.spec.ts` probes both `/zh/` and `/zh-cn/` and follows redirects | Either agreed Chinese route exists | Conditional; canonical segment still unresolved |
 | About, learning, articles, festivals, books, events, legal and contact routes | Public route smoke suite | Default CI for legacy routes; bilingual paths after Agent 2 | Implemented; CI execution pending |
 | 404 behavior | Public route smoke suite | Default CI | Implemented; CI execution pending |
 | EN / 中文 switcher | Localization suite | `/en/` and `/zh/` return 200 | Conditional |
@@ -17,7 +17,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | Admin dashboard and navigation | CMS UI suite not yet contract-aligned | Owner-authorized preview | NOT TESTED |
 | CMS create/edit/draft/preview/delete-draft | `tests/e2e/admin-cms-api.spec.ts` | Explicit preview mutation gate + owner JWT | Implemented; NOT TESTED until a preview target is authorized |
 | CMS publish/unpublish PR lifecycle | Requires isolated test PR lifecycle and cleanup contract | Preview branch only | NOT TESTED |
-| Bilingual CMS editing and SEO fields | CMS UI suite not yet contract-aligned | Explicit preview mutation gate | NOT TESTED |
+| Bilingual CMS editing, SEO fields and tags | API draft lifecycle test verifies locale variants, SEO metadata and tags round-trip | Explicit preview mutation gate + owner JWT | Implemented; NOT TESTED until preview is authorized; UI SEO payload mapping still pending Agent 4 |
 | Media upload | Admin security suite | Agent 5 media API path + owner-authorized preview | NOT TESTED |
 | Anonymous and invalid JWT access | Admin security suite | `QA_REQUIRE_ADMIN=true` | NOT TESTED |
 | Unauthorized writes | Admin security suite | `QA_REQUIRE_ADMIN=true` | NOT TESTED |
@@ -25,7 +25,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | Invalid upload content | Admin security suite | Media API contract + owner-authorized preview | NOT TESTED |
 | GitHub API error handling | Backend unit/integration tests still required | Agent 5 supplies injectable client seam | NOT TESTED |
 | Static content schema and route generation | Astro build + `npm run verify` | Default CI | Existing CI PASS on main run #17 |
-| OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | When the approved contract file exists | Implemented; current main has no contract file |
+| OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | Contract file now merged on main (Admin API v1.1.0) | Implemented; latest lint result pending |
 | Formatting/lint | Optional configured scripts | If scripts exist | No lint/format script configured on inspected main |
 | Secret leakage in built assets | Planned static secret scan | Add after backend secret contract is merged | NOT TESTED |
 | Apex DNS and Pages binding | Cloudflare control-plane read: apex CNAME is proxied to Pages; Pages custom domain validation is active | Cloudflare configuration | PASS (control plane); live HTTP probe NOT TESTED |
