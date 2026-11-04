@@ -411,28 +411,28 @@ if (root) {
       return;
     }
     if (demoMode) {
-      $("[data-preview-title]").textContent = variant.title;
-      $("[data-preview-description]").textContent = variant.description;
-      $("[data-preview-body]").textContent = variant.bodyMarkdown;
-      $("[data-preview-category]").textContent = variant.category || collectionNames[value.type]?.title || "Culture";
-      $("[data-preview-frame]").hidden = true;
-      $("[data-preview-body]").hidden = false;
-      $("[data-preview-language-status]").textContent = "Development preview";
+      $("[data-preview-title]", document).textContent = variant.title;
+      $("[data-preview-description]", document).textContent = variant.description;
+      $("[data-preview-body]", document).textContent = variant.bodyMarkdown;
+      $("[data-preview-category]", document).textContent = variant.category || collectionNames[value.type]?.title || "Culture";
+      $("[data-preview-frame]", document).hidden = true;
+      $("[data-preview-body]", document).hidden = false;
+      $("[data-preview-language-status]", document).textContent = "Development preview";
     } else {
       try {
         if (!state.selectedId) await saveLiveDrafts();
         const payload = toApiPayload(locale);
         const result = await previewContent(state.selectedId,{locale,metadata:payload,bodyMarkdown:payload.bodyMarkdown});
-        $("[data-preview-title]").textContent = variant.title;
-        $("[data-preview-description]").textContent = variant.description;
-        $("[data-preview-category]").textContent = variant.category;
-        $("[data-preview-frame]").srcdoc = result.html;
-        $("[data-preview-frame]").hidden = false;
-        $("[data-preview-body]").hidden = true;
-        $("[data-preview-language-status]").textContent = (result.warnings || []).join(" · ") || "Sanitized server preview";
+        $("[data-preview-title]", document).textContent = variant.title;
+        $("[data-preview-description]", document).textContent = variant.description;
+        $("[data-preview-category]", document).textContent = variant.category;
+        $("[data-preview-frame]", document).srcdoc = result.html;
+        $("[data-preview-frame]", document).hidden = false;
+        $("[data-preview-body]", document).hidden = true;
+        $("[data-preview-language-status]", document).textContent = (result.warnings || []).join(" · ") || "Sanitized server preview";
       } catch (error) { handleApiError(error); return; }
     }
-    if (openDialog && !$("[data-preview-dialog]").open) $("[data-preview-dialog]").showModal();
+    if (openDialog && !$("[data-preview-dialog]", document).open) $("[data-preview-dialog]", document).showModal();
   };
   const saveContent = async () => {
     if (demoMode) {
@@ -532,13 +532,13 @@ if (root) {
   };
   const requestDelete = (id) => {
     state.pendingDelete = id;
-    $("[data-confirm-dialog]").showModal();
+    $("[data-confirm-dialog]", document).showModal();
   };
   const deleteContent = async () => {
     if (demoMode) {
       state.items = state.items.filter((item) => item.id !== state.pendingDelete);
       state.pendingDelete = null;
-      $("[data-confirm-dialog]").close();
+      $("[data-confirm-dialog]", document).close();
       showToast("Content deleted in development preview.","info");
       if (state.page === "editor") setPage("content"); else renderList();
       updateCounts();
@@ -550,7 +550,7 @@ if (root) {
       if (!drafts.length) throw new Error("Only an unsubmitted draft variant can be discarded. Published content must go through a reviewed unpublish workflow.");
       for (const locale of drafts) await discardDraft(state.pendingDelete,locale);
       state.pendingDelete = null;
-      $("[data-confirm-dialog]").close();
+      $("[data-confirm-dialog]", document).close();
       showToast("Unsubmitted draft variant(s) discarded.","success");
       if (state.page === "editor") setPage("content");
       await loadAllContent();
@@ -593,7 +593,7 @@ if (root) {
   const uploadCurrentMedia = async (file) => {
     const locale = $("[data-media-locale]").value;
     if (demoMode) {
-      if (!file.type.startsWith("image/")) { showToast("Choose a supported image file.","error"); return; }
+      if (!["image/jpeg","image/png","image/webp","image/avif"].includes(file.type) || file.size > 8 * 1024 * 1024) { showToast("Choose a JPEG, PNG, WebP or AVIF image under 8 MiB.","error"); return; }
       state.media.push({name:file.name,url:URL.createObjectURL(file),size:file.size});
       renderMedia();
       showToast("Local preview added. It has not been uploaded.","info");
@@ -651,10 +651,10 @@ if (root) {
     if (name === "delete") requestDelete(action.dataset.id);
     if (name === "delete-current") requestDelete(state.selectedId);
     if (name === "confirm-delete") deleteContent();
-    if (name === "cancel-delete") $("[data-confirm-dialog]").close();
+    if (name === "cancel-delete") $("[data-confirm-dialog]", document).close();
     if (name === "feature") await toggleFeatured(action.dataset.id);
     if (name === "preview") await preview();
-    if (name === "close-preview") $("[data-preview-dialog]").close();
+    if (name === "close-preview") $("[data-preview-dialog]", document).close();
     if (name === "save-draft") await saveContent();
     if (name === "publish") await submitWorkflow("publish");
     if (name === "unpublish") await submitWorkflow("unpublish");
@@ -703,8 +703,8 @@ if (root) {
   document.addEventListener("click", (event) => {
     const externalAction = event.target.closest("[data-action]");
     if (externalAction && !root.contains(externalAction)) {
-      if (externalAction.dataset.action === "close-preview") $("[data-preview-dialog]").close();
-      if (externalAction.dataset.action === "cancel-delete") $("[data-confirm-dialog]").close();
+      if (externalAction.dataset.action === "close-preview") $("[data-preview-dialog]", document).close();
+      if (externalAction.dataset.action === "cancel-delete") $("[data-confirm-dialog]", document).close();
       if (externalAction.dataset.action === "confirm-delete") deleteContent();
     }
     const choose = event.target.closest("[data-action='select-media']");
@@ -723,7 +723,7 @@ if (root) {
     const previewLocale = event.target.closest("[data-preview-language]");
     if (previewLocale) {
       state.previewLocale = previewLocale.dataset.previewLanguage;
-      $$("[data-preview-language]").forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
+      $("[data-preview-language]", document).forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
       preview(false);
     }
   });

@@ -28,3 +28,5 @@
 .media-locale-label select{border:1px solid #e2e8e3;border-radius:6px;background:white;padding:7px 9px;color:#536259;font-size:9px}
 .form-panel input:disabled,.form-panel textarea:disabled{background:#f7f8f7;color:#a0aaa3;cursor:not-allowed}
 .contract-note{line-height:1.6;margin:8px 20px 12px}
+
+.status-mixed{background:#f0f2f0;color:#66756c}
