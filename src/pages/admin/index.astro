@@ -150,11 +150,11 @@ const demo = import.meta.env.DEV;
                 </section>
                 <section class="panel form-panel seo-panel">
                   <div class="panel-heading"><div><h2>Search appearance</h2><p>SEO metadata for both languages</p></div><span class="seo-icon">⌕</span></div>
-                  <label>English SEO title<input name="seoTitle.en" maxlength="70" disabled placeholder="Awaiting SEO fields in the API contract" /></label>
-                  <label>English meta description<textarea name="seoDescription.en" rows="2" maxlength="160" disabled placeholder="Awaiting SEO fields in the API contract"></textarea></label>
+                  <label>English SEO title<input name="seoTitle.en" maxlength="180" placeholder="Search title in English" /></label>
+                  <label>English meta description<textarea name="seoDescription.en" rows="2" maxlength="300" placeholder="A clear search description"></textarea></label>
                   <div class="form-divider"></div>
-                  <label>中文 SEO 标题<input name="seoTitle.zh" maxlength="70" disabled placeholder="等待 API 合同增加 SEO 字段" /></label>
-                  <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="160" disabled placeholder="等待 API 合同增加 SEO 字段"></textarea></label>
+                  <label>中文 SEO 标题<input name="seoTitle.zh" maxlength="180" placeholder="中文搜索标题" /></label>
+                  <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="300" placeholder="中文搜索摘要"></textarea></label>
                   <div class="form-divider"></div>
                   <p class="field-hint contract-note">Media upload is paused until the request metadata schema is corrected. A global searchable media library also needs a listing API.</p>
                   <button class="text-button media-select-button" type="button" data-action="open-media">Open media uploader →</button>

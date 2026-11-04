@@ -163,7 +163,9 @@ if (root) {
       mediaCredit:formValue("mediaCredit." + suffix).trim(),
       mediaLicense:formValue("mediaLicense." + suffix).trim(),
       mediaSource:formValue("mediaSource." + suffix).trim(),
-      tags:parseTags(formValue("tags." + suffix))
+      tags:parseTags(formValue("tags." + suffix)),
+      seoTitle:formValue("seoTitle." + suffix).trim(),
+      seoDescription:formValue("seoDescription." + suffix).trim()
     };
   };
   const formData = () => ({
@@ -216,6 +218,8 @@ if (root) {
       media,
       sources:existing?.sources || []
     };
+    if (value.seoTitle) payload.seoTitle = value.seoTitle;
+    if (value.seoDescription) payload.seoDescription = value.seoDescription;
     if (value.level) payload.level = value.level;
     if (value.chinese) payload.chinese = value.chinese;
     if (value.pinyin) payload.pinyin = value.pinyin;
@@ -305,6 +309,8 @@ if (root) {
       setField("body." + suffix,variant?.bodyMarkdown ?? demo?.bodyMarkdown ?? value.body?.[suffix] ?? "");
       setField("category." + suffix,variant?.category ?? demo?.category ?? value.categories?.[suffix] ?? value.category ?? "");
       setField("tags." + suffix,(variant?.tags || demo?.tags || value.tags || []).join(", "));
+      setField("seoTitle." + suffix,variant?.seoTitle ?? demo?.seoTitle ?? "");
+      setField("seoDescription." + suffix,variant?.seoDescription ?? demo?.seoDescription ?? "");
       setField("featured." + suffix,variant?.featured ?? demo?.featured ?? value.featured ?? false);
       setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
       setField("level." + suffix,variant?.level ?? demo?.level ?? "");
@@ -534,6 +540,8 @@ if (root) {
           category:variant.category,
           featured:!variant.featured,
           tags:variant.tags || [],
+          ...(variant.seoTitle ? {seoTitle:variant.seoTitle} : {}),
+          ...(variant.seoDescription ? {seoDescription:variant.seoDescription} : {}),
           bodyMarkdown:variant.bodyMarkdown,
           readingMinutes:variant.readingMinutes || 5,
           media:variant.media || [],
@@ -615,8 +623,11 @@ if (root) {
   };
   const uploadCurrentMedia = async (file) => {
     const locale = $("[data-media-locale]").value;
+    if (!["image/jpeg","image/png","image/webp","image/avif"].includes(file.type) || file.size > 8 * 1024 * 1024) {
+      showToast("Choose a JPEG, PNG, WebP or AVIF image under 8 MiB.","error");
+      return;
+    }
     if (demoMode) {
-      if (!["image/jpeg","image/png","image/webp","image/avif"].includes(file.type) || file.size > 8 * 1024 * 1024) { showToast("Choose a JPEG, PNG, WebP or AVIF image under 8 MiB.","error"); return; }
       state.media.push({name:file.name,url:URL.createObjectURL(file),size:file.size});
       renderMedia();
       showToast("Local preview added. It has not been uploaded.","info");
@@ -630,8 +641,6 @@ if (root) {
       showToast("Save a draft for this language before uploading its cover image.","error");
       return;
     }
-    showToast("Upload is paused: Agent 0 must publish the MediaUploadMetadata request schema before the API can accept a new image.","info");
-    return;
     const suffix=uiLocale(locale);
     const metadata={
       alt:formValue("mediaAlt."+suffix),
@@ -647,6 +656,12 @@ if (root) {
     try {
       const result=await uploadMedia(state.selectedId,locale,state.etags[locale],file,metadata);
       setField("mediaSrc."+suffix,result.src);
+      if(result.metadata) {
+        setField("mediaAlt."+suffix,result.metadata.alt);
+        setField("mediaCredit."+suffix,result.metadata.credit);
+        setField("mediaLicense."+suffix,result.metadata.license);
+        setField("mediaSource."+suffix,result.metadata.sourceUrl || "");
+      }
       await refreshVariant(locale);
       markClean();
       showToast("Image uploaded and attached to the " + (locale==="en" ? "English" : "Chinese") + " draft.","success");
@@ -767,8 +782,8 @@ if (root) {
     $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
-    $("[data-media-input]").disabled=true;
-    $("[data-action=choose-upload]").disabled=true;
+    $("[data-media-input]").disabled=false;
+    $("[data-action=choose-upload]").disabled=false;
   } else {
     $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=false;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=false;});
