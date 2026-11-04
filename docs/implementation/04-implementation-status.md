@@ -28,7 +28,7 @@
 
 ## Validation state
 
-The latest successful main-branch CI run [#41830613564](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41830613564) passed: dependency install, Astro build, static verifier and deployment-artifact packaging. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
+The latest successful main-branch CI run [#41922502515](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41922502515) passed: dependency install, Astro build, static verifier and deployment-artifact packaging. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
 
 ## Deployment state (2026-11-05)
 

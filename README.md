@@ -25,7 +25,7 @@ Requires a supported Node.js version (CI uses Node 22).
 4. Run `npm run build` to generate `dist/`.
 5. Run `npm run verify` to validate required routes and Cloudflare Free static limits.
 
-The Pages project `chinese-culture` has been created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but it has no deployment yet. Add the protected GitHub Actions secrets described in the runbook, then trigger the deployment workflow.
+The Pages project `chinese-culture` has been created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but it has no deployment yet. Add the protected Cloudflare Pages API token secret described in the runbook, then trigger the deployment workflow.
 
 ## Cloudflare Pages deployment
 

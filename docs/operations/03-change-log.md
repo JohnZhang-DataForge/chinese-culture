@@ -62,7 +62,11 @@ Updated the repository to use Cloudflare Pages Direct Upload as the production t
 ## 2026-11-04 — Documentation and Pages launch checklist verified
 
 The runbook, architecture plan, repository map and implementation status were aligned to the Pages Direct Upload decision. Final build-only CI [#41829806975](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on main commit `658088da09400449d09a0fdcbe1111a09efa724a`. The deployment workflow correctly remains skipped until the owner enables it or manually dispatches it after adding the required secrets. The Pages project still has no production deployment.
-\n## 2026-11-04 — Cloudflare deployment investigation\n\nVerified Cloudflare account connection and workers.dev subdomain. The `chinese-culture` Worker has no versions. Found an empty Pages Direct Upload project (zero deployments), which cannot be converted to Git integration. Attempted to configure Pages Git integration; Cloudflare returned HTTP 401 / error 8000011 indicating an internal Git installation issue. Workers Builds has no repository connections and zero build tokens. Documented the exact owner authorization flow in [Cloudflare deployment status](04-cloudflare-deployment.md). No production deployment has been claimed.\n
+
+## 2026-11-05 — Cloudflare Pages deployment investigation
+
+Verified that the Pages Direct Upload project exists but has zero deployments. The Git integration error does not block the selected Direct Upload approach. The Cloudflare API connection can issue a short-lived Pages upload JWT, but the subsequent asset upload requires a custom Authorization header unavailable through the connected API action. Updated the deployment workflow to use GitHub Actions + Wrangler with a protected Pages Write API token; Cloudflare GitHub App authorization is not required. No production deployment has been claimed.
+
 ## 2026-11-05 — Simplify the Pages deployment credential
 
 Hardcoded the non-secret Cloudflare account ID in the deployment workflow and reduced the required GitHub secret to `CLOUDFLARE_API_TOKEN` with the Pages Write role. Added a preflight check with an actionable error and documented manual workflow dispatch plus optional automatic deployment via `CLOUDFLARE_DEPLOY_ENABLED=true`. The first public deployment still awaits the owner-created token; CI build success is not treated as deployment success.

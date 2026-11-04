@@ -11,7 +11,8 @@
 | [Content schema and routes](architecture/08-content-schema-and-routing.md) | Metadata requirements and author workflow |
 | [Developer runbook](implementation/05-developer-runbook.md) | Local preview, build, checks and Cloudflare deploy |
 | [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
-| [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |\n| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified account state, current blocker and owner authorization steps |
+| [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
+| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified account state, required Pages Write token and release steps |
 
 ## Long-term planning areas
 
