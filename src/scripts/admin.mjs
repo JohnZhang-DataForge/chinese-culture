@@ -317,8 +317,8 @@ if (root) {
     const variants = Object.values(state.variants).filter(Boolean);
     const hasPublished = variants.some((variant) => variant.status === "published");
     const hasDiscardableDraft = variants.some((variant) => variant.status === "draft" && !variant.pullRequest);
-    $("[data-action='unpublish']").hidden = !hasPublished;
-    $("[data-action='delete-current']").hidden = !hasDiscardableDraft;
+    $("[data-action='unpublish']").forEach((button)=>{button.hidden=!hasPublished;});
+    $("[data-action='delete-current']").forEach((button)=>{button.hidden=!hasDiscardableDraft;});
   };
   const openEditor = async (item = null) => {
     state.selectedId = item?.id || null;
@@ -464,8 +464,9 @@ if (root) {
       return;
     }
     try {
+      const previouslyPublished = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "published");
       await saveLiveDrafts();
-      const locales = ["en","zh-CN"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || state.variants[locale].status === "published"));
+      const locales = ["en","zh-CN"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
       if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
       const results = [];
       for (const locale of locales) {

@@ -5,7 +5,7 @@ export function filterContent(items, options = {}) {
   return items.filter((item) => {
     const title = [item.title?.en, item.title?.zh, item.id, item.slug, item.category, ...(item.tags || [])].filter(Boolean).join(" ").toLocaleLowerCase();
     if (query && !title.includes(query)) return false;
-    if (status && item.status !== status) return false;
+    if (status && !(item.status === status || item.statuses?.includes(status))) return false;
     const translation = translationStatus(item);
     if (language === "complete" && !(translation.en && translation.zh)) return false;
     if (language === "missing-en" && translation.en) return false;

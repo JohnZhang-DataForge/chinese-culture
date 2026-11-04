@@ -63,6 +63,7 @@ test("session bootstrap stores the short-lived CSRF token in memory", async () =
   const response = {status:200,ok:true,headers:new Headers(),text:async()=>JSON.stringify({email:"editor@example.com",role:"editor",csrfToken:"csrf-one"})};
   const session = await getAdminSession(async()=>response);
   assert.equal(session.role,"editor");
+  clearAdminCsrfToken();
   await assert.rejects(
     ()=>requestAdminApi(ADMIN_API_BASE+"/content",{method:"POST",body:{}},async()=>({status:201,ok:true,headers:new Headers(),text:async()=>"{}"})),
     (error)=>error instanceof AdminApiError && error.code==="CSRF_SESSION_MISSING"
