@@ -607,6 +607,8 @@ if (root) {
       showToast("Save a draft for this language before uploading its cover image.","error");
       return;
     }
+    showToast("Upload is paused: Agent 0 must publish the MediaUploadMetadata request schema before the API can accept a new image.","info");
+    return;
     const suffix=uiLocale(locale);
     const metadata={
       alt:formValue("mediaAlt."+suffix),
@@ -737,6 +739,13 @@ if (root) {
     if (event.key==="Escape") $("#admin-sidebar").classList.remove("is-open");
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
+  if (!demoMode) {
+    $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
+    $('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
+    $('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
+    $("[data-media-input]").disabled=true;
+    $("[data-action=choose-upload]").disabled=true;
+  }
   if (demoMode) {
     setConnection("Development preview");
     renderDashboard();
