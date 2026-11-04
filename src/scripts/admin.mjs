@@ -583,7 +583,7 @@ if (root) {
       state.pendingDelete = null;
       $("[data-confirm-dialog]", document).close();
       showToast("Unsubmitted draft variant(s) discarded.","success");
-      if (state.page === "editor") setPage("content");
+      if (state.page === "editor") { state.dirty=false; setPage("content"); }
       await loadAllContent();
     } catch (error) { handleApiError(error); }
   };

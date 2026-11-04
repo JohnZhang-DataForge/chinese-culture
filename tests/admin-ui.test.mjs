@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { filterContent, paginate, parseTags, translationStatus, wordCount } from "../src/lib/admin-ui.mjs";
 import {
   ADMIN_API_BASE, AdminApiError, clearAdminCsrfToken, getAdminSession,
-  requestAdminApi, requestAdminApiWithMeta, setAdminCsrfToken
+  requestAdminApi, requestAdminApiWithMeta, setAdminCsrfToken, uploadMedia
 } from "../src/lib/admin-api.mjs";
 
 const records = [
@@ -103,4 +103,19 @@ test("API transport surfaces RFC 9457 problem details and request ID", async () 
 test("API transport rejects paths outside the approved versioned API", async () => {
   await assert.rejects(()=>requestAdminApi("https://api.github.com/repos/example",{},async()=>({})),TypeError);
   await assert.rejects(()=>requestAdminApi("/api/admin/session",{},async()=>({})),TypeError);
+});
+
+
+test("media upload uses multipart metadata, CSRF and the variant ETag", async () => {
+  setAdminCsrfToken("media-csrf");
+  let observed;
+  const file = new Blob(["fake-image"],{type:"image/png"});
+  const response = {status:201,ok:true,headers:new Headers(),text:async()=>JSON.stringify({src:"/media/test.webp"})};
+  const result = await uploadMedia("content-1","zh-CN",'"variant-4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
+  assert.equal(result.src,"/media/test.webp");
+  assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-CN$/);
+  assert.equal(observed.options.headers.get("X-CSRF-Token"),"media-csrf");
+  assert.equal(observed.options.headers.get("If-Match"),'"variant-4"');
+  assert.equal(observed.options.headers.has("Content-Type"),false);
+  assert.equal(observed.options.body.get("metadata"),JSON.stringify({alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"}));
 });
