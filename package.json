@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
     "test": "npm run test:unit",
-    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:unit": "node --test",
     "test:e2e": "playwright test",
     "test:qa": "npm run build && npm run verify && npm run test:unit && npm run test:e2e",
     "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main"
