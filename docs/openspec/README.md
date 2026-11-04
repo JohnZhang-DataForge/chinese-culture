@@ -33,6 +33,9 @@
 - Existing CI: GitHub Actions static build and static-output verification.
 - Existing deployment: Cloudflare Pages Direct Upload via Wrangler.
 - Latest observed main runs at baseline: static CI run 41932129795 passed; Pages deployment run 41932129872 passed.
+- Cloudflare API independently confirms the zone is active, the Pages project is chinese-culture, both chinese-culture.site and www.chinese-culture.site are active Pages custom domains, proxied CNAMEs point to chinese-culture-79h.pages.dev, and the canonical HTTPS-apex redirect ruleset exists. Cloudflare reports active certificate provisioning.
+- External HTTP redirect/TLS smoke remains pending: this execution environment cannot resolve the domain, so no public 200/301 response or TLS handshake is claimed.
+- The current production Pages deployment reports uses_functions=false. Pages Functions are not yet deployed; Agent 5's Admin API work remains pending.
 - Existing main branch was reported unprotected. The old feature branch feat/astro-cloudflare-free-mvp is divergent (7 commits ahead and 13 behind main); do not merge it as a substitute for current main.
 - Existing docs contain stale deployment statements and describe localization, APIs and CMS as future work. Agent 7 must reconcile them against verified current evidence.
 
