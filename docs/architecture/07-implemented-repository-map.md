@@ -19,6 +19,7 @@
 | `astro.config.mjs` | Forces static output and trailing-slash URLs |
 | `wrangler.jsonc` | Cloudflare Pages build output directory `./dist` |
 | `.github/workflows/site-ci.yml` | Install, build, verify and publish a short-lived static artifact |
+| `.github/workflows/pages-deploy.yml` | Credential-gated Wrangler Direct Upload to Cloudflare Pages |
 | `public/favicon.svg` | Original project mark; no external image source |
 | `public/_headers` | Basic security-related response headers |
 | `public/robots.txt` | Robot instructions; indexing policy requires launch review |

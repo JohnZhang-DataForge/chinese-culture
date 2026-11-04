@@ -38,4 +38,4 @@ Any required dynamic feature, a constraint that makes pure static serving imprac
 
 ## Official references
 
-[Static Assets](https://developers.cloudflare.com/workers/static-assets/) · [Billing and limitations](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/) · [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) · [Node.js compatibility](https://developers.cloudflare.com/workers/runtime-apis/nodejs/)
+[Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/) · [Pages limits](https://developers.cloudflare.com/pages/platform/limits/) · [Pages Functions pricing](https://developers.cloudflare.com/pages/functions/pricing/)

@@ -1,9 +1,9 @@
 # Implementation Status and Known Gaps
 
 **Updated:** 2026-11-04  
-**Stage:** MVP source merged to GitHub main through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after green CI. Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits the protected API token.  
-**Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at `chinese-culture-79h.pages.dev`; no production deployment has yet been published.
-**Merged commit:** [778b5ea](https://github.com/JohnZhang-DataForge/chinese-culture/commit/778b5ea54ee9aec6120524f25aa119c5107191c9).
+**Stage:** MVP source merged to `main`; Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits a one-time dashboard upload or protected API token.  
+**Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
+**Latest main:** [791b1dc](https://github.com/JohnZhang-DataForge/chinese-culture/commit/791b1dc9e40888c6cfd312b3e95cec02f559b0ec).
 
 ## Implemented in source
 
@@ -27,19 +27,19 @@
 
 ## Validation state
 
-Source files are committed to a feature branch. The project must pass real dependency installation, Astro static generation and `npm run verify` on GitHub CI before merge. This document should be updated with an actual PR/run reference after validation. A code commit alone is not proof that a build passed.
+[GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039) passed on `main`: dependency install, Astro build, static verifier and deployment-artifact packaging all succeeded. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
 
 ## Remaining before public launch
 
 - Keep CI passing after any change; verify all internal links in build output.
-- Keep the build-only CI green and publish the one-day static build artifact.
+- Keep build CI green and refresh the one-day `chinese-culture-dist` artifact on main pushes.
 - Record dependency lockfile/reproducible installs after the initial build.
 - Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
 - Assign factual/editorial reviewers and check all source links and Chinese terms.
 - Replace pending public contact details with a verified method and approve privacy notice.
 - Add only real, source-verified events, or keep the empty state.
-- Add a least-privilege Cloudflare Pages API token and account ID to GitHub Actions secrets; never commit credentials.
-- Trigger Pages Direct Upload, validate `chinese-culture-79h.pages.dev`, HTTPS, page routes and response headers, then sign off production launch.
+- For immediate launch, upload the verified `chinese-culture-dist` ZIP through the Pages dashboard; for repeatable releases, add a least-privilege Pages API token and account ID to GitHub Actions secrets. Never commit credentials.
+- Complete the first Pages Direct Upload, validate `chinese-culture-79h.pages.dev`, HTTPS, page routes and response headers, then sign off production launch.
 
 ## Explicit exclusions
 
