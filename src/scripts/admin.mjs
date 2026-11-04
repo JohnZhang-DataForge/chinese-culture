@@ -593,6 +593,10 @@ if (root) {
       showToast("Local preview added. It has not been uploaded.","info");
       return;
     }
+    if (state.returnDirty) {
+      showToast("Save your current editor changes as a draft before uploading media.","error");
+      return;
+    }
     if (!state.selectedId || !state.variants[locale] || !state.etags[locale]) {
       showToast("Save a draft for this language before uploading its cover image.","error");
       return;
@@ -652,7 +656,7 @@ if (root) {
       else { showAdminBanner("Homepage and site-settings write APIs are not part of OpenAPI v1.0.0 yet. These controls are read-only until Agent 0 approves the extension.","warning"); showToast("No settings were saved; the API contract does not define this operation.","info"); }
     }
     if (name === "choose-upload") $("[data-media-input]").click();
-    if (name === "open-media") { state.returnPage=state.page; state.returnDirty=state.dirty; state.dirty=false; $("[data-action=back-to-editor]").hidden=state.returnPage!=="editor"; setPage("media"); }
+    if (name === "open-media") { state.returnPage=state.page; state.returnDirty=state.dirty; state.dirty=false; $("[data-action=back-to-editor]").hidden=state.returnPage!=="editor"; setPage("media"); renderMedia(); }
     if (name === "add-navigation") { if (demoMode) showToast("Navigation preview only in development mode.","info"); else showToast("Navigation API is not defined in the approved contract yet.","info"); }
     if (name === "back-to-editor") { state.dirty=false; setPage("editor"); if(state.returnDirty) markDirty(); }
   });
@@ -668,7 +672,7 @@ if (root) {
       $$(".media-card").forEach((card) => { card.hidden = !card.dataset.name.includes(query); });
     }
   });
-  root.addEventListener("change", (event) => {
+  root.addEventListener("change", async (event) => {
     if (event.target.matches("[data-status-filter],[data-language-filter]")) { state.pageNumber=1; renderList(); }
     if (event.target.matches("[data-media-input]")) {
       const files = [...event.target.files || []];
