@@ -1,61 +1,43 @@
 # Implementation Status and Known Gaps
 
 **Updated:** 2026-11-05  
-**Stage:** MVP source merged to `main`; Cloudflare Pages Free Direct Upload project is provisioned; first production deployment awaits one protected API token.  
-**Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
-**Main branch:** [main](https://github.com/JohnZhang-DataForge/chinese-culture/tree/main).
+**Inspected main:** \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
 
-## Implemented in source
+The static English Astro MVP is implemented, CI-verified and deployed to Cloudflare Pages Free. The apex custom domain is active. The \`www\` custom-domain validation remains pending.
 
-| Area | Source status | Notes |
-|---|---|---|
-| Astro static project | Added | Node build time, no adapter/SSR |
-| Cloudflare Pages config | Added | `pages_build_output_dir: ./dist`; no Functions or SSR |
-| Pages Direct Upload project | Provisioned | `chinese-culture`, production branch `main`; first upload pending token |
-| Shared layout and navigation | Added | Desktop and mobile using native HTML details |
-| Landing page | Added | Curated starter learning, articles and festivals |
-| Collection index and detail routes | Added | Generated from Markdown during build |
-| Beginner curriculum | 5 lessons drafted | Additional teaching review needed |
-| Culture articles | 3 drafted | Includes credible further-reading links |
-| Festival references | 3 drafted | Evergreen, not real-world event registration |
-| Book guides | 2 drafted | Original guidance, no hosted copyrighted book text |
-| Events | Placeholder with honest empty state | No verified current event information |
-| Informational pages | Added | About, contact-status, privacy, accessibility, editorial policy |
-| Responsive styles | Added | Mobile layout, focus, reduced motion |
-| Build CI | Added | GitHub Actions install/build/static verifier |
-| Pages deployment workflow | Added | Wrangler Direct Upload; requires one protected Pages Write token |
-| Public hosting | Project provisioned; deployment pending | Requires token secret, first deployment and browser smoke verification |
+## Current status
 
-## Validation state
+| Area | Status |
+|---|---|
+| Astro static website | Implemented |
+| Markdown collections | Implemented: 5 lessons, 3 culture articles, 3 festival guides, 2 book guides |
+| GitHub CI | Passing |
+| Cloudflare Pages Direct Upload | Production deployment successful |
+| Apex custom domain | Active |
+| WWW custom domain | Pending HTTP validation |
+| Bilingual routing and translations | Not implemented in inspected source |
+| Admin dashboard and APIs | Not implemented |
+| Admin authentication | Not implemented |
+| Browser-based media upload | Not implemented |
+| Event collection and management | Not implemented |
+| Browser E2E / Playwright | Not implemented |
+| Formal accessibility audit | Not completed |
 
-The latest successful main-branch CI run [#41922502515](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41922502515) passed: dependency install, Astro build, static verifier and deployment-artifact packaging. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
+## Deployment evidence
 
-## Deployment state (2026-11-05)
+- CI run [#41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795): success.
+- Pages deployment run [#41932129872](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872): success.
+- Cloudflare deployment ID: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
+- Deployed SHA: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
 
-- Cloudflare account connection is working; account ID is configured in the deployment workflow.
-- Pages project `chinese-culture` exists at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but its deployments list is empty and its latest/canonical deployment is null.
-- The GitHub Pages Git integration had an account-side installation error. This does not block Direct Upload; the project is intentionally deployed by GitHub Actions and Wrangler rather than Cloudflare's Git integration.
-- The deployment workflow is gated: push-triggered deployments remain skipped until repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`; manual `workflow_dispatch` is available after the token secret is added.
-- The connected Cloudflare API can inspect the Pages project and issue an upload token, but direct asset upload requires a short-lived JWT in a custom Authorization header. That upload step cannot be completed through the current API connector. The GitHub Actions Wrangler workflow is the supported release path.
-- Exact token setup and release steps are documented in [Cloudflare deployment status](../operations/04-cloudflare-deployment.md).
+## Known gaps
 
-## Remaining before public launch
+No admin/CMS, API, authentication, database, localization route tree, translation schema, event collection or media upload service exists in the inspected source. The homepage and navigation are hard-coded Astro source. The \`featured\` content field is not used for homepage selection.
 
-- Add GitHub repository secret `CLOUDFLARE_API_TOKEN` with the Cloudflare **Pages Write** role, scoped to the intended account only.
-- Run **Actions → Deploy Chinese Culture Atlas to Cloudflare Pages → Run workflow** on `main`.
-- Verify the production deployment, home page, nested article routes, 404 behavior, HTTPS and response headers.
-- Keep CI passing after any change; verify all internal links in build output.
-- Commit a lockfile and convert CI installs to `npm ci` for stronger reproducibility.
-- Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
-- Assign factual/editorial reviewers and check all source links and Chinese terms.
-- Replace pending public contact details with a verified method and approve privacy notice.
-- Add only real, source-verified events, or keep the empty state.
-- Record deployment ID, source SHA, timestamp and rollback target after first publication.
+The root repository \`README.md\` still contains a stale "first deployment awaits token" statement. The root README is outside this agent's assigned directories and should be updated by the integration lead.
 
-## Explicit exclusions
+## Integration dependency
 
-No live API, user accounts, SSR, always-on Node.js VPS, database, newsletter, payment/registration processing or third-party analytics.
+Agent 0's \`docs/openspec/\` contracts were not present on the inspected \`main\`. Update these docs after the approved contracts and Agents 1–6 implementation details are merged.
 
-## References
-
-[Repository map](../architecture/07-implemented-repository-map.md) · [Runbook](05-developer-runbook.md) · [Release log](../operations/03-change-log.md) · [Launch checklist](03-launch-checklist.md).
+For the canonical status matrix, use [implementation-status.md](implementation-status.md).

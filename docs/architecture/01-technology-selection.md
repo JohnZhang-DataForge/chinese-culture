@@ -1,41 +1,36 @@
-# Technology Selection — Cloudflare Workers Free
+# Technology Selection — Implemented Static Site
 
-**Status:** Proposed · **Last reviewed:** 2026-11-04
+**Status:** Accepted implementation baseline · **Updated:** 2026-11-05.
 
-## Deployment requirement
+## Current stack
 
-This website must fit **Cloudflare Workers Free**, prioritizing **Workers Static Assets**. “Free Node.js” here means Node.js tooling at build time and optional Workers runtime compatibility; it does **not** provide a continuously running Node.js server.
+| Component | Actual implementation |
+|---|---|
+| Content framework | Astro 5, static output |
+| Build runtime | Node.js 22 in GitHub Actions; Node.js >=20.19 in package engines |
+| Package tooling | npm |
+| Static hosting | Cloudflare Pages Free, Direct Upload |
+| Deployment | GitHub Actions with Wrangler Direct Upload |
+| Source control | Private GitHub repository and pull requests |
+| Content | Astro Markdown collections |
+| Data store | None |
+| Runtime API | None |
+| SSR / Pages Functions | None |
 
-## Stack
+## Important platform distinction
 
-| Component | Decision | Why |
-|---|---|---|
-| Content framework | Astro, static prerendering | Fast content pages without server-side requests |
-| Node.js | Build-time environment in development/CI | Build Markdown content into static HTML, CSS and JS |
-| Production delivery | Cloudflare Workers Static Assets, Free plan | CDN-backed static asset requests free and unlimited |
-| Production compute | No Worker script for core content pages | Keep dynamic Worker invocations at zero in MVP |
-| Source and editorial workflow | Private GitHub, Markdown and pull requests | Auditable content approvals without database |
-| Design | Responsive CSS and accessible HTML | Lightweight reading experience |
-| Search | Navigation and static client-side index if needed | Avoid paid runtime API |
-| Database / storage | None for MVP beyond compiled static assets | No need for D1/KV/R2 to serve content |
-| APIs | Optional future Cloudflare Worker endpoints | Add only after approval of runtime, data and costs |
+The deployed project is **Cloudflare Pages**, not a Cloudflare Workers Static Assets project. The Pages project reports \`uses_functions=false\`. Node.js runs during development and CI builds; it is not a persistent production server.
 
-## Node.js compatibility
+Cloudflare currently recommends Workers for new projects, but this repository already has a Pages Direct Upload project and a successful production deployment. Do not migrate hosting as part of an unrelated documentation change.
 
-Cloudflare Workers supports a **subset** of Node.js APIs; some package shims are non-functional. A Worker with a compatibility date on or after **2026-08-04** enables Node compatibility by default; older compatibility dates may require `nodejs_compat`. Compatibility does not transform the Worker into an always-on Node.js VM. Validate third-party dependencies before selecting them.
+## Why static output
 
-## Critical Astro caveat
+The current site is an educational content site. Prerendering the pages avoids a runtime database and server process, keeps the deployment simple and fits the intended low-cost hosting model.
 
-Astro prerenders static pages by default. Adding Astro's Cloudflare adapter can change output to server rendering: pages not explicitly prerendered would invoke a Worker. **Do not add a server adapter for MVP.** Deploy the static build output as assets.
+## Current deployment evidence
 
-## Free limits to respect
+See [Cloudflare Pages architecture](cloudflare-pages-architecture.md) and [Cloudflare configuration](../operations/cloudflare-configuration.md). The current successful deployment is tied to main commit \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
 
-Worker Free scripts: **100,000 requests/day**, **10 ms CPU per HTTP request**, **128 MB memory** and **50 subrequests per request**; asset limit **20,000 files per Worker version** and **25 MiB per file**. Static asset requests themselves are free and unlimited. See [the detailed deployment plan](06-cloudflare-free-node-deployment.md) for policies, tradeoffs and validation.
+## Deferred capabilities
 
-## Deferred alternatives
-
-Managed databases, CMS backends, always-on Node/Express services, SSR for article pages, dynamic personalization, accounts and paid add-ons require a new ADR and usage budget.
-
-## Sources
-
-[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) · [Static Assets billing](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/) · [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) · [Node.js APIs](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) · [Astro guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/)
+Admin APIs, account management, database storage, forms, media upload, full localization and SSR are not part of the current source. They require approved architecture and security/cost review before implementation.

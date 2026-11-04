@@ -1,50 +1,47 @@
-# Content Schema, Routing and Author Workflow
+# Content Schema and Routing
 
-**Status:** Implemented MVP baseline · **Updated:** 2026-11-04
+**Status:** Current English-only Markdown implementation · **Updated:** 2026-11-05.
 
 ## Source of truth
 
-Markdown content lives under `src/content/`, categorized into `lessons`, `culture`, `festivals` and `books`. `src/content.config.ts` validates metadata using Astro collections and a glob loader.
+Markdown files live under \`src/content/\` in the \`lessons\`, \`culture\`, \`festivals\` and \`books\` collections. \`src/content.config.ts\` uses Astro's \`glob\` loader and a shared Zod schema.
 
-## Frontmatter fields
+## Actual frontmatter schema
 
-| Field | Required? | Type | Meaning |
-|---|---|---|---|
-| `title` | Yes | string | Reader-facing name and browser title |
-| `description` | Yes | string | Introductory summary and SEO description |
-| `category` | Yes | string | Section descriptor displayed above title |
-| `chinese` | No | string | Chinese characters shown with language annotation |
-| `pinyin` | No | string | Pronunciation metadata (planned UI enhancement) |
-| `level` | No | string | e.g. Beginner |
-| `order` | No | number | Learning sequence; defaults to alphabetical after unspecified order |
-| `readingMinutes` | No | positive integer | Estimated time, default 5 |
-| `featured` | No | boolean | Editorial feature flag, default false (future curated home behavior) |
+| Field | Required | Type / behavior |
+|---|---:|---|
+| \`title\` | Yes | String |
+| \`description\` | Yes | String |
+| \`category\` | Yes | String |
+| \`chinese\` | No | Optional Chinese characters/term |
+| \`pinyin\` | No | Optional string |
+| \`level\` | No | Optional string |
+| \`order\` | No | Optional number |
+| \`readingMinutes\` | No | Positive integer; default 5 |
+| \`featured\` | No | Boolean; default false; not currently used by homepage selection |
 
-## Routing contract
+There is no locale, translation ID, publication status, localized slug, cover image or CMS audit field in the current schema.
 
-The file name (without `.md`) becomes the entry ID and URL slug. For example:
+## Current routes
 
-- `src/content/lessons/02-language-and-writing.md` → `/learn/02-language-and-writing/`
-- `src/content/culture/calligraphy-and-the-brush.md` → `/culture/calligraphy-and-the-brush/`
-- `src/content/festivals/spring-festival.md` → `/festivals/spring-festival/`
-- `src/content/books/the-analects.md` → `/books/the-analects/`
+- \`src/content/lessons/<file>.md\` → \`/learn/<file>/\`
+- \`src/content/culture/<file>.md\` → \`/culture/<file>/\`
+- \`src/content/festivals/<file>.md\` → \`/festivals/<file>/\`
+- \`src/content/books/<file>.md\` → \`/books/<file>/\`
 
-Static paths are enumerated in Astro at build time. A renamed Markdown file changes its public URL: create a redirect plan and update internal links before renaming published content.
+The filename without \`.md\` is the entry ID and URL slug. Astro enumerates static paths at build time.
 
-## Adding a lesson
+## Ordering and homepage behavior
 
-1. Copy the [article brief](../templates/article-brief.md) and verify teaching intent, sources and reviewer.
-2. Write a unique kebab-case Markdown file under the correct collection.
-3. Add `title`, `description`, `category`, and optionally `chinese`, `pinyin`, `level`, `order` and `readingMinutes`.
-4. Write original, beginner-friendly sections; differentiate historical evidence from folklore.
-5. Add trusted further-reading links and licensing information for any media.
-6. Check language, dates, article link paths and first-time-reader clarity.
-7. Run `npm run build` and `npm run verify`, then submit a PR for review.
+Collection index pages sort by \`order\` (missing values sort after explicit order), then title. The homepage sorts lessons by \`order\` and shows the first three. It takes the first three culture and festival entries without filtering by \`featured\`.
 
-## Editorial quality
+## Current limitations
 
-These first 13 pages are development starter content and need final human cultural/factual review before an official public launch. External links and citations are educational references, not endorsements. Full copyrighted books and scraped images are not committed.
+- Only English page bodies are implemented.
+- The \`chinese\` field is terminology, not a translated body.
+- No events collection exists.
+- No draft/publish status exists; files in collections are included in the build.
+- No canonical or alternate-language metadata is emitted by the shared layout.
+- No language switcher exists.
 
-## Future schema changes
-
-Avoid breaking existing content. Version conceptual schema decisions in documentation; update all affected files and generated routes together with CI evidence. Introduce translations through a separate reviewed localization decision.
+For localization, use [Bilingual Routing](bilingual-routing.md) and [Localization Content Model](localization-content-model.md). Agent 0's approved contracts must govern any new schema.
