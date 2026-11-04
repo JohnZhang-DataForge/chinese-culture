@@ -116,6 +116,7 @@ const demo = import.meta.env.DEV;
                   <label>URL slug<input name="slug.en" maxlength="120" placeholder="your-story-slug" /></label>
                   <label>Short description<textarea name="description.en" rows="3" maxlength="500" placeholder="A short introduction for readers and search results"></textarea></label>
                   <label>Category<input name="category.en" maxlength="100" placeholder="Arts &amp; traditions" /></label>
+                  <label>Tags<input name="tags.en" maxlength="800" placeholder="calligraphy, history, art" /><small class="field-hint">Separate tags with commas.</small></label>
                   <label>Article body<textarea class="body-editor" name="body.en" rows="15" maxlength="200000" placeholder="Write your article in Markdown…"></textarea><small class="field-hint">Markdown supported. Use headings, lists, links and emphasis.</small></label>
                   <div class="form-grid variant-meta"><label>Reading time (minutes)<input type="number" name="readingMinutes.en" min="1" max="240" value="5" /></label><label>Learning level<input name="level.en" maxlength="80" placeholder="Beginner" /></label></div>
                   <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.en" /> <span>Feature this English version</span></label>
@@ -129,6 +130,7 @@ const demo = import.meta.env.DEV;
                   <label>URL slug<input name="slug.zh" maxlength="120" placeholder="wenhua-gushi" /></label>
                   <label>简短介绍<textarea name="description.zh" rows="3" maxlength="500" placeholder="为读者和搜索结果提供简短介绍"></textarea></label>
                   <label>分类<input name="category.zh" maxlength="100" placeholder="文化与传统" /></label>
+                  <label>标签<input name="tags.zh" maxlength="800" placeholder="书法、历史、艺术" /><small class="field-hint">使用逗号分隔。</small></label>
                   <label>正文<textarea class="body-editor" name="body.zh" rows="15" maxlength="200000" placeholder="使用 Markdown 编写中文内容…"></textarea><small class="field-hint">中文内容独立保存，不会覆盖英文版本。</small></label>
                   <div class="form-grid variant-meta"><label>阅读时间（分钟）<input type="number" name="readingMinutes.zh" min="1" max="240" value="5" /></label><label>学习级别<input name="level.zh" maxlength="80" placeholder="入门" /></label></div>
                   <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.zh" /> <span>在首页推荐此中文版本</span></label>
@@ -142,7 +144,7 @@ const demo = import.meta.env.DEV;
                   <div class="form-grid">
                     <label class="full-field">Content ID<input name="id" readonly placeholder="Assigned by the content service" /><small class="field-hint">Stable ID is immutable and managed by the backend.</small></label>
                     <label class="full-field">Collection<select name="type"><option value="articles">Article (culture)</option><option value="lessons">Learning guide</option><option value="festivals">Festival</option><option value="books">Book</option><option value="events">Event</option></select></label>
-                    <label class="full-field">Tags<input name="tags" disabled placeholder="Waiting for the approved API contract" /><small class="field-hint">The shared content model defines tags, but the current API write schema does not expose them yet.</small></label>
+                    <label class="full-field">Tag storage is locale-specific and edited in the language panels above.<small class="field-hint">Tags are stored independently with each language variant.</small></label>
                     <label>Publication workflow<select name="status" disabled><option value="draft">Save creates a draft</option><option value="published">Publish through a review PR</option><option value="unpublished">Unpublish through a review PR</option></select><small class="field-hint">Publishing never merges a pull request automatically.</small></label>
                   </div>
                 </section>

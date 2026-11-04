@@ -163,14 +163,14 @@ if (root) {
       mediaAlt:formValue("mediaAlt." + suffix).trim(),
       mediaCredit:formValue("mediaCredit." + suffix).trim(),
       mediaLicense:formValue("mediaLicense." + suffix).trim(),
-      mediaSource:formValue("mediaSource." + suffix).trim()
+      mediaSource:formValue("mediaSource." + suffix).trim(),
+      tags:parseTags(formValue("tags." + suffix))
     };
   };
   const formData = () => ({
     id:formValue("id"),
     type:formValue("type") || state.collection,
     locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN")},
-    tags:parseTags(formValue("tags")),
     seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh")}}
   });
   const setField = (name,value) => { const field = form.elements.namedItem(name); if (!field) return; if (field.type === "checkbox") field.checked = Boolean(value); else field.value = value ?? ""; };
@@ -211,6 +211,7 @@ if (root) {
       description:value.description,
       category:value.category,
       featured:value.featured,
+      tags:value.tags,
       readingMinutes:value.readingMinutes,
       bodyMarkdown:value.bodyMarkdown,
       media,
@@ -227,12 +228,16 @@ if (root) {
     const merged = new Map();
     const add = (summary) => {
       const id = summary.contentId;
-      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null},pullRequest:null});
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null},categories:{en:"",zh:""},pullRequest:null});
       const item = merged.get(id);
       const locale = summary.locale;
       const suffix = uiLocale(locale);
       item.variants[locale] = summary;
       item.title[suffix] = summary.title || "";
+      item.description[suffix] = summary.description || "";
+      item.categories[suffix] = summary.category || "";
+      item.category = item.category || summary.category || "";
+      item.tags = [...new Set([...(item.tags || []),...(summary.tags || [])])];
       item.slug = item.slug || summary.slug;
       item.statuses.push(summary.status);
       item.featured = item.featured || Boolean(summary.featured);
@@ -299,7 +304,8 @@ if (root) {
       setField("slug." + suffix,variant?.slug ?? demo?.slug ?? (locale === "en" ? value.slug : "") ?? "");
       setField("description." + suffix,variant?.description ?? demo?.description ?? value.description?.[suffix] ?? "");
       setField("body." + suffix,variant?.bodyMarkdown ?? demo?.bodyMarkdown ?? value.body?.[suffix] ?? "");
-      setField("category." + suffix,variant?.category ?? demo?.category ?? value.category ?? "");
+      setField("category." + suffix,variant?.category ?? demo?.category ?? value.categories?.[suffix] ?? value.category ?? "");
+      setField("tags." + suffix,(variant?.tags || demo?.tags || value.tags || []).join(", "));
       setField("featured." + suffix,variant?.featured ?? demo?.featured ?? value.featured ?? false);
       setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
       setField("level." + suffix,variant?.level ?? demo?.level ?? "");
@@ -441,7 +447,7 @@ if (root) {
         body:{en:value.locales.en.bodyMarkdown,zh:value.locales["zh-CN"].bodyMarkdown},
         slug:value.locales.en.slug || value.locales["zh-CN"].slug,
         category:value.locales.en.category || value.locales["zh-CN"].category,
-        tags:value.tags,status:"draft",featured:value.locales.en.featured || value.locales["zh-CN"].featured,
+        tags:[...new Set([...value.locales.en.tags,...value.locales["zh-CN"].tags])],status:"draft",featured:value.locales.en.featured || value.locales["zh-CN"].featured,
         updatedAt:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),
         translationLocales:complete.map((locale)=>locale)
       };
