@@ -19,7 +19,7 @@
 
 ## Important platform distinction
 
-The deployed project is **Cloudflare Pages**, not a Cloudflare Workers Static Assets project. The Pages project reports \`uses_functions=false\`. Node.js runs during development and CI builds; it is not a persistent production server.
+The deployed project is **Cloudflare Pages**, not a Cloudflare Workers Static Assets project. The Pages project reports `uses_functions=false`. Node.js runs during development and CI builds; it is not a persistent production server.
 
 Cloudflare currently recommends Workers for new projects, but this repository already has a Pages Direct Upload project and a successful production deployment. Do not migrate hosting as part of an unrelated documentation change.
 
@@ -29,7 +29,7 @@ The current site is an educational content site. Prerendering the pages avoids a
 
 ## Current deployment evidence
 
-See [Cloudflare Pages architecture](cloudflare-pages-architecture.md) and [Cloudflare configuration](../operations/cloudflare-configuration.md). The current successful deployment is tied to main commit \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+See [Cloudflare Pages architecture](cloudflare-pages-architecture.md) and [Cloudflare configuration](../operations/cloudflare-configuration.md). The current successful deployment is tied to main commit `539b37c9bfa5363f7149c95563bd549957eeff3d`.
 
 ## Deferred capabilities
 

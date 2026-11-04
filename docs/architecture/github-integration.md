@@ -4,31 +4,31 @@
 
 ## Current repository model
 
-- Repository: \`JohnZhang-DataForge/chinese-culture\`.
+- Repository: `JohnZhang-DataForge/chinese-culture`.
 - Visibility: private.
-- Default branch: \`main\`.
+- Default branch: `main`.
 - Source of truth: Astro source, Markdown collections, public assets and workflow configuration committed to Git.
-- Current publishing boundary: reviewed pull request merged to \`main\`.
+- Current publishing boundary: reviewed pull request merged to `main`.
 
 ## Current workflows
 
 | Workflow | Trigger | Behavior |
 |---|---|---|
-| \`site-ci.yml\` | Pull request; push to \`main\` | Node 22, install, Astro build and static verifier |
-| \`pages-deploy.yml\` | Push to \`main\`; manual dispatch | Build and verify, token preflight, Wrangler Pages Direct Upload |
+| `site-ci.yml` | Pull request; push to `main` | Node 22, install, Astro build and static verifier |
+| `pages-deploy.yml` | Push to `main`; manual dispatch | Build and verify, token preflight, Wrangler Pages Direct Upload |
 
 Pull requests run CI but do not deploy production. A main push triggers Pages deployment.
 
 ## Current credentials
 
-- \`GITHUB_TOKEN\` is automatically supplied by GitHub Actions.
-- \`CLOUDFLARE_API_TOKEN\` is a repository Actions secret used by Wrangler.
+- `GITHUB_TOKEN` is automatically supplied by GitHub Actions.
+- `CLOUDFLARE_API_TOKEN` is a repository Actions secret used by Wrangler.
 - No GitHub PAT is required by the current static-site workflow.
-- No production CMS GitHub App integration exists in current \`main\`.
+- No production CMS GitHub App integration exists in current `main`.
 
 ## Proposed GitHub App for the CMS
 
-Agent 0's Proposed design specifies a GitHub App installed only on \`JohnZhang-DataForge/chinese-culture\` with minimum permissions:
+Agent 0's Proposed design specifies a GitHub App installed only on `JohnZhang-DataForge/chinese-culture` with minimum permissions:
 
 - Metadata: read.
 - Contents: read/write.
@@ -39,7 +39,7 @@ The separate Admin Worker would create short-lived installation tokens server-si
 
 ## Proposed editorial branch model
 
-The Worker writes to \`cms/<contentId>/<locale>\` branches, creates or updates a PR to \`main\`, and reads PR/check status. It must not merge PRs. Human review and repository checks remain the publishing gate.
+The Worker writes to `cms/<contentId>/<locale>` branches, creates or updates a PR to `main`, and reads PR/check status. It must not merge PRs. Human review and repository checks remain the publishing gate.
 
 ## Integration status
 

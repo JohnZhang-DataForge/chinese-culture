@@ -21,12 +21,12 @@ Current collection folders:
 
 | Collection | Current source directory | Current route |
 |---|---|---|
-| Lessons | \`src/content/lessons/\` | \`/learn/<slug>/\` |
-| Culture | \`src/content/culture/\` | \`/culture/<slug>/\` |
-| Festivals | \`src/content/festivals/\` | \`/festivals/<slug>/\` |
-| Books | \`src/content/books/\` | \`/books/<slug>/\` |
+| Lessons | `src/content/lessons/` | `/learn/<slug>/` |
+| Culture | `src/content/culture/` | `/culture/<slug>/` |
+| Festivals | `src/content/festivals/` | `/festivals/<slug>/` |
+| Books | `src/content/books/` | `/books/<slug>/` |
 
-A file in one of these collections is included in the build. There is no draft status field or scheduling mechanism. The homepage currently does not use \`featured\` to select content. Events are a hard-coded empty state.
+A file in one of these collections is included in the build. There is no draft status field or scheduling mechanism. The homepage currently does not use `featured` to select content. Events are a hard-coded empty state.
 
 ## Proposed CMS workflow
 
@@ -45,24 +45,24 @@ flowchart TD
   H --> I[Pages build includes published content]
 ~~~
 
-- Save Draft writes \`status=draft\` to a CMS-owned branch.
+- Save Draft writes `status=draft` to a CMS-owned branch.
 - Submit for review creates/updates a PR while keeping draft status.
-- Publish changes the PR branch to \`status=published\`; the content becomes public only after human merge and successful Pages deployment.
-- Unpublish changes the PR branch to \`status=unpublished\`; the public route is removed only after merge and deployment.
-- The Worker API never merges PRs or writes directly to \`main\`.
+- Publish changes the PR branch to `status=published`; the content becomes public only after human merge and successful Pages deployment.
+- Unpublish changes the PR branch to `status=unpublished`; the public route is removed only after merge and deployment.
+- The Worker API never merges PRs or writes directly to `main`.
 
 ## Proposed status semantics
 
 | State | Public build | Source retention |
 |---|---|---|
-| \`draft\` | Excluded | CMS branch |
-| \`published\` | Included | \`main\` after reviewed merge |
-| \`unpublished\` | Excluded | Retained in \`main\` after reviewed merge |
+| `draft` | Excluded | CMS branch |
+| `published` | Included | `main` after reviewed merge |
+| `unpublished` | Excluded | Retained in `main` after reviewed merge |
 
-\`featured\` is independent of status. Only published content can appear in public featured placements.
+`featured` is independent of status. Only published content can appear in public featured placements.
 
 ## Review requirements
 
 Check factual accuracy, cultural nuance, sources, image rights, accessible alt text, metadata, locale completeness, internal links, route compatibility and generated public output. Draft and unpublished content must not appear in routes, sitemap, public search or featured modules.
 
-The CMS workflow is proposed, not implemented in current \`main\`. See [content management guide](../implementation/content-management-guide.md).
+The CMS workflow is proposed, not implemented in current `main`. See [content management guide](../implementation/content-management-guide.md).

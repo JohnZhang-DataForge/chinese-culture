@@ -1,13 +1,13 @@
 # Implementation Status
 
 **Snapshot date:** 2026-11-05  
-**Main baseline:** \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+**Main baseline:** `539b37c9bfa5363f7149c95563bd549957eeff3d`.
 
 ## Executive summary
 
-The English-language static Astro website is built, CI-verified and deployed to Cloudflare Pages. Both apex and \`www\` custom domains now report active Pages validation and an active Universal SSL certificate. External HTTP/TLS smoke testing has not yet been independently completed from the available execution environment.
+The English-language static Astro website is built, CI-verified and deployed to Cloudflare Pages. Both apex and `www` custom domains now report active Pages validation and an active Universal SSL certificate. External HTTP/TLS smoke testing has not yet been independently completed from the available execution environment.
 
-The bilingual CMS program is in progress across separate agent branches and PRs. The shared Agent 0 contracts are still Proposed and not Ready. No bilingual routes, production CMS, Admin API, admin authentication or media upload are merged to \`main\` at this snapshot.
+The bilingual CMS program is in progress across separate agent branches and PRs. The shared Agent 0 contracts are still Proposed and not Ready. No bilingual routes, production CMS, Admin API, admin authentication or media upload are merged to `main` at this snapshot.
 
 ## Current main status
 
@@ -22,7 +22,7 @@ The bilingual CMS program is in progress across separate agent branches and PRs.
 | WWW custom domain | Active in Cloudflare API | Verification and HTTP validation active |
 | Universal SSL | Active in Cloudflare API | Certificate covers apex and wildcard |
 | External HTTP/TLS smoke test | Not verified | Execution environment could not resolve public hostnames |
-| Bilingual route tree | Not implemented in main | Agent 0 proposes \`/en/\` and \`/zh-cn/\` |
+| Bilingual route tree | Not implemented in main | Agent 0 proposes `/en/` and `/zh-cn/` |
 | Chinese translation content | Not migrated in main | Agent 3 has inventory/style guide draft only |
 | Admin dashboard | Not merged | Agent 4 PR is draft and mock-only in dev |
 | Admin API/backend | Not merged | Agent 5 branch currently conflicts with Agent 0 runtime proposal |
@@ -34,13 +34,13 @@ The bilingual CMS program is in progress across separate agent branches and PRs.
 
 ## Production deployment evidence
 
-- Cloudflare Pages project: \`chinese-culture\`.
-- Production deployment ID: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
-- Deployed source SHA: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
-- Pages Functions: disabled (\`uses_functions=false\`).
+- Cloudflare Pages project: `chinese-culture`.
+- Production deployment ID: `ce2e7daa-86af-4f55-baed-80730b63e7c7`.
+- Deployed source SHA: `539b37c9bfa5363f7149c95563bd549957eeff3d`.
+- Pages Functions: disabled (`uses_functions=false`).
 - Pages hostname: [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
-- Apex and \`www\` Pages custom-domain API statuses: active.
-- Active Universal SSL certificate covers \`chinese-culture.site\` and \`*.chinese-culture.site\`.
+- Apex and `www` Pages custom-domain API statuses: active.
+- Active Universal SSL certificate covers `chinese-culture.site` and `*.chinese-culture.site`.
 
 Cloudflare API configuration evidence is not a substitute for an external browser/HTTP/TLS smoke test.
 
@@ -53,15 +53,15 @@ Cloudflare API configuration evidence is not a substitute for an external browse
 | Agent 2 | Localization frontend | Branch currently identical to main; implementation has not appeared in the inspected branch |
 | Agent 3 | PR #2 — English content inventory and Simplified Chinese style guide | Draft; migration waits for Agent 0 contract readiness |
 | Agent 4 | PR #4 — Admin frontend workspace | Draft; development-only mock records; real API integration pending |
-| Agent 5 | Backend branch | Contains Pages Functions under \`functions/\`; conflicts with Agent 0's proposed separate Worker. Must be reconciled before integration |
-| Agent 6 | PR #6 — Playwright and QA workflow | Open; bilingual tests currently reference \`/zh/\`, while Agent 0 proposes \`/zh-cn/\`; align before release |
+| Agent 5 | Backend branch | Contains Pages Functions under `functions/`; conflicts with Agent 0's proposed separate Worker. Must be reconciled before integration |
+| Agent 6 | PR #6 — Playwright and QA workflow | Open; bilingual tests currently reference `/zh/`, while Agent 0 proposes `/zh-cn/`; align before release |
 | Agent 7 | Documentation branch | This documentation update; must be reconciled after contracts and feature PRs merge |
 
 ## Agent 0 contract snapshot
 
 PR #3 proposes:
-- CC-CONTENT-001 v1.0.0: locale values \`en\` and \`zh-CN\`; route segments \`en\` and \`zh-cn\`; immutable shared \`contentId\`; status \`draft/published/unpublished\`.
-- Admin API OpenAPI 3.1.0 v1.0.0 under \`/api/admin/v1\`.
+- CC-CONTENT-001 v1.0.0: locale values `en` and `zh-CN`; route segments `en` and `zh-cn`; immutable shared `contentId`; status `draft/published/unpublished`.
+- Admin API OpenAPI 3.1.0 v1.0.0 under `/api/admin/v1`.
 - Static public Pages plus a separate Admin Worker, Cloudflare Access and GitHub App.
 - CMS branches and PR-based publication; no direct main writes or automatic merges.
 
@@ -70,14 +70,14 @@ The PR is Proposed and explicitly not Ready. This documentation describes the pr
 ## Key integration blockers
 
 1. Agent 5's Pages Functions implementation conflicts with the separate Worker architecture in Agent 0's proposal.
-2. Agent 6's \`/zh/\` test paths conflict with Agent 0's proposed \`/zh-cn/\` route segment.
+2. Agent 6's `/zh/` test paths conflict with Agent 0's proposed `/zh-cn/` route segment.
 3. Agent 4's UI needs the frozen API and real backend; its current mock mode is not a production CMS.
 4. Agent 0 must announce the content and API contracts Ready before Agents 2–5 implement against them.
 5. Main branch protection and required checks must be confirmed before the final publishing flow is accepted.
 
 ## Documentation debt
 
-The repository-root \`README.md\` previously described the first Pages deployment as pending a token. This branch updates that stale statement and points readers to the canonical docs. External hostname smoke testing remains a separate open item.
+The repository-root `README.md` previously described the first Pages deployment as pending a token. This branch updates that stale statement and points readers to the canonical docs. External hostname smoke testing remains a separate open item.
 
 ## Verification references
 

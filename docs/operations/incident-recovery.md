@@ -5,7 +5,7 @@ This runbook covers the current static website and Pages deployment. It does not
 ## 1. Website unavailable
 
 1. Check the Cloudflare Pages project and latest production deployment.
-2. Check the existing \`pages.dev\` hostname.
+2. Check the existing `pages.dev` hostname.
 3. If Pages is healthy but a custom domain fails, inspect zone status, DNS CNAMEs, Pages custom-domain status, Universal SSL and redirect rules.
 4. Determine whether the failure affects apex, www or both.
 5. Do not delete the Pages project or replace nameservers as a first response.
@@ -15,8 +15,8 @@ This runbook covers the current static website and Pages deployment. It does not
 
 1. Open the failed run in GitHub Actions.
 2. Identify the failing step: checkout, Node setup, npm install, Astro build, static verification, token preflight or Wrangler upload.
-3. For build failures, reproduce with \`npm install\`, \`npm run build\` and \`npm run verify\`.
-4. For token failures, confirm the repository secret is named \`CLOUDFLARE_API_TOKEN\` and is valid.
+3. For build failures, reproduce with `npm install`, `npm run build` and `npm run verify`.
+4. For token failures, confirm the repository secret is named `CLOUDFLARE_API_TOKEN` and is valid.
 5. Never print the secret value.
 6. Fix source or credential configuration through an approved change and rerun.
 
@@ -27,7 +27,7 @@ The latest Cloudflare API state reports both Pages custom domains active, both H
 The redirect ruleset contains:
 - WWW → HTTPS apex, 301, preserving path/query.
 - Apex HTTP → HTTPS apex, 301, preserving path/query.
-- Both rules exclude \`/.well-known/acme-challenge/*\`.
+- Both rules exclude `/.well-known/acme-challenge/*`.
 
 Cloudflare configuration does not replace an external smoke test. Use a normal workstation to check DNS resolution, TLS handshake, HTTP status and the complete redirect chain. If a redirect rule is suspected, inspect the exact expression before changing it.
 
@@ -35,9 +35,9 @@ Cloudflare configuration does not replace an external smoke test. Use a normal w
 
 1. Confirm the source file exists in the expected current collection.
 2. Confirm required frontmatter is valid.
-3. Run \`npm run build\` and \`npm run verify\`.
-4. Check the generated \`dist/\` route.
-5. Confirm the content change was merged to \`main\`.
+3. Run `npm run build` and `npm run verify`.
+4. Check the generated `dist/` route.
+5. Confirm the content change was merged to `main`.
 6. Confirm the production deployment references that commit.
 7. If a published slug was renamed, add an approved redirect.
 

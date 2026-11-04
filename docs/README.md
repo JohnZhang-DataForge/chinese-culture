@@ -1,7 +1,7 @@
 # Chinese Culture Atlas — Documentation Index
 
 **Documentation snapshot:** 2026-11-05  
-**Verified main baseline:** \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+**Verified main baseline:** `539b37c9bfa5363f7149c95563bd549957eeff3d`.
 
 This index distinguishes the current deployed implementation from the proposed bilingual CMS program. A proposal or open PR is not proof of a production feature.
 
@@ -70,4 +70,4 @@ Product plans, information architecture, editorial strategy, design direction, i
 - Describe only behavior supported by source, configuration or operational evidence.
 - Keep secrets and private keys out of Git and documentation.
 - Update implementation status, repository map, relevant architecture pages and change log after each major feature is merged.
-- Agent 0 owns \`docs/openspec/\`; Agent 7 must not edit that directory.
+- Agent 0 owns `docs/openspec/`; Agent 7 must not edit that directory.

@@ -1,6 +1,6 @@
 # Administrator User Guide
 
-**Important:** A production browser-based Admin CMS is not merged or deployed yet. The current \`main\` branch has no supported Admin login or live content dashboard.
+**Important:** A production browser-based Admin CMS is not merged or deployed yet. The current `main` branch has no supported Admin login or live content dashboard.
 
 Agent 4 has an open draft PR that adds an Admin UI workspace, but its PR states that it uses development-only mock records. Production does not display mock content or claim writes succeeded. The UI is not a production publishing tool until it is integrated with Agent 5's real backend and Agent 0's approved contract.
 
@@ -15,11 +15,11 @@ Use the private GitHub repository:
 
 ## Editing an existing article in GitHub
 
-1. Open the private repository \`JohnZhang-DataForge/chinese-culture\`.
-2. Browse to \`src/content/\` and open the correct current folder: \`lessons\`, \`culture\`, \`festivals\` or \`books\`.
+1. Open the private repository `JohnZhang-DataForge/chinese-culture`.
+2. Browse to `src/content/` and open the correct current folder: `lessons`, `culture`, `festivals` or `books`.
 3. Open the Markdown file and choose Edit.
 4. Change the text while preserving the metadata block at the top.
-5. Choose **Commit changes** and create a new branch. Do not commit directly to \`main\`.
+5. Choose **Commit changes** and create a new branch. Do not commit directly to `main`.
 6. Open the pull request GitHub offers, or create one from the Pull requests tab.
 7. Explain the content change and wait for CI.
 8. Ask for review, then merge only after the content and checks are approved.
@@ -29,9 +29,9 @@ If you do not have permission to edit the private repository, ask the repository
 
 ## Adding new content
 
-Use the current folder and metadata rules in [Content Management Guide](content-management-guide.md). A new Markdown file in one of the four collections becomes a public page after it is merged to \`main\` and the production deployment succeeds.
+Use the current folder and metadata rules in [Content Management Guide](content-management-guide.md). A new Markdown file in one of the four collections becomes a public page after it is merged to `main` and the production deployment succeeds.
 
-The future contract proposes locale-specific paths such as \`src/content/culture/en/<slug>.md\` and \`src/content/culture/zh-CN/<slug>.md\`. Do not move current files until Agent 2/3 migration is merged.
+The future contract proposes locale-specific paths such as `src/content/culture/en/<slug>.md` and `src/content/culture/zh-CN/<slug>.md`. Do not move current files until Agent 2/3 migration is merged.
 
 ## What is not yet available in production
 

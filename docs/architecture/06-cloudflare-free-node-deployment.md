@@ -20,20 +20,20 @@ flowchart LR
 
 ## Verified project configuration
 
-- Pages project: \`chinese-culture\`.
-- Pages project ID: \`7d79fba6-5fed-4f22-bce1-7e46dc5bfd06\`.
-- Pages hostname: \`chinese-culture-79h.pages.dev\`.
-- Output directory: \`./dist\`.
-- Wrangler compatibility date: \`2026-11-04\`.
-- Production branch: \`main\`.
+- Pages project: `chinese-culture`.
+- Pages project ID: `7d79fba6-5fed-4f22-bce1-7e46dc5bfd06`.
+- Pages hostname: `chinese-culture-79h.pages.dev`.
+- Output directory: `./dist`.
+- Wrangler compatibility date: `2026-11-04`.
+- Production branch: `main`.
 - Pages Functions: disabled.
-- Latest verified deployment ID: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
-- Deployed source SHA: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+- Latest verified deployment ID: `ce2e7daa-86af-4f55-baed-80730b63e7c7`.
+- Deployed source SHA: `539b37c9bfa5363f7149c95563bd549957eeff3d`.
 
 ## GitHub Actions
 
-- \`site-ci.yml\`: pull requests and pushes to main; Node 22, npm install, Astro build and static verification.
-- \`pages-deploy.yml\`: push to main and manual dispatch; builds and verifies, checks \`CLOUDFLARE_API_TOKEN\`, then runs Wrangler Direct Upload.
+- `site-ci.yml`: pull requests and pushes to main; Node 22, npm install, Astro build and static verification.
+- `pages-deploy.yml`: push to main and manual dispatch; builds and verifies, checks `CLOUDFLARE_API_TOKEN`, then runs Wrangler Direct Upload.
 - Pull requests do not deploy to production.
 
 ## Free-plan discipline

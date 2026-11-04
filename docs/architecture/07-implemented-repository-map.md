@@ -1,51 +1,51 @@
 # Implemented Repository Map
 
-**Status:** Verified against main commit \`539b37c9bfa5363f7149c95563bd549957eeff3d\` · **Updated:** 2026-11-05.
+**Status:** Verified against main commit `539b37c9bfa5363f7149c95563bd549957eeff3d` · **Updated:** 2026-11-05.
 
 ## Build and delivery
 
-Private GitHub source → pull request review → \`main\` → GitHub Actions (Node 22) → Astro static build → \`dist/\` → Wrangler Direct Upload → Cloudflare Pages Free.
+Private GitHub source → pull request review → `main` → GitHub Actions (Node 22) → Astro static build → `dist/` → Wrangler Direct Upload → Cloudflare Pages Free.
 
 ## Application files
 
 | Location | Responsibility |
 |---|---|
-| \`package.json\` | Astro, Wrangler and dev/build/verify/deploy scripts |
-| \`astro.config.mjs\` | Static output and trailing-slash URLs |
-| \`wrangler.jsonc\` | Pages project name, compatibility date and \`./dist\` output |
-| \`src/layouts/BaseLayout.astro\` | HTML shell, English navigation, footer and skip link |
-| \`src/components/StoryCard.astro\` | Reusable content card |
-| \`src/styles/global.css\` | Typography, layout, responsive styles and focus treatment |
-| \`src/content.config.ts\` | Four Markdown collection definitions and frontmatter schema |
-| \`src/lib/sections.ts\` | Collection-to-route configuration |
-| \`src/pages/index.astro\` | Hard-coded English homepage sections |
-| \`src/pages/[section]/index.astro\` | Static collection indexes |
-| \`src/pages/[section]/[slug].astro\` | Static content detail pages |
-| \`src/pages/events/index.astro\` | Hard-coded Events empty state |
-| \`src/pages/about.astro\` | About page |
-| \`src/pages/contact.astro\` | Contact-channel pending state |
-| \`src/pages/editorial-policy.astro\` | Editorial policy |
-| \`src/pages/privacy.astro\` | Initial privacy notice |
-| \`src/pages/accessibility.astro\` | Accessibility statement and audit gap |
-| \`src/pages/404.astro\` | Not-found page |
-| \`src/content/lessons/\` | Five beginner lessons |
-| \`src/content/culture/\` | Three culture articles |
-| \`src/content/festivals/\` | Three evergreen festival guides |
-| \`src/content/books/\` | Two book-reading guides |
-| \`public/favicon.svg\` | Site favicon |
-| \`public/_headers\` | Current response headers |
-| \`public/robots.txt\` | Allows crawler access |
-| \`scripts/verify-static.mjs\` | Static route, link and Pages-limit checks |
+| `package.json` | Astro, Wrangler and dev/build/verify/deploy scripts |
+| `astro.config.mjs` | Static output and trailing-slash URLs |
+| `wrangler.jsonc` | Pages project name, compatibility date and `./dist` output |
+| `src/layouts/BaseLayout.astro` | HTML shell, English navigation, footer and skip link |
+| `src/components/StoryCard.astro` | Reusable content card |
+| `src/styles/global.css` | Typography, layout, responsive styles and focus treatment |
+| `src/content.config.ts` | Four Markdown collection definitions and frontmatter schema |
+| `src/lib/sections.ts` | Collection-to-route configuration |
+| `src/pages/index.astro` | Hard-coded English homepage sections |
+| `src/pages/[section]/index.astro` | Static collection indexes |
+| `src/pages/[section]/[slug].astro` | Static content detail pages |
+| `src/pages/events/index.astro` | Hard-coded Events empty state |
+| `src/pages/about.astro` | About page |
+| `src/pages/contact.astro` | Contact-channel pending state |
+| `src/pages/editorial-policy.astro` | Editorial policy |
+| `src/pages/privacy.astro` | Initial privacy notice |
+| `src/pages/accessibility.astro` | Accessibility statement and audit gap |
+| `src/pages/404.astro` | Not-found page |
+| `src/content/lessons/` | Five beginner lessons |
+| `src/content/culture/` | Three culture articles |
+| `src/content/festivals/` | Three evergreen festival guides |
+| `src/content/books/` | Two book-reading guides |
+| `public/favicon.svg` | Site favicon |
+| `public/_headers` | Current response headers |
+| `public/robots.txt` | Allows crawler access |
+| `scripts/verify-static.mjs` | Static route, link and Pages-limit checks |
 
 ## CI and deployment
 
 | Location | Responsibility |
 |---|---|
-| \`.github/workflows/site-ci.yml\` | Pull-request and main build verification |
-| \`.github/workflows/pages-deploy.yml\` | Wrangler Pages Direct Upload |
-| \`docs/architecture/\` | Architecture and implementation-oriented system docs |
-| \`docs/implementation/\` | Owner, developer, deployment and test guides |
-| \`docs/operations/\` | Cloudflare, credentials, security and recovery guides |
+| `.github/workflows/site-ci.yml` | Pull-request and main build verification |
+| `.github/workflows/pages-deploy.yml` | Wrangler Pages Direct Upload |
+| `docs/architecture/` | Architecture and implementation-oriented system docs |
+| `docs/implementation/` | Owner, developer, deployment and test guides |
+| `docs/operations/` | Cloudflare, credentials, security and recovery guides |
 
 ## Current route inventory
 

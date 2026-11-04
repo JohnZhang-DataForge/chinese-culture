@@ -4,7 +4,7 @@
 
 The private GitHub repository is the editable source of truth for Astro application source, Markdown content, static assets, workflows and documentation.
 
-The deployed \`dist/\` directory is generated output. The current main branch has no CMS database, event database, user-account store, external media object store or runtime upload area.
+The deployed `dist/` directory is generated output. The current main branch has no CMS database, event database, user-account store, external media object store or runtime upload area.
 
 ## What Git protects
 
@@ -36,7 +36,7 @@ For a full source rollback, use the reviewed Git revert process in [Rollback Pro
 
 ## Proposed CMS drafts and media
 
-Agent 0's Proposed design stores drafts on \`cms/<contentId>/<locale>\` branches and Git-backed media under \`public/media/<contentId>/\`. Published/unpublished content remains in Git history. These branches and paths are not yet implemented in current main.
+Agent 0's Proposed design stores drafts on `cms/<contentId>/<locale>` branches and Git-backed media under `public/media/<contentId>/`. Published/unpublished content remains in Git history. These branches and paths are not yet implemented in current main.
 
 If the CMS is delivered, include draft branches and media commits in the independent Git mirror and test restoration of both Markdown and image metadata.
 

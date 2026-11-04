@@ -6,11 +6,11 @@
 
 The current public website is static. The inspected main branch has no visitor accounts, login, contact form, newsletter, integrated analytics, runtime database or Admin API.
 
-\`public/_headers\` configures:
-- \`X-Content-Type-Options: nosniff\`
-- \`Referrer-Policy: strict-origin-when-cross-origin\`
-- \`X-Frame-Options: DENY\`
-- \`Permissions-Policy: camera=(), microphone=(), geolocation=()\`
+`public/_headers` configures:
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `X-Frame-Options: DENY`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
 
 The checked file does not configure CSP or HSTS. Main branch protection must be verified; Agent 0's baseline inspection reported it was not protected.
 

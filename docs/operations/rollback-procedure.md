@@ -29,8 +29,8 @@ Official reference: [Cloudflare Pages rollbacks](https://developers.cloudflare.c
 ## Git revert fallback
 
 1. Identify the faulty commit and last-known-good source.
-2. Create a branch from current \`main\`.
-3. Run \`git revert <bad-commit-sha>\` for a single commit, or carefully revert the required commit range.
+2. Create a branch from current `main`.
+3. Run `git revert <bad-commit-sha>` for a single commit, or carefully revert the required commit range.
 4. Open a PR and wait for CI.
 5. Merge after review.
 6. The main-branch workflow publishes the reverted source.

@@ -6,7 +6,7 @@ The earlier proposal in this file has been superseded by the actual implementati
 
 ## Current architecture
 
-Private GitHub source and Markdown content are reviewed through pull requests. GitHub Actions runs Node.js 22, builds Astro static output, verifies generated routes and links, then uses Wrangler Direct Upload to publish \`dist/\` to Cloudflare Pages Free.
+Private GitHub source and Markdown content are reviewed through pull requests. GitHub Actions runs Node.js 22, builds Astro static output, verifies generated routes and links, then uses Wrangler Direct Upload to publish `dist/` to Cloudflare Pages Free.
 
 ~~~mermaid
 flowchart TD

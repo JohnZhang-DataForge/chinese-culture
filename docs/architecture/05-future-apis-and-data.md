@@ -1,6 +1,6 @@
 # Future APIs, Data Models and Integrations
 
-**Status:** Public dynamic APIs and databases remain out of scope. A private Admin API is proposed in Agent 0 OpenSpec PR #3 but is not Ready or implemented in current \`main\`.
+**Status:** Public dynamic APIs and databases remain out of scope. A private Admin API is proposed in Agent 0 OpenSpec PR #3 but is not Ready or implemented in current `main`.
 
 ## Current MVP decision
 
@@ -8,7 +8,7 @@ The public site is static Astro content, human-reviewed GitHub changes and outbo
 
 ## Proposed private Admin API
 
-Agent 0's Proposed design introduces a same-origin Admin API at \`/api/admin/v1/*\`, served by a **separate Cloudflare Worker**, protected by Cloudflare Access and backed by a least-privilege GitHub App. The API manages Git-backed drafts, previews, media and PR submissions. It does not serve normal public pages, write directly to \`main\` or merge PRs.
+Agent 0's Proposed design introduces a same-origin Admin API at `/api/admin/v1/*`, served by a **separate Cloudflare Worker**, protected by Cloudflare Access and backed by a least-privilege GitHub App. The API manages Git-backed drafts, previews, media and PR submissions. It does not serve normal public pages, write directly to `main` or merge PRs.
 
 This is not the same as a public content API and does not require a database. The shared API contract is in Agent 0 PR #3; do not implement against it until Agent 0 marks it Ready.
 

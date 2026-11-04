@@ -1,7 +1,7 @@
 # Cloudflare Pages Deployment — Current State
 
 **Updated:** 2026-11-05  
-**Project:** \`chinese-culture\`  
+**Project:** `chinese-culture`  
 **Pages hostname:** [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev)  
 **Canonical custom domain:** [https://chinese-culture.site](https://chinese-culture.site)
 
@@ -9,10 +9,10 @@
 
 The latest Cloudflare Pages project read returned a successful production deployment:
 
-- Deployment ID: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
-- Source branch: \`main\`.
-- Source commit: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
-- Pages deployment stage: \`success\`.
+- Deployment ID: `ce2e7daa-86af-4f55-baed-80730b63e7c7`.
+- Source branch: `main`.
+- Source commit: `539b37c9bfa5363f7149c95563bd549957eeff3d`.
+- Pages deployment stage: `success`.
 - Pages Functions: disabled.
 - Project mode: Direct Upload.
 
@@ -23,17 +23,17 @@ GitHub Actions evidence:
 
 ## Current domain state
 
-- Zone \`chinese-culture.site\`: active.
+- Zone `chinese-culture.site`: active.
 - Apex Pages custom domain: active; verification and HTTP validation active.
 - WWW Pages custom domain: pending; verification active; HTTP validation pending.
-- Both DNS CNAME records point to \`chinese-culture-79h.pages.dev\` and are proxied.
-- An enabled 301 rule redirects \`www\` to the apex and preserves path/query.
+- Both DNS CNAME records point to `chinese-culture-79h.pages.dev` and are proxied.
+- An enabled 301 rule redirects `www` to the apex and preserves path/query.
 
-If \`www\` remains pending, investigate the HTTP validation path. Cloudflare documents that redirect rules can interfere with Pages HTTP validation. Do not remove the redirect or change DNS without coordinating with the infrastructure owner.
+If `www` remains pending, investigate the HTTP validation path. Cloudflare documents that redirect rules can interfere with Pages HTTP validation. Do not remove the redirect or change DNS without coordinating with the infrastructure owner.
 
 ## Deployment workflow
 
-The repository uses GitHub Actions + Wrangler Direct Upload. A push to \`main\` triggers deployment. Pull requests run CI only. The deployment workflow checks \`CLOUDFLARE_API_TOKEN\`, then uploads \`dist/\` to the existing Pages project. The account ID is configured in workflow YAML and is not a secret.
+The repository uses GitHub Actions + Wrangler Direct Upload. A push to `main` triggers deployment. Pull requests run CI only. The deployment workflow checks `CLOUDFLARE_API_TOKEN`, then uploads `dist/` to the existing Pages project. The account ID is configured in workflow YAML and is not a secret.
 
 ## Release verification
 

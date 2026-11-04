@@ -7,7 +7,7 @@
 - Review GitHub Actions for failed CI or Pages deployment runs.
 - Confirm the latest production Pages deployment references the expected main SHA.
 - Check apex and www HTTPS/redirect behavior from an external workstation.
-- Run \`npm run build\` and \`npm run verify\` after significant content or source changes.
+- Run `npm run build` and `npm run verify` after significant content or source changes.
 - Check outbound editorial links and citations for obvious breakage.
 - Review content correction requests and any upcoming public announcements.
 - Keep the Events page as an empty state until event records have a verified source and process.
@@ -21,9 +21,9 @@ Monitor:
 - Universal SSL certificate status and expiry.
 - DNS CNAME target and proxy status.
 - Redirect ruleset version and ACME path exclusions.
-- Static asset count and individual file sizes checked by \`scripts/verify-static.mjs\`.
+- Static asset count and individual file sizes checked by `scripts/verify-static.mjs`.
 
-Current Pages production is static and reports \`uses_functions=false\`. There is no persistent Node.js process to monitor. The proposed Admin Worker is not deployed; if it is later released, add separate Worker request, error, CPU, quota and deployment monitoring.
+Current Pages production is static and reports `uses_functions=false`. There is no persistent Node.js process to monitor. The proposed Admin Worker is not deployed; if it is later released, add separate Worker request, error, CPU, quota and deployment monitoring.
 
 Re-check official [Cloudflare pricing](https://developers.cloudflare.com/workers/platform/pricing/) and [limits](https://developers.cloudflare.com/workers/platform/limits/) before changing the runtime model.
 

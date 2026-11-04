@@ -10,18 +10,18 @@ This file replaces the earlier future-only deployment plan. See [Deployment Guid
 |---|---|
 | Local | Astro development server and static preview |
 | CI | GitHub Actions build and static verification |
-| Production | Cloudflare Pages project \`chinese-culture\` |
+| Production | Cloudflare Pages project `chinese-culture` |
 | Preview | Cloudflare Pages preview deployment capability exists at platform level; a dedicated project-specific preview release process is not documented here |
 
 ## Production release
 
-A push to \`main\` triggers CI and the Pages deployment workflow. Wrangler uploads \`dist/\` to the existing Direct Upload project. Pull requests run CI only.
+A push to `main` triggers CI and the Pages deployment workflow. Wrangler uploads `dist/` to the existing Direct Upload project. Pull requests run CI only.
 
 ## Current production evidence
 
-- Successful deployment: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
-- Source commit: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
-- Pages hostname: \`chinese-culture-79h.pages.dev\`.
+- Successful deployment: `ce2e7daa-86af-4f55-baed-80730b63e7c7`.
+- Source commit: `539b37c9bfa5363f7149c95563bd549957eeff3d`.
+- Pages hostname: `chinese-culture-79h.pages.dev`.
 - Pages Functions: disabled.
 - Apex custom domain: active.
 - WWW custom domain: pending validation.

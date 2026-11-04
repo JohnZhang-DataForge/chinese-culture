@@ -13,19 +13,19 @@ A welcoming educational website for exploring Chinese culture through beginner l
 - **Events** page with an honest empty state; no unverified event listings.
 - About, Contact (public channel pending), editorial policy, privacy, accessibility and 404 pages.
 - Cloudflare Pages Free Direct Upload; static assets only, no SSR adapter, Pages Functions, database or visitor accounts in current main.
-- GitHub Actions CI and automatic Pages deployment on pushes to \`main\`.
+- GitHub Actions CI and automatic Pages deployment on pushes to `main`.
 
 ## Production deployment
 
-The Pages project \`chinese-culture\` is deployed at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
+The Pages project `chinese-culture` is deployed at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
 
 Latest verified production deployment:
-- Deployment ID: \`ce2e7daa-86af-4f55-baed-80730b63e7c7\`.
-- Source commit: \`539b37c9bfa5363f7149c95563bd549957eeff3d\`.
+- Deployment ID: `ce2e7daa-86af-4f55-baed-80730b63e7c7`.
+- Source commit: `539b37c9bfa5363f7149c95563bd549957eeff3d`.
 - [Pages deployment workflow run](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872): success.
 - [Static CI run](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795): success.
 
-Cloudflare Pages API reports both \`chinese-culture.site\` and \`www.chinese-culture.site\` custom domains active, with HTTP validation active and an active Universal SSL certificate. The canonical redirect rules send \`www\` to the HTTPS apex and apex HTTP to HTTPS, preserving path/query and excluding the ACME validation path. An external HTTP/TLS smoke test is still outstanding because the execution environment could not resolve the public hostnames.
+Cloudflare Pages API reports both `chinese-culture.site` and `www.chinese-culture.site` custom domains active, with HTTP validation active and an active Universal SSL certificate. The canonical redirect rules send `www` to the HTTPS apex and apex HTTP to HTTPS, preserving path/query and excluding the ACME validation path. An external HTTP/TLS smoke test is still outstanding because the execution environment could not resolve the public hostnames.
 
 ## Start locally
 
@@ -42,23 +42,23 @@ npm run verify
 
 ## Cloudflare Pages deployment
 
-The site uses Cloudflare Pages Free Direct Upload. GitHub Actions uses repository secret \`CLOUDFLARE_API_TOKEN\` with the minimum Pages Write permission. The account ID is configured in the workflow and is not a secret.
+The site uses Cloudflare Pages Free Direct Upload. GitHub Actions uses repository secret `CLOUDFLARE_API_TOKEN` with the minimum Pages Write permission. The account ID is configured in the workflow and is not a secret.
 
-Pull requests run CI only. A push to \`main\` triggers the Pages deployment workflow. See [Deployment Guide](docs/implementation/deployment-guide.md) and [GitHub Token Setup](docs/operations/github-token-setup.md). Never paste the token into chat or commit it.
+Pull requests run CI only. A push to `main` triggers the Pages deployment workflow. See [Deployment Guide](docs/implementation/deployment-guide.md) and [GitHub Token Setup](docs/operations/github-token-setup.md). Never paste the token into chat or commit it.
 
 ## Project map
 
-- \`src/pages/\` — Astro routes and public information pages.
-- \`src/layouts/\` — shared website shell and navigation.
-- \`src/components/\` — reusable story card.
-- \`src/styles/\` — responsive design system.
-- \`src/content/\` — reviewed Markdown teaching content.
-- \`src/content.config.ts\` — content metadata definitions.
-- \`src/lib/\` — section metadata and route mappings.
-- \`public/\` — favicon, static headers and robots rules.
-- \`scripts/\` — static-output verification.
-- \`.github/workflows/\` — build/verification CI and Pages deployment.
-- \`docs/\` — architecture, implementation, operations and planning documentation.
+- `src/pages/` — Astro routes and public information pages.
+- `src/layouts/` — shared website shell and navigation.
+- `src/components/` — reusable story card.
+- `src/styles/` — responsive design system.
+- `src/content/` — reviewed Markdown teaching content.
+- `src/content.config.ts` — content metadata definitions.
+- `src/lib/` — section metadata and route mappings.
+- `public/` — favicon, static headers and robots rules.
+- `scripts/` — static-output verification.
+- `.github/workflows/` — build/verification CI and Pages deployment.
+- `docs/` — architecture, implementation, operations and planning documentation.
 
 ## Documents
 
