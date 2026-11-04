@@ -23,7 +23,7 @@ Do not commit `node_modules/`, `dist/`, `.env` files or Cloudflare credentials.
 
 `.github/workflows/site-ci.yml` runs on pull requests and pushes to `main`. It installs dependencies, builds Astro, runs the static verifier and publishes a short-lived `chinese-culture-dist` artifact for main pushes. The separate Pages deployment workflow is credential-gated. A committed lockfile and `npm ci` conversion remain a reproducibility improvement.
 
-Latest verified build: [GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039). It completed install, Astro build, static verification and artifact packaging successfully.
+Latest verified build: [GitHub Actions run #41829806975](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039). It completed install, Astro build, static verification and artifact packaging successfully.
 
 ## Cloudflare Pages project
 

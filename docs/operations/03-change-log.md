@@ -58,3 +58,7 @@ The embedded Worker fallback was not selected for production because it would ma
 ## 2026-11-04 — Pages deployment workflow and verified upload bundle
 
 Updated the repository to use Cloudflare Pages Direct Upload as the production target. Added a credential-gated GitHub Actions workflow and a `npm run deploy` Wrangler command. The build-only CI run [#41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039) passed: Astro build, static verification and the 29-file deployment artifact all succeeded. The Pages project exists but still has no production deployment. The verified ZIP can be uploaded once through the dashboard without creating an API token; future automatic deployments require `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` GitHub Actions secrets.
+
+## 2026-11-04 — Documentation and Pages launch checklist verified
+
+The runbook, architecture plan, repository map and implementation status were aligned to the Pages Direct Upload decision. Final build-only CI [#41829806975](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on main commit `658088da09400449d09a0fdcbe1111a09efa724a`. The deployment workflow correctly remains skipped until the owner enables it or manually dispatches it after adding the required secrets. The Pages project still has no production deployment.

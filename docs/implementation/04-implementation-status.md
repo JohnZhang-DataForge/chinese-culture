@@ -3,7 +3,7 @@
 **Updated:** 2026-11-04  
 **Stage:** MVP source merged to `main`; Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits a one-time dashboard upload or protected API token.  
 **Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
-**Latest main:** [791b1dc](https://github.com/JohnZhang-DataForge/chinese-culture/commit/791b1dc9e40888c6cfd312b3e95cec02f559b0ec).
+**Latest main:** [791b1dc](https://github.com/JohnZhang-DataForge/chinese-culture/commit/658088da09400449d09a0fdcbe1111a09efa724a).
 
 ## Implemented in source
 
@@ -27,7 +27,7 @@
 
 ## Validation state
 
-[GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039) passed on `main`: dependency install, Astro build, static verifier and deployment-artifact packaging all succeeded. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
+[GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on `main`: dependency install, Astro build, static verifier and deployment-artifact packaging all succeeded. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
 
 ## Remaining before public launch
 
