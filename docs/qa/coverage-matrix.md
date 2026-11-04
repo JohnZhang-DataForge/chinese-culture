@@ -25,6 +25,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | Invalid upload content | Admin security suite | Media API contract + owner-authorized preview | NOT TESTED |
 | GitHub API error handling | Backend unit/integration tests still required | Agent 5 supplies injectable client seam | NOT TESTED |
 | Static content schema and route generation | Astro build + `npm run verify` | Default CI | Existing CI PASS on main run #17 |
+| OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | When the approved contract file exists | Implemented; current main has no contract file |
 | Formatting/lint | Optional configured scripts | If scripts exist | No lint/format script configured on inspected main |
 | Secret leakage in built assets | Planned static secret scan | Add after backend secret contract is merged | NOT TESTED |
 | Apex, www, SSL and production deployment | External deployment checks | Cloudflare custom-domain activation + live HTTPS probe | NOT TESTED |
