@@ -90,9 +90,10 @@ test.describe("Admin CMS API draft lifecycle", () => {
       const previewResponse = await request.post(`${apiRoot}/content/${created.contentId}/preview`, {
         headers: mutationHeaders,
         data: {
-          locale: "en",
-          metadata: payload("en", slug, "QA Preview", "Preview sanitizer test.", ""),
-          bodyMarkdown: "# Safe preview\n\n<script>alert(1)</script>\n\n[unsafe](javascript:alert(1))"
+          content: {
+            ...payload("en", slug, "QA Preview", "Preview sanitizer test.", ""),
+            bodyMarkdown: "# Safe preview\n\n<script>alert(1)</script>\n\n[unsafe](javascript:alert(1))"
+          }
         }
       });
       expect(previewResponse.status()).toBe(200);
