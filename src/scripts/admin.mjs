@@ -2,7 +2,7 @@ import { filterContent, paginate, parseTags, translationStatus, wordCount } from
 import {
   AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
   getContent, createContent, createTranslation, saveDraft, previewContent,
-  uploadMedia, submitContent, discardDraft
+  uploadMedia, submitContent, discardDraft, getPullRequestStatus
 } from "../lib/admin-api.mjs";
 
 const root = document.querySelector("[data-admin-app]");
@@ -481,7 +481,29 @@ if (root) {
       state.submissions = results;
       markClean();
       const prNumbers = results.map((result)=>"#" + result.pullRequest.number).join(", ");
-      showToast((intent === "publish" ? "Publish" : "Unpublish") + " request submitted for review: " + prNumbers + ". A reviewer must merge the PR.","success");
+      const firstPr = results[0]?.pullRequest;
+      const prLink = $("[data-pr-link]");
+      if (firstPr?.url) {
+        try {
+          const url = new URL(firstPr.url);
+          if (url.hostname === "github.com" && url.pathname.startsWith("/JohnZhang-DataForge/chinese-culture/pull/")) {
+            prLink.href = url.href;
+            prLink.textContent = "View review PR #" + firstPr.number + " ↗";
+            prLink.hidden = false;
+          }
+        } catch {}
+      }
+      const checkNotes = [];
+      for (const result of results) {
+        try {
+          const prState = await getPullRequestStatus(result.pullRequest.number);
+          const checks = prState.checks || [];
+          const failed = checks.filter((check)=>check.status === "completed" && check.conclusion && check.conclusion !== "success").length;
+          const pending = checks.filter((check)=>check.status !== "completed").length;
+          checkNotes.push("PR #" + result.pullRequest.number + ": " + (failed ? failed + " failed check(s)" : pending ? pending + " check(s) pending" : checks.length ? "checks passed" : "checks pending"));
+        } catch { checkNotes.push("PR #" + result.pullRequest.number + ": checks not yet available"); }
+      }
+      showToast((intent === "publish" ? "Publish" : "Unpublish") + " request submitted for review: " + prNumbers + ". " + checkNotes.join("; ") + ". A reviewer must merge the PR.","success");
       await loadAllContent();
       updateStatusControls();
     } catch (error) { handleApiError(error); }

@@ -30,3 +30,6 @@
 .contract-note{line-height:1.6;margin:8px 20px 12px}
 
 .status-mixed{background:#f0f2f0;color:#66756c}
+
+.pr-status-link{font-size:9px;color:#47765c;text-decoration:none;font-weight:700}
+.pr-status-link:hover{text-decoration:underline}

@@ -106,7 +106,7 @@ const demo = import.meta.env.DEV;
           </section>
 
           <section class="admin-page editor-page" data-page="editor" hidden>
-            <div class="editor-topline"><button class="back-link" type="button" data-action="back-to-list">← Back to <span data-editor-back>articles</span></button><span class="editor-save-state" data-save-state>All changes saved</span></div>
+            <div class="editor-topline"><button class="back-link" type="button" data-action="back-to-list">← Back to <span data-editor-back>articles</span></button><span class="editor-save-state" data-save-state>All changes saved</span><a class="pr-status-link" data-pr-link hidden target="_blank" rel="noreferrer">View review PR ↗</a></div>
             <div class="page-heading editor-heading"><div><p class="eyebrow-admin">CONTENT EDITOR</p><h1 data-editor-heading>New article</h1><p class="page-subtitle">Edit each language independently, then preview them side by side.</p></div><div class="editor-actions"><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish <span>→</span></button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>
             <form class="content-form" data-content-form>
               <div class="editor-languages">
@@ -144,7 +144,7 @@ const demo = import.meta.env.DEV;
                   <div class="form-grid">
                     <label class="full-field">Content ID<input name="id" readonly placeholder="Assigned by the content service" /><small class="field-hint">Stable ID is immutable and managed by the backend.</small></label>
                     <label class="full-field">Collection<select name="type"><option value="articles">Article (culture)</option><option value="lessons">Learning guide</option><option value="festivals">Festival</option><option value="books">Book</option><option value="events">Event</option></select></label>
-                    <label class="full-field">Tag storage is locale-specific and edited in the language panels above.<small class="field-hint">Tags are stored independently with each language variant.</small></label>
+                    <p class="field-hint full-field">Tags are stored independently with each language variant.</p>
                     <label>Publication workflow<select name="status" disabled><option value="draft">Save creates a draft</option><option value="published">Publish through a review PR</option><option value="unpublished">Unpublish through a review PR</option></select><small class="field-hint">Publishing never merges a pull request automatically.</small></label>
                   </div>
                 </section>
@@ -156,11 +156,11 @@ const demo = import.meta.env.DEV;
                   <label>中文 SEO 标题<input name="seoTitle.zh" maxlength="70" disabled placeholder="等待 API 合同增加 SEO 字段" /></label>
                   <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="160" disabled placeholder="等待 API 合同增加 SEO 字段"></textarea></label>
                   <div class="form-divider"></div>
-                  <p class="field-hint contract-note">Media upload is available per content variant. A global searchable media library needs an additional API endpoint.</p>
+                  <p class="field-hint contract-note">Media upload is paused until the request metadata schema is corrected. A global searchable media library also needs a listing API.</p>
                   <button class="text-button media-select-button" type="button" data-action="open-media">Open media uploader →</button>
                 </section>
               </div>
-              <div class="editor-bottom-actions"><button class="danger-text-button" type="button" data-action="delete-current" hidden>Delete content</button><span>Changes are not public until published.</span><div><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish →</button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>
+              <div class="editor-bottom-actions"><button class="danger-text-button" type="button" data-action="delete-current" hidden>Discard draft</button><span>Changes become public only after the review pull request is merged.</span><div><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish →</button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>
             </form>
           </section>
 
