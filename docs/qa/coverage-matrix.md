@@ -28,7 +28,12 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | When the approved contract file exists | Implemented; current main has no contract file |
 | Formatting/lint | Optional configured scripts | If scripts exist | No lint/format script configured on inspected main |
 | Secret leakage in built assets | Planned static secret scan | Add after backend secret contract is merged | NOT TESTED |
-| Apex, www, SSL and production deployment | External deployment checks | Cloudflare custom-domain activation + live HTTPS probe | NOT TESTED |
+| Apex DNS and Pages binding | Cloudflare control-plane read: apex CNAME is proxied to Pages; Pages custom domain validation is active | Cloudflare configuration | PASS (control plane); live HTTP probe NOT TESTED |
+| www redirect | Enabled zone redirect rule returns 301 to HTTPS apex and preserves path/query | Cloudflare ruleset read | PASS (rule configuration); live 301 response NOT TESTED |
+| SSL | Pages apex/www validation active; zone SSL mode is Full and wildcard certificate status is active | Cloudflare control-plane read | PASS (configuration); external TLS handshake NOT TESTED |
+| HTTP to HTTPS | Enabled apex HTTP-to-HTTPS 301 rule; global Always Use HTTPS setting is off | Cloudflare ruleset/settings read | PASS (rule configuration); live response NOT TESTED |
+| Production deployment | Pages Deploy workflow run #9 triggered by push to main, completed SUCCESS on commit `539b37c` | GitHub Actions + Pages deployment record | PASS |
+| Pages Functions runtime | Latest production deployment reports `uses_functions=false`; Agent 5 API handlers are not yet in the production deployment | Cloudflare Pages project read | NOT TESTED / backend not deployed |
 
 ## Existing main-branch evidence (pre-QA branch)
 
