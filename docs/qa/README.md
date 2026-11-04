@@ -13,6 +13,7 @@ npm install
 npm run build
 npm run verify
 npm run verify:secrets
+npm run verify:openapi
 npm run test:unit
 npx playwright install chromium
 npm run test:e2e
