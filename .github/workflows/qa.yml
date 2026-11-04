@@ -50,6 +50,9 @@ jobs:
       - name: Build static site and validate content schema
         run: npm run build
 
+      - name: Scan built assets for leaked credentials
+        run: npm run verify:secrets
+
       - name: Validate generated routes and Cloudflare static limits
         run: npm run verify
 
