@@ -1,8 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type APIRequestContext } from "@playwright/test";
 
 const requireBilingual = process.env.QA_REQUIRE_BILINGUAL === "true";
 
-async function requireLocalizedRoutes(request: Parameters<Parameters<typeof test>[1]>[0]["request"]) {
+async function requireLocalizedRoutes(request: APIRequestContext) {
   const [english, chinese] = await Promise.all([
     request.get("/en/"),
     request.get("/zh/")
