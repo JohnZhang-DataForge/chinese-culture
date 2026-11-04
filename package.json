@@ -10,10 +10,11 @@
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
     "verify:secrets": "node scripts/verify-no-secrets.mjs",
+    "verify:openapi": "node scripts/verify-openapi.mjs",
     "test": "npm run test:unit",
     "test:unit": "node --test",
     "test:e2e": "playwright test",
-    "test:qa": "npm run build && npm run verify && npm run verify:secrets && npm run test:unit && npm run test:e2e",
+    "test:qa": "npm run build && npm run verify && npm run verify:secrets && npm run verify:openapi && npm run test:unit && npm run test:e2e",
     "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main"
   },
   "dependencies": { "astro": "^5.16.0" },
