@@ -13,7 +13,10 @@ function payload(locale, slug, title, description, bodyMarkdown) {
     slug,
     title,
     description,
+    seoTitle: `${title} | QA`,
+    seoDescription: `SEO: ${description}`,
     category: "QA validation",
+    tags: ["qa", "automation"],
     featured: false,
     readingMinutes: 1,
     bodyMarkdown
@@ -55,6 +58,9 @@ test.describe("Admin CMS API draft lifecycle", () => {
       const created = await createResponse.json();
       expect(created.contentId).toMatch(/^[0-9a-f-]{36}$/i);
       expect(created.status).toBe("draft");
+      expect(created.seoTitle).toBe("QA Article — English | QA");
+      expect(created.seoDescription).toBe("SEO: Temporary QA article.");
+      expect(created.tags).toEqual(["qa", "automation"]);
       expect(created.branch).not.toBe("main");
       contentIdRef.value = created.contentId;
       localesCreated.add("en");
@@ -66,6 +72,8 @@ test.describe("Admin CMS API draft lifecycle", () => {
       expect(readResponse.status()).toBe(200);
       const readItem = await readResponse.json();
       expect(readItem.title).toBe("QA Article — English");
+      expect(readItem.seoTitle).toBe("QA Article — English | QA");
+      expect(readItem.tags).toEqual(["qa", "automation"]);
       const etag = readResponse.headers()["etag"];
       expect(etag).toBeTruthy();
 
@@ -76,6 +84,8 @@ test.describe("Admin CMS API draft lifecycle", () => {
       expect(updatedResponse.status()).toBe(200);
       const updated = await updatedResponse.json();
       expect(updated.title).toBe("QA Article — Edited");
+      expect(updated.seoTitle).toBe("QA Article — Edited | QA");
+      expect(updated.seoDescription).toBe("SEO: Updated QA description.");
 
       const translationResponse = await request.post(`${apiRoot}/content/${created.contentId}/translations`, {
         headers: mutationHeaders,
@@ -85,6 +95,8 @@ test.describe("Admin CMS API draft lifecycle", () => {
       const translation = await translationResponse.json();
       expect(translation.contentId).toBe(created.contentId);
       expect(translation.locale).toBe("zh-CN");
+      expect(translation.seoTitle).toBe("质量保证测试文章 | QA");
+      expect(translation.tags).toEqual(["qa", "automation"]);
       localesCreated.add("zh-CN");
 
       const previewResponse = await request.post(`${apiRoot}/content/${created.contentId}/preview`, {
