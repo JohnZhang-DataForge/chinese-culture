@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
+    "verify:secrets": "node scripts/verify-no-secrets.mjs",
     "test": "npm run test:unit",
     "test:unit": "node --test",
     "test:e2e": "playwright test",
