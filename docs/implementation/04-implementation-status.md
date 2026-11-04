@@ -29,7 +29,7 @@
 
 [GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on `main`: dependency install, Astro build, static verifier and deployment-artifact packaging all succeeded. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
 
-## Remaining before public launch
+## Deployment blocker (2026-11-04)\n\nCloudflare account is connected, but the Worker has no versions and is not deployed. The existing `chinese-culture` Pages project is an empty Direct Upload project with zero deployments, not the selected Workers Static Assets production target. Cloudflare reports an internal GitHub Git-installation error (HTTP 401 / 8000011); the account has no Workers Builds repository connection or build token. The Cloudflare Workers and Pages GitHub App must be authorized for the private repository by the account owner. See [Cloudflare deployment status](../operations/04-cloudflare-deployment.md).\n\n## Remaining before public launch
 
 - Keep CI passing after any change; verify all internal links in build output.
 - Keep build CI green and refresh the one-day `chinese-culture-dist` artifact on main pushes.

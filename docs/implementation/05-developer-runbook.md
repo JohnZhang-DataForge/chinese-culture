@@ -97,3 +97,4 @@ Add one Markdown file under a content collection, keep metadata valid, cite reli
 ## Cost controls
 
 All reader pages prerender; no SSR adapter, Pages Functions, D1/KV/R2, forms, queues or third-party tracking are enabled. Native Pages static asset requests are free and unlimited. See [Pages limits](https://developers.cloudflare.com/pages/platform/limits/).
+\n## Current account-specific blocker\n\nThe account-specific state and required owner authorization are recorded in [Cloudflare deployment status](../operations/04-cloudflare-deployment.md). Do not attempt to use the empty Pages Direct Upload project as if it were the Workers deployment.\n
