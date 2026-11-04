@@ -33,7 +33,7 @@
 - Existing CI: GitHub Actions static build and static-output verification.
 - Existing deployment: Cloudflare Pages Direct Upload via Wrangler.
 - Latest observed main runs at baseline: static CI run 41932129795 passed; Pages deployment run 41932129872 passed.
-- Current repository had no open PRs when inspected. Existing main branch was reported unprotected. The old feature branch feat/astro-cloudflare-free-mvp is divergent (7 commits ahead and 13 behind main); do not merge it as a substitute for current main.
+- Existing main branch was reported unprotected. The old feature branch feat/astro-cloudflare-free-mvp is divergent (7 commits ahead and 13 behind main); do not merge it as a substitute for current main.
 - Existing docs contain stale deployment statements and describe localization, APIs and CMS as future work. Agent 7 must reconcile them against verified current evidence.
 
 The GitHub API exposes remote commits and branches, not a local working tree. No claim is made that a local checkout has been checked for uncommitted changes.
