@@ -1,35 +1,35 @@
 # Future APIs, Data Models and Integrations
 
-**Status:** Proposed — future design only.
+**Status:** Public dynamic APIs and databases remain out of scope. A private Admin API is proposed in Agent 0 OpenSpec PR #3 but is not Ready or implemented in current \`main\`.
 
-## MVP decision
+## Current MVP decision
 
-Use static content, human-reviewed GitHub changes and outbound links. **No runtime backend API, database, accounts or registration service is required to launch.**
+The public site is static Astro content, human-reviewed GitHub changes and outbound links. No runtime database, public API, reader accounts, registration service or event submission system is deployed.
 
-## Cloudflare Free runtime boundary
+## Proposed private Admin API
 
-If a dynamic endpoint is justified later, deploy it as a request-driven Cloudflare Worker using APIs supported by the Workers runtime. It is **not** an always-on Node.js VPS. Budget for Workers Free's 100,000 script requests/day, 10 ms CPU/request, 128 MB memory and 50 subrequests/request; revalidate exact published limits then. Normal articles and learning pages must stay static. See [the Cloudflare Free plan](06-cloudflare-free-node-deployment.md).
+Agent 0's Proposed design introduces a same-origin Admin API at \`/api/admin/v1/*\`, served by a **separate Cloudflare Worker**, protected by Cloudflare Access and backed by a least-privilege GitHub App. The API manages Git-backed drafts, previews, media and PR submissions. It does not serve normal public pages, write directly to \`main\` or merge PRs.
 
-## When an API becomes justified
+This is not the same as a public content API and does not require a database. The shared API contract is in Agent 0 PR #3; do not implement against it until Agent 0 marks it Ready.
 
-A requirement must identify the action impossible with static pages, a data owner, retention period, operational cost, abuse prevention, and a simpler alternative considered.
+## Runtime boundary
 
-## Candidate future resources
+Keep public pages static on Cloudflare Pages. The proposed Admin Worker is request-driven and separate from the Pages project. Do not add Pages Functions or SSR to the public project as a substitute for the agreed separate Worker architecture.
 
-- **Events:** searchable event details, dates, organizer and venue; possible curated submissions.
-- **Newsletter:** opt-in subscription state, double opt-in and unsubscribe.
-- **Feedback:** moderated corrections and editorial questions.
-- **Learning progress:** user-specific data, only if accounts deliver a clear learning benefit.
-- **Catalog search:** read-only indexed content if local static search becomes insufficient.
+Re-check Cloudflare's current published pricing and limits before adding any runtime service. Normal articles and learning pages must remain readable if the Admin Worker is unavailable.
 
-## Future OpenAPI approach
+## Candidate future resources outside the current scope
 
-If any public or internal endpoint is approved, design the contract **before** implementation. Document resources, operations, field types, authentication, validation errors, pagination, privacy-sensitive data, abuse limits, examples and API versioning. Keep schemas and documentation under reviewed Git history.
+- **Events:** searchable event details, dates, organizer and venue; not implemented.
+- **Newsletter:** opt-in subscription state, double opt-in and unsubscribe; not approved.
+- **Feedback:** moderated corrections and editorial questions; not implemented.
+- **Learning progress:** user-specific data; out of scope without a separate privacy/security design.
+- **Public catalog API:** not required by the current site.
 
 ## Data and privacy
 
-Store the least possible personal data. Never add anonymous visitor identities, location tracking or registration data merely to improve analytics. Set retention and deletion policies before collecting anything.
+Store the least possible personal data. Do not add anonymous visitor identities, location tracking, registration data or behavioral analytics merely to improve metrics. Set retention and deletion policies before collecting personal information.
 
 ## Decision gate
 
-No API implementation starts until a new ADR approves the feature, threat model, estimated monthly spend and operational owner.
+Any additional API/data service requires a reviewed architecture decision, threat model, data owner, retention policy, abuse controls, cost estimate and operational owner. Changes to Agent 0's proposed Admin API must follow its versioned contract process.

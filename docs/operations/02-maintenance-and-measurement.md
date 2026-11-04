@@ -1,39 +1,60 @@
-# Maintenance, Reliability and Learning Loop
+# Maintenance, Reliability and Measurement
 
-**Status:** Proposed
+**Status:** Operational guidance for the current static site and proposed future CMS. No scheduled monitoring job or visitor analytics integration is verified in current main.
 
-## Weekly
+## Weekly checks
 
-Check upcoming event accuracy, broken outbound links, new feedback, publishing requests and failed deploys once technical workflows exist.
+- Review GitHub Actions for failed CI or Pages deployment runs.
+- Confirm the latest production Pages deployment references the expected main SHA.
+- Check apex and www HTTPS/redirect behavior from an external workstation.
+- Run \`npm run build\` and \`npm run verify\` after significant content or source changes.
+- Check outbound editorial links and citations for obvious breakage.
+- Review content correction requests and any upcoming public announcements.
+- Keep the Events page as an empty state until event records have a verified source and process.
 
-## Cloudflare Free service monitoring
+## Cloudflare Pages health
 
-Track Static Assets file count and individual asset sizes, deploy/build errors, hostname and HTTPS, and (if ever enabled) Worker script request count, CPU time and 1027/429 quota errors. Ordinary static asset delivery is free and unlimited under current pricing, whereas dynamic Worker usage is capped. No persistent Node.js service should need uptime monitoring. Recheck official [pricing](https://developers.cloudflare.com/workers/platform/pricing/) and [limits](https://developers.cloudflare.com/workers/platform/limits/) before adding features or changing rollout.
+Monitor:
 
-## Monthly
+- Pages deployment success/failure and deployed source SHA.
+- Apex and www Pages custom-domain status.
+- Universal SSL certificate status and expiry.
+- DNS CNAME target and proxy status.
+- Redirect ruleset version and ACME path exclusions.
+- Static asset count and individual file sizes checked by \`scripts/verify-static.mjs\`.
 
-Review popular educational entry points, pages with unanswered reader questions, correction requests, content freshness, hosting consumption and domain/billing status.
+Current Pages production is static and reports \`uses_functions=false\`. There is no persistent Node.js process to monitor. The proposed Admin Worker is not deployed; if it is later released, add separate Worker request, error, CPU, quota and deployment monitoring.
 
-## Quarterly
+Re-check official [Cloudflare pricing](https://developers.cloudflare.com/workers/platform/pricing/) and [limits](https://developers.cloudflare.com/workers/platform/limits/) before changing the runtime model.
 
-Review major topic gaps, accessibility regressions, expired links, cultural terminology changes, translated pages and whether optional functionality is justified.
+## Monthly checks
+
+- Review content freshness and corrections.
+- Review domain renewal, registrar, Cloudflare zone and billing status.
+- Review GitHub collaborator access and deployment-token necessity.
+- Review Pages asset limits and repository growth.
+- Confirm independent repository backup status if one has been configured.
+
+## Quarterly checks
+
+- Review topic gaps and editorial accuracy.
+- Review accessibility issues and keyboard/mobile behavior.
+- Review external links, citations and image licenses.
+- Review security headers and dependency updates.
+- Re-check whether any proposed dynamic feature is still justified.
 
 ## Event lifecycle
 
-Verify newly listed events; re-check near their dates; mark canceled or completed promptly; keep evergreen festival content separate from event status.
-
-## Incident response
-
-When a bad release occurs, stop publication, assess whether public information or credentials are affected, restore last-known-good release, correct source content and record lessons learned.
+There is no event collection today. If one is implemented, verify organizer, date/time zone, location and registration URL before publication; re-check near the event date; mark canceled or completed events promptly; keep evergreen festival guides separate from dated event announcements.
 
 ## Measurement policy
 
-Prefer aggregate and privacy-conscious data. Avoid collecting unnecessary personal identifiers, IP-level profiles or persistent cross-site tracking.
+The current site has no integrated analytics. Prefer privacy-conscious aggregate measurement if analytics are approved later. Avoid collecting unnecessary personal identifiers, IP-level profiles or persistent cross-site tracking.
 
-## Operating scorecard
+## Incident response
 
-Report: reviewed lessons published, corrections resolved, stale announcements, broken links, accessibility defects, uptime/issues, monthly costs and reader feedback themes.
+For a bad release, stop further publication, assess whether public information or credentials are affected, restore the last-known-good Pages deployment or use a reviewed Git revert, correct the source and record lessons learned. See [Incident Recovery](incident-recovery.md).
 
 ## Ownership
 
-Assign named maintainers for domain renewal, publishing approvals, Cloudflare access, GitHub access and content corrections before public launch.
+Before enabling CMS publishing, explicitly assign maintainers for domain renewal, content approvals, Cloudflare access, GitHub access, Worker secrets and corrections. Do not invent owner identities in documentation.

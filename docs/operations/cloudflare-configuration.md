@@ -38,7 +38,7 @@
 
 ## Pages custom-domain status
 
-Both custom domains now report active status:
+Both custom domains report active status:
 
 | Hostname | Pages status | Verification | HTTP validation |
 |---|---|---|---|
@@ -55,15 +55,13 @@ Both custom domains now report active status:
 - Primary issuer: Let's Encrypt.
 - Certificate expiry returned by API: \`2027-02-01T12:18:46Z\`.
 
-A Google Trust Services backup pack was not needed to establish the active primary certificate status. Re-check live API state before certificate renewal or DNS work.
-
 ## Redirect ruleset
 
 Ruleset \`Chinese Culture hostname redirects\` (\`cd7bbdc493d24ff4a73fd0d1c5e8aaae\`) is enabled at version 4:
 
 - \`www_to_apex_chinese_culture\`: 301 from www to HTTPS apex, preserving path and query.
 - \`apex_http_to_https_chinese_culture\`: 301 from HTTP apex to HTTPS apex, preserving path and query.
-- Both rules exclude \`/.well-known/acme-challenge/\* \`.
+- Both rules exclude \`/.well-known/acme-challenge/*\`.
 
 ## Repository deployment settings
 
