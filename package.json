@@ -3,20 +3,21 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "engines": {
-    "node": ">=20.19.0"
-  },
+  "engines": { "node": ">=20.19.0" },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
+    "test": "npm run test:unit",
+    "test:unit": "node --test tests/unit/*.test.mjs",
+    "test:e2e": "playwright test",
+    "test:qa": "npm run build && npm run verify && npm run test:unit && npm run test:e2e",
     "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main"
   },
-  "dependencies": {
-    "astro": "^5.16.0"
-  },
+  "dependencies": { "astro": "^5.16.0" },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
     "wrangler": "^4.34.0"
   }
 }

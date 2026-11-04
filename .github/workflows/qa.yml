@@ -1,0 +1,69 @@
+name: QA - automated tests and browser E2E
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Build, unit tests and browser E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      QA_REQUIRE_BILINGUAL: ${{ vars.QA_REQUIRE_BILINGUAL || 'false' }}
+      QA_REQUIRE_ADMIN: ${{ vars.QA_REQUIRE_ADMIN || 'false' }}
+      QA_ENVIRONMENT: ${{ vars.QA_ENVIRONMENT || 'ci' }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run configured lint and format checks
+        run: |
+          npm run lint --if-present
+          npm run format:check --if-present
+
+      - name: Build static site and validate content schema
+        run: npm run build
+
+      - name: Validate generated routes and Cloudflare static limits
+        run: npm run verify
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser end-to-end tests
+        run: npm run test:e2e
+
+      - name: Upload QA reports and failure artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chinese-culture-qa-${{ github.run_number }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
