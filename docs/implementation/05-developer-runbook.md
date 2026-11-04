@@ -59,7 +59,7 @@ If the account-owned token option is unavailable, an account administrator with 
 4. Confirm the build, static verification and Wrangler Direct Upload steps all succeed.
 5. Open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
 
-For future automatic deployment after each main push, add repository variable `CLOUDFLARE_DEPLOY_ENABLED` with value `true`. Leave it unset to keep production deploys manual.
+Every push to `main` triggers this deployment workflow. Pull requests do not deploy. The credential check fails early if the repository secret is missing.
 
 For a local deployment, set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the shell, then run `npm run deploy`. Never commit either value.
 

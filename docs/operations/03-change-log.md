@@ -70,3 +70,7 @@ Verified that the Pages Direct Upload project exists but has zero deployments. T
 ## 2026-11-05 — Simplify the Pages deployment credential
 
 Hardcoded the non-secret Cloudflare account ID in the deployment workflow and reduced the required GitHub secret to `CLOUDFLARE_API_TOKEN` with the Pages Write role. Added a preflight check with an actionable error and documented manual workflow dispatch plus optional automatic deployment via `CLOUDFLARE_DEPLOY_ENABLED=true`. The first public deployment still awaits the owner-created token; CI build success is not treated as deployment success.
+
+## 2026-11-05 — Enable deployment after repository secret setup
+
+The user confirmed that repository secret `CLOUDFLARE_API_TOKEN` has been added. Removed the extra `CLOUDFLARE_DEPLOY_ENABLED` variable gate so pushes to `main` trigger the Pages Direct Upload deployment automatically. Pull requests remain non-deploying. This commit triggers the first production deployment; success must be verified from the resulting Actions run and Pages deployment record.

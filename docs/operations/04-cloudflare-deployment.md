@@ -14,7 +14,7 @@
 - The Pages deployments API currently returns an empty list; `latest_deployment` and `canonical_deployment` are null. The site is not yet publicly deployed.
 - The Cloudflare Git integration attempt returned account-side error `8000011`. A Direct Upload project cannot be converted to Git integration (error `8000069` when attempting to change its `source` object).
 - GitHub Actions build CI passed on main commit `2e4417a7a6bd9e556d6bc63b0a0e57219d3ef334`: 25 generated pages, 29 output files, 700 internal links and a deployable `chinese-culture-dist` artifact.
-- The deploy workflow on main was correctly skipped because repository variable `CLOUDFLARE_DEPLOY_ENABLED` is not set to `true`. It can also be run manually after the API token secret is added.
+- The deploy workflow initially skipped main pushes unless `CLOUDFLARE_DEPLOY_ENABLED=true`. After the repository secret was added, the gate was removed so pushes to `main` trigger production deployment automatically. Pull requests remain non-deploying.
 
 ## Selected release path: GitHub Actions + Wrangler Direct Upload
 
@@ -46,7 +46,7 @@ If account-owned API tokens are not available, an account administrator with API
 4. Wait for install, Astro build, static verification and Wrangler deployment to complete.
 5. Open the production URL and run the release checks below.
 
-To deploy automatically on future pushes to `main`, add repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`. Otherwise, keep production deployment manual.
+Every push to `main` now triggers production deployment automatically after the protected Pages token is configured. Pull requests do not deploy.
 
 ## Release verification
 
