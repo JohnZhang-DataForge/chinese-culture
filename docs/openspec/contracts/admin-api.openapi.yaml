@@ -1,0 +1,807 @@
+openapi: 3.1.0
+info:
+  title: Chinese Culture Admin API
+  version: 1.0.0
+  description: >
+    Same-origin API for the protected Admin CMS. The Cloudflare Access edge
+    injects the Access JWT header; the browser never receives GitHub credentials.
+servers:
+  - url: https://chinese-culture.site/api/admin/v1
+    description: Production
+security:
+  - CloudflareAccess: []
+tags:
+  - name: Session
+  - name: Content
+  - name: Preview
+  - name: Media
+  - name: Publishing
+paths:
+  /session:
+    get:
+      tags: [Session]
+      operationId: getAdminSession
+      summary: Return the verified editor identity, role and CSRF token
+      responses:
+        '200':
+          description: Authenticated CMS session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /content:
+    get:
+      tags: [Content]
+      operationId: listContent
+      summary: List content variants and CMS drafts
+      parameters:
+        - $ref: '#/components/parameters/Locale'
+        - name: collection
+          in: query
+          schema:
+            $ref: '#/components/schemas/Collection'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ContentStatus'
+        - name: q
+          in: query
+          description: Search title, slug and contentId.
+          schema:
+            type: string
+            maxLength: 120
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: Paged content variants
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/UpstreamFailure'
+    post:
+      tags: [Content]
+      operationId: createContent
+      summary: Create a conceptual content item and its first draft variant
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentWrite'
+      responses:
+        '201':
+          description: Draft created on a CMS branch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentVariant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+  /content/{contentId}:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+      - $ref: '#/components/parameters/Locale'
+    get:
+      tags: [Content]
+      operationId: getContent
+      summary: Read one locale variant, including its current revision and PR state
+      responses:
+        '200':
+          description: Content variant
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Current revision SHA, suitable for If-Match.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentVariant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Content]
+      operationId: saveDraft
+      summary: Create or update a draft on the CMS branch
+      description: >
+        This operation always writes status=draft to the CMS branch. It never
+        writes to main. If-Match is required for existing variants.
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentWrite'
+      responses:
+        '200':
+          description: Draft saved
+          headers:
+            ETag:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentVariant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+  /content/{contentId}/translations:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+    post:
+      tags: [Content]
+      operationId: createTranslation
+      summary: Create another locale variant linked to the same contentId
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationWrite'
+      responses:
+        '201':
+          description: Translation draft created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentVariant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+  /content/{contentId}/preview:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+    post:
+      tags: [Preview]
+      operationId: previewContent
+      summary: Render unsaved content as sanitized preview HTML
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreviewRequest'
+      responses:
+        '200':
+          description: Sanitized preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+  /content/{contentId}/media:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+      - $ref: '#/components/parameters/Locale'
+      - $ref: '#/components/parameters/IfMatch'
+    post:
+      tags: [Media]
+      operationId: uploadMedia
+      summary: Upload an image to the current CMS branch
+      description: >
+        Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and
+        AVIF. SVG, HTML and other formats are rejected. The Worker validates
+        file signatures and commits the asset to the CMS branch.
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, metadata]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  $ref: '#/components/schemas/MediaMetadata'
+      responses:
+        '201':
+          description: Media committed to the CMS branch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaUploadResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '415':
+          $ref: '#/components/responses/UnsupportedMedia'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+  /content/{contentId}/submit:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+      - $ref: '#/components/parameters/Locale'
+      - $ref: '#/components/parameters/IfMatch'
+    post:
+      tags: [Publishing]
+      operationId: submitContent
+      summary: Create or update a pull request for review, publish or unpublish
+      description: >
+        intent=review keeps status=draft; intent=publish sets status=published;
+        intent=unpublish sets status=unpublished. This endpoint never merges a PR.
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitRequest'
+      responses:
+        '200':
+          description: Pull request created or updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailure'
+        '502':
+          $ref: '#/components/responses/UpstreamFailure'
+  /content/{contentId}/draft:
+    parameters:
+      - $ref: '#/components/parameters/ContentId'
+      - $ref: '#/components/parameters/Locale'
+    delete:
+      tags: [Content]
+      operationId: discardDraft
+      summary: Delete a CMS draft branch when no open PR depends on it
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      responses:
+        '204':
+          description: Draft branch deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /pull-requests/{number}:
+    get:
+      tags: [Publishing]
+      operationId: getPullRequestStatus
+      summary: Read PR status and required checks for a CMS submission
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Pull request status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PullRequestStatus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/UpstreamFailure'
+
+components:
+  securitySchemes:
+    CloudflareAccess:
+      type: apiKey
+      in: header
+      name: CF-Access-Jwt-Assertion
+      description: Injected by Cloudflare Access at the edge; the browser must not forge it.
+    CsrfToken:
+      type: apiKey
+      in: header
+      name: X-CSRF-Token
+      description: Short-lived token returned by GET /session; required for mutations.
+  parameters:
+    ContentId:
+      name: contentId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    Locale:
+      name: locale
+      in: query
+      required: true
+      schema:
+        $ref: '#/components/schemas/Locale'
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      description: Exact revision ETag returned by GET or a prior mutation.
+      schema:
+        type: string
+    responses:
+      BadRequest:
+        description: Invalid request syntax or missing required header
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      Unauthorized:
+        description: Missing or invalid Cloudflare Access identity
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      Forbidden:
+        description: Authenticated identity lacks the required CMS role
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      NotFound:
+        description: Content, locale variant or PR not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      Conflict:
+        description: Stale revision, duplicate locale or unsafe draft deletion
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      ValidationFailure:
+        description: Schema or editorial metadata validation failed
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      PayloadTooLarge:
+        description: Media exceeds 8 MiB
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      UnsupportedMedia:
+        description: Media type or file signature is not allowed
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      UpstreamFailure:
+        description: GitHub or another required upstream service failed
+        content:
+          application/problem+json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+  schemas:
+    Locale:
+      type: string
+      enum: [en, zh-CN]
+    Collection:
+      type: string
+      enum: [lessons, culture, festivals, books, events]
+    ContentStatus:
+      type: string
+      enum: [draft, published, unpublished]
+    Role:
+      type: string
+      enum: [admin, editor]
+    Session:
+      type: object
+      required: [email, role, csrfToken, repository]
+      properties:
+        email:
+          type: string
+          format: email
+        role:
+          $ref: '#/components/schemas/Role'
+        csrfToken:
+          type: string
+          description: Short-lived, identity-bound mutation token.
+        repository:
+          type: string
+          const: JohnZhang-DataForge/chinese-culture
+    ContentList:
+      type: object
+      required: [items, page, pageSize, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentSummary'
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+    ContentSummary:
+      type: object
+      required: [contentId, locale, collection, slug, title, status, featured, updatedAt]
+      properties:
+        contentId:
+          type: string
+          format: uuid
+        locale:
+          $ref: '#/components/schemas/Locale'
+        collection:
+          $ref: '#/components/schemas/Collection'
+        slug:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/ContentStatus'
+        featured:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+        branch:
+          type: string
+        revision:
+          type: string
+        pullRequest:
+          type: integer
+          nullable: true
+        translationLocales:
+          type: array
+          items:
+            $ref: '#/components/schemas/Locale'
+    ContentVariant:
+      allOf:
+        - $ref: '#/components/schemas/ContentSummary'
+        - type: object
+          required: [description, category, bodyMarkdown, readingMinutes]
+          properties:
+            description:
+              type: string
+            category:
+              type: string
+            bodyMarkdown:
+              type: string
+            publishedAt:
+              type: string
+              format: date-time
+            order:
+              type: number
+              minimum: 0
+            readingMinutes:
+              type: integer
+              minimum: 1
+              default: 5
+            level:
+              type: string
+            chinese:
+              type: string
+            pinyin:
+              type: string
+            sources:
+              type: array
+              items:
+                $ref: '#/components/schemas/Source'
+            media:
+              type: array
+              items:
+                $ref: '#/components/schemas/MediaMetadata'
+    ContentWrite:
+      type: object
+      required: [locale, collection, slug, title, description, category, featured, bodyMarkdown]
+      properties:
+        locale:
+          $ref: '#/components/schemas/Locale'
+        collection:
+          $ref: '#/components/schemas/Collection'
+        slug:
+          type: string
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        title:
+          type: string
+          minLength: 1
+          maxLength: 180
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        featured:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+        order:
+          type: number
+          minimum: 0
+        readingMinutes:
+          type: integer
+          minimum: 1
+          maximum: 240
+          default: 5
+        level:
+          type: string
+          maxLength: 80
+        chinese:
+          type: string
+          maxLength: 120
+        pinyin:
+          type: string
+          maxLength: 120
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaMetadata'
+        bodyMarkdown:
+          type: string
+          maxLength: 200000
+    TranslationWrite:
+      allOf:
+        - $ref: '#/components/schemas/ContentWrite'
+      description: locale must be the missing locale for the given contentId.
+    PreviewRequest:
+      type: object
+      required: [locale, metadata, bodyMarkdown]
+      properties:
+        locale:
+          $ref: '#/components/schemas/Locale'
+        metadata:
+          $ref: '#/components/schemas/ContentWrite'
+        bodyMarkdown:
+          type: string
+          maxLength: 200000
+    PreviewResponse:
+      type: object
+      required: [html, warnings]
+      properties:
+        html:
+          type: string
+          description: Sanitized HTML safe for insertion into a sandboxed preview container.
+        warnings:
+          type: array
+          items:
+            type: string
+    SubmitRequest:
+      type: object
+      required: [intent]
+      properties:
+        intent:
+          type: string
+          enum: [review, publish, unpublish]
+        summary:
+          type: string
+          maxLength: 500
+    SubmitResult:
+      type: object
+      required: [contentId, locale, intent, branch, revision, pullRequest]
+      properties:
+        contentId:
+          type: string
+          format: uuid
+        locale:
+          $ref: '#/components/schemas/Locale'
+        intent:
+          type: string
+          enum: [review, publish, unpublish]
+        branch:
+          type: string
+        revision:
+          type: string
+        pullRequest:
+          type: object
+          required: [number, url, state]
+          properties:
+            number:
+              type: integer
+            url:
+              type: string
+              format: uri
+            state:
+              type: string
+              enum: [open, closed, merged]
+    PullRequestStatus:
+      type: object
+      required: [number, url, state, mergeable, checks]
+      properties:
+        number:
+          type: integer
+        url:
+          type: string
+          format: uri
+        state:
+          type: string
+          enum: [open, closed, merged]
+        mergeable:
+          type: boolean
+        checks:
+          type: array
+          items:
+            type: object
+            required: [name, status, conclusion]
+            properties:
+              name:
+                type: string
+              status:
+                type: string
+              conclusion:
+                type: string
+    Source:
+      type: object
+      required: [title, url]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        url:
+          type: string
+          format: uri
+        publisher:
+          type: string
+        accessedAt:
+          type: string
+          format: date
+    MediaMetadata:
+      type: object
+      required: [src, alt, credit, license]
+      properties:
+        src:
+          type: string
+          pattern: '^/media/'
+        alt:
+          type: string
+          maxLength: 300
+        decorative:
+          type: boolean
+          default: false
+        credit:
+          type: string
+          maxLength: 300
+        license:
+          type: string
+          maxLength: 160
+        sourceUrl:
+          type: string
+          format: uri
+    MediaUploadResult:
+      type: object
+      required: [src, publicUrl, contentType, size, blobSha, metadata]
+      properties:
+        src:
+          type: string
+        publicUrl:
+          type: string
+          format: uri
+        contentType:
+          type: string
+        size:
+          type: integer
+        blobSha:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/MediaMetadata'
+    Problem:
+      type: object
+      required: [type, title, status, code, requestId]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+          description: Stable application error code.
+        requestId:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
