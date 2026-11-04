@@ -46,3 +46,7 @@ An intermediate CI run [#41717877814](https://github.com/JohnZhang-DataForge/chi
 ## 2026-11-04 — Prepare deployable CI artifact
 
 Added a main-only `chinese-culture-dist` artifact after build and static verification. Artifact contains only generated public `dist/` files and is retained for one day. No Cloudflare credentials or secrets were added to GitHub; deployment will use the authorized Cloudflare connection. This workflow change must pass CI before using its artifact.
+
+## 2026-11-04 — Add embedded Worker deployment fallback
+
+Cloudflare direct Static Assets uploads require a short-lived upload JWT in a custom Authorization header that is not supported by the connected API action. A Cloudflare Pages Git project creation attempt also returned account-side Git installation error `8000011`. Added a fallback generator that packages the verified Astro `dist/` output as a gzip-compressed tar archive embedded in a small Worker script. The fallback serves GET/HEAD, directory index routes, 404, MIME types and the site's security headers. CI now builds/tests the fallback and publishes a one-day deployable Worker artifact. The native Workers Static Assets configuration remains the preferred future path because static asset requests are free and unlimited; the fallback consumes the Workers Free daily request allowance (100,000 requests/day across the account).

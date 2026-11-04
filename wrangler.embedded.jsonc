@@ -1,0 +1,9 @@
+{
+  "name": "chinese-culture",
+  "main": "./dist-worker/index.js",
+  "compatibility_date": "2026-11-04",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  }
+}
