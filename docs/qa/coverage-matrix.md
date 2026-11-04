@@ -33,7 +33,8 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | SSL | Pages apex/www validation active; zone SSL mode is Full and wildcard certificate status is active | Cloudflare control-plane read | PASS (configuration); external TLS handshake NOT TESTED |
 | HTTP to HTTPS | Enabled apex HTTP-to-HTTPS 301 rule; global Always Use HTTPS setting is off | Cloudflare ruleset/settings read | PASS (rule configuration); live response NOT TESTED |
 | Production deployment | Pages Deploy workflow run #9 triggered by push to main, completed SUCCESS on commit `539b37c` | GitHub Actions + Pages deployment record | PASS |
-| Pages Functions runtime | Latest production deployment reports `uses_functions=false`; Agent 5 API handlers are not yet in the production deployment | Cloudflare Pages project read | NOT TESTED / backend not deployed |
+| Cloudflare Access protection | Account and zone Access application lists each return 0 apps; account policy list returns 0 policies | Cloudflare control-plane read | FAIL — no Access application/policy currently protects `/admin/*` or `/api/admin/*` |
+| Pages Functions runtime | Latest production deployment reports `uses_functions=false`; Agent 5 API handlers are not yet in the production deployment | Cloudflare Pages project read | FAIL — backend is not deployed |
 
 ## Existing main-branch evidence (pre-QA branch)
 
