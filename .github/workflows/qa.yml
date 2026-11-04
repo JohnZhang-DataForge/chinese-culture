@@ -56,6 +56,9 @@ jobs:
       - name: Validate generated routes and Cloudflare static limits
         run: npm run verify
 
+      - name: Lint the approved OpenAPI contract when available
+        run: npm run verify:openapi
+
       - name: Run unit tests
         run: npm run test:unit
 
