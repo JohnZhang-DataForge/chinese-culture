@@ -6,11 +6,10 @@ export function filterContent(items, options = {}) {
     const title = [item.title?.en, item.title?.zh, item.id, item.slug, item.category, ...(item.tags || [])].filter(Boolean).join(" ").toLocaleLowerCase();
     if (query && !title.includes(query)) return false;
     if (status && item.status !== status) return false;
-    const en = Boolean(item.title?.en && item.description?.en && item.body?.en);
-    const zh = Boolean(item.title?.zh && item.description?.zh && item.body?.zh);
-    if (language === "complete" && !(en && zh)) return false;
-    if (language === "missing-en" && en) return false;
-    if (language === "missing-zh" && zh) return false;
+    const translation = translationStatus(item);
+    if (language === "complete" && !(translation.en && translation.zh)) return false;
+    if (language === "missing-en" && translation.en) return false;
+    if (language === "missing-zh" && translation.zh) return false;
     return true;
   });
 }
@@ -32,6 +31,9 @@ export function paginate(items, page = 1, pageSize = 10) {
 }
 
 export function translationStatus(item) {
+  if (Array.isArray(item.translationLocales)) {
+    return { en: item.translationLocales.includes("en"), zh: item.translationLocales.includes("zh-CN") || item.translationLocales.includes("zh") };
+  }
   const complete = (locale) => Boolean(item.title?.[locale]?.trim() && item.description?.[locale]?.trim() && item.body?.[locale]?.trim());
   return { en: complete("en"), zh: complete("zh") };
 }
