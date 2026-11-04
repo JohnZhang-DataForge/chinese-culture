@@ -37,7 +37,7 @@ paths:
     get:
       tags: [Content]
       operationId: listContent
-      summary: List conceptual content items, their locale variants and CMS drafts
+      summary: List locale-specific content variants and CMS drafts
       parameters:
         - name: locale
           in: query
@@ -74,7 +74,7 @@ paths:
             default: 25
       responses:
         '200':
-          description: Paged conceptual content groups with locale variants
+          description: Paged locale-specific content variants; each row identifies its shared contentId and available translations
           content:
             application/json:
               schema:
@@ -505,7 +505,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/ContentGroupSummary'
+            $ref: '#/components/schemas/ContentVariantSummary'
         page:
           type: integer
         pageSize:
@@ -514,10 +514,15 @@ components:
           type: integer
     ContentVariantSummary:
       type: object
-      required: [locale, slug, title, description, category, status, featured, updatedAt]
+      required: [contentId, locale, collection, slug, title, description, category, status, featured, updatedAt, translationLocales]
       properties:
+        contentId:
+          type: string
+          format: uuid
         locale:
           $ref: '#/components/schemas/Locale'
+        collection:
+          $ref: '#/components/schemas/Collection'
         slug:
           type: string
         title:
@@ -540,40 +545,20 @@ components:
         pullRequest:
           type: integer
           nullable: true
-    ContentGroupSummary:
-      type: object
-      required: [contentId, collection, variants, translationLocales, updatedAt]
-      properties:
-        contentId:
-          type: string
-          format: uuid
-        collection:
-          $ref: '#/components/schemas/Collection'
-        variants:
-          type: object
-          properties:
-            en:
-              $ref: '#/components/schemas/ContentVariantSummary'
-            "zh-CN":
-              $ref: '#/components/schemas/ContentVariantSummary'
         translationLocales:
           type: array
           items:
             $ref: '#/components/schemas/Locale'
-        updatedAt:
-          type: string
-          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
     ContentVariant:
       allOf:
         - $ref: '#/components/schemas/ContentVariantSummary'
         - type: object
-          required: [contentId, collection, bodyMarkdown, readingMinutes]
+          required: [bodyMarkdown, readingMinutes]
           properties:
-            contentId:
-              type: string
-              format: uuid
-            collection:
-              $ref: '#/components/schemas/Collection'
             bodyMarkdown:
               type: string
             publishedAt:
@@ -653,6 +638,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MediaMetadata'
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 80
         bodyMarkdown:
           type: string
           maxLength: 200000
