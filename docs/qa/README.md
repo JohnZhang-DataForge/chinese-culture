@@ -12,6 +12,7 @@ Feature-specific checks are explicitly skipped until bilingual routes and the Ad
 npm install
 npm run build
 npm run verify
+npm run verify:secrets
 npm run test:unit
 npx playwright install chromium
 npm run test:e2e
