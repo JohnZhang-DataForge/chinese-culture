@@ -2,7 +2,7 @@
 
 **Program:** Bilingual public site + GitHub-backed Admin CMS  
 **Production target:** https://chinese-culture.site  
-**Status:** Architecture proposal and shared contracts prepared for review  
+**Status:** Architecture and shared contracts merged; CC-CONTENT-001 v1.1.0 and Admin API OpenAPI v1.1.0 are READY for implementation  
 **Architecture baseline:** Astro 5 static public site + Cloudflare Pages + Cloudflare Pages Functions (Workers runtime) for authenticated administration.
 
 ## Source-of-truth rules
@@ -29,7 +29,8 @@
 
 - Repository: JohnZhang-DataForge/chinese-culture (private).
 - Default branch: main.
-- Baseline commit on 2026-11-05: 539b37c9bfa5363f7149c95563bd549957eeff3d.
+- Initial baseline commit on 2026-11-05: 539b37c9bfa5363f7149c95563bd549957eeff3d.
+- Architecture/contracts PR #3 merged to main as 20b7a98cf6976a8348d972cc5eec721d35fa5af7.
 - Existing application: Astro 5.16 static output; four Markdown collections (lessons, culture, festivals, books); 13 starter guides.
 - Existing CI: GitHub Actions static build and static-output verification.
 - Existing deployment: Cloudflare Pages Direct Upload via Wrangler.
