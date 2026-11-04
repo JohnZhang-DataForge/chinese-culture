@@ -323,8 +323,8 @@ if (root) {
     const variants = Object.values(state.variants).filter(Boolean);
     const hasPublished = variants.some((variant) => variant.status === "published");
     const hasDiscardableDraft = variants.some((variant) => variant.status === "draft" && !variant.pullRequest);
-    $("[data-action='unpublish']").forEach((button)=>{button.hidden=!hasPublished;});
-    $("[data-action='delete-current']").forEach((button)=>{button.hidden=!hasDiscardableDraft;});
+    $$("[data-action='unpublish']").forEach((button)=>{button.hidden=!hasPublished;});
+    $$("[data-action='delete-current']").forEach((button)=>{button.hidden=!hasDiscardableDraft;});
   };
   const openEditor = async (item = null) => {
     state.selectedId = item?.id || null;
@@ -724,7 +724,7 @@ if (root) {
     const previewLocale = event.target.closest("[data-preview-language]");
     if (previewLocale) {
       state.previewLocale = previewLocale.dataset.previewLanguage;
-      $("[data-preview-language]", document).forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
+      $$("[data-preview-language]", document).forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
       preview(false);
     }
   });
