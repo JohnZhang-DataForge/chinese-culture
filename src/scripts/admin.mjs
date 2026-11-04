@@ -682,6 +682,7 @@ if (root) {
   });
   root.addEventListener("change", async (event) => {
     if (event.target.matches("[data-status-filter],[data-language-filter]")) { state.pageNumber=1; renderList(); }
+    if (event.target.matches("[data-media-locale]")) renderMedia();
     if (event.target.matches("[data-media-input]")) {
       const files = [...event.target.files || []];
       if (!files.length) return;
@@ -740,11 +741,17 @@ if (root) {
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (!demoMode) {
-    $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
-    $('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
-    $('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
+    $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
+    $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
+    $$('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
     $("[data-media-input]").disabled=true;
     $("[data-action=choose-upload]").disabled=true;
+  } else {
+    $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=false;});
+    $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=false;});
+    $$('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=false;});
+    $("[data-media-input]").disabled=false;
+    $("[data-action=choose-upload]").disabled=false;
   }
   if (demoMode) {
     setConnection("Development preview");
