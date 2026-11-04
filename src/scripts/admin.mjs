@@ -18,7 +18,7 @@ if (root) {
     books:{title:"Books",singular:"book",subtitle:"Manage book introductions and reading guides."},
     events:{title:"Events",singular:"event",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[]};
+  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -185,7 +185,7 @@ if (root) {
       if (count) count.textContent = wordCount(body) + (locale === "zh" ? " 字" : " words");
     });
   };
-  const preview = () => {
+  const preview = (openDialog = true) => {
     const value = formData();
     const locale = state.previewLocale;
     $("[data-preview-title]").textContent = value.title[locale] || (locale === "en" ? "Untitled story" : "尚未填写标题");
@@ -194,7 +194,7 @@ if (root) {
     $("[data-preview-category]").textContent = value.category || collectionNames[value.type]?.title || "Culture";
     const complete = Boolean(value.title[locale] && value.description[locale] && value.body[locale]);
     $("[data-preview-language-status]").textContent = complete ? "Translation complete" : "This language version is incomplete";
-    $("[data-preview-dialog]").showModal();
+    if (openDialog && !$("[data-preview-dialog]").open) $("[data-preview-dialog]").showModal();
   };
   const apiNotReady = () => {
     showToast("The Agent 5 API contract is not available yet. No changes were sent or saved.", "info");
@@ -282,8 +282,9 @@ if (root) {
     if (name === "clear-filters") { $("[data-list-search]").value=""; $("[data-status-filter]").value=""; $("[data-language-filter]").value=""; state.pageNumber=1; renderList(); }
     if (name === "save-settings") showToast(demoMode ? "Settings preview only; backend API integration is pending." : "Settings API integration is pending.","info");
     if (name === "choose-upload") $("[data-media-input]").click();
-    if (name === "open-media") setPage("media");
+    if (name === "open-media") { state.returnPage=state.page; state.returnDirty=state.dirty; state.dirty=false; $("[data-action=back-to-editor]").hidden=state.returnPage!=="editor"; setPage("media"); }
     if (name === "add-navigation") showToast("Navigation editing will be enabled by the site-settings API.","info");
+    if (name === "back-to-editor") { state.dirty=false; setPage("editor"); if(state.returnDirty) markDirty(); }
   });
   root.addEventListener("input", (event) => {
     if (event.target.matches("[data-list-search]")) { state.pageNumber=1; renderList(); }
@@ -317,9 +318,16 @@ if (root) {
     $("[data-media-count]").textContent = state.media.length + " local preview asset(s)";
     grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '">Use image</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Your media library is ready</strong><p>Uploaded assets will appear here after the media API is connected.</p></div>';
   };
-  root.addEventListener("click", (event) => {
+  document.addEventListener("click", (event) => {
+    const externalAction = event.target.closest("[data-action]");
+    if (externalAction && !root.contains(externalAction)) {
+      if (externalAction.dataset.action === "close-preview") $("[data-preview-dialog]").close();
+      if (externalAction.dataset.action === "cancel-delete") $("[data-confirm-dialog]").close();
+      if (externalAction.dataset.action === "confirm-delete") deleteContent();
+    }
     const choose = event.target.closest("[data-action='select-media']");
     if (choose) {
+      if (state.returnPage === "editor") { state.dirty=false; setPage("editor"); state.returnPage=null; }
       if (state.page !== "editor") { showToast("Open a content editor to select a cover image.","info"); return; }
       setField("coverImage",choose.dataset.url);
       markDirty();
@@ -329,7 +337,7 @@ if (root) {
     if (previewLocale) {
       state.previewLocale = previewLocale.dataset.previewLanguage;
       $$("[data-preview-language]").forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
-      preview();
+      preview(false);
     }
   });
   $("[data-page-prev]").addEventListener("click",() => {state.pageNumber=Math.max(1,state.pageNumber-1);renderList();});

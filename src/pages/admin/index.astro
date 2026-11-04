@@ -171,7 +171,7 @@ const demo = import.meta.env.DEV;
           </section>
 
           <section class="admin-page" data-page="media" hidden>
-            <div class="page-heading"><div><p class="eyebrow-admin">ASSET LIBRARY</p><h1>Media library</h1><p class="page-subtitle">Upload and organize approved images for your stories.</p></div><button class="primary-button" type="button" data-action="choose-upload">＋ Upload media</button></div>
+            <div class="page-heading"><div><p class="eyebrow-admin">ASSET LIBRARY</p><h1>Media library</h1><p class="page-subtitle">Upload and organize approved images for your stories.</p></div><div class="editor-actions"><button class="secondary-button" type="button" data-action="back-to-editor" hidden>← Back to editor</button><button class="primary-button" type="button" data-action="choose-upload">＋ Upload media</button></div></div>
             <section class="panel media-panel">
               <label class="upload-dropzone" data-dropzone><input type="file" accept="image/png,image/jpeg,image/webp,image/avif" multiple data-media-input hidden /><span class="upload-icon">↑</span><strong>Drop images here, or <u>browse files</u></strong><small>PNG, JPG, WebP or AVIF · Maximum size depends on media service policy</small></label>
               <div class="media-toolbar"><span data-media-count>Media assets</span><label class="table-search"><span>⌕</span><input type="search" placeholder="Search media..." data-media-search /></label><select aria-label="Filter media type"><option>All media</option><option>Images</option></select></div>
