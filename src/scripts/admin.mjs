@@ -72,8 +72,8 @@ if (root) {
       const node = $("[data-count='" + name + "']");
       if (node) node.textContent = demoMode ? String(state.items.filter((item) => item.type === name).length) : "—";
     });
-    const published = state.items.filter((item) => item.status === "published").length;
-    const drafts = state.items.filter((item) => item.status === "draft").length;
+    const published = state.items.filter((item) => item.statuses?.includes("published") || item.status === "published").length;
+    const drafts = state.items.filter((item) => item.statuses?.includes("draft") || item.status === "draft").length;
     const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh; }).length;
     const setStat = (name, value) => { const node = $("[data-stat='" + name + "']"); if (node) node.textContent = String(value); };
     setStat("total", demoMode ? state.items.length : "—");
@@ -299,8 +299,8 @@ if (root) {
       setField("slug." + suffix,variant?.slug ?? demo?.slug ?? (locale === "en" ? value.slug : "") ?? "");
       setField("description." + suffix,variant?.description ?? demo?.description ?? value.description?.[suffix] ?? "");
       setField("body." + suffix,variant?.bodyMarkdown ?? demo?.bodyMarkdown ?? value.body?.[suffix] ?? "");
-      setField("category." + suffix,variant?.category ?? demo?.category ?? "");
-      setField("featured." + suffix,variant?.featured ?? demo?.featured ?? false);
+      setField("category." + suffix,variant?.category ?? demo?.category ?? value.category ?? "");
+      setField("featured." + suffix,variant?.featured ?? demo?.featured ?? value.featured ?? false);
       setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
       setField("level." + suffix,variant?.level ?? demo?.level ?? "");
       setField("mediaSrc." + suffix,variant?.media?.[0]?.src ?? demo?.mediaSrc ?? "");
@@ -331,7 +331,10 @@ if (root) {
       try { await loadVariantDetails(item.id); }
       catch (error) { handleApiError(error); return; }
     } else if (demoMode && item) {
-      state.variants = {en:item.variants?.en || null,"zh-CN":item.variants?.["zh-CN"] || null};
+      state.variants = {
+        en:item.title?.en ? {status:item.status,featured:item.featured} : null,
+        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null
+      };
     }
     const editorItem = item ? {...item,variants:state.variants} : null;
     populateEditor(editorItem);
@@ -478,6 +481,48 @@ if (root) {
       updateStatusControls();
     } catch (error) { handleApiError(error); }
   };
+  const toggleFeatured = async (id) => {
+    if (demoMode) {
+      const item=state.items.find((entry)=>entry.id===id);
+      if(item){item.featured=!item.featured;renderList();showToast(item.featured?"Added to featured content.":"Removed from featured content.","info");}
+      return;
+    }
+    try {
+      await loadVariantDetails(id);
+      const locales=["en","zh-CN"].filter((locale)=>state.variants[locale]);
+      if(!locales.length) throw new Error("No editable language variants were found.");
+      for(const locale of locales){
+        const variant=state.variants[locale];
+        let etag=state.etags[locale];
+        if(!etag) etag=(await refreshVariant(locale)).etag;
+        if(!etag) throw new Error("The server did not return a revision ETag. Refresh and retry.");
+        const payload={
+          locale,
+          collection:variant.collection,
+          slug:variant.slug,
+          title:variant.title,
+          description:variant.description,
+          category:variant.category,
+          featured:!variant.featured,
+          bodyMarkdown:variant.bodyMarkdown,
+          readingMinutes:variant.readingMinutes || 5,
+          media:variant.media || [],
+          sources:variant.sources || []
+        };
+        if(variant.order !== undefined) payload.order=variant.order;
+        if(variant.level) payload.level=variant.level;
+        if(variant.chinese) payload.chinese=variant.chinese;
+        if(variant.pinyin) payload.pinyin=variant.pinyin;
+        const saved=await saveDraft(id,locale,payload,etag);
+        state.variants[locale]=saved.data;
+        state.etags[locale]=saved.etag;
+        if(!state.etags[locale]) await refreshVariant(locale);
+        await submitContent(id,locale,state.etags[locale],variant.status==="published"?"publish":"review","Featured setting changed from the editorial CMS.");
+      }
+      await loadAllContent();
+      showToast("Featured setting submitted for review. The public site changes after PR merge.","success");
+    } catch(error) { handleApiError(error); }
+  };
   const requestDelete = (id) => {
     state.pendingDelete = id;
     $("[data-confirm-dialog]").showModal();
@@ -583,31 +628,31 @@ if (root) {
     if (!action) return;
     const name = action.dataset.action;
     if (name === "toggle-sidebar") $("#admin-sidebar").classList.toggle("is-open");
-    if (name === "new-content") openEditor();
+    if (name === "new-content") await openEditor();
     if (name === "open-articles") setCollection("articles");
     if (name === "back-to-list") setPage("content");
     if (name === "edit") {
       const item = state.items.find((entry) => entry.id === action.dataset.id);
-      if (item) { state.collection = item.type; openEditor(item); }
+      if (item) { state.collection = item.type; await openEditor(item); }
     }
     if (name === "delete") requestDelete(action.dataset.id);
     if (name === "delete-current") requestDelete(state.selectedId);
     if (name === "confirm-delete") deleteContent();
     if (name === "cancel-delete") $("[data-confirm-dialog]").close();
-    if (name === "feature") {
-      if (!demoMode) { apiNotReady(); return; }
-      const item = state.items.find((entry) => entry.id === action.dataset.id);
-      if (item) { item.featured = !item.featured; renderList(); showToast(item.featured ? "Added to featured content." : "Removed from featured content.","info"); }
-    }
-    if (name === "preview") preview();
+    if (name === "feature") await toggleFeatured(action.dataset.id);
+    if (name === "preview") await preview();
     if (name === "close-preview") $("[data-preview-dialog]").close();
-    if (name === "save-draft") await saveContent("draft");
-    if (name === "publish") await saveContent("published");
+    if (name === "save-draft") await saveContent();
+    if (name === "publish") await submitWorkflow("publish");
+    if (name === "unpublish") await submitWorkflow("unpublish");
     if (name === "clear-filters") { $("[data-list-search]").value=""; $("[data-status-filter]").value=""; $("[data-language-filter]").value=""; state.pageNumber=1; renderList(); }
-    if (name === "save-settings") showToast(demoMode ? "Settings preview only; backend API integration is pending." : "Settings API integration is pending.","info");
+    if (name === "save-settings") {
+      if (demoMode) showToast("Settings preview only in development mode.","info");
+      else { showAdminBanner("Homepage and site-settings write APIs are not part of OpenAPI v1.0.0 yet. These controls are read-only until Agent 0 approves the extension.","warning"); showToast("No settings were saved; the API contract does not define this operation.","info"); }
+    }
     if (name === "choose-upload") $("[data-media-input]").click();
     if (name === "open-media") { state.returnPage=state.page; state.returnDirty=state.dirty; state.dirty=false; $("[data-action=back-to-editor]").hidden=state.returnPage!=="editor"; setPage("media"); }
-    if (name === "add-navigation") showToast("Navigation editing will be enabled by the site-settings API.","info");
+    if (name === "add-navigation") { if (demoMode) showToast("Navigation preview only in development mode.","info"); else showToast("Navigation API is not defined in the approved contract yet.","info"); }
     if (name === "back-to-editor") { state.dirty=false; setPage("editor"); if(state.returnDirty) markDirty(); }
   });
   root.addEventListener("input", (event) => {
@@ -627,20 +672,20 @@ if (root) {
     if (event.target.matches("[data-media-input]")) {
       const files = [...event.target.files || []];
       if (!files.length) return;
-      if (!demoMode) { showToast("Media upload is unavailable until the Agent 5 media endpoint is connected.","info"); return; }
-      files.forEach((file) => {
-        if (!file.type.startsWith("image/")) return;
-        const url = URL.createObjectURL(file);
-        state.media.push({name:file.name,url,size:file.size});
-      });
-      renderMedia();
-      showToast(files.length + " local preview(s) added. These files have not been uploaded.","info");
+      for (const file of files) await uploadCurrentMedia(file);
     }
   });
   const renderMedia = () => {
     const grid = $("[data-media-grid]");
-    $("[data-media-count]").textContent = state.media.length + " local preview asset(s)";
-    grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '">Use image</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Your media library is ready</strong><p>Uploaded assets will appear here after the media API is connected.</p></div>';
+    if (demoMode) {
+      $("[data-media-count]").textContent = state.media.length + " local preview asset(s)";
+      grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '" data-locale="en">Use image</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Local preview library is empty</strong><p>Demo uploads are not sent to a server.</p></div>';
+      return;
+    }
+    const locale=$("[data-media-locale]").value || "en";
+    const media=state.variants[locale]?.media || [];
+    $("[data-media-count]").textContent = media.length + " asset(s) attached to this language variant";
+    grid.innerHTML = media.length ? media.map((item,index) => '<article class="media-card" data-name="' + escapeHtml((item.src || "").toLocaleLowerCase()) + '"><img src="' + escapeHtml(item.src) + '" alt="' + escapeHtml(item.alt || "") + '" /><div><strong>' + escapeHtml(item.src.split("/").pop()) + '</strong><small>' + escapeHtml(item.license || "License not supplied") + '</small><button class="text-button" type="button" data-action="select-media" data-url="' + escapeHtml(item.src) + '" data-locale="' + locale + '" data-alt="' + escapeHtml(item.alt || "") + '" data-credit="' + escapeHtml(item.credit || "") + '" data-license="' + escapeHtml(item.license || "") + '" data-source="' + escapeHtml(item.sourceUrl || "") + '">Use as cover</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>No media attached to this variant</strong><p>Upload an image after saving this language as a draft.</p></div>';
   };
   document.addEventListener("click", (event) => {
     const externalAction = event.target.closest("[data-action]");
@@ -653,9 +698,14 @@ if (root) {
     if (choose) {
       if (state.returnPage === "editor") { state.dirty=false; setPage("editor"); state.returnPage=null; }
       if (state.page !== "editor") { showToast("Open a content editor to select a cover image.","info"); return; }
-      setField("coverImage",choose.dataset.url);
+      const suffix=uiLocale(choose.dataset.locale || "en");
+      setField("mediaSrc."+suffix,choose.dataset.url);
+      if(choose.dataset.alt) setField("mediaAlt."+suffix,choose.dataset.alt);
+      if(choose.dataset.credit) setField("mediaCredit."+suffix,choose.dataset.credit);
+      if(choose.dataset.license) setField("mediaLicense."+suffix,choose.dataset.license);
+      if(choose.dataset.source) setField("mediaSource."+suffix,choose.dataset.source);
       markDirty();
-      showToast("Local preview selected. Upload integration is still pending.","info");
+      showToast("Cover image selected for the " + (suffix==="zh"?"Chinese":"English") + " variant.","info");
     }
     const previewLocale = event.target.closest("[data-preview-language]");
     if (previewLocale) {
@@ -675,19 +725,15 @@ if (root) {
     if ((event.metaKey || event.ctrlKey) && event.key.toLocaleLowerCase()==="k") {event.preventDefault();$("[data-global-search]").focus();}
     if (event.key==="Escape") $("#admin-sidebar").classList.remove("is-open");
   });
-  // Exact route mapping and resource payloads are added only after Agent 0 approves
-  // the API contract and Agent 5 publishes its matching implementation.
+  if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (demoMode) {
     setConnection("Development preview");
     renderDashboard();
     updateCounts();
   } else {
-    setConnection("API contract pending");
+    setConnection("Connecting to CMS");
     renderDashboard();
     updateCounts();
+    void bootstrapLive();
   }
-  if (form) form.addEventListener("submit",(event) => event.preventDefault());
-  // Keep the shared transport available for the contract integration without exposing credentials.
-  window.__adminApiRequest = requestAdminApi;
-  window.__adminApiErrorHandler = handleApiError;
 }
