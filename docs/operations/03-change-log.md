@@ -42,3 +42,7 @@ An intermediate CI run [#41717877814](https://github.com/JohnZhang-DataForge/chi
 ## Integration to main
 
 [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) was squash-merged after [CI run #41718253670](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718253670) completed successfully. Main commit: [778b5ea](https://github.com/JohnZhang-DataForge/chinese-culture/commit/778b5ea54ee9aec6120524f25aa119c5107191c9). This milestone delivers **source code and documentation**, not a public production deployment.
+
+## 2026-11-04 — Prepare deployable CI artifact
+
+Added a main-only `chinese-culture-dist` artifact after build and static verification. Artifact contains only generated public `dist/` files and is retained for one day. No Cloudflare credentials or secrets were added to GitHub; deployment will use the authorized Cloudflare connection. This workflow change must pass CI before using its artifact.

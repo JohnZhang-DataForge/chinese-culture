@@ -22,7 +22,11 @@ Do not commit `node_modules/`, `dist/`, `.env` files or Cloudflare credentials.
 
 ## CI behavior
 
-`.github/workflows/site-ci.yml` runs on pull requests and pushes to main. It installs dependencies with npm, builds and runs the static verifier. **It does not deploy** and currently does not set Cloudflare secrets. The project needs a committed lockfile and `npm ci` conversion for tighter reproducibility after initial build verification.
+`.github/workflows/site-ci.yml` runs on pull requests and pushes to main. It installs dependencies with npm, builds and runs the static verifier. **It does not deploy** and does not set Cloudflare secrets. On main pushes, CI also packages the verified `dist/` folder as a short-lived `chinese-culture-dist` artifact for an authorized deployment step. The project needs a committed lockfile and `npm ci` conversion for tighter reproducibility after initial build verification.
+
+## Cloudflare deployment
+
+A successful main CI run produces a `chinese-culture-dist` artifact (retained for one day). This artifact contains only the generated public website files; it excludes source code and private documentation. The Cloudflare deployment operator can retrieve it and upload its assets. The artifact itself is not a deployment.
 
 ## Cloudflare preview / deployment (not yet performed)
 

@@ -31,6 +31,7 @@ Source files are committed to a feature branch. The project must pass real depen
 ## Remaining before public launch
 
 - Keep CI passing after any change; verify all internal links in build output.
+- Publish a one-day GitHub Actions build artifact from main for the Cloudflare deployment step.
 - Record dependency lockfile/reproducible installs after the initial build.
 - Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
 - Assign factual/editorial reviewers and check all source links and Chinese terms.
