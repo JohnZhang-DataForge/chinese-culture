@@ -1,5 +1,9 @@
 import { filterContent, paginate, parseTags, translationStatus, wordCount } from "../lib/admin-ui.mjs";
-import { requestAdminApi, AdminApiError } from "../lib/admin-api.mjs";
+import {
+  ADMIN_API_BASE, AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
+  getContent, createContent, createTranslation, saveDraft, previewContent,
+  uploadMedia, submitContent, discardDraft
+} from "../lib/admin-api.mjs";
 
 const root = document.querySelector("[data-admin-app]");
 if (root) {
@@ -12,13 +16,13 @@ if (root) {
     {id:"event-autumn-talk",slug:"autumn-culture-talk",type:"events",title:{en:"Autumn culture talk",zh:"秋季文化讲座"},description:{en:"A sample event draft for editorial review.",zh:"供编辑审核的活动草稿示例。"},body:{en:"Event details are pending verification.",zh:"活动详情有待核实。"},category:"Community",tags:["event"],status:"unpublished",featured:false,updatedAt:"Oct 29, 2026"}
   ] : [];
   const collectionNames = {
-    articles:{title:"Articles",singular:"article",subtitle:"Manage culture stories, editorial metadata and publication status."},
-    lessons:{title:"Learning guides",singular:"learning guide",subtitle:"Organize the learning path and beginner-friendly lessons."},
-    festivals:{title:"Festivals",singular:"festival",subtitle:"Manage festival guides, seasonal stories and traditions."},
-    books:{title:"Books",singular:"book",subtitle:"Manage book introductions and reading guides."},
-    events:{title:"Events",singular:"event",subtitle:"Publish verified events and community announcements."}
+    articles:{title:"Articles",singular:"article",apiCollection:"culture",subtitle:"Manage culture stories, editorial metadata and publication status."},
+    lessons:{title:"Learning guides",singular:"learning guide",apiCollection:"lessons",subtitle:"Organize the learning path and beginner-friendly lessons."},
+    festivals:{title:"Festivals",singular:"festival",apiCollection:"festivals",subtitle:"Manage festival guides, seasonal stories and traditions."},
+    books:{title:"Books",singular:"book",apiCollection:"books",subtitle:"Manage book introductions and reading guides."},
+    events:{title:"Events",singular:"event",apiCollection:"events",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false};
+  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null},etags:{en:null,"zh-CN":null},submissions:[]};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -132,121 +136,441 @@ if (root) {
     }).join("");
   };
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
+  const formChecked = (name) => Boolean(form.elements.namedItem(name)?.checked);
+  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : "en";
+  const apiLocale = (locale) => locale === "zh" ? "zh-CN" : locale;
+  const showAdminBanner = (message, kind = "warning") => {
+    const banner = $("[data-admin-banner]");
+    banner.hidden = !message;
+    banner.textContent = message || "";
+    banner.dataset.kind = kind;
+  };
+  const localeFormData = (locale) => {
+    const suffix = uiLocale(locale);
+    return {
+      locale,
+      slug:formValue("slug." + suffix).trim(),
+      title:formValue("title." + suffix).trim(),
+      description:formValue("description." + suffix).trim(),
+      bodyMarkdown:formValue("body." + suffix),
+      category:formValue("category." + suffix).trim(),
+      featured:formChecked("featured." + suffix),
+      readingMinutes:Number(formValue("readingMinutes." + suffix) || 5),
+      level:formValue("level." + suffix).trim(),
+      chinese:locale === "en" ? formValue("chinese.en").trim() : "",
+      pinyin:locale === "en" ? formValue("pinyin.en").trim() : "",
+      mediaSrc:formValue("mediaSrc." + suffix).trim(),
+      mediaAlt:formValue("mediaAlt." + suffix).trim(),
+      mediaCredit:formValue("mediaCredit." + suffix).trim(),
+      mediaLicense:formValue("mediaLicense." + suffix).trim(),
+      mediaSource:formValue("mediaSource." + suffix).trim()
+    };
+  };
   const formData = () => ({
     id:formValue("id"),
-    slug:formValue("slug"),
     type:formValue("type") || state.collection,
-    title:{en:formValue("title.en"),zh:formValue("title.zh")},
-    description:{en:formValue("description.en"),zh:formValue("description.zh")},
-    body:{en:formValue("body.en"),zh:formValue("body.zh")},
-    category:formValue("category"),
+    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN")},
     tags:parseTags(formValue("tags")),
-    status:formValue("status") || "draft",
-    featured:Boolean(form.elements.namedItem("featured")?.checked),
-    seo:{title:{en:formValue("seoTitle.en"),zh:formValue("seoTitle.zh")},description:{en:formValue("seoDescription.en"),zh:formValue("seoDescription.zh")}},
-    coverImage:formValue("coverImage")
+    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh")}}
   });
   const setField = (name,value) => { const field = form.elements.namedItem(name); if (!field) return; if (field.type === "checkbox") field.checked = Boolean(value); else field.value = value ?? ""; };
   const markClean = () => { state.dirty = false; $("[data-save-state]").textContent = "All changes saved"; $("[data-save-state]").classList.remove("is-dirty"); };
   const markDirty = () => { state.dirty = true; $("[data-save-state]").textContent = "Unsaved changes"; $("[data-save-state]").classList.add("is-dirty"); };
-  const openEditor = (item = null) => {
+  const localeHasAnyContent = (value) => Boolean(value.title || value.description || value.bodyMarkdown || value.slug || value.category);
+  const localeIsComplete = (value) => Boolean(value.title && value.description && value.bodyMarkdown.trim() && value.slug && value.category);
+  const toApiPayload = (locale) => {
+    const value = localeFormData(locale);
+    const existing = state.variants[locale];
+    if (!localeIsComplete(value)) {
+      throw new Error((locale === "en" ? "English" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
+    }
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug)) {
+      throw new Error("URL slug must use lowercase letters, numbers and hyphens.");
+    }
+    let media = existing?.media || [];
+    if (value.mediaSrc) {
+      if (!value.mediaAlt || !value.mediaCredit || !value.mediaLicense) {
+        throw new Error("Add image alt text, credit and license before saving a cover image.");
+      }
+      media = [{
+        src:value.mediaSrc,
+        alt:value.mediaAlt,
+        decorative:false,
+        credit:value.mediaCredit,
+        license:value.mediaLicense,
+        ...(value.mediaSource ? {sourceUrl:value.mediaSource} : {})
+      }];
+    } else if (existing?.media?.length && !value.mediaSrc) {
+      media = existing.media;
+    }
+    const payload = {
+      locale,
+      collection:collectionNames[formValue("type") || state.collection].apiCollection,
+      slug:value.slug,
+      title:value.title,
+      description:value.description,
+      category:value.category,
+      featured:value.featured,
+      readingMinutes:value.readingMinutes,
+      bodyMarkdown:value.bodyMarkdown,
+      media,
+      sources:existing?.sources || []
+    };
+    if (value.level) payload.level = value.level;
+    if (value.chinese) payload.chinese = value.chinese;
+    if (value.pinyin) payload.pinyin = value.pinyin;
+    if (typeof existing?.order === "number") payload.order = existing.order;
+    return payload;
+  };
+  const mapCollectionToUi = (collection) => collection === "culture" ? "articles" : collection;
+  const mergeSummaries = (enItems, zhItems) => {
+    const merged = new Map();
+    const add = (summary) => {
+      const id = summary.contentId;
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null},pullRequest:null});
+      const item = merged.get(id);
+      const locale = summary.locale;
+      const suffix = uiLocale(locale);
+      item.variants[locale] = summary;
+      item.title[suffix] = summary.title || "";
+      item.slug = item.slug || summary.slug;
+      item.statuses.push(summary.status);
+      item.featured = item.featured || Boolean(summary.featured);
+      if (!item.updatedAt || Date.parse(summary.updatedAt) > Date.parse(item.updatedAt)) item.updatedAt = summary.updatedAt;
+      if (summary.pullRequest) item.pullRequest = summary.pullRequest;
+      item.translationLocales = [...new Set([...(item.translationLocales || []),...(summary.translationLocales || []),locale])];
+    };
+    enItems.forEach(add); zhItems.forEach(add);
+    return [...merged.values()].map((item) => {
+      item.statuses = [...new Set(item.statuses)];
+      item.status = item.statuses.length > 1 ? (item.statuses.every((x)=>x===item.statuses[0]) ? item.statuses[0] : "mixed") : (item.statuses[0] || "draft");
+      item.updatedAt = item.updatedAt ? new Date(item.updatedAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "—";
+      return item;
+    }).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  };
+  const fetchAllSummaries = async (locale, collection = "") => {
+    const pageSize = 100;
+    const first = await listContent({locale,collection,page:1,pageSize});
+    const items = [...(first.items || [])];
+    const pages = Math.ceil((first.total || items.length) / pageSize);
+    for (let page = 2; page <= pages; page += 1) {
+      const next = await listContent({locale,collection,page,pageSize});
+      items.push(...(next.items || []));
+    }
+    return items;
+  };
+  const loadAllContent = async () => {
+    const [enItems,zhItems] = await Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN")]);
+    state.items = mergeSummaries(enItems,zhItems);
+    updateCounts();
+    if (state.page === "dashboard") renderDashboard();
+    if (state.page === "content") renderList();
+    if (state.page === "languages") renderLanguages();
+  };
+  const loadVariantDetails = async (contentId) => {
+    const locales = ["en","zh-CN"];
+    const results = await Promise.all(locales.map(async (locale) => {
+      try {
+        const result = await getContent(contentId,locale);
+        return {locale,data:result.data,etag:result.etag};
+      } catch (error) {
+        if (error instanceof AdminApiError && error.status === 404) return {locale,data:null,etag:null};
+        throw error;
+      }
+    }));
+    state.variants = {en:null,"zh-CN":null};
+    state.etags = {en:null,"zh-CN":null};
+    results.forEach((result) => {
+      state.variants[result.locale] = result.data;
+      state.etags[result.locale] = result.etag;
+    });
+    return state.variants;
+  };
+  const populateEditor = (item = null) => {
+    form.reset();
+    const value = item || {};
+    setField("id",value.id || "");
+    setField("type",value.type || state.collection);
+    ["en","zh-CN"].forEach((locale) => {
+      const suffix = uiLocale(locale);
+      const variant = value.variants?.[locale] || null;
+      const demo = value.locales?.[locale] || null;
+      setField("title." + suffix,variant?.title ?? demo?.title ?? value.title?.[suffix] ?? "");
+      setField("slug." + suffix,variant?.slug ?? demo?.slug ?? (locale === "en" ? value.slug : "") ?? "");
+      setField("description." + suffix,variant?.description ?? demo?.description ?? value.description?.[suffix] ?? "");
+      setField("body." + suffix,variant?.bodyMarkdown ?? demo?.bodyMarkdown ?? value.body?.[suffix] ?? "");
+      setField("category." + suffix,variant?.category ?? demo?.category ?? "");
+      setField("featured." + suffix,variant?.featured ?? demo?.featured ?? false);
+      setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
+      setField("level." + suffix,variant?.level ?? demo?.level ?? "");
+      setField("mediaSrc." + suffix,variant?.media?.[0]?.src ?? demo?.mediaSrc ?? "");
+      setField("mediaAlt." + suffix,variant?.media?.[0]?.alt ?? demo?.mediaAlt ?? "");
+      setField("mediaCredit." + suffix,variant?.media?.[0]?.credit ?? demo?.mediaCredit ?? "");
+      setField("mediaLicense." + suffix,variant?.media?.[0]?.license ?? demo?.mediaLicense ?? "");
+      setField("mediaSource." + suffix,variant?.media?.[0]?.sourceUrl ?? demo?.mediaSource ?? "");
+      if (locale === "en") { setField("chinese.en",variant?.chinese ?? demo?.chinese ?? ""); setField("pinyin.en",variant?.pinyin ?? demo?.pinyin ?? ""); }
+    });
+    setField("tags",(value.tags || []).join(", "));
+    setField("status","draft");
+  };
+  const updateStatusControls = () => {
+    const variants = Object.values(state.variants).filter(Boolean);
+    const hasPublished = variants.some((variant) => variant.status === "published");
+    const hasDiscardableDraft = variants.some((variant) => variant.status === "draft" && !variant.pullRequest);
+    $("[data-action='unpublish']").hidden = !hasPublished;
+    $("[data-action='delete-current']").hidden = !hasDiscardableDraft;
+  };
+  const openEditor = async (item = null) => {
     state.selectedId = item?.id || null;
     state.isNew = !item;
     state.dirty = false;
-    form.reset();
-    const value = item || {id:"",slug:"",type:state.collection,title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",featured:false,seo:{title:{en:"",zh:""},description:{en:"",zh:""}},coverImage:""};
-    setField("id",value.id);
-    setField("slug",value.slug);
-    setField("type",value.type || state.collection);
-    setField("title.en",value.title?.en); setField("title.zh",value.title?.zh);
-    setField("description.en",value.description?.en); setField("description.zh",value.description?.zh);
-    setField("body.en",value.body?.en); setField("body.zh",value.body?.zh);
-    setField("category",value.category); setField("tags",(value.tags || []).join(", "));
-    setField("status",value.status || "draft"); setField("featured",value.featured);
-    setField("seoTitle.en",value.seo?.title?.en); setField("seoTitle.zh",value.seo?.title?.zh);
-    setField("seoDescription.en",value.seo?.description?.en); setField("seoDescription.zh",value.seo?.description?.zh);
-    setField("coverImage",value.coverImage);
+    state.variants = {en:null,"zh-CN":null};
+    state.etags = {en:null,"zh-CN":null};
+    if (!demoMode && item) {
+      setConnection("Loading content");
+      try { await loadVariantDetails(item.id); }
+      catch (error) { handleApiError(error); return; }
+    } else if (demoMode && item) {
+      state.variants = {en:item.variants?.en || null,"zh-CN":item.variants?.["zh-CN"] || null};
+    }
+    const editorItem = item ? {...item,variants:state.variants} : null;
+    populateEditor(editorItem);
+    state.submissions = [];
     $("[data-editor-heading]").textContent = item ? "Edit content" : "Create " + collectionNames[state.collection].singular;
-    $("[data-action='delete-current']").hidden = !item;
     updateTranslationIndicators();
+    updateStatusControls();
+    $("[data-action='back-to-list']").dataset.backTo = state.collection;
     setPage("editor");
     markClean();
+    if (!demoMode) setConnection(state.session ? "Connected as " + state.session.email : "API session pending");
   };
   const updateTranslationIndicators = () => {
-    ["en","zh"].forEach((locale) => {
-      const title = formValue("title." + locale);
-      const desc = formValue("description." + locale);
-      const body = formValue("body." + locale);
+    ["en","zh-CN"].forEach((locale) => {
+      const suffix = uiLocale(locale);
+      const title = formValue("title." + suffix);
+      const desc = formValue("description." + suffix);
+      const body = formValue("body." + suffix);
       const complete = Boolean(title.trim() && desc.trim() && body.trim());
-      const node = $("[data-language-state='" + locale + "']");
+      const node = $("[data-language-state='" + suffix + "']");
       node.textContent = complete ? "Complete" : (title || desc || body ? "In progress" : "Not started");
       node.classList.toggle("is-missing",!complete);
-      const count = $("[data-word-count='" + locale + "']");
-      if (count) count.textContent = wordCount(body) + (locale === "zh" ? " 字" : " words");
+      const count = $("[data-word-count='" + suffix + "']");
+      if (count) count.textContent = wordCount(body) + (suffix === "zh" ? " 字" : " words");
     });
   };
-  const preview = (openDialog = true) => {
+  const refreshVariant = async (locale) => {
+    const result = await getContent(state.selectedId,locale);
+    state.variants[locale] = result.data;
+    state.etags[locale] = result.etag;
+    return result;
+  };
+  const saveLiveDrafts = async () => {
+    const locales = ["en","zh-CN"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
+    if (!locales.length) throw new Error("Add content in English or 简体中文 before saving.");
+    for (const locale of locales) {
+      const payload = toApiPayload(locale);
+      if (!state.selectedId) {
+        const created = await createContent(payload);
+        state.selectedId = created.contentId;
+        state.isNew = false;
+        state.variants[locale] = created;
+        await refreshVariant(locale);
+      } else if (!state.variants[locale]) {
+        const created = await createTranslation(state.selectedId,payload);
+        state.variants[locale] = created;
+        await refreshVariant(locale);
+      } else {
+        let etag = state.etags[locale];
+        if (!etag) etag = (await refreshVariant(locale)).etag;
+        if (!etag) throw new Error("The server did not return a revision ETag for " + locale + ". Refresh and retry.");
+        const saved = await saveDraft(state.selectedId,locale,payload,etag);
+        state.variants[locale] = saved.data;
+        state.etags[locale] = saved.etag;
+      }
+    }
+    setField("id",state.selectedId);
+    markClean();
+    updateStatusControls();
+    return state.selectedId;
+  };
+  const preview = async (openDialog = true) => {
     const value = formData();
-    const locale = state.previewLocale;
-    $("[data-preview-title]").textContent = value.title[locale] || (locale === "en" ? "Untitled story" : "尚未填写标题");
-    $("[data-preview-description]").textContent = value.description[locale] || "";
-    $("[data-preview-body]").textContent = value.body[locale] || "";
-    $("[data-preview-category]").textContent = value.category || collectionNames[value.type]?.title || "Culture";
-    const complete = Boolean(value.title[locale] && value.description[locale] && value.body[locale]);
-    $("[data-preview-language-status]").textContent = complete ? "Translation complete" : "This language version is incomplete";
+    const locale = state.previewLocale === "zh" ? "zh-CN" : "en";
+    const variant = value.locales[locale];
+    if (!variant.title || !variant.description || !variant.bodyMarkdown.trim()) {
+      showToast("Complete the selected language before previewing it.","error");
+      return;
+    }
+    if (demoMode) {
+      $("[data-preview-title]").textContent = variant.title;
+      $("[data-preview-description]").textContent = variant.description;
+      $("[data-preview-body]").textContent = variant.bodyMarkdown;
+      $("[data-preview-category]").textContent = variant.category || collectionNames[value.type]?.title || "Culture";
+      $("[data-preview-frame]").hidden = true;
+      $("[data-preview-body]").hidden = false;
+      $("[data-preview-language-status]").textContent = "Development preview";
+    } else {
+      try {
+        if (!state.selectedId) await saveLiveDrafts();
+        const payload = toApiPayload(locale);
+        const result = await previewContent(state.selectedId,{locale,metadata:payload,bodyMarkdown:payload.bodyMarkdown});
+        $("[data-preview-title]").textContent = variant.title;
+        $("[data-preview-description]").textContent = variant.description;
+        $("[data-preview-category]").textContent = variant.category;
+        $("[data-preview-frame]").srcdoc = result.html;
+        $("[data-preview-frame]").hidden = false;
+        $("[data-preview-body]").hidden = true;
+        $("[data-preview-language-status]").textContent = (result.warnings || []).join(" · ") || "Sanitized server preview";
+      } catch (error) { handleApiError(error); return; }
+    }
     if (openDialog && !$("[data-preview-dialog]").open) $("[data-preview-dialog]").showModal();
   };
-  const apiNotReady = () => {
-    showToast("The Agent 5 API contract is not available yet. No changes were sent or saved.", "info");
-  };
-  const saveContent = async (status) => {
-    if (!form.reportValidity()) return;
-    const payload = formData();
-    payload.status = status;
-    if (!demoMode) { apiNotReady(); return; }
-    const now = new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-    payload.updatedAt = now;
-    if (state.selectedId) {
-      const index = state.items.findIndex((item) => item.id === state.selectedId);
-      if (index >= 0) state.items[index] = {...state.items[index],...payload};
-    } else {
-      payload.id = "demo-" + Date.now().toString(36);
-      payload.slug = payload.slug || payload.id;
-      state.items.unshift(payload);
-      state.selectedId = payload.id;
-      setField("id",payload.id);
+  const saveContent = async () => {
+    if (demoMode) {
+      const value = formData();
+      const complete = ["en","zh-CN"].filter((locale)=>localeIsComplete(value.locales[locale]));
+      if (!complete.length) { showToast("Complete at least one language version before saving.","error"); return; }
+      const item = {
+        id:state.selectedId || "demo-" + Date.now().toString(36),
+        type:value.type,
+        title:{en:value.locales.en.title,zh:value.locales["zh-CN"].title},
+        description:{en:value.locales.en.description,zh:value.locales["zh-CN"].description},
+        body:{en:value.locales.en.bodyMarkdown,zh:value.locales["zh-CN"].bodyMarkdown},
+        slug:value.locales.en.slug || value.locales["zh-CN"].slug,
+        category:value.locales.en.category || value.locales["zh-CN"].category,
+        tags:value.tags,status:"draft",featured:value.locales.en.featured || value.locales["zh-CN"].featured,
+        updatedAt:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),
+        translationLocales:complete.map((locale)=>locale)
+      };
+      const index=state.items.findIndex((entry)=>entry.id===item.id);
+      if(index>=0) state.items[index]={...state.items[index],...item}; else state.items.unshift(item);
+      state.selectedId=item.id; setField("id",item.id); markClean(); updateCounts(); updateStatusControls();
+      showToast("Draft saved in development preview.","info");
+      return;
     }
-    state.collection = payload.type;
-    markClean();
-    updateCounts();
-    showToast(status === "published" ? "Content published in demo mode." : "Draft saved in demo mode.", "info");
-    setCollection(payload.type);
+    try {
+      await saveLiveDrafts();
+      await loadAllContent();
+      showToast("Draft saved to the CMS branch. It is not public yet.","success");
+    } catch (error) { handleApiError(error); }
+  };
+  const submitWorkflow = async (intent) => {
+    if (demoMode) {
+      await saveContent();
+      showToast(intent === "publish" ? "Publish request previewed in development mode." : "Unpublish request previewed in development mode.","info");
+      return;
+    }
+    try {
+      await saveLiveDrafts();
+      const locales = ["en","zh-CN"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || state.variants[locale].status === "published"));
+      if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
+      const results = [];
+      for (const locale of locales) {
+        if (!state.etags[locale]) await refreshVariant(locale);
+        const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"Submitted from the bilingual editorial CMS.");
+        results.push(result);
+      }
+      state.submissions = results;
+      markClean();
+      const prNumbers = results.map((result)=>"#" + result.pullRequest.number).join(", ");
+      showToast((intent === "publish" ? "Publish" : "Unpublish") + " request submitted for review: " + prNumbers + ". A reviewer must merge the PR.","success");
+      await loadAllContent();
+      updateStatusControls();
+    } catch (error) { handleApiError(error); }
   };
   const requestDelete = (id) => {
     state.pendingDelete = id;
     $("[data-confirm-dialog]").showModal();
   };
-  const deleteContent = () => {
-    if (!demoMode) { apiNotReady(); $("[data-confirm-dialog]").close(); return; }
-    state.items = state.items.filter((item) => item.id !== state.pendingDelete);
-    state.pendingDelete = null;
-    $("[data-confirm-dialog]").close();
-    showToast("Content deleted in demo mode.","info");
-    if (state.page === "editor") setPage("content"); else renderList();
-    updateCounts();
+  const deleteContent = async () => {
+    if (demoMode) {
+      state.items = state.items.filter((item) => item.id !== state.pendingDelete);
+      state.pendingDelete = null;
+      $("[data-confirm-dialog]").close();
+      showToast("Content deleted in development preview.","info");
+      if (state.page === "editor") setPage("content"); else renderList();
+      updateCounts();
+      return;
+    }
+    try {
+      await loadVariantDetails(state.pendingDelete);
+      const drafts = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
+      if (!drafts.length) throw new Error("Only an unsubmitted draft variant can be discarded. Published content must go through a reviewed unpublish workflow.");
+      for (const locale of drafts) await discardDraft(state.pendingDelete,locale);
+      state.pendingDelete = null;
+      $("[data-confirm-dialog]").close();
+      showToast("Unsubmitted draft variant(s) discarded.","success");
+      if (state.page === "editor") setPage("content");
+      await loadAllContent();
+    } catch (error) { handleApiError(error); }
   };
   const handleApiError = (error) => {
     if (error instanceof AdminApiError && error.status === 401) {
-      showToast(error.message,"error");
+      clearAdminCsrfToken();
       setConnection("Authentication required");
-      return;
-    }
-    if (error instanceof AdminApiError && error.status === 403) {
-      showToast(error.message,"error");
+      showAdminBanner("Sign in with the authorized Cloudflare Access account, then reload this page. The admin API rejected the session.", "error");
+    } else if (error instanceof AdminApiError && error.status === 403) {
       setConnection("Permission denied");
+      showAdminBanner("Your Cloudflare Access identity is recognized but does not have an authorized CMS role.", "error");
+    } else if (error instanceof AdminApiError && error.status === 409) {
+      showAdminBanner("This content changed on the server. Reload the variant before saving again to avoid overwriting another editor's changes.", "warning");
+    }
+    const detail = error instanceof AdminApiError && error.requestId ? error.message + " (Request " + error.requestId + ")" : (error.message || "The request failed.");
+    showToast(detail,"error");
+  };
+  const bootstrapLive = async () => {
+    try {
+      setConnection("Checking Access session");
+      const session = await getAdminSession();
+      state.session = session;
+      const email = $("[data-session-email]",document);
+      const role = $("[data-session-role]",document);
+      if (email) email.textContent = session.email;
+      if (role) role.textContent = session.role;
+      setConnection("Connected");
+      showAdminBanner("", "success");
+      await loadAllContent();
+      renderDashboard();
+    } catch (error) {
+      handleApiError(error);
+      if (!(error instanceof AdminApiError && (error.status === 401 || error.status === 403))) {
+        showAdminBanner("The CMS API is temporarily unavailable or not fully deployed yet. No sample content is shown in production.", "warning");
+      }
+    }
+  };
+  const uploadCurrentMedia = async (file) => {
+    const locale = $("[data-media-locale]").value;
+    if (demoMode) {
+      if (!file.type.startsWith("image/")) { showToast("Choose a supported image file.","error"); return; }
+      state.media.push({name:file.name,url:URL.createObjectURL(file),size:file.size});
+      renderMedia();
+      showToast("Local preview added. It has not been uploaded.","info");
       return;
     }
-    showToast(error.message || "The request failed.","error");
+    if (!state.selectedId || !state.variants[locale] || !state.etags[locale]) {
+      showToast("Save a draft for this language before uploading its cover image.","error");
+      return;
+    }
+    const suffix=uiLocale(locale);
+    const metadata={
+      alt:formValue("mediaAlt."+suffix),
+      decorative:false,
+      credit:formValue("mediaCredit."+suffix),
+      license:formValue("mediaLicense."+suffix),
+      ...(formValue("mediaSource."+suffix) ? {sourceUrl:formValue("mediaSource."+suffix)} : {})
+    };
+    if (!metadata.alt || !metadata.credit || !metadata.license) {
+      showToast("Enter image alt text, credit and license in the language editor before upload.","error");
+      return;
+    }
+    try {
+      const result=await uploadMedia(state.selectedId,locale,state.etags[locale],file,metadata);
+      setField("mediaSrc."+suffix,result.src);
+      await refreshVariant(locale);
+      markClean();
+      showToast("Image uploaded and attached to the " + (locale==="en" ? "English" : "Chinese") + " draft.","success");
+      renderMedia();
+    } catch(error) { handleApiError(error); }
   };
   root.addEventListener("click", async (event) => {
     const nav = event.target.closest("[data-nav]");
