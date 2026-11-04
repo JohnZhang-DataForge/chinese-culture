@@ -1,6 +1,6 @@
 # Developer Runbook — Astro and Cloudflare Pages Free
 
-**Status:** Astro static site is implemented and CI-tested. The Cloudflare Pages Direct Upload project exists; its first production deployment is awaiting a one-time upload or protected API token.
+**Status:** Astro static site is implemented and CI-tested. The Cloudflare Pages Direct Upload project exists; its first production deployment is awaiting one protected Pages Write API token.
 
 ## Prerequisites
 
@@ -21,13 +21,11 @@ Do not commit `node_modules/`, `dist/`, `.env` files or Cloudflare credentials.
 
 ## CI behavior
 
-`.github/workflows/site-ci.yml` runs on pull requests and pushes to `main`. It installs dependencies, builds Astro, runs the static verifier and publishes a short-lived `chinese-culture-dist` artifact for main pushes. The separate Pages deployment workflow is credential-gated. A committed lockfile and `npm ci` conversion remain a reproducibility improvement.
+`.github/workflows/site-ci.yml` runs on pull requests and pushes to `main`. It installs dependencies, builds Astro, runs the static verifier and publishes a short-lived `chinese-culture-dist` artifact for main pushes. The separate Pages deployment workflow uses Wrangler Direct Upload and is credential-gated. A committed lockfile and `npm ci` conversion remain a reproducibility improvement.
 
-Latest verified build: [GitHub Actions run #41829806975](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829390039). It completed install, Astro build, static verification and artifact packaging successfully.
+Latest verified build: [GitHub Actions run #41830613564](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41830613564). It completed install, Astro build, static verification and artifact packaging successfully.
 
 ## Cloudflare Pages project
-
-The Cloudflare Pages project has already been created:
 
 - Project: `chinese-culture`
 - Production branch: `main`
@@ -35,39 +33,35 @@ The Cloudflare Pages project has already been created:
 - Upload mode: Direct Upload (Wrangler or dashboard ZIP upload)
 - Current state: project provisioned, no production deployment yet
 
-The Cloudflare Git integration attempt returned an account-side installation error. Direct Upload avoids that integration and keeps the site fully static. A Direct Upload project cannot later be converted to Git integration; this is intentional because GitHub Actions will build the site and Wrangler will publish the prebuilt files.
+The Cloudflare Git integration attempt returned an account-side installation error. This does not block Direct Upload. GitHub Actions builds the site and Wrangler publishes the prebuilt files, so no Cloudflare GitHub App authorization is required.
 
-## First deployment — quickest path without creating an API token
+## One-time API token setup
 
-A validated ZIP is available as the `chinese-culture-dist` artifact in the latest successful main-branch CI run. It contains only the 29 public files generated from `dist/`; it does not contain the private source repository or documentation.
+To enable the automated deployment workflow:
 
-1. Download the `chinese-culture-dist` artifact from the latest successful run.
-2. In Cloudflare Dashboard, open **Workers & Pages → Pages → chinese-culture**.
-3. Choose **Create a new deployment**, select the **Production** environment, and upload the ZIP.
-4. Wait for the deployment to complete, then open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
+1. In Cloudflare Dashboard, open **Manage Account → Account API Tokens**.
+2. Choose **Create Token** and select the account-owned token flow.
+3. Grant the **Pages Write** role only. Scope it to the account that owns the `chinese-culture` Pages project. Do not grant Zone, Workers, DNS or unrelated permissions.
+4. Create the token and copy it directly to a secure location. Cloudflare shows the token only once.
+5. In GitHub, open **JohnZhang-DataForge/chinese-culture → Settings → Secrets and variables → Actions**.
+6. Add one repository secret:
+   - `CLOUDFLARE_API_TOKEN` — the Pages Write token just created.
 
-The ZIP is already structured with the website files at its root. The current package contains 29 files, below the dashboard drag-and-drop limit.
+The Cloudflare account ID is already configured in `.github/workflows/pages-deploy.yml`; it is an identifier, not a secret. Do not add it as another GitHub secret and do not paste the API token into ChatGPT or source control.
 
-## Automated future deployments
+If the account-owned token option is unavailable, an account administrator with API Token Provisioning or Super Administrator access must create the token.
 
-To deploy from GitHub Actions without manually uploading each release:
+## First production deployment
 
-1. In Cloudflare Dashboard, open **Account API Tokens → Create Token → Custom Token**.
-2. Grant the account permission **Cloudflare Pages → Edit** for the intended account only.
-3. Create the token. Do not paste it into chat or commit it to the repository.
-4. In GitHub, open **JohnZhang-DataForge/chinese-culture → Settings → Secrets and variables → Actions**.
-5. Add repository secrets:
-   - `CLOUDFLARE_API_TOKEN` — the token just created.
-   - `CLOUDFLARE_ACCOUNT_ID` — the Cloudflare account ID.
-6. To deploy automatically after future pushes to `main`, add repository variable `CLOUDFLARE_DEPLOY_ENABLED` with value `true`. Otherwise, use the workflow's manual `workflow_dispatch` after the secrets exist.
+1. Open the repository's **Actions** tab.
+2. Select **Deploy Chinese Culture Atlas to Cloudflare Pages**.
+3. Choose **Run workflow**, select branch `main`, and start the run.
+4. Confirm the build, static verification and Wrangler Direct Upload steps all succeed.
+5. Open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
 
-The workflow **Deploy Chinese Culture Atlas to Cloudflare Pages** rebuilds the site, runs `npm run verify`, then executes:
+For future automatic deployment after each main push, add repository variable `CLOUDFLARE_DEPLOY_ENABLED` with value `true`. Leave it unset to keep production deploys manual.
 
-```bash
-wrangler pages deploy dist --project-name=chinese-culture --branch=main
-```
-
-For a local deployment, set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the shell, then run `npm run deploy`.
+For a local deployment, set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the shell, then run `npm run deploy`. Never commit either value.
 
 ## Verify a release
 
@@ -97,4 +91,5 @@ Add one Markdown file under a content collection, keep metadata valid, cite reli
 ## Cost controls
 
 All reader pages prerender; no SSR adapter, Pages Functions, D1/KV/R2, forms, queues or third-party tracking are enabled. Native Pages static asset requests are free and unlimited. See [Pages limits](https://developers.cloudflare.com/pages/platform/limits/).
-\n## Current account-specific blocker\n\nThe account-specific state and required owner authorization are recorded in [Cloudflare deployment status](../operations/04-cloudflare-deployment.md). Do not attempt to use the empty Pages Direct Upload project as if it were the Workers deployment.\n
+
+See [Cloudflare deployment status](../operations/04-cloudflare-deployment.md) for the verified account state and release evidence.

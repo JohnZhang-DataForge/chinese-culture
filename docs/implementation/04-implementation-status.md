@@ -1,7 +1,7 @@
 # Implementation Status and Known Gaps
 
-**Updated:** 2026-11-04  
-**Stage:** MVP source merged to `main`; Cloudflare Pages Direct Upload project is provisioned; first production deployment awaits a one-time dashboard upload or protected API token.  
+**Updated:** 2026-11-05  
+**Stage:** MVP source merged to `main`; Cloudflare Pages Free Direct Upload project is provisioned; first production deployment awaits one protected API token.  
 **Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
 **Main branch:** [main](https://github.com/JohnZhang-DataForge/chinese-culture/tree/main).
 
@@ -23,27 +23,38 @@
 | Informational pages | Added | About, contact-status, privacy, accessibility, editorial policy |
 | Responsive styles | Added | Mobile layout, focus, reduced motion |
 | Build CI | Added | GitHub Actions install/build/static verifier |
-| Public hosting | Project provisioned; deployment pending | Requires GitHub API token secret, first Pages deployment and browser smoke verification |
+| Pages deployment workflow | Added | Wrangler Direct Upload; requires one protected Pages Write token |
+| Public hosting | Project provisioned; deployment pending | Requires token secret, first deployment and browser smoke verification |
 
 ## Validation state
 
-[GitHub Actions run #41829390039](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on `main`: dependency install, Astro build, static verifier and deployment-artifact packaging all succeeded. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
+The latest successful main-branch CI run [#41830613564](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41830613564) passed: dependency install, Astro build, static verifier and deployment-artifact packaging. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
 
-## Deployment blocker (2026-11-04)\n\nCloudflare account is connected, but the Worker has no versions and is not deployed. The existing `chinese-culture` Pages project is an empty Direct Upload project with zero deployments, not the selected Workers Static Assets production target. Cloudflare reports an internal GitHub Git-installation error (HTTP 401 / 8000011); the account has no Workers Builds repository connection or build token. The Cloudflare Workers and Pages GitHub App must be authorized for the private repository by the account owner. See [Cloudflare deployment status](../operations/04-cloudflare-deployment.md).\n\n## Remaining before public launch
+## Deployment state (2026-11-05)
 
+- Cloudflare account connection is working; account ID is configured in the deployment workflow.
+- Pages project `chinese-culture` exists at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but its deployments list is empty and its latest/canonical deployment is null.
+- The GitHub Pages Git integration had an account-side installation error. This does not block Direct Upload; the project is intentionally deployed by GitHub Actions and Wrangler rather than Cloudflare's Git integration.
+- The deployment workflow is gated: push-triggered deployments remain skipped until repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`; manual `workflow_dispatch` is available after the token secret is added.
+- The connected Cloudflare API can inspect the Pages project and issue an upload token, but direct asset upload requires a short-lived JWT in a custom Authorization header. That upload step cannot be completed through the current API connector. The GitHub Actions Wrangler workflow is the supported release path.
+- Exact token setup and release steps are documented in [Cloudflare deployment status](../operations/04-cloudflare-deployment.md).
+
+## Remaining before public launch
+
+- Add GitHub repository secret `CLOUDFLARE_API_TOKEN` with the Cloudflare **Pages Write** role, scoped to the intended account only.
+- Run **Actions → Deploy Chinese Culture Atlas to Cloudflare Pages → Run workflow** on `main`.
+- Verify the production deployment, home page, nested article routes, 404 behavior, HTTPS and response headers.
 - Keep CI passing after any change; verify all internal links in build output.
-- Keep build CI green and refresh the one-day `chinese-culture-dist` artifact on main pushes.
-- Record dependency lockfile/reproducible installs after the initial build.
+- Commit a lockfile and convert CI installs to `npm ci` for stronger reproducibility.
 - Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
 - Assign factual/editorial reviewers and check all source links and Chinese terms.
 - Replace pending public contact details with a verified method and approve privacy notice.
 - Add only real, source-verified events, or keep the empty state.
-- For immediate launch, upload the verified `chinese-culture-dist` ZIP through the Pages dashboard; for repeatable releases, add a least-privilege Pages API token and account ID to GitHub Actions secrets. Never commit credentials.
-- Complete the first Pages Direct Upload, validate `chinese-culture-79h.pages.dev`, HTTPS, page routes and response headers, then sign off production launch.
+- Record deployment ID, source SHA, timestamp and rollback target after first publication.
 
 ## Explicit exclusions
 
-No live API, user accounts, SSR, always-on Node.js VPS, Worker script invocation on educational pages, database, newsletter, payment/registration processing or third-party analytics.
+No live API, user accounts, SSR, always-on Node.js VPS, database, newsletter, payment/registration processing or third-party analytics.
 
 ## References
 

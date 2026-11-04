@@ -47,9 +47,9 @@ An intermediate CI run [#41717877814](https://github.com/JohnZhang-DataForge/chi
 
 Added a main-only `chinese-culture-dist` artifact after build and static verification. Artifact contains only generated public `dist/` files and is retained for one day. No Cloudflare credentials or secrets were added to GitHub; deployment will use the authorized Cloudflare connection. This workflow change must pass CI before using its artifact.
 
-## 2026-11-04 — Add embedded Worker deployment fallback
+## 2026-11-04 — Evaluate alternate Worker upload path (not selected)
 
-Cloudflare direct Static Assets uploads require a short-lived upload JWT in a custom Authorization header that is not supported by the connected API action. A Cloudflare Pages Git project creation attempt also returned account-side Git installation error `8000011`. Added a fallback generator that packages the verified Astro `dist/` output as a gzip-compressed tar archive embedded in a small Worker script. The fallback serves GET/HEAD, directory index routes, 404, MIME types and the site's security headers. CI now builds/tests the fallback and publishes a one-day deployable Worker artifact. The native Workers Static Assets configuration remains the preferred future path because static asset requests are free and unlimited; the fallback consumes the Workers Free daily request allowance (100,000 requests/day across the account).
+A direct Worker-script upload was investigated as a possible workaround for the Pages asset-upload authorization path. It was not selected or implemented: the existing product design is a static Pages site, and the Pages Direct Upload workflow is the better fit. No Worker fallback was deployed.
 
 ## 2026-11-04 — Select Cloudflare Pages Direct Upload for the public static site
 
@@ -63,3 +63,6 @@ Updated the repository to use Cloudflare Pages Direct Upload as the production t
 
 The runbook, architecture plan, repository map and implementation status were aligned to the Pages Direct Upload decision. Final build-only CI [#41829806975](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41829806975) passed on main commit `658088da09400449d09a0fdcbe1111a09efa724a`. The deployment workflow correctly remains skipped until the owner enables it or manually dispatches it after adding the required secrets. The Pages project still has no production deployment.
 \n## 2026-11-04 — Cloudflare deployment investigation\n\nVerified Cloudflare account connection and workers.dev subdomain. The `chinese-culture` Worker has no versions. Found an empty Pages Direct Upload project (zero deployments), which cannot be converted to Git integration. Attempted to configure Pages Git integration; Cloudflare returned HTTP 401 / error 8000011 indicating an internal Git installation issue. Workers Builds has no repository connections and zero build tokens. Documented the exact owner authorization flow in [Cloudflare deployment status](04-cloudflare-deployment.md). No production deployment has been claimed.\n
+## 2026-11-05 — Simplify the Pages deployment credential
+
+Hardcoded the non-secret Cloudflare account ID in the deployment workflow and reduced the required GitHub secret to `CLOUDFLARE_API_TOKEN` with the Pages Write role. Added a preflight check with an actionable error and documented manual workflow dispatch plus optional automatic deployment via `CLOUDFLARE_DEPLOY_ENABLED=true`. The first public deployment still awaits the owner-created token; CI build success is not treated as deployment success.

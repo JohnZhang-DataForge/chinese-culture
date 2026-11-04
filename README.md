@@ -1,6 +1,6 @@
 # Chinese Culture Atlas
 
-**Status: MVP implementation merged; Cloudflare Pages project provisioned; first deployment awaits a protected API token.**  
+**Status: MVP implementation merged; Cloudflare Pages project provisioned; first deployment awaits a protected Pages Write API token.**  
 **Repository:** Private GitHub · **Hosting target:** Cloudflare Pages Free (Direct Upload) · **Framework:** Astro (static output) + Node.js build tooling.
 
 A welcoming educational website for exploring Chinese culture through beginner lessons, art, traditions, festivals and literary reading guides.
@@ -29,9 +29,11 @@ The Pages project `chinese-culture` has been created at [chinese-culture-79h.pag
 
 ## Cloudflare Pages deployment
 
-Run `npm run deploy` with a least-privilege Cloudflare API token, or trigger the `Deploy Chinese Culture Atlas to Cloudflare Pages` GitHub Actions workflow after adding the repository secrets. Wrangler Direct Upload publishes only `dist/` to the existing Pages project; no Worker Functions or permanent Node.js process are deployed.
+The site uses Cloudflare Pages Free Direct Upload. No Cloudflare GitHub App connection is required. Add one repository Actions secret, `CLOUDFLARE_API_TOKEN`, containing a Cloudflare account token with the **Pages Write** role restricted to this account. The account ID is already configured in the workflow and is not a secret.
 
-See [Developer runbook](docs/implementation/05-developer-runbook.md) for all deployment gates. Do not store tokens or secrets in source control.
+Then open **Actions → Deploy Chinese Culture Atlas to Cloudflare Pages → Run workflow** on `main`. To deploy automatically on every future push to `main`, also add repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`. Wrangler publishes only `dist/`; no Worker Functions or permanent Node.js process are deployed.
+
+See [Developer runbook](docs/implementation/05-developer-runbook.md) for the exact token setup and release checks. Never paste the token into chat or commit it to source control.
 
 ## Project map
 
