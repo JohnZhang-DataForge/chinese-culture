@@ -78,3 +78,37 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  production-smoke:
+    name: Production domain, TLS and redirect smoke
+    if: github.event_name != 'pull_request'
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify apex HTTPS response and certificate
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl --retry 4 --retry-all-errors --retry-delay 3 --max-time 30 --silent --show-error --output /tmp/chinese-culture-home.html --write-out '%{http_code}' https://chinese-culture.site/)"
+          test "$status" = "200"
+          grep -Eqi '<title>[^<]*Chinese Culture' /tmp/chinese-culture-home.html
+          echo "Apex HTTPS returned HTTP $status and passed TLS certificate validation."
+
+      - name: Verify www permanently redirects to HTTPS apex
+        shell: bash
+        run: |
+          set -euo pipefail
+          headers="$(curl --retry 4 --retry-all-errors --retry-delay 3 --max-time 30 --silent --show-error --dump-header - --output /dev/null 'https://www.chinese-culture.site/__qa_redirect_probe?source=agent06')"
+          printf '%s\n' "$headers"
+          printf '%s\n' "$headers" | grep -Eqi '^HTTP/[^ ]+[[:space:]]+301'
+          printf '%s\n' "$headers" | grep -Eqi '^location:[[:space:]]*https://chinese-culture.site/__qa_redirect_probe\?source=agent06'
+
+      - name: Verify apex HTTP permanently redirects to HTTPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          headers="$(curl --retry 4 --retry-all-errors --retry-delay 3 --max-time 30 --silent --show-error --dump-header - --output /dev/null 'http://chinese-culture.site/__qa_redirect_probe?source=agent06')"
+          printf '%s\n' "$headers"
+          printf '%s\n' "$headers" | grep -Eqi '^HTTP/[^ ]+[[:space:]]+301'
+          printf '%s\n' "$headers" | grep -Eqi '^location:[[:space:]]*https://chinese-culture.site/__qa_redirect_probe\?source=agent06'
