@@ -63,9 +63,10 @@ export function buildGoogleTranslateUrl(currentPageUrl, targetLanguage) {
     throw new TypeError("Google Translate requires an HTTP or HTTPS page URL.");
   }
 
-  const translationUrl = new URL("https://translate.google.com/translate");
+  const translationUrl = new URL("https://translate.google.com/");
   translationUrl.searchParams.set("sl", "auto");
   translationUrl.searchParams.set("tl", targetLanguage);
-  translationUrl.searchParams.set("u", pageUrl.href);
+  translationUrl.searchParams.set("op", "websites");
+  translationUrl.searchParams.set("text", pageUrl.href);
   return translationUrl.toString();
 }

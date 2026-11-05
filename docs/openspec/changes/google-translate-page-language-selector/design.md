@@ -21,7 +21,7 @@ Select Language control (native HTML select)
 Browser builds a URL using URL + URLSearchParams
   |
   v
-Google Translate website-translation endpoint
+Google Translate Websites interface
   |
   v
 Google-hosted translated view of the current page
@@ -43,12 +43,13 @@ No translation request is sent to a project-owned API. The static site does not 
 The component renders a native select:
 - Empty initial option: `Select Language`.
 - Each supported option has a human-readable language label and Google Translate target-language code.
-- On change, construct `https://translate.google.com/translate` with:
+- On change, construct `https://translate.google.com/` with:
   - `sl=auto` — let Google detect the page's source language.
   - `tl=<selected language>` — target language.
-  - `u=<window.location.href>` — current page URL.
+  - `op=websites` — select Google's website-translation mode.
+  - `text=<window.location.href>` — supply the current page URL to the interface.
 
-Use `URL` and `URLSearchParams`; do not concatenate an unescaped query string. Navigate in the same tab to the translated view so browser Back returns to the original page.
+Use `URL` and `URLSearchParams`; do not concatenate an unescaped query string. Navigate in the same tab to Google's Website translation interface. The reader may need to confirm the URL and press Google's Go/Translate control; this is not an inline auto-translation widget.
 
 The attribution is a plain link to Google Translate and reads **Powered by Google Translate**. This is a custom selector that launches Google's website translation service; it is not the retired embedded Website Translator widget.
 
