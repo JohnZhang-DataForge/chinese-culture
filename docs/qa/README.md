@@ -25,7 +25,7 @@ For an external preview deployment:
 QA_BASE_URL=https://<isolated-preview-host> npm run test:e2e
 ```
 
-Set `QA_REQUIRE_BILINGUAL=true` to make missing `/en/` or both Chinese route candidates (`/zh/`, `/zh-cn/`) fail the suite rather than skip. The canonical Chinese segment remains an open contract decision. Set `QA_REQUIRE_ADMIN=true` only when `QA_BASE_URL` points to a preview with the backend API and Access policy deployed.
+Set `QA_REQUIRE_BILINGUAL=true` to make missing `/en/` or both Chinese route candidates (`/zh/`, `/zh-cn/`) fail the suite rather than skip. The canonical Chinese segment remains an open contract decision. Set `QA_REQUIRE_ADMIN=true` only when `QA_BASE_URL` points to a preview with the backend API and Access policy deployed. Never print or commit the Access cookie; store it only as the GitHub Actions secret `QA_ACCESS_COOKIE` and refresh it when it expires.
 
 ## Destructive CMS tests
 
