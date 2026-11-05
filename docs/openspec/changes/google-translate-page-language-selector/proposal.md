@@ -28,7 +28,8 @@ The first production implementation opened the Google Translate Websites interfa
 - **TRN-007:** The selector SHALL NOT load `translate_a/element.js` or call `google.translate.TranslateElement`.
 - **TRN-008:** No Google Cloud API key, paid service, Pages Function, database or runtime server SHALL be required.
 - **TRN-009:** The privacy notice SHALL disclose that the selected page is served through Google's translation infrastructure.
-- **TRN-010:** The original website and native locale routes SHALL remain readable if the external Google translation route is unavailable.\n- **TRN-011:** Public pages SHALL NOT render native form controls (`form`, `input`, `select`, `textarea`, `option`) in the Google Translate proxy experience; language navigation SHALL use ordinary links inside a non-form disclosure menu.
+- **TRN-010:** The original website and native locale routes SHALL remain readable if the external Google translation route is unavailable.
+- **TRN-011:** Public pages SHALL NOT render native form controls (`form`, `input`, `select`, `textarea`, `option`) in the Google Translate proxy experience; language navigation SHALL use ordinary links inside a non-form disclosure menu.
 
 ## External behavior and limitation
 
