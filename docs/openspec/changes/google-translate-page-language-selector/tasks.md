@@ -23,3 +23,14 @@
 - [ ] P2.3 Verify URL-builder edge cases.
 - [ ] P2.4 Manually verify translated page loads in a real browser.
 - [ ] P2.5 Merge and deploy after CI passes; confirm production behavior.
+
+ 
+## P3 — Language switching regression
+
+- [x] P3.1 Reproduce the second-selection failure from the supplied browser recording.
+- [x] P3.2 Decode an existing Google Translate proxy hostname back to the original website hostname.
+- [x] P3.3 Recover a nested proxy hostname produced by the previous implementation.
+- [x] P3.4 Preserve the current path, normal query parameters and fragment while replacing the target language.
+- [x] P3.5 Add automated tests for normal language switching and legacy nested-proxy recovery.
+- [ ] P3.6 Run CI and deploy the correction.
+- [ ] P3.7 Re-test switching between multiple languages in a real browser.

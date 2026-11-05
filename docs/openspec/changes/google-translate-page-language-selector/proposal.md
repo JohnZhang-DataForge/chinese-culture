@@ -42,3 +42,8 @@ Google documents the translated-page hostname convention and how to map translat
 4. URL-builder tests verify host encoding, path, query, fragment, target language and invalid inputs.
 5. Astro build and static verification pass.
 6. A real browser test confirms the translated page loads, rather than an empty Google Translate input screen.
+
+
+## Follow-up requirement: changing language on a translated page
+
+The shared selector remains available on the Google-hosted translated page. Selecting another language SHALL recover the original source hostname from the current `.translate.goog` hostname, remove prior translation routing parameters, and generate a new URL for the selected language without adding another proxy layer. The URL builder SHALL also recover URLs nested by the earlier defective implementation when possible.

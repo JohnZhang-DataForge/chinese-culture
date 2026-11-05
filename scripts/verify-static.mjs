@@ -52,6 +52,19 @@ assert.equal(wwwUrl.hostname, "www-example-com.translate.goog", "Dots in hostnam
 const dashedHostUrl = new URL(buildGoogleTranslateUrl("https://foo-bar.example.com/", "es"));
 assert.equal(dashedHostUrl.hostname, "foo--bar-example-com.translate.goog", "Literal hostname hyphens must be doubled");
 
+const translatedPageUrl = "https://chinese--culture-site.translate.goog/culture/calligraphy/?topic=brush&_x_tr_sl=auto&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp#history";
+const switchedLanguageUrl = new URL(buildGoogleTranslateUrl(translatedPageUrl, "ca"));
+assert.equal(switchedLanguageUrl.hostname, "chinese--culture-site.translate.goog", "Switching language on an existing translated page must reuse the original proxy host");
+assert.equal(switchedLanguageUrl.searchParams.get("_x_tr_tl"), "ca", "Switching language must update the target language");
+assert.equal(switchedLanguageUrl.searchParams.get("topic"), "brush", "Switching language must preserve the source query");
+assert.equal(switchedLanguageUrl.hash, "#history", "Switching language must preserve the current fragment");
+assert.equal([...switchedLanguageUrl.searchParams.keys()].filter((key) => key.startsWith("_x_tr_")).length, 4, "Switching language must not accumulate translation parameters");
+
+const nestedLegacyProxyUrl = "https://chinese----culture-site-translate-goog.translate.goog/?_x_tr_sl=auto&_x_tr_tl=zh-TW&_x_tr_hl=en&_x_tr_pto=wapp";
+const recoveredLegacyProxyUrl = new URL(buildGoogleTranslateUrl(nestedLegacyProxyUrl, "ja"));
+assert.equal(recoveredLegacyProxyUrl.hostname, "chinese--culture-site.translate.goog", "Recover the original site even from a nested proxy URL created by the previous implementation");
+assert.equal(recoveredLegacyProxyUrl.searchParams.get("_x_tr_tl"), "ja", "A recovered nested proxy must use the newly selected language");
+
 assert.throws(() => buildGoogleTranslateUrl(samplePageUrl, "not-a-language"), RangeError);
 assert.throws(() => buildGoogleTranslateUrl("javascript:alert(1)", "es"), TypeError);
 assert.throws(() => buildGoogleTranslateUrl("http://localhost:4321/", "es"), TypeError);
