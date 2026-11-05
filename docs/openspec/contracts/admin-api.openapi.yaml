@@ -542,7 +542,7 @@ components:
           type: integer
     ContentVariantSummary:
       type: object
-      required: [contentId, locale, collection, slug, title, description, category, status, featured, updatedAt, translationLocales]
+      required: [contentId, locale, collection, slug, title, description, category, status, featured, updatedAt, revision, translationLocales]
       properties:
         contentId:
           type: string
@@ -561,6 +561,7 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/ContentStatus'
+          description: Desired editorial state in D1; it does not by itself prove that the corresponding public snapshot is live.
         featured:
           type: boolean
         updatedAt:
@@ -738,6 +739,7 @@ components:
           type: string
         revision:
           type: string
+          description: Exact D1 revision exported to the GitHub snapshot branch and PR.
         pullRequest:
           type: object
           required: [number, url, state]
