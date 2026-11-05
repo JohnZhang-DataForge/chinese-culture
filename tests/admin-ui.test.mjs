@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { filterContent, paginate, parseTags, translationStatus, wordCount } from "../src/lib/admin-ui.mjs";
+import { filterContent, paginate, parseTags, translationStatus, wordCount, localizedSeoPayload } from "../src/lib/admin-ui.mjs";
 import {
   ADMIN_API_BASE, AdminApiError, clearAdminCsrfToken, getAdminSession,
   requestAdminApi, requestAdminApiWithMeta, setAdminCsrfToken, uploadMedia
@@ -44,6 +44,16 @@ test("word count supports Latin words and Chinese characters", () => {
   assert.equal(wordCount("Brush painting and calligraphy"),4);
   assert.equal(wordCount("中国传统文化"),6);
   assert.equal(wordCount(""),0);
+});
+
+test("localized SEO fields map independently for English and Simplified Chinese", () => {
+  assert.deepEqual(localizedSeoPayload("en","Chinese culture guide","Explore traditions and history."),{
+    locale:"en",seoTitle:"Chinese culture guide",seoDescription:"Explore traditions and history."
+  });
+  assert.deepEqual(localizedSeoPayload("zh-CN","中国文化指南","了解中国传统与历史。"),{
+    locale:"zh-CN",seoTitle:"中国文化指南",seoDescription:"了解中国传统与历史。"
+  });
+  assert.deepEqual(localizedSeoPayload("zh-CN","",""),{locale:"zh-CN"});
 });
 
 test("API transport sends same-origin cookies and CSRF token for writes", async () => {
@@ -117,5 +127,7 @@ test("media upload uses multipart metadata, CSRF and the variant ETag", async ()
   assert.equal(observed.options.headers.get("X-CSRF-Token"),"media-csrf");
   assert.equal(observed.options.headers.get("If-Match"),'"variant-4"');
   assert.equal(observed.options.headers.has("Content-Type"),false);
-  assert.equal(observed.options.body.get("metadata"),JSON.stringify({alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"}));
+  const metadataPart=observed.options.body.get("metadata");
+  assert.equal(metadataPart.type,"application/json");
+  assert.deepEqual(JSON.parse(await metadataPart.text()),{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"});
 });

@@ -161,7 +161,7 @@ export function previewContent(contentId, payload, fetcher = fetch) {
 export function uploadMedia(contentId, locale, etag, file, metadata, fetcher = fetch) {
   const form = new FormData();
   form.append("file", file);
-  form.append("metadata", JSON.stringify(metadata));
+  form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }), "metadata.json");
   const path = queryPath(ADMIN_API_BASE + "/content/" + encodeURIComponent(contentId) + "/media", { locale });
   return requestAdminApi(path, { method: "POST", body: form, ifMatch: etag }, fetcher);
 }

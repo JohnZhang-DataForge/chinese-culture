@@ -49,3 +49,13 @@ export function wordCount(value) {
   const latin = text.replace(/[\u3400-\u9fff]/g, " ").trim().split(/\s+/).filter(Boolean).length;
   return cjk + latin;
 }
+
+
+export function localizedSeoPayload(locale, title, description) {
+  const payload = { locale };
+  const seoTitle = String(title || "").trim();
+  const seoDescription = String(description || "").trim();
+  if (seoTitle) payload.seoTitle = seoTitle;
+  if (seoDescription) payload.seoDescription = seoDescription;
+  return payload;
+}

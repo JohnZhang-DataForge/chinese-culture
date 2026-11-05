@@ -1,4 +1,4 @@
-import { filterContent, paginate, parseTags, translationStatus, wordCount } from "../lib/admin-ui.mjs";
+import { filterContent, paginate, parseTags, translationStatus, wordCount, localizedSeoPayload } from "../lib/admin-ui.mjs";
 import {
   AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
   getContent, createContent, createTranslation, saveDraft, previewContent,
@@ -218,8 +218,7 @@ if (root) {
       media,
       sources:existing?.sources || []
     };
-    if (value.seoTitle) payload.seoTitle = value.seoTitle;
-    if (value.seoDescription) payload.seoDescription = value.seoDescription;
+    Object.assign(payload,localizedSeoPayload(locale,value.seoTitle,value.seoDescription));
     if (value.level) payload.level = value.level;
     if (value.chinese) payload.chinese = value.chinese;
     if (value.pinyin) payload.pinyin = value.pinyin;
