@@ -98,7 +98,7 @@ test.describe("Admin browser experience", () => {
     try {
       await page.goto("/admin/");
       await page.locator('[data-nav="articles"]').click();
-      await page.locator('[data-action="new-content"]').click();
+      await page.locator('[data-page="content"] [data-action="new-content"]').click();
 
       await page.locator('input[name="title.en"]').fill("QA Browser Article");
       await page.locator('input[name="slug.en"]').fill(slug);
