@@ -33,3 +33,13 @@
 
 .pr-status-link{font-size:9px;color:#47765c;text-decoration:none;font-weight:700}
 .pr-status-link:hover{text-decoration:underline}
+
+.nav-item:disabled{opacity:.45;cursor:not-allowed}
+.variant-media-list{display:grid;gap:8px;margin:8px 0 12px}
+.variant-media-item{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid #e7ece8;border-radius:8px;background:#fbfcfb}
+.variant-media-item img{width:52px;height:52px;object-fit:cover;border-radius:6px;background:#eef1ee}
+.variant-media-item>div{display:grid;gap:3px;min-width:0}
+.variant-media-item strong{font-size:9px;color:#46574c;overflow-wrap:anywhere}
+.variant-media-item small{font-size:8px;color:#859187}
+.variant-media-item .text-button{justify-self:start;margin-top:2px}
+.workflow-status{display:block;padding:8px 10px;border:1px solid #e7ece8;border-radius:7px;background:#f8faf8;color:#627267;font-size:10px}
