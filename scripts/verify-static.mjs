@@ -35,14 +35,26 @@ assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
 
 const samplePageUrl = "https://chinese-culture.site/culture/calligraphy/?topic=brush#history";
 const googleUrl = new URL(buildGoogleTranslateUrl(samplePageUrl, "ja"));
-assert.equal(googleUrl.origin, "https://translate.google.com", "Wrong translation provider");
-assert.equal(googleUrl.pathname, "/", "Use the current Google Translate interface");
-assert.equal(googleUrl.searchParams.get("sl"), "auto", "Source language must be auto-detected");
-assert.equal(googleUrl.searchParams.get("tl"), "ja", "Target language must be retained");
-assert.equal(googleUrl.searchParams.get("op"), "websites", "Open Google Translate's Website mode");
-assert.equal(googleUrl.searchParams.get("text"), samplePageUrl, "Current page URL must be prefilled intact");
+assert.equal(googleUrl.origin, "https://chinese--culture-site.translate.goog", "Hyphenated source hostname must be encoded for translate.goog");
+assert.equal(googleUrl.pathname, "/culture/calligraphy/", "Current page path must be preserved");
+assert.equal(googleUrl.searchParams.get("topic"), "brush", "Original query parameters must be preserved");
+assert.equal(googleUrl.hash, "#history", "Current page fragment must be preserved");
+assert.equal(googleUrl.searchParams.get("_x_tr_sl"), "auto", "Source language must be auto-detected");
+assert.equal(googleUrl.searchParams.get("_x_tr_tl"), "ja", "Target language must be retained");
+assert.equal(googleUrl.searchParams.get("_x_tr_hl"), "en", "Google Translate interface language must be English");
+assert.equal(googleUrl.searchParams.get("_x_tr_pto"), "wapp", "Google Translate web-app mode must be enabled");
+assert.equal(googleUrl.searchParams.has("text"), false, "Do not pass the URL as text to the Translate input field");
+assert.equal(googleUrl.searchParams.has("op"), false, "Do not redirect to the empty Translate UI");
+
+const wwwUrl = new URL(buildGoogleTranslateUrl("https://www.example.com/about", "ca"));
+assert.equal(wwwUrl.hostname, "www-example-com.translate.goog", "Dots in hostnames must map to hyphens");
+
+const dashedHostUrl = new URL(buildGoogleTranslateUrl("https://foo-bar.example.com/", "es"));
+assert.equal(dashedHostUrl.hostname, "foo--bar-example-com.translate.goog", "Literal hostname hyphens must be doubled");
+
 assert.throws(() => buildGoogleTranslateUrl(samplePageUrl, "not-a-language"), RangeError);
 assert.throws(() => buildGoogleTranslateUrl("javascript:alert(1)", "es"), TypeError);
+assert.throws(() => buildGoogleTranslateUrl("http://localhost:4321/", "es"), TypeError);
 const languageCodes = GOOGLE_TRANSLATE_LANGUAGES.map(({ code }) => code);
 assert.ok(languageCodes.length >= 40, "Expected a broad set of target languages");
 assert.equal(new Set(languageCodes).size, languageCodes.length, "Duplicate target language code");
@@ -58,7 +70,6 @@ const componentSource = readFileSync(join(root,"src/components/GoogleTranslate.a
 assert.ok(!componentSource.includes("translate_a/element.js"), "Retired Google Website Translator script must not be loaded");
 assert.ok(!componentSource.includes("google.translate.TranslateElement"), "Retired Google Website Translator API must not be used");
 
-// Check every local hyperlink in generated HTML, including content collection slugs.
 let linksChecked = 0;
 function inspectLinks(dir) {
   for (const name of readdirSync(dir)) {
@@ -67,7 +78,6 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     assert.ok(html.includes('id="google-translate-language"'), "Missing Google Translate selector in " + file);
-    // Astro emits double-quoted hrefs; inspect each local link without an HTML parser.
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
       if (!href.startsWith("/")) continue;
@@ -88,4 +98,4 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
 },0);
 assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, Google Translate selector and URL builder verified, no legacy widget or SSR Worker.");
+console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, direct Google Translate site URL verified, no legacy widget or SSR Worker.");
