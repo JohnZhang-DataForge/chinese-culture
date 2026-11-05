@@ -16,7 +16,7 @@ export function cmsMutationEnabled(env = process.env, baseURL = env.QA_BASE_URL 
   return (
     env.QA_ENABLE_CMS_MUTATIONS === "true" &&
     env.QA_ENVIRONMENT === "preview" &&
-    Boolean(env.QA_ACCESS_JWT?.trim()) &&
+    Boolean(env.QA_ACCESS_COOKIE?.trim()) &&
     /^qa-[a-z0-9][a-z0-9-]{2,40}$/.test(prefix) &&
     !PRODUCTION_HOSTS.has(hostname)
   );
@@ -26,7 +26,7 @@ export function assertCmsMutationAllowed(env = process.env, baseURL = env.QA_BAS
   if (!cmsMutationEnabled(env, baseURL)) {
     throw new Error(
       "CMS mutations are disabled. Require QA_ENABLE_CMS_MUTATIONS=true, QA_ENVIRONMENT=preview, " +
-      "a QA_ACCESS_JWT, a QA_TEST_CONTENT_PREFIX beginning with qa-, and a non-production target."
+      "a QA_ACCESS_COOKIE, a QA_TEST_CONTENT_PREFIX beginning with qa-, and a non-production target."
     );
   }
   return new URL(baseURL);
