@@ -62,8 +62,7 @@ test.describe("Admin CMS API draft lifecycle", () => {
       localesCreated.add("en");
 
       const itemPath = `${apiRoot}/content/${created.contentId}?locale=en`;
-      const readResponse = await request.get(itemPath, {
-      });
+      const readResponse = await request.get(itemPath);
       expect(readResponse.status()).toBe(200);
       const readItem = await readResponse.json();
       expect(readItem.title).toBe("QA Article — English");
@@ -108,8 +107,7 @@ test.describe("Admin CMS API draft lifecycle", () => {
       expect(preview.html).toContain("Safe preview");
       expect(preview.html).not.toMatch(/<script\b|javascript:/i);
 
-      const latestRead = await request.get(itemPath, {
-        });
+      const latestRead = await request.get(itemPath);
       expect(latestRead.status()).toBe(200);
       const latestEtag = latestRead.headers()["etag"];
       expect(latestEtag).toBeTruthy();
