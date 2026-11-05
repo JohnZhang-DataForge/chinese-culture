@@ -25,6 +25,7 @@ The static public site has a useful security baseline, and the preliminary JWT/m
 | Server-side CSRF enforcement | NOT TESTED | Current Agent 5 branch has only middleware scaffold; complete handlers/token checks are not present |
 | Invalid content / media validation at runtime | NOT TESTED | Requires deployed API handlers and owner-authorized preview |
 | GitHub API upstream failure handling | NOT TESTED | Agent 6 added mock-fetch tests; helper is not yet present on main |
+| CMS GitHub write-branch isolation | FAIL in Agent 5 scaffold | putRepositoryFile() and deleteRepositoryFile() default to main and accept main; Agent 5 notified and QA tests now require an explicit non-main branch |
 | GitHub API token isolation in deployed Functions | NOT TESTED | Backend Functions are not deployed |
 | Live HTTPS/TLS handshake | NOT TESTED | Cloudflare control-plane configuration is active; live probe awaits production-smoke job execution |
 
