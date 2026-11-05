@@ -76,10 +76,27 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  contract-lint:
+    name: OpenAPI contract lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Lint the approved OpenAPI contract when available
+        run: npm run verify:openapi
+
   production-smoke:
     name: Production domain, TLS and redirect smoke
     if: github.event_name != 'pull_request'
-    needs: quality
+    needs: [quality, contract-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
