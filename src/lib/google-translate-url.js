@@ -63,10 +63,32 @@ export function buildGoogleTranslateUrl(currentPageUrl, targetLanguage) {
     throw new TypeError("Google Translate requires an HTTP or HTTPS page URL.");
   }
 
-  const translationUrl = new URL("https://translate.google.com/");
-  translationUrl.searchParams.set("sl", "auto");
-  translationUrl.searchParams.set("tl", targetLanguage);
-  translationUrl.searchParams.set("op", "websites");
-  translationUrl.searchParams.set("text", pageUrl.href);
-  return translationUrl.toString();
+  if (
+    pageUrl.port ||
+    !pageUrl.hostname.includes(".") ||
+    !/^[a-z0-9.-]+$/i.test(pageUrl.hostname)
+  ) {
+    throw new TypeError("Google Translate requires a public DNS hostname without a port.");
+  }
+
+  const encodedHostname = pageUrl.hostname
+    .toLowerCase()
+    .replace(/-/g, "--")
+    .replace(/\./g, "-");
+
+  const translatedUrl = new URL(pageUrl.href);
+  translatedUrl.protocol = "https:";
+  translatedUrl.hostname = encodedHostname + ".translate.goog";
+  translatedUrl.port = "";
+
+  for (const key of [...translatedUrl.searchParams.keys()]) {
+    if (key.startsWith("_x_tr_")) translatedUrl.searchParams.delete(key);
+  }
+
+  translatedUrl.searchParams.set("_x_tr_sl", "auto");
+  translatedUrl.searchParams.set("_x_tr_tl", targetLanguage);
+  translatedUrl.searchParams.set("_x_tr_hl", "en");
+  translatedUrl.searchParams.set("_x_tr_pto", "wapp");
+
+  return translatedUrl.toString();
 }

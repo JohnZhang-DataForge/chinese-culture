@@ -1,57 +1,44 @@
 # Proposal: Google Translate Page Language Selector
 
 **Change ID:** google-translate-page-language-selector  
-**Status:** Implemented in PR #17; external browser verification pending  
+**Status:** Direct translated-site URL correction in progress  
 **Target:** https://chinese-culture.site  
 **Hosting constraint:** Astro static output on Cloudflare Pages Free
 
 ## Why
 
-Readers may want to read an individual page in a language beyond the site's maintained English and Simplified Chinese editions. The requested experience is the familiar compact **Select Language** dropdown with Google Translate attribution.
-
-Google's legacy Website Translator embed is no longer supported as of October 1, 2026. The project must not introduce that retired script as a new dependency or present it as a supported integration. Google continues to provide website translation through Google Translate itself.
+The first production implementation opened the Google Translate Websites interface with a URL supplied in the `text` query parameter. A real browser test showed that Google displayed the Websites tab but left its Website field empty. The `text` parameter is not a supported prefill contract for that field, so the prior acceptance claim was incorrect.
 
 ## Outcomes
 
-1. Add a compact, accessible, site-wide language dropdown labelled **Select Language**.
-2. Offer common target languages without requiring an API key or server-side translation service.
-3. When a reader selects a language, open Google Translate's current Websites interface with the current page URL and selected target language supplied.
-4. Preserve the original page URL in the translation request so readers can translate the page they are currently viewing.
-5. Keep the existing and future human-maintained `/en/` and `/zh-cn/` routes as the authoritative editions.
-6. Disclose that the optional translation flow is handled by Google and may contain machine-translation errors.
+1. Keep the compact, accessible, site-wide **Select Language** dropdown.
+2. On selection, navigate directly to the Google-hosted translated-site URL for the current page and target language.
+3. Preserve the current path, original query parameters and fragment.
+4. Keep the manually maintained English and Simplified Chinese editions authoritative.
+5. Avoid the retired embedded Website Translator widget and avoid paid Cloud Translation API dependencies.
 
 ## Normative requirements
 
 - **TRN-001:** The selector SHALL be available from the shared public layout on desktop and mobile.
-- **TRN-002:** The control SHALL use a native HTML select element with an accessible name and an initial `Select Language` option.
-- **TRN-003:** A valid language selection SHALL navigate to Google Translate's current Websites interface with `op=websites`, `sl=auto`, the selected `tl`, and the current page URL supplied in `text`.
-- **TRN-004:** The URL SHALL be assembled using the platform URL API so the current path, query and fragment are encoded safely.
-- **TRN-005:** The selector SHALL NOT load `translate_a/element.js`, call `google.translate.TranslateElement`, or depend on the unsupported legacy Website Translator widget.
-- **TRN-006:** The implementation SHALL NOT require Google Cloud Translation API credentials, paid services, a database, Pages Functions or a runtime server.
-- **TRN-007:** The control SHALL identify Google Translate as the external translation provider without implying that the legacy embedded widget is installed.
-- **TRN-008:** The site's manually maintained English and Simplified Chinese content and language switcher SHALL remain unchanged and authoritative.
-- **TRN-009:** The privacy notice SHALL explain that selecting Google translation sends the page URL to Google and opens Google's translation service; Google's own processing is governed by Google's terms and privacy policy.
-- **TRN-010:** If JavaScript is unavailable or the external service changes, the site SHALL remain fully readable in its original language and the native language routes SHALL continue to work.
+- **TRN-002:** The control SHALL use a native HTML select with an accessible name and initial `Select Language` option.
+- **TRN-003:** A valid selection SHALL navigate directly to a hostname under the Google translated-site domain, with `_x_tr_sl=auto`, selected `_x_tr_tl`, `_x_tr_hl=en`, and `_x_tr_pto=wapp`.
+- **TRN-004:** The translated hostname SHALL encode source hostname dots as hyphens and literal hostname hyphens as double hyphens.
+- **TRN-005:** The source path, query parameters and fragment SHALL be preserved.
+- **TRN-006:** The URL builder SHALL reject non-HTTP(S), local-only, port-qualified and unsupported hostnames rather than generate a malformed translation URL.
+- **TRN-007:** The selector SHALL NOT load `translate_a/element.js` or call `google.translate.TranslateElement`.
+- **TRN-008:** No Google Cloud API key, paid service, Pages Function, database or runtime server SHALL be required.
+- **TRN-009:** The privacy notice SHALL disclose that the selected page is served through Google's translation infrastructure.
+- **TRN-010:** The original website and native locale routes SHALL remain readable if the external Google translation route is unavailable.
 
-## Out of scope
+## External behavior and limitation
 
-- Translating and storing additional locale content in the repository.
-- Search-indexable machine-translated locale routes or hreflang entries for generated translations.
-- Google Cloud Translation API integration, API billing, translation caching or editorial review workflows.
-- Replacing the site's human-maintained English / Simplified Chinese language switcher.
-- Embedding the retired Google Website Translator JavaScript widget.
+Google documents the translated-page hostname convention and how to map translated URLs back to source hostnames in its [Search Central translation documentation](https://developers.google.com/search/docs/appearance/ad-network-and-translation). This implementation uses that Google-hosted URL convention. It is not a supported public translation API or a guaranteed stable integration; Google may change or restrict it.
 
 ## Acceptance criteria
 
-1. The dropdown appears on every public page through the shared layout.
-2. The dropdown is keyboard-operable and has a programmatic accessible name.
-3. Selecting a language constructs a Google Translate Websites URL containing the current page URL and selected target language.
-4. The implementation does not request the retired `translate_a/element.js` script.
-5. Static build and verification pass with no SSR Worker or additional Cloudflare resource.
-6. The privacy page accurately describes the optional third-party translation flow.
-7. Desktop and mobile layouts remain usable.
-8. A manual browser check confirms Google opens Websites mode, pre-fills the current page URL, and lets the reader start translation. If Google changes or blocks this URL format, record the limitation and do not claim runtime acceptance.
-
-## Operational note
-
-Google's direct website-translation URL is an external service behavior, not a stable application API. Keep the URL construction isolated in the shared selector component so it can be changed or removed without altering the site's content model or hosting architecture.
+1. The selector appears on all public pages.
+2. Selecting Catalan for the production homepage generates the Google-hosted translated-page URL for `chinese-culture.site`.
+3. The target URL does not contain `op=translate`, `op=websites` or a `text` field that leaves the Website input blank.
+4. URL-builder tests verify host encoding, path, query, fragment, target language and invalid inputs.
+5. Astro build and static verification pass.
+6. A real browser test confirms the translated page loads, rather than an empty Google Translate input screen.
