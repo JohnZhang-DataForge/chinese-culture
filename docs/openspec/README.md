@@ -2,7 +2,7 @@
 
 **Program:** Bilingual public site + GitHub-backed Admin CMS  
 **Production target:** https://chinese-culture.site  
-**Status:** Architecture and shared contracts merged; CC-CONTENT-001 v1.1.0 and the public locale contract are READY. Admin API OpenAPI v1.1.0 is frozen but awaiting successful structural lint before Agent 4/5 integration is declared Ready.  
+**Status:** Architecture and shared contracts merged; CC-CONTENT-001 v1.1.0 and the public locale contract are READY. Admin API OpenAPI v1.1.0 is frozen; a structural issue found by the first Redocly run has been corrected, and Agent 6 must rerun lint against this corrected file before Agent 4/5 integration is declared Ready.  
 **Architecture baseline:** Astro 5 static public site + Cloudflare Pages + Cloudflare Pages Functions (Workers runtime) for authenticated administration.
 
 ## Source-of-truth rules
