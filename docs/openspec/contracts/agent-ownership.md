@@ -44,8 +44,8 @@
 | Agent 1 | Immediately for read-only domain/zone discovery; DNS mutation after owner confirms zone/domain and rollback plan | Production domain target and current Pages project name | Independent |
 | Agent 2 | Agent 0 marks CC-CONTENT-001 v1.1.0 and locale route contract Ready | content-schema.md + proposal/design | Parallel with Agent 3 after schema freeze |
 | Agent 3 | Agent 0 marks Content Contract v1 Ready and Agent 2 confirms destination path implementation | content-schema.md + route path contract | Parallel with Agent 2; do not change schema code |
-| Agent 4 | Agent 0 marks Admin API OpenAPI v1.1.0 and auth/CSRF contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 5 |
-| Agent 5 | Agent 0 marks Admin API OpenAPI v1.1.0 and auth/GitHub App contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 4 |
+| Agent 4 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/CSRF contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 5 |
+| Agent 5 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/GitHub App contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 4 |
 | Agent 6 | Agent 0 publishes acceptance criteria and API/content contracts | proposal.md + both contracts | Start baseline CI/tests early; complete after feature PRs |
 | Agent 7 | Agent 0 publishes architecture, ownership and implementation sequence | all docs under docs/openspec | Parallel with implementation; docs must reflect actual evidence |
 
