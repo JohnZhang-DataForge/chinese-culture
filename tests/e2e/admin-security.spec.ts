@@ -71,7 +71,7 @@ test.describe("Admin API security", () => {
   });
 
   test("authenticated path traversal does not expose repository files", async ({ request }) => {
-    test.skip(!requireAdmin || !isPreview || !accessJwt, "Requires owner authorization against an isolated preview environment.");
+    test.skip(!requireAdmin || !isPreview || !accessCookie, "Requires owner authorization against an isolated preview environment.");
     const response = await request.get(`${apiRoot}/content/..%2F..%2FREADME.md?locale=en`);
     expect([400, 403, 404]).toContain(response.status());
     const body = await response.text();
