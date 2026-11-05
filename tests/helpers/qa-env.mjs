@@ -1,7 +1,9 @@
 export const PRODUCTION_HOSTS = new Set([
   "chinese-culture.site",
   "www.chinese-culture.site",
-  "chinese-culture-79h.pages.dev"
+  "chinese-culture-79h.pages.dev",
+  "main.chinese-culture-79h.pages.dev",
+  "production.chinese-culture-79h.pages.dev"
 ]);
 
 export function cmsMutationEnabled(env = process.env, baseURL = env.QA_BASE_URL || "http://127.0.0.1:4321") {
