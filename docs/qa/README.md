@@ -33,7 +33,7 @@ CMS mutation E2E is disabled by default. It requires all of:
 
 - `QA_ENABLE_CMS_MUTATIONS=true`
 - `QA_ENVIRONMENT=preview`
-- `QA_ACCESS_JWT` containing a valid owner Access JWT
+- `QA_ACCESS_COOKIE` containing a valid owner Cloudflare Access session cookie
 - `QA_TEST_CONTENT_PREFIX` matching `qa-<unique-name>`
 - `QA_BASE_URL` pointing at an isolated preview hostname
 
@@ -49,7 +49,7 @@ The baseline main branch still contains the original English-only static site. T
 
 ## Security limits
 
-The suite never stores or prints an owner JWT. GitHub API failure injection is not enabled in this branch because the backend contract does not yet expose a safe test-only injection mechanism. That case remains NOT TESTED until Agent 5 supplies a deterministic mock seam or unit-testable GitHub client boundary.
+The suite never stores or prints an owner Cloudflare Access session cookie. GitHub API failure injection is not enabled in this branch because the backend contract does not yet expose a safe test-only injection mechanism. That case remains NOT TESTED until Agent 5 supplies a deterministic mock seam or unit-testable GitHub client boundary.
 
 ## Acceptance reports
 
