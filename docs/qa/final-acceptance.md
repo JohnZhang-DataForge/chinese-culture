@@ -32,7 +32,7 @@
 | Pages Functions deployed | FAIL | Current Pages deployment reports uses_functions=false |
 | Admin API handlers deployed | NOT TESTED | Agent 5 backend is still scaffold-only; no production handlers |
 | Anonymous / invalid JWT runtime rejection | NOT TESTED | Unit JWT checks pass, runtime API is not deployed |
-| CMS create/edit/draft/preview/delete | NOT TESTED | Preview-only API lifecycle suite is gated and not authorized |
+| CMS create/edit/draft/preview/delete | NOT TESTED | Preview-only UI and API lifecycle suites are implemented but gated and not authorized |
 | Publish / unpublish PR lifecycle | NOT TESTED | Requires safe test PR creation and cleanup |
 | Bilingual CMS and SEO/tag persistence | NOT TESTED | Agent 4 branch now enables/maps SEO fields; UI-to-live-API round-trip remains NOT TESTED |
 | Media upload validation | NOT TESTED | Runtime API unavailable |
