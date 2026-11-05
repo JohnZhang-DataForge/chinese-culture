@@ -24,8 +24,8 @@
 | Agent 3 | Content migration and translation | src/content/**; `docs/content/06-content-inventory.md`; `docs/content/07-simplified-chinese-localization-style-guide.md` | src/content.config.ts; routes/layouts; shared contracts; workflows |
 | Agent 4 | Admin frontend | src/pages/admin/**; src/layouts/AdminLayout.astro; src/components/admin/**; src/styles/admin.css; src/lib/admin-*.mjs; src/scripts/admin.mjs; tests/admin-ui.test.mjs | Pages Functions implementation; OpenAPI contract; public site shell; content files; package.json and workflows |
 | Agent 5 | Admin backend and security | functions/**; tests/admin-security.test.mjs; Cloudflare Access/GitHub App configuration and secrets (not values in Git) | Astro public frontend; content schema contract; CI workflows; root package.json; Pages deployment workflow |
-| Agent 6 | QA and CI | .github/workflows/**; scripts/**; package.json; playwright.config.ts; tests/e2e/**; tests/unit/**; tests/contracts/**; branch protection configuration | Production content, public UI, Admin UI, Pages Functions business logic |
-| Agent 7 | Documentation | README.md; docs/** excluding docs/openspec/**, docs/operations/05-production-domain-cutover.md and the two Agent 3 content inventory/style-guide documents | Shared OpenSpec contracts; application code; content Markdown |
+| Agent 6 | QA and CI | .github/workflows/**; scripts/**; package.json; playwright.config.ts; tests/e2e/**; tests/unit/**; tests/contracts/**; docs/qa/**; branch protection configuration | Production content, public UI, Admin UI, Pages Functions business logic |
+| Agent 7 | Documentation | README.md; docs/** excluding docs/openspec/**, docs/qa/**, docs/operations/05-production-domain-cutover.md and the two Agent 3 content inventory/style-guide documents | Shared OpenSpec contracts; application code; content Markdown |
 
 ### Boundary clarifications
 
@@ -34,7 +34,7 @@
 3. Agent 4 consumes admin-api.openapi.yaml. Agent 5 implements it. Neither may change the API contract unilaterally.
 4. Agent 5's Pages Functions live under functions/ and use the existing Pages Wrangler deployment. Agent 5 must not change root package.json or workflows; Agent 6 owns those integration points.
 5. Agent 1's DNS/custom-domain work is Cloudflare account configuration, not code; its cutover evidence document is an explicit ownership exception. Agent 5 owns Access and Pages Functions route configuration.
-6. Agent 4 owns tests/admin-ui.test.mjs and Agent 5 owns tests/admin-security.test.mjs. Agent 6 owns E2E, unit, contract tests and all workflow/package integration points.
+6. Agent 4 owns tests/admin-ui.test.mjs and Agent 5 owns tests/admin-security.test.mjs. Agent 6 owns E2E, unit, contract tests, docs/qa/** and all workflow/package integration points.
 7. Agent 7 updates existing status/deployment documentation only after checking current Actions and Cloudflare evidence. It must not repeat old "deployment pending token" statements after a successful deployment.
 
 ## 3. Dependency readiness
@@ -42,10 +42,10 @@
 | Agent | May start when | Required contract/evidence | Parallelism |
 |---|---|---|---|
 | Agent 1 | Immediately for read-only domain/zone discovery; DNS mutation after owner confirms zone/domain and rollback plan | Production domain target and current Pages project name | Independent |
-| Agent 2 | Agent 0 marks Content Contract v1 and locale route contract Ready | content-schema.md + proposal/design | Parallel with Agent 3 after schema freeze |
+| Agent 2 | Agent 0 marks CC-CONTENT-001 v1.1.0 and locale route contract Ready | content-schema.md + proposal/design | Parallel with Agent 3 after schema freeze |
 | Agent 3 | Agent 0 marks Content Contract v1 Ready and Agent 2 confirms destination path implementation | content-schema.md + route path contract | Parallel with Agent 2; do not change schema code |
-| Agent 4 | Agent 0 marks Admin API v1 and auth/CSRF contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 5 |
-| Agent 5 | Agent 0 marks Admin API v1 and auth/GitHub App contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 4 |
+| Agent 4 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/CSRF contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 5 |
+| Agent 5 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/GitHub App contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 4 |
 | Agent 6 | Agent 0 publishes acceptance criteria and API/content contracts | proposal.md + both contracts | Start baseline CI/tests early; complete after feature PRs |
 | Agent 7 | Agent 0 publishes architecture, ownership and implementation sequence | all docs under docs/openspec | Parallel with implementation; docs must reflect actual evidence |
 

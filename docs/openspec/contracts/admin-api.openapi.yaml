@@ -12,10 +12,15 @@ security:
   - CloudflareAccess: []
 tags:
   - name: Session
+    description: Authenticated CMS session and role information.
   - name: Content
+    description: Read, create, update and translate locale-specific content variants.
   - name: Preview
+    description: Render sanitized previews of unsaved Markdown.
   - name: Media
+    description: Upload validated, rights-documented images to a CMS branch.
   - name: Publishing
+    description: Create and inspect pull requests for review, publish and unpublish actions.
 paths:
   /session:
     get:
@@ -415,61 +420,61 @@ components:
       description: Exact revision ETag returned by GET or a prior mutation.
       schema:
         type: string
-    responses:
-      BadRequest:
-        description: Invalid request syntax or missing required header
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      Unauthorized:
-        description: Missing or invalid Cloudflare Access identity
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      Forbidden:
-        description: Authenticated identity lacks the required CMS role
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      NotFound:
-        description: Content, locale variant or PR not found
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      Conflict:
-        description: Stale revision, duplicate locale or unsafe draft deletion
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      ValidationFailure:
-        description: Schema or editorial metadata validation failed
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      PayloadTooLarge:
-        description: Media exceeds 8 MiB
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      UnsupportedMedia:
-        description: Media type or file signature is not allowed
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
-      UpstreamFailure:
-        description: GitHub or another required upstream service failed
-        content:
-          application/problem+json:
-            schema:
-              $ref: '#/components/schemas/Problem'
+  responses:
+    BadRequest:
+      description: Invalid request syntax or missing required header
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Missing or invalid Cloudflare Access identity
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Authenticated identity lacks the required CMS role
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Content, locale variant or PR not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Stale revision, duplicate locale or unsafe draft deletion
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ValidationFailure:
+      description: Schema or editorial metadata validation failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    PayloadTooLarge:
+      description: Media exceeds 8 MiB
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    UnsupportedMedia:
+      description: Media type or file signature is not allowed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    UpstreamFailure:
+      description: GitHub or another required upstream service failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
     Locale:
       type: string
