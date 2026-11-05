@@ -21,7 +21,7 @@
 - [ ] P2.1 Run Astro build and static verification.
 - [ ] P2.2 Verify every generated public page includes the selector.
 - [ ] P2.3 Verify no retired Google widget script is emitted.
-- [ ] P2.4 Test target-language URL generation for current paths, query strings and fragments.
+- [x] P2.4 Test target-language URL generation for current paths, query strings and fragments.
 - [ ] P2.5 Manually verify the Google-hosted translated view in a real browser.
 - [ ] P2.6 Verify desktop/mobile keyboard and layout behavior.
 - [ ] P2.7 Merge only after CI passes and the external-service limitation is documented.

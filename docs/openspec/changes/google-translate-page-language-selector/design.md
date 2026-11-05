@@ -31,7 +31,8 @@ No translation request is sent to a project-owned API. The static site does not 
 
 ## 2. Component placement
 
-- Add `src/components/GoogleTranslate.astro`.
+- Add `src/lib/google-translate-url.js` as the validated, unit-testable URL builder and language catalogue.
+- Add `src/components/GoogleTranslate.astro` as the shared selector UI.
 - Import it once from `src/layouts/BaseLayout.astro`.
 - Place it in the shared header so it is available on all public routes.
 - Use scoped component styles and the existing site's neutral palette.
