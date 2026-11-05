@@ -1,10 +1,9 @@
 openapi: 3.1.0
 info:
   title: Chinese Culture Admin API
-  version: 1.1.0
+  version: 1.2.0
   description: >
-    Same-origin API for the protected Admin CMS. The Cloudflare Access edge
-    injects the Access JWT header; the browser never receives GitHub credentials.
+    Same-origin API for the protected D1-backed Admin CMS. D1 is the canonical editorial store; GitHub is used only for generated publication snapshots. The Cloudflare Access edge injects the Access JWT header; the browser never receives D1 or GitHub credentials.
 servers:
   - url: https://chinese-culture.site/api/admin/v1
     description: Production
@@ -18,9 +17,9 @@ tags:
   - name: Preview
     description: Render sanitized previews of unsaved Markdown.
   - name: Media
-    description: Upload validated, rights-documented images to a CMS branch.
+    description: Upload validated, rights-documented images to a CMS snapshot branch; store their metadata in D1.
   - name: Publishing
-    description: Create and inspect pull requests for review, publish and unpublish actions.
+    description: Export exact D1 revisions to GitHub pull requests for review, publish and unpublish actions.
 paths:
   /session:
     get:
@@ -42,7 +41,7 @@ paths:
     get:
       tags: [Content]
       operationId: listContent
-      summary: List locale-specific content variants and CMS drafts
+      summary: List locale-specific content variants and D1-backed CMS drafts
       parameters:
         - name: locale
           in: query
@@ -93,7 +92,7 @@ paths:
     post:
       tags: [Content]
       operationId: createContent
-      summary: Create a conceptual content item and its first draft variant
+      summary: Create a conceptual content item and its first draft variant in D1
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -105,7 +104,7 @@ paths:
               $ref: '#/components/schemas/ContentWrite'
       responses:
         '201':
-          description: Draft created on a CMS branch
+          description: Draft created in D1 with its first revision
           content:
             application/json:
               schema:
@@ -120,6 +119,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content/{contentId}:
     parameters:
       - $ref: '#/components/parameters/ContentId'
@@ -127,7 +128,7 @@ paths:
     get:
       tags: [Content]
       operationId: getContent
-      summary: Read one locale variant, including its current revision and PR state
+      summary: Read one locale variant from D1, including its current revision and latest submission state
       responses:
         '200':
           description: Content variant
@@ -135,7 +136,7 @@ paths:
             ETag:
               schema:
                 type: string
-              description: Current revision SHA, suitable for If-Match.
+              description: Current opaque D1 revision ETag, suitable for If-Match.
           content:
             application/json:
               schema:
@@ -146,13 +147,14 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
     put:
       tags: [Content]
       operationId: saveDraft
-      summary: Create or update a draft on the CMS branch
+      summary: Create or update a draft in D1
       description: >
-        This operation always writes status=draft to the CMS branch. It never
-        writes to main. If-Match is required for existing variants.
+        This operation persists status=draft and an immutable revision snapshot in D1. It does not create a GitHub commit or write to main. If-Match is required for existing variants.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -166,7 +168,7 @@ paths:
               $ref: '#/components/schemas/ContentWrite'
       responses:
         '200':
-          description: Draft saved
+          description: Draft saved in D1
           headers:
             ETag:
               schema:
@@ -187,6 +189,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content/{contentId}/translations:
     parameters:
       - $ref: '#/components/parameters/ContentId'
@@ -205,7 +209,7 @@ paths:
               $ref: '#/components/schemas/TranslationWrite'
       responses:
         '201':
-          description: Translation draft created
+          description: Translation draft created in D1
           content:
             application/json:
               schema:
@@ -220,6 +224,8 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content/{contentId}/preview:
     parameters:
       - $ref: '#/components/parameters/ContentId'
@@ -257,11 +263,12 @@ paths:
     post:
       tags: [Media]
       operationId: uploadMedia
-      summary: Upload an image to the current CMS branch
+      summary: Upload an image to the current CMS snapshot branch and store its metadata in D1
       description: >
         Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and
         AVIF. SVG, HTML and other formats are rejected. The Pages Function validates
-        file signatures and commits the asset to the CMS branch.
+        file signatures, commits the asset to a CMS snapshot branch and stores its
+        rights/accessibility metadata in D1.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -305,10 +312,12 @@ paths:
     post:
       tags: [Publishing]
       operationId: submitContent
-      summary: Create or update a pull request for review, publish or unpublish
+      summary: Export the selected D1 revision to a pull request for review, publish or unpublish
       description: >
-        intent=review keeps status=draft; intent=publish sets status=published;
-        intent=unpublish sets status=unpublished. This endpoint never merges a PR.
+        The selected D1 revision is serialized into a generated GitHub snapshot branch.
+        intent=review exports status=draft; intent=publish exports status=published;
+        intent=unpublish exports status=unpublished. D1 remains the canonical source.
+        This endpoint never merges a PR.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -344,7 +353,7 @@ paths:
     delete:
       tags: [Content]
       operationId: discardDraft
-      summary: Delete a CMS draft branch when no open PR depends on it
+      summary: Delete a D1 draft variant when no open PR depends on it
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -386,6 +395,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '502':
           $ref: '#/components/responses/UpstreamFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
 
 components:
   securitySchemes:
@@ -417,7 +428,7 @@ components:
       name: If-Match
       in: header
       required: true
-      description: Exact revision ETag returned by GET or a prior mutation.
+      description: Exact opaque D1 revision ETag returned by GET or a prior mutation. The revision is monotonic and is not a Git blob SHA.
       schema:
         type: string
   responses:
@@ -470,7 +481,13 @@ components:
           schema:
             $ref: '#/components/schemas/Problem'
     UpstreamFailure:
-      description: GitHub or another required upstream service failed
+      description: GitHub snapshot export or another required upstream service failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ServiceUnavailable:
+      description: D1 or a required runtime binding is unavailable
       content:
         application/problem+json:
           schema:
@@ -545,11 +562,12 @@ components:
           format: date-time
         branch:
           type: string
+          description: CMS branch for the latest generated publication snapshot, if one exists.
         revision:
           type: string
+          description: Monotonic D1 revision identifier; not a Git commit or blob SHA.
         pullRequest:
-          type: integer
-          nullable: true
+          type: [integer, 'null']
         translationLocales:
           type: array
           items:
