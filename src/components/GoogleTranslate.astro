@@ -1,13 +1,37 @@
 ---
-import { GOOGLE_TRANSLATE_LANGUAGES } from "../lib/google-translate-url.js";
+import {
+  GOOGLE_TRANSLATE_LANGUAGES,
+  buildGoogleTranslateUrl
+} from "../lib/google-translate-url.js";
+
+// Static fallback URLs keep the menu useful without JavaScript. The click
+// handler rebuilds the destination from window.location.href so translated
+// pages retain their current path and can switch languages without nesting
+// another Google proxy hostname.
+const canonicalPageUrl = new URL(
+  Astro.url.pathname,
+  "https://chinese-culture.site"
+).href;
 ---
 
 <div class="google-translate-widget">
-  <label class="visually-hidden" for="google-translate-language">Translate this page</label>
-  <select id="google-translate-language" name="google-translate-language" aria-label="Select Language">
-    <option value="" selected>Select Language</option>
-    {GOOGLE_TRANSLATE_LANGUAGES.map(({ code, label }) => <option value={code}>{label}</option>)}
-  </select>
+  <details class="google-translate-menu">
+    <summary aria-label="Select Language">
+      <span>Select Language</span>
+      <span class="language-chevron" aria-hidden="true"></span>
+    </summary>
+    <nav class="google-translate-options" aria-label="Translation languages">
+      {GOOGLE_TRANSLATE_LANGUAGES.map(({ code, label }) => (
+        <a
+          href={buildGoogleTranslateUrl(canonicalPageUrl, code)}
+          data-target-language={code}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+  </details>
+
   <a class="google-translate-credit" href="https://translate.google.com/" target="_blank" rel="noopener noreferrer">
     Powered by <span>Google</span> Translate
   </a>
@@ -16,16 +40,34 @@ import { GOOGLE_TRANSLATE_LANGUAGES } from "../lib/google-translate-url.js";
 <script>
   import { buildGoogleTranslateUrl } from "../lib/google-translate-url.js";
 
-  const languageSelector = document.querySelector("#google-translate-language");
+  const languageMenu = document.querySelector(".google-translate-menu");
 
-  if (languageSelector instanceof HTMLSelectElement) {
-    languageSelector.addEventListener("change", () => {
-      const targetLanguage = languageSelector.value;
-      if (!targetLanguage) return;
+  if (languageMenu instanceof HTMLDetailsElement) {
+    languageMenu.querySelectorAll("a[data-target-language]").forEach((link) => {
+      if (!(link instanceof HTMLAnchorElement)) return;
 
-      window.location.assign(
-        buildGoogleTranslateUrl(window.location.href, targetLanguage)
-      );
+      link.addEventListener("click", (event) => {
+        const targetLanguage = link.dataset.targetLanguage;
+        if (!targetLanguage) return;
+
+        event.preventDefault();
+        window.location.assign(
+          buildGoogleTranslateUrl(window.location.href, targetLanguage)
+        );
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (event.target instanceof Node && !languageMenu.contains(event.target)) {
+        languageMenu.removeAttribute("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && languageMenu.open) {
+        languageMenu.removeAttribute("open");
+        languageMenu.querySelector("summary")?.focus();
+      }
     });
   }
 </script>
@@ -41,20 +83,83 @@ import { GOOGLE_TRANSLATE_LANGUAGES } from "../lib/google-translate-url.js";
     min-width: 0;
   }
 
-  .google-translate-widget select {
+  .google-translate-menu {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .google-translate-menu summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
     width: 100%;
     min-height: 29px;
-    padding: 0.25rem 1.5rem 0.25rem 0.45rem;
+    padding: 0.25rem 0.55rem 0.25rem 0.45rem;
     border: 1px solid #c9c3b8;
     border-radius: 3px;
     background: #fcfaf6;
     color: #252b2a;
     font: 0.72rem/1.35 var(--sans);
+    cursor: pointer;
+    list-style: none;
   }
 
-  .google-translate-widget select:focus-visible {
+  .google-translate-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .google-translate-menu summary:focus-visible {
     outline: 3px solid var(--red);
     outline-offset: 3px;
+  }
+
+  .language-chevron {
+    width: 0.42rem;
+    height: 0.42rem;
+    flex: 0 0 auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.12rem) rotate(45deg);
+    transition: transform 120ms ease;
+  }
+
+  .google-translate-menu[open] .language-chevron {
+    transform: translateY(0.1rem) rotate(225deg);
+  }
+
+  .google-translate-options {
+    position: absolute;
+    z-index: 100;
+    top: calc(100% + 4px);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(230px, 82vw);
+    max-height: min(60vh, 340px);
+    overflow-y: auto;
+    padding: 0.25rem;
+    border: 1px solid #c9c3b8;
+    border-radius: 4px;
+    background: #fcfaf6;
+    box-shadow: 0 8px 24px rgb(30 30 30 / 16%);
+  }
+
+  .google-translate-options a {
+    display: block;
+    padding: 0.42rem 0.5rem;
+    border-radius: 2px;
+    color: #252b2a;
+    font: 0.76rem/1.35 var(--sans);
+    text-decoration: none;
+  }
+
+  .google-translate-options a:hover,
+  .google-translate-options a:focus-visible {
+    background: #eee7db;
+    color: var(--red);
+    outline: none;
   }
 
   .google-translate-credit {
@@ -73,18 +178,6 @@ import { GOOGLE_TRANSLATE_LANGUAGES } from "../lib/google-translate-url.js";
     font-weight: 700;
   }
 
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
   @media (max-width: 760px) {
     :global(.header-inner) {
       flex-wrap: wrap;
@@ -98,8 +191,19 @@ import { GOOGLE_TRANSLATE_LANGUAGES } from "../lib/google-translate-url.js";
       padding-bottom: 0.2rem;
     }
 
-    .google-translate-widget select {
+    .google-translate-menu summary {
       width: min(100%, 220px);
+    }
+
+    .google-translate-options {
+      right: auto;
+      left: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .language-chevron {
+      transition: none;
     }
   }
 </style>

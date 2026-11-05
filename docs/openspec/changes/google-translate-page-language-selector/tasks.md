@@ -34,3 +34,13 @@
 - [x] P3.5 Add automated tests for normal language switching and legacy nested-proxy recovery.
 - [ ] P3.6 Run CI and deploy the correction.
 - [ ] P3.7 Re-test switching between multiple languages in a real browser.
+
+
+## P4 — Remove Google Translate form warning trigger
+
+- [x] P4.1 Identify the site's only native form control: the language selector `<select>`.
+- [x] P4.2 Replace the native select with a keyboard-accessible `details/summary` menu and language links.
+- [x] P4.3 Keep language switching aware of the current Google Translate proxy URL.
+- [x] P4.4 Add static checks that fail if any public page contains native form controls.
+- [ ] P4.5 Run CI and verify every built page is form-control-free.
+- [ ] P4.6 Re-test the translated page in a real browser and confirm the Google security interstitial is gone.
