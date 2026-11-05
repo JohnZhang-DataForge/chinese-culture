@@ -3,7 +3,6 @@ import { assertCmsMutationAllowed, cmsMutationEnabled } from "../helpers/qa-env.
 
 const baseURL = process.env.QA_BASE_URL || "http://127.0.0.1:4321";
 const apiRoot = "/api/admin/v1";
-const accessJwt = process.env.QA_ACCESS_JWT;
 const prefix = process.env.QA_TEST_CONTENT_PREFIX || "qa-agent6";
 
 function payload(locale, slug, title, description, bodyMarkdown) {
@@ -33,7 +32,6 @@ test.describe("Admin CMS API draft lifecycle", () => {
 
     const origin = new URL(baseURL).origin;
     const sessionResponse = await request.get(`${apiRoot}/session`, {
-      headers: { "Cf-Access-Jwt-Assertion": accessJwt! }
     });
     expect(sessionResponse.status()).toBe(200);
     const session = await sessionResponse.json();
@@ -67,7 +65,6 @@ test.describe("Admin CMS API draft lifecycle", () => {
 
       const itemPath = `${apiRoot}/content/${created.contentId}?locale=en`;
       const readResponse = await request.get(itemPath, {
-        headers: { "Cf-Access-Jwt-Assertion": accessJwt! }
       });
       expect(readResponse.status()).toBe(200);
       const readItem = await readResponse.json();
@@ -114,8 +111,7 @@ test.describe("Admin CMS API draft lifecycle", () => {
       expect(preview.html).not.toMatch(/<script\b|javascript:/i);
 
       const latestRead = await request.get(itemPath, {
-        headers: { "Cf-Access-Jwt-Assertion": accessJwt! }
-      });
+        });
       expect(latestRead.status()).toBe(200);
       const latestEtag = latestRead.headers()["etag"];
       expect(latestEtag).toBeTruthy();
