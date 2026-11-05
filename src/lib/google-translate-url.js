@@ -53,6 +53,48 @@ const supportedLanguageCodes = new Set(
   GOOGLE_TRANSLATE_LANGUAGES.map(({ code }) => code)
 );
 
+function decodeGoogleTranslateHostname(hostname) {
+  const proxySuffix = ".translate.goog";
+  let decodedHostname = hostname.toLowerCase();
+  let decodedLayers = 0;
+
+  // A previous version could create a proxy-of-a-proxy URL. Decode each
+  // translate.goog layer until the original public hostname is recovered.
+  while (decodedHostname.endsWith(proxySuffix)) {
+    const encodedHostname = decodedHostname.slice(0, -proxySuffix.length);
+    let sourceHostname = "";
+
+    for (let index = 0; index < encodedHostname.length; index += 1) {
+      const character = encodedHostname[index];
+
+      if (character !== "-") {
+        sourceHostname += character;
+        continue;
+      }
+
+      if (encodedHostname[index + 1] === "-") {
+        sourceHostname += "-";
+        index += 1;
+      } else {
+        sourceHostname += ".";
+      }
+    }
+
+    if (!sourceHostname || sourceHostname === encodedHostname) {
+      throw new TypeError("Unable to decode the Google Translate hostname.");
+    }
+
+    decodedHostname = sourceHostname;
+    decodedLayers += 1;
+
+    if (decodedLayers > 5) {
+      throw new TypeError("Google Translate hostname contains too many nested proxy layers.");
+    }
+  }
+
+  return decodedHostname;
+}
+
 export function buildGoogleTranslateUrl(currentPageUrl, targetLanguage) {
   if (!supportedLanguageCodes.has(targetLanguage)) {
     throw new RangeError("Unsupported Google Translate target language: " + targetLanguage);
@@ -63,15 +105,17 @@ export function buildGoogleTranslateUrl(currentPageUrl, targetLanguage) {
     throw new TypeError("Google Translate requires an HTTP or HTTPS page URL.");
   }
 
+  const sourceHostname = decodeGoogleTranslateHostname(pageUrl.hostname);
+
   if (
     pageUrl.port ||
-    !pageUrl.hostname.includes(".") ||
-    !/^[a-z0-9.-]+$/i.test(pageUrl.hostname)
+    !sourceHostname.includes(".") ||
+    !/^[a-z0-9.-]+$/i.test(sourceHostname)
   ) {
     throw new TypeError("Google Translate requires a public DNS hostname without a port.");
   }
 
-  const encodedHostname = pageUrl.hostname
+  const encodedHostname = sourceHostname
     .toLowerCase()
     .replace(/-/g, "--")
     .replace(/\./g, "-");
@@ -81,6 +125,8 @@ export function buildGoogleTranslateUrl(currentPageUrl, targetLanguage) {
   translatedUrl.hostname = encodedHostname + ".translate.goog";
   translatedUrl.port = "";
 
+  // Remove routing parameters from an existing translated page before
+  // applying the newly selected target language.
   for (const key of [...translatedUrl.searchParams.keys()]) {
     if (key.startsWith("_x_tr_")) translatedUrl.searchParams.delete(key);
   }
