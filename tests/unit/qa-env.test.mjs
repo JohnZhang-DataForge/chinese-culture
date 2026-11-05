@@ -15,9 +15,11 @@ test("CMS mutation gate accepts an explicitly authorized preview target", () => 
     "pr-123.chinese-culture-79h.pages.dev");
 });
 
-test("CMS mutation gate rejects the production apex even when all flags are set", () => {
-  assert.equal(cmsMutationEnabled(validEnv, "https://chinese-culture.site"), false);
-  assert.throws(() => assertCmsMutationAllowed(validEnv, "https://chinese-culture.site"), /mutations are disabled/i);
+test("CMS mutation gate rejects the production apex and all custom-domain subdomains", () => {
+  for (const host of ["chinese-culture.site", "www.chinese-culture.site", "admin.chinese-culture.site"]) {
+    assert.equal(cmsMutationEnabled(validEnv, `https://${host}`), false);
+    assert.throws(() => assertCmsMutationAllowed(validEnv, `https://${host}`), /mutations are disabled/i);
+  }
 });
 
 test("CMS mutation gate rejects canonical and main/production Pages aliases", () => {
