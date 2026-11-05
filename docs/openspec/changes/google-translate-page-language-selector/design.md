@@ -1,7 +1,7 @@
 # Design: Google Translate Page Language Selector
 
 **Change ID:** google-translate-page-language-selector  
-**Status:** Proposed
+**Status:** Implemented in PR #17; external browser verification pending
 
 ## 1. Architecture
 

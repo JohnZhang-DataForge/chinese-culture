@@ -18,9 +18,9 @@
 
 ## P2 — Validation and release
 
-- [ ] P2.1 Run Astro build and static verification.
-- [ ] P2.2 Verify every generated public page includes the selector.
-- [ ] P2.3 Verify no retired Google widget script is emitted.
+- [x] P2.1 Run Astro build and static verification.
+- [x] P2.2 Verify every generated public page includes the selector.
+- [x] P2.3 Verify no retired Google widget script is emitted.
 - [x] P2.4 Test target-language URL generation for current paths, query strings and fragments.
 - [ ] P2.5 Manually verify the Google-hosted translated view in a real browser.
 - [ ] P2.6 Verify desktop/mobile keyboard and layout behavior.

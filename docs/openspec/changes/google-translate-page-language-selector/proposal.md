@@ -1,7 +1,7 @@
 # Proposal: Google Translate Page Language Selector
 
 **Change ID:** google-translate-page-language-selector  
-**Status:** Proposed for implementation  
+**Status:** Implemented in PR #17; external browser verification pending  
 **Target:** https://chinese-culture.site  
 **Hosting constraint:** Astro static output on Cloudflare Pages Free
 
