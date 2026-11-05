@@ -31,14 +31,12 @@ test.describe("Admin CMS API draft lifecycle", () => {
     assertCmsMutationAllowed(process.env, baseURL);
 
     const origin = new URL(baseURL).origin;
-    const sessionResponse = await request.get(`${apiRoot}/session`, {
-    });
+    const sessionResponse = await request.get(`${apiRoot}/session`);
     expect(sessionResponse.status()).toBe(200);
     const session = await sessionResponse.json();
     expect(session.csrfToken).toBeTruthy();
 
     const mutationHeaders = {
-      "Cf-Access-Jwt-Assertion": accessJwt!,
       "X-CSRF-Token": session.csrfToken,
       Origin: origin,
       "Sec-Fetch-Site": "same-origin"
