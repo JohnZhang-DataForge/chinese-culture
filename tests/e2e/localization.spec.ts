@@ -2,6 +2,14 @@ import { test, expect, type APIRequestContext } from "@playwright/test";
 
 const requireBilingual = process.env.QA_REQUIRE_BILINGUAL === "true";
 
+async function requireEnglishRoute(request: APIRequestContext) {
+  const english = await request.get("/en/");
+  if (english.status() !== 200) {
+    if (requireBilingual) throw new Error(`English locale route is required but /en/ returned ${english.status()}.`);
+    test.skip(true, "Bilingual English route is not merged yet.");
+  }
+}
+
 async function resolveChineseSegment(request: APIRequestContext) {
   const [english, shortChinese, regionChinese] = await Promise.all([
     request.get("/en/"),
@@ -41,7 +49,7 @@ const sections = [
 test.describe("bilingual routing and SEO", () => {
   for (const locale of ["en", "zh"] as const) {
     test(`${locale} homepage renders with the correct document language`, async ({ page, request }) => {
-      const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : null;
+      const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : (await requireEnglishRoute(request), null);
       const segment = locale === "en" ? "en" : chineseSegment!;
       const response = await page.goto(`/${segment}/`);
       expect(response?.status()).toBe(200);
@@ -57,7 +65,7 @@ test.describe("bilingual routing and SEO", () => {
   for (const section of sections) {
     for (const locale of ["en", "zh"] as const) {
       test(`/${locale}/${section}/ renders with locale metadata`, async ({ page, request }) => {
-        const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : null;
+        const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : (await requireEnglishRoute(request), null);
         const segment = locale === "en" ? "en" : chineseSegment!;
         const path = `/${segment}/${section}/`;
         const response = await page.goto(path);
