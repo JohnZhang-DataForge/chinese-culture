@@ -49,7 +49,9 @@ const sections = [
 test.describe("bilingual routing and SEO", () => {
   for (const locale of ["en", "zh"] as const) {
     test(`${locale} homepage renders with the correct document language`, async ({ page, request }) => {
-      const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : (await requireEnglishRoute(request), null);
+      let chineseSegment: "zh" | "zh-cn" | null = null;
+      if (locale === "zh") chineseSegment = await resolveChineseSegment(request);
+      else await requireEnglishRoute(request);
       const segment = locale === "en" ? "en" : chineseSegment!;
       const response = await page.goto(`/${segment}/`);
       expect(response?.status()).toBe(200);
@@ -65,7 +67,9 @@ test.describe("bilingual routing and SEO", () => {
   for (const section of sections) {
     for (const locale of ["en", "zh"] as const) {
       test(`/${locale}/${section}/ renders with locale metadata`, async ({ page, request }) => {
-        const chineseSegment = locale === "zh" ? await resolveChineseSegment(request) : (await requireEnglishRoute(request), null);
+        let chineseSegment: "zh" | "zh-cn" | null = null;
+        if (locale === "zh") chineseSegment = await resolveChineseSegment(request);
+        else await requireEnglishRoute(request);
         const segment = locale === "en" ? "en" : chineseSegment!;
         const path = `/${segment}/${section}/`;
         const response = await page.goto(path);
