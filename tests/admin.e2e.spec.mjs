@@ -32,7 +32,7 @@ test("dashboard, bilingual editor and server-preview affordances render", async 
 test("creates and discards a bilingual draft with confirmation", async ({ page }) => {
   await page.goto("/admin/");
   await page.locator('[data-nav="articles"]').click();
-  await page.locator('[data-action="new-content"]').click();
+  await page.locator('[data-action="new-content"]').last().click();
 
   await page.locator('[name="title.en"]').fill("E2E sample article");
   await page.locator('[name="slug.en"]').fill("e2e-sample-article");
