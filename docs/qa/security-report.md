@@ -39,7 +39,7 @@ The static public site has a useful security baseline, and the preliminary JWT/m
 
 - Anonymous and invalid-token tests are read-only.
 - Authenticated schema/path/upload tests require an explicitly authorized preview target.
-- CMS mutation tests require QA_ENABLE_CMS_MUTATIONS=true, QA_ENVIRONMENT=preview, an owner JWT, a qa-... content prefix, and a non-production host.
+- CMS mutation tests require QA_ENABLE_CMS_MUTATIONS=true, QA_ENVIRONMENT=preview, an owner Cloudflare Access session cookie, a qa-... content prefix, and a non-production host.
 - The production apex, www host, and canonical Pages hostname are blocked by the mutation safety helper.
 - No production CMS content was created, edited, published or deleted during this assessment.
 
