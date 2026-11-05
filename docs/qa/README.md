@@ -50,3 +50,10 @@ The baseline main branch still contains the original English-only static site. T
 ## Security limits
 
 The suite never stores or prints an owner JWT. GitHub API failure injection is not enabled in this branch because the backend contract does not yet expose a safe test-only injection mechanism. That case remains NOT TESTED until Agent 5 supplies a deterministic mock seam or unit-testable GitHub client boundary.
+
+## Acceptance reports
+
+- [Coverage matrix](coverage-matrix.md)
+- [Security test report](security-report.md)
+- [E2E and CI execution results](e2e-results.md)
+- [Final acceptance checklist](final-acceptance.md)
