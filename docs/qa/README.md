@@ -25,7 +25,7 @@ For an external preview deployment:
 QA_BASE_URL=https://<isolated-preview-host> npm run test:e2e
 ```
 
-Set `QA_REQUIRE_BILINGUAL=true` to make missing `/en/` or `/zh/` routes fail the suite rather than skip. Set `QA_REQUIRE_ADMIN=true` after the backend API contract and Access protection are deployed to a test environment.
+Set `QA_REQUIRE_BILINGUAL=true` to make missing `/en/` or both Chinese route candidates (`/zh/`, `/zh-cn/`) fail the suite rather than skip. The canonical Chinese segment remains an open contract decision. Set `QA_REQUIRE_ADMIN=true` only when `QA_BASE_URL` points to a preview with the backend API and Access policy deployed.
 
 ## Destructive CMS tests
 
@@ -41,7 +41,7 @@ The helper blocks the production apex, www hostname, and canonical Pages project
 
 ## Reports
 
-GitHub Actions uploads Playwright HTML/JUnit output, traces, screenshots and videos (where produced) as a seven-day artifact named `chinese-culture-qa-<run number>`.
+GitHub Actions uploads Playwright HTML/JUnit output, traces, screenshots and videos (where produced) as a seven-day artifact named `chinese-culture-qa-<run number>`. The OpenAPI lint job is independent of browser/unit tests. A separate read-only production-smoke job runs after successful QA on main pushes or manual dispatches.
 
 ## Current integration boundary
 
