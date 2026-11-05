@@ -7,7 +7,7 @@
 
 The public site remains a static Astro build:
 
-\`\`\`text
+```text
 Reader
   |
   v
@@ -25,14 +25,14 @@ Google Translate website-translation endpoint
   |
   v
 Google-hosted translated view of the current page
-\`\`\`
+```
 
 No translation request is sent to a project-owned API. The static site does not need an always-on service, Pages Function, API key, database or paid Cloudflare resource.
 
 ## 2. Component placement
 
-- Add \`src/components/GoogleTranslate.astro\`.
-- Import it once from \`src/layouts/BaseLayout.astro\`.
+- Add `src/components/GoogleTranslate.astro`.
+- Import it once from `src/layouts/BaseLayout.astro`.
 - Place it in the shared header so it is available on all public routes.
 - Use scoped component styles and the existing site's neutral palette.
 - On narrow screens, allow the header tools to wrap so the selector does not compress the brand or mobile navigation.
@@ -40,14 +40,14 @@ No translation request is sent to a project-owned API. The static site does not 
 ## 3. Interaction
 
 The component renders a native select:
-- Empty initial option: \`Select Language\`.
+- Empty initial option: `Select Language`.
 - Each supported option has a human-readable language label and Google Translate target-language code.
-- On change, construct \`https://translate.google.com/translate\` with:
-  - \`sl=auto\` — let Google detect the page's source language.
-  - \`tl=<selected language>\` — target language.
-  - \`u=<window.location.href>\` — current page URL.
+- On change, construct `https://translate.google.com/translate` with:
+  - `sl=auto` — let Google detect the page's source language.
+  - `tl=<selected language>` — target language.
+  - `u=<window.location.href>` — current page URL.
 
-Use \`URL\` and \`URLSearchParams\`; do not concatenate an unescaped query string. Navigate in the same tab to the translated view so browser Back returns to the original page.
+Use `URL` and `URLSearchParams`; do not concatenate an unescaped query string. Navigate in the same tab to the translated view so browser Back returns to the original page.
 
 The attribution is a plain link to Google Translate and reads **Powered by Google Translate**. This is a custom selector that launches Google's website translation service; it is not the retired embedded Website Translator widget.
 
@@ -72,8 +72,8 @@ Do not claim that the project hosts, stores, reviews or guarantees Google's mach
 
 ## 7. Validation
 
-- Run \`npm run build\`.
-- Run \`npm run verify\`.
+- Run `npm run build`.
+- Run `npm run verify`.
 - Extend static verification to assert the selector and attribution exist and the legacy embed script is absent.
 - Inspect generated pages for the control.
 - Perform a manual browser test for at least Spanish and Japanese on desktop and mobile. Record the actual result because Google may change external URL behavior independently of this repository.
