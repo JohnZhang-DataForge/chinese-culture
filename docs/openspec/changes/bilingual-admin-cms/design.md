@@ -248,14 +248,14 @@ If a PR is closed or a deployment fails, the D1 record remains available for cor
 
 ### Publish
 
-- The CMS exports the selected D1 revision with status=published to the CMS branch.
+- The CMS changes the D1 desired status to published, sets publishedAt, appends a new revision, then exports that exact revision with status=published to the CMS branch.
 - A human reviewer reviews the final diff and checks.
 - Only a permitted merge to main triggers the Pages deployment.
 - A page is live only after the corresponding PR is merged and the Pages deployment succeeds.
 
 ### Unpublish
 
-- The CMS exports the selected D1 revision with status=unpublished.
+- The CMS changes the D1 desired status to unpublished, retains the historical publishedAt value, appends a new revision, then exports that exact revision with status=unpublished.
 - The PR review and merge process is the same as publishing.
 - The next public build removes the route and any featured placement.
 - The source record and revision history remain in D1; the generated snapshot remains in Git history.
