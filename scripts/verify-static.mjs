@@ -74,23 +74,28 @@ assert.equal(new Set(languageCodes).size, languageCodes.length, "Duplicate targe
 
 const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
 assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
-assert.ok(homeHtml.includes('id="google-translate-language"'), "Missing Google Translate language selector");
+assert.ok(homeHtml.includes('class="google-translate-menu"'), "Missing non-form Google Translate language menu");
 assert.ok(homeHtml.includes("Select Language"), "Missing selector placeholder");
 assert.ok(homeHtml.includes("Powered by"), "Missing Google Translate attribution");
 assert.ok(homeHtml.includes("Google</span> Translate"), "Missing Google Translate attribution text");
+assert.ok(homeHtml.includes('data-target-language="ca"'), "Missing Catalan language link");
 
 const componentSource = readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
 assert.ok(!componentSource.includes("translate_a/element.js"), "Retired Google Website Translator script must not be loaded");
 assert.ok(!componentSource.includes("google.translate.TranslateElement"), "Retired Google Website Translator API must not be used");
+assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(componentSource), "Language menu must not use native form controls");
 
 let linksChecked = 0;
+let htmlPagesChecked = 0;
 function inspectLinks(dir) {
   for (const name of readdirSync(dir)) {
     const file = join(dir, name);
     if (statSync(file).isDirectory()) { inspectLinks(file); continue; }
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
-    assert.ok(html.includes('id="google-translate-language"'), "Missing Google Translate selector in " + file);
+    htmlPagesChecked++;
+    assert.ok(html.includes('class="google-translate-menu"'), "Missing Google Translate menu in " + file);
+    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Google Translate proxy warning risk: form control found in " + file);
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
       if (!href.startsWith("/")) continue;
@@ -111,4 +116,4 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
 },0);
 assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, direct Google Translate site URL verified, no legacy widget or SSR Worker.");
+console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, form-free Google Translate menu, direct translated-page URL verified, no legacy widget or SSR Worker.");

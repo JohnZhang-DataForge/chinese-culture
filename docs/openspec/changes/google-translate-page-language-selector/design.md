@@ -58,3 +58,16 @@ Before constructing a new translation URL, decode the Google proxy hostname:
 - Preserve the page path, ordinary query parameters and fragment; remove old `_x_tr_*` routing parameters before adding the new set.
 
 This makes language changes idempotent: selecting a different language from a Google-translated page reuses the same translated host rather than nesting another proxy.
+
+
+## 8. Form-free language menu
+
+The Google Translate proxy displays a security interstitial when it detects form controls. The only native form control on the public site was the language selector's `<select>`. Replace it with a native `<details>` / `<summary>` disclosure containing ordinary anchor links for each target language.
+
+- The summary retains the compact Select Language appearance.
+- The options are links, not inputs or submit controls.
+- JavaScript intercepts a selected language link and rebuilds its destination from the current browser URL. This preserves page path and query parameters and reuses the original source hostname when the visitor is already on a `.translate.goog` page.
+- Each link also has a static translated URL as a no-JavaScript fallback.
+- The static verifier scans every generated HTML page and fails if a `form`, `input`, `select`, `textarea` or `option` element is present.
+
+The goal is to prevent Google Translate from detecting an unsupported form on the translated page, rather than trying to hide Google's own warning overlay with CSS.
