@@ -15,12 +15,15 @@ export function cmsMutationEnabled(env = process.env, baseURL = env.QA_BASE_URL 
   }
 
   const prefix = env.QA_TEST_CONTENT_PREFIX || "";
+  const isProductionCustomDomain =
+    hostname === "chinese-culture.site" || hostname.endsWith(".chinese-culture.site");
   return (
     env.QA_ENABLE_CMS_MUTATIONS === "true" &&
     env.QA_ENVIRONMENT === "preview" &&
     Boolean(env.QA_ACCESS_COOKIE?.trim()) &&
     /^qa-[a-z0-9][a-z0-9-]{2,40}$/.test(prefix) &&
-    !PRODUCTION_HOSTS.has(hostname)
+    !PRODUCTION_HOSTS.has(hostname) &&
+    !isProductionCustomDomain
   );
 }
 
