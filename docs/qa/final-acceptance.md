@@ -37,6 +37,7 @@
 | Bilingual CMS and SEO/tag persistence | NOT TESTED | Agent 4 branch now enables/maps SEO fields; UI-to-live-API round-trip remains NOT TESTED |
 | Media upload validation | NOT TESTED | Runtime API unavailable |
 | GitHub commits and PR creation from CMS | NOT TESTED | Backend handlers not implemented/deployed |
+| CMS writes isolated from main | FAIL in current Agent 5 helper scaffold | GitHub file write/delete helpers default to main and allow explicit main; must require CMS branch before merge |
 | GitHub API failure handling | NOT TESTED | QA mock-fetch tests await backend helper on main |
 | No frontend secret leakage | PASS (pattern scan) | Agent 6 generated-asset scanner passed; this is a pattern scan, not proof against every secret format |
 
