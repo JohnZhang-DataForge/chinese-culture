@@ -14,7 +14,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | HTML lang, canonical and hreflang | Localization suite | Bilingual routes integrated | Conditional |
 | Sitemap | Localization suite | Bilingual routes integrated | Conditional |
 | Old URL redirects | Localization suite | Bilingual routes integrated | Conditional |
-| Admin dashboard and navigation | CMS UI suite not yet contract-aligned | Owner-authorized preview | NOT TESTED |
+| Admin dashboard, navigation and bilingual editor | `tests/e2e/admin-ui.spec.ts` | Owner-authorized preview + QA_REQUIRE_ADMIN=true | Implemented; NOT TESTED until preview and Access are ready |
 | CMS create/edit/draft/preview/delete-draft | `tests/e2e/admin-cms-api.spec.ts` | Explicit preview mutation gate + owner Cloudflare Access session cookie | Implemented; NOT TESTED until a preview target is authorized |
 | CMS publish/unpublish PR lifecycle | Requires isolated test PR lifecycle and cleanup contract | Preview branch only | NOT TESTED |
 | Bilingual CMS editing, SEO fields and tags | API draft lifecycle test verifies locale variants, SEO metadata and tags round-trip | Explicit preview mutation gate + owner Cloudflare Access session cookie | Implemented; NOT TESTED until preview is authorized; Agent 4 branch now maps SEO fields; UI-to-live-API round-trip still NOT TESTED |
