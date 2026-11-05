@@ -145,4 +145,39 @@ if (!existsSync(helperPath)) {
     assert.equal(body.branch, "cms/qa-agent6");
     assert.equal(captured.init.method, "DELETE");
   });
+  test("refuses writes when the CMS branch is omitted", async () => {
+    await assert.rejects(
+      putRepositoryFile(env, {
+        path: filePath,
+        allowedRoots,
+        content: "must not land on main",
+        message: "test: omitted CMS branch"
+      }, async () => new Response('{"ok":true}', { status: 200 })),
+      RepositoryPathError
+    );
+  });
+
+  test("refuses direct writes or deletes against main", async () => {
+    await assert.rejects(
+      putRepositoryFile(env, {
+        path: filePath,
+        allowedRoots,
+        content: "must not land on main",
+        message: "test: block main write",
+        branch: "main"
+      }, async () => new Response('{"ok":true}', { status: 200 })),
+      RepositoryPathError
+    );
+    await assert.rejects(
+      deleteRepositoryFile(env, {
+        path: filePath,
+        allowedRoots,
+        sha: "a".repeat(40),
+        message: "test: block main delete",
+        branch: "main"
+      }, async () => new Response('{"ok":true}', { status: 200 })),
+      RepositoryPathError
+    );
+  });
+
 }
