@@ -304,6 +304,8 @@ paths:
           $ref: '#/components/responses/UnsupportedMedia'
         '422':
           $ref: '#/components/responses/ValidationFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content/{contentId}/submit:
     parameters:
       - $ref: '#/components/parameters/ContentId'
@@ -314,9 +316,9 @@ paths:
       operationId: submitContent
       summary: Export the selected D1 revision to a pull request for review, publish or unpublish
       description: >
-        The selected D1 revision is serialized into a generated GitHub snapshot branch.
-        intent=review exports status=draft; intent=publish exports status=published;
-        intent=unpublish exports status=unpublished. D1 remains the canonical source.
+        The API validates If-Match, applies the requested desired status in D1, appends a submission revision, then serializes that exact revision into a generated GitHub snapshot branch.
+        intent=review keeps status=draft; intent=publish sets status=published and publishedAt;
+        intent=unpublish sets status=unpublished and retains historical publishedAt. D1 remains the canonical source.
         This endpoint never merges a PR.
       security:
         - CloudflareAccess: []
@@ -346,6 +348,8 @@ paths:
           $ref: '#/components/responses/ValidationFailure'
         '502':
           $ref: '#/components/responses/UpstreamFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content/{contentId}/draft:
     parameters:
       - $ref: '#/components/parameters/ContentId'
@@ -359,7 +363,7 @@ paths:
           CsrfToken: []
       responses:
         '204':
-          description: Draft branch deleted
+          description: Active D1 draft variant removed; retained revision history follows the configured retention policy
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -368,6 +372,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /pull-requests/{number}:
     get:
       tags: [Publishing]
