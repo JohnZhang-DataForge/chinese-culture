@@ -5,7 +5,7 @@ import { assertCmsMutationAllowed, cmsMutationEnabled } from "../helpers/qa-env.
 const validEnv = {
   QA_ENABLE_CMS_MUTATIONS: "true",
   QA_ENVIRONMENT: "preview",
-  QA_ACCESS_JWT: "test-only-owner-access-jwt",
+  QA_ACCESS_COOKIE: "CF_Authorization=test-only-owner-cookie",
   QA_TEST_CONTENT_PREFIX: "qa-agent6"
 };
 
@@ -26,7 +26,7 @@ test("CMS mutation gate rejects the canonical Pages hostname", () => {
 
 test("CMS mutation gate requires explicit preview and owner authorization", () => {
   assert.equal(cmsMutationEnabled({ ...validEnv, QA_ENVIRONMENT: "production" }, "https://pr-123.chinese-culture-79h.pages.dev"), false);
-  assert.equal(cmsMutationEnabled({ ...validEnv, QA_ACCESS_JWT: "" }, "https://pr-123.chinese-culture-79h.pages.dev"), false);
+  assert.equal(cmsMutationEnabled({ ...validEnv, QA_ACCESS_COOKIE: "" }, "https://pr-123.chinese-culture-79h.pages.dev"), false);
   assert.equal(cmsMutationEnabled({ ...validEnv, QA_ENABLE_CMS_MUTATIONS: "false" }, "https://pr-123.chinese-culture-79h.pages.dev"), false);
 });
 
