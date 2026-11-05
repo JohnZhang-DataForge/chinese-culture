@@ -548,8 +548,7 @@ components:
         revision:
           type: string
         pullRequest:
-          type: integer
-          nullable: true
+          type: [integer, 'null']
         translationLocales:
           type: array
           items:
