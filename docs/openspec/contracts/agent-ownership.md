@@ -2,7 +2,7 @@
 
 **Program owner:** Agent 0 — Chief Architect and Integration Lead  
 **Repository:** JohnZhang-DataForge/chinese-culture  
-**Baseline:** main @ 539b37c9bfa5363f7149c95563bd549957eeff3d
+**Baseline checked:** main @ 6af91a4d63811ccadb64e99f742d31d0537ce8b9 (2026-11-05). Re-read main before every PR review.
 
 ## 1. Ownership rules
 
@@ -42,10 +42,10 @@
 | Agent | May start when | Required contract/evidence | Parallelism |
 |---|---|---|---|
 | Agent 1 | Immediately for read-only domain/zone discovery; DNS mutation after owner confirms zone/domain and rollback plan | Production domain target and current Pages project name | Independent |
-| Agent 2 | Agent 0 marks CC-CONTENT-001 v1.1.0 and locale route contract Ready | content-schema.md + proposal/design | Parallel with Agent 3 after schema freeze |
-| Agent 3 | Agent 0 marks Content Contract v1 Ready and Agent 2 confirms destination path implementation | content-schema.md + route path contract | Parallel with Agent 2; do not change schema code |
-| Agent 4 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/CSRF contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 5 |
-| Agent 5 | Agent 0 confirms Admin API OpenAPI v1.1.0 passes Redocly lint and marks the API/auth/GitHub App contract Ready | admin-api.openapi.yaml + design.md | Parallel with Agent 4 |
+| Agent 2 | **READY NOW** — CC-CONTENT-001 v1.1.0 and locale routes are merged on main | content-schema.md + proposal/design; routes `/en/` and `/zh-cn/`, locale value `zh-CN` | May proceed; coordinate destination layout with Agent 3 |
+| Agent 3 | **CONTRACT READY; migration gate conditional** — begin/continue inventory and translation preparation now; move/create content records only after Agent 2 confirms the exact implemented destination layout | content-schema.md + route path contract; preserve existing English slugs and stable contentId pairs | Parallel with Agent 2 after written path confirmation; do not change schema code |
+| Agent 4 | **BLOCKED from final API integration** until Agent 6 confirms Redocly/OpenAPI lint on corrected main contract; UI scaffolding may continue, but no alternate API/mock behavior may be treated as complete | admin-api.openapi.yaml + design.md; `/api/admin/v1/*`, GET `/session`, CSRF, ETag/If-Match, RFC 9457 | Parallel with Agent 5 after lint gate |
+| Agent 5 | **BLOCKED from final API implementation sign-off** until Agent 6 confirms Redocly/OpenAPI lint on corrected main contract; architecture is fixed now: same-project Cloudflare Pages Functions under `functions/`, not a separate Worker deployment | admin-api.openapi.yaml + design.md; Access JWT verification, GitHub App, CSRF, optimistic concurrency | Parallel with Agent 4 after lint gate |
 | Agent 6 | Agent 0 publishes acceptance criteria and API/content contracts | proposal.md + both contracts | Start baseline CI/tests early; complete after feature PRs |
 | Agent 7 | Agent 0 publishes architecture, ownership and implementation sequence | all docs under docs/openspec | Parallel with implementation; docs must reflect actual evidence |
 
@@ -64,6 +64,17 @@ Every agent PR description must include:
 The PR must not claim a production feature is complete based only on source code or a successful build.
 
 ## 5. Contract readiness announcement
+
+### 2026-11-05 integration status
+
+- Main baseline: `6af91a4d63811ccadb64e99f742d31d0537ce8b9`.
+- CC-CONTENT-001 v1.1.0 and locale route contract are already merged; Agents 2 and 3 are notified and may proceed subject to the path-layout handshake above.
+- Admin API OpenAPI v1.1.0 has an OAS 3.1 nullable-schema correction in Agent 0 PR #15. The PR's `static-build` check passed, but that is not OpenAPI lint evidence. Agent 6 must run the dedicated Redocly/OpenAPI lint against the corrected spec before Agents 4/5 are declared Ready.
+- Existing PRs #2, #4, #6 and #12 were notified of the contract/path/branch-base requirements. PRs based on `539b37c...` must be updated against current main before merge review.
+- Agent 1 may continue independent Cloudflare domain verification. Agent 5 owns Access and Pages Functions, not Agent 1.
+- The GitHub connector exposes remote refs/files; it does not expose a local working-tree status. No claim is made about local uncommitted changes.
+
+
 
 Agent 0 will publish a GitHub issue/comment and update this document when:
 - Content Contract CC-CONTENT-001 v1.1.0 is frozen for Agents 2 and 3.
