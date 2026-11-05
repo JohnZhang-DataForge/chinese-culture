@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = process.env.QA_BASE_URL || "http://127.0.0.1:4321";
 const useLocalPreview = !process.env.QA_BASE_URL;
-const accessJwt = process.env.QA_ACCESS_JWT;
+const accessCookie = process.env.QA_ACCESS_COOKIE;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -24,7 +24,7 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
-    ...(accessJwt ? { extraHTTPHeaders: { "Cf-Access-Jwt-Assertion": accessJwt } } : {})
+    ...(accessCookie ? { extraHTTPHeaders: { Cookie: accessCookie } } : {})
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   ...(useLocalPreview
