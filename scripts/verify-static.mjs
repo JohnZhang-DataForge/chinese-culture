@@ -28,7 +28,12 @@ function walk(dir) {
 }
 walk(dist);
 assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
-assert.ok(readFileSync(join(dist,"index.html"),"utf8").includes("Chinese Culture Atlas"), "Missing home page brand");
+const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
+assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
+assert.ok(homeHtml.includes('id="google-translate-language"'), "Missing Google Translate language selector");
+assert.ok(homeHtml.includes("Powered by"), "Missing Google Translate attribution");
+assert.ok(homeHtml.includes("translate.google.com/translate"), "Missing Google Translate website-translation URL");
+assert.ok(!homeHtml.includes("translate_a/element.js"), "Retired Google Website Translator script must not be loaded");
 // Check every local hyperlink in generated HTML, including content collection slugs.
 let linksChecked = 0;
 function inspectLinks(dir) {
@@ -37,6 +42,7 @@ function inspectLinks(dir) {
     if (statSync(file).isDirectory()) { inspectLinks(file); continue; }
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
+    assert.ok(html.includes('id="google-translate-language"'), "Missing Google Translate selector in " + file);
     // Astro emits double-quoted hrefs; inspect each local link without an HTML parser.
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
@@ -58,4 +64,4 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
 },0);
 assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, no SSR Worker.");
+console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+linksChecked+" internal links, Google Translate selector present, no legacy widget or SSR Worker.");

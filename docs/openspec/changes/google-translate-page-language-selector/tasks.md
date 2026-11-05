@@ -10,11 +10,11 @@
 
 ## P1 — Implementation
 
-- [ ] P1.1 Add the reusable \`GoogleTranslate.astro\` component.
-- [ ] P1.2 Integrate it into the shared public layout.
-- [ ] P1.3 Add responsive styling without changing the existing visual identity.
-- [ ] P1.4 Update the public privacy notice.
-- [ ] P1.5 Extend static verification for selector markup and legacy-widget exclusion.
+- [x] P1.1 Add the reusable GoogleTranslate.astro component.
+- [x] P1.2 Integrate it into the shared public layout.
+- [x] P1.3 Add responsive styling without changing the existing visual identity.
+- [x] P1.4 Update the public privacy notice.
+- [x] P1.5 Extend static verification for selector markup and legacy-widget exclusion.
 
 ## P2 — Validation and release
 
