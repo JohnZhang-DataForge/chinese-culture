@@ -33,7 +33,7 @@ const demo = import.meta.env.DEV;
         <nav class="admin-nav" aria-label="Site management">
           <button class="nav-item" type="button" data-nav="homepage"><span class="nav-icon">⌂</span><span>Homepage</span></button>
           <button class="nav-item" type="button" data-nav="settings"><span class="nav-icon">⚙</span><span>Navigation &amp; settings</span></button>
-          <button class="nav-item" type="button" data-nav="media"><span class="nav-icon">▧</span><span>Media library</span></button>
+          <button class="nav-item" type="button" data-nav="media" disabled title="Global media library is not in the approved API contract"><span class="nav-icon">▧</span><span>Media library · later</span></button>
           <button class="nav-item" type="button" data-nav="languages"><span class="nav-icon">文</span><span>Languages</span></button>
         </nav>
         <div class="sidebar-bottom">
@@ -121,7 +121,7 @@ const demo = import.meta.env.DEV;
                   <div class="form-grid variant-meta"><label>Reading time (minutes)<input type="number" name="readingMinutes.en" min="1" max="240" value="5" /></label><label>Learning level<input name="level.en" maxlength="80" placeholder="Beginner" /></label></div>
                   <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.en" /> <span>Feature this English version</span></label>
                   <details class="variant-details"><summary>Chinese term and pronunciation</summary><label>Chinese term<input name="chinese.en" maxlength="120" placeholder="汉字" /></label><label>Pinyin<input name="pinyin.en" maxlength="120" placeholder="Hànzì" /></label></details>
-                  <details class="variant-details"><summary>Cover image and rights metadata</summary><label>Image path<input name="mediaSrc.en" placeholder="/media/content-id/image.webp" /></label><label>Alternative text<input name="mediaAlt.en" maxlength="300" placeholder="Describe the image for screen readers" /></label><label>Credit<input name="mediaCredit.en" maxlength="300" placeholder="Photographer or source" /></label><label>License<input name="mediaLicense.en" maxlength="160" placeholder="original, CC BY 4.0, permission-granted…" /></label><label>Source URL<input name="mediaSource.en" type="url" placeholder="https://…" /></label></details>
+                  <details class="variant-details"><summary>Cover image and rights metadata</summary><label>Image path<input name="mediaSrc.en" placeholder="/media/content-id/image.webp" /></label><label>Alternative text<input name="mediaAlt.en" maxlength="300" placeholder="Describe the image for screen readers" /></label><label>Credit<input name="mediaCredit.en" maxlength="300" placeholder="Photographer or source" /></label><label>License<input name="mediaLicense.en" maxlength="160" placeholder="original, CC BY 4.0, permission-granted…" /></label><label>Source URL<input name="mediaSource.en" type="url" placeholder="https://…" /></label><div class="variant-media-list" data-variant-media-list="en"></div><button class="secondary-button" type="button" data-action="upload-variant-media" data-locale="en">Upload image to English variant</button><input type="file" accept="image/png,image/jpeg,image/webp,image/avif" data-variant-media-input="en" hidden /></details>
                   <div class="editor-word-count"><span data-word-count="en">0 words</span><span>English content</span></div>
                 </section>
                 <section class="language-editor chinese-editor">
@@ -134,7 +134,7 @@ const demo = import.meta.env.DEV;
                   <label>正文<textarea class="body-editor" name="body.zh" rows="15" maxlength="200000" placeholder="使用 Markdown 编写中文内容…"></textarea><small class="field-hint">中文内容独立保存，不会覆盖英文版本。</small></label>
                   <div class="form-grid variant-meta"><label>阅读时间（分钟）<input type="number" name="readingMinutes.zh" min="1" max="240" value="5" /></label><label>学习级别<input name="level.zh" maxlength="80" placeholder="入门" /></label></div>
                   <label class="checkbox-field variant-feature"><input type="checkbox" name="featured.zh" /> <span>在首页推荐此中文版本</span></label>
-                  <details class="variant-details"><summary>封面图片与版权信息</summary><label>图片路径<input name="mediaSrc.zh" placeholder="/media/content-id/image.webp" /></label><label>替代文本<input name="mediaAlt.zh" maxlength="300" placeholder="描述图片内容，便于辅助技术阅读" /></label><label>图片来源<input name="mediaCredit.zh" maxlength="300" placeholder="摄影者或来源" /></label><label>授权许可<input name="mediaLicense.zh" maxlength="160" placeholder="原创、CC BY 4.0、已获授权…" /></label><label>来源网址<input name="mediaSource.zh" type="url" placeholder="https://…" /></label></details>
+                  <details class="variant-details"><summary>封面图片与版权信息</summary><label>图片路径<input name="mediaSrc.zh" placeholder="/media/content-id/image.webp" /></label><label>替代文本<input name="mediaAlt.zh" maxlength="300" placeholder="描述图片内容，便于辅助技术阅读" /></label><label>图片来源<input name="mediaCredit.zh" maxlength="300" placeholder="摄影者或来源" /></label><label>授权许可<input name="mediaLicense.zh" maxlength="160" placeholder="原创、CC BY 4.0、已获授权…" /></label><label>来源网址<input name="mediaSource.zh" type="url" placeholder="https://…" /></label><div class="variant-media-list" data-variant-media-list="zh"></div><button class="secondary-button" type="button" data-action="upload-variant-media" data-locale="zh-CN">上传图片到中文版本</button><input type="file" accept="image/png,image/jpeg,image/webp,image/avif" data-variant-media-input="zh-CN" hidden /></details>
                   <div class="editor-word-count"><span data-word-count="zh">0 字</span><span>中文内容</span></div>
                 </section>
               </div>
@@ -157,7 +157,7 @@ const demo = import.meta.env.DEV;
                   <label>中文 Meta 描述<textarea name="seoDescription.zh" rows="2" maxlength="300" placeholder="中文搜索摘要"></textarea></label>
                   <div class="form-divider"></div>
                   <p class="field-hint contract-note">Uploads attach images to a selected content variant. A global searchable media library still needs a listing API.</p>
-                  <button class="text-button media-select-button" type="button" data-action="open-media">Open media uploader →</button>
+                  <p class="field-hint">Upload and select images inside each language panel. The global media library is not available yet.</p>
                 </section>
               </div>
               <div class="editor-bottom-actions"><button class="danger-text-button" type="button" data-action="delete-current" hidden>Discard draft</button><span>Changes become public only after the review pull request is merged.</span><div><button class="secondary-button" type="button" data-action="preview">Preview</button><button class="secondary-button" type="button" data-action="save-draft">Save draft</button><button class="primary-button" type="button" data-action="publish">Request publish →</button><button class="danger-button" type="button" data-action="unpublish" hidden>Request unpublish</button></div></div>

@@ -322,6 +322,17 @@ if (root) {
     });
     setField("status","draft");
   };
+  const renderVariantMedia = () => {
+    ["en","zh-CN"].forEach((locale) => {
+      const node=$('[data-variant-media-list="' + uiLocale(locale) + '"]');
+      if(!node) return;
+      const assets=state.variants[locale]?.media || [];
+      node.innerHTML=assets.length ? assets.map((asset,index) => {
+        const source=asset.src || "";
+        return '<div class="variant-media-item"><img src="' + escapeHtml(source) + '" alt="' + escapeHtml(asset.alt || "") + '" /><div><strong>' + escapeHtml(source.split("/").pop()) + '</strong><small>' + escapeHtml(asset.license || "License not supplied") + '</small><button class="text-button" type="button" data-action="select-variant-media" data-locale="' + locale + '" data-src="' + escapeHtml(source) + '" data-alt="' + escapeHtml(asset.alt || "") + '" data-credit="' + escapeHtml(asset.credit || "") + '" data-license="' + escapeHtml(asset.license || "") + '" data-source="' + escapeHtml(asset.sourceUrl || "") + '">Use as cover</button></div></div>';
+      }).join("") : '<p class="field-hint">No images attached to this language variant yet.</p>';
+    });
+  };
   const updateStatusControls = () => {
     const variants = Object.values(state.variants).filter(Boolean);
     const hasPublished = variants.some((variant) => variant.status === "published");
@@ -620,16 +631,17 @@ if (root) {
       }
     }
   };
-  const uploadCurrentMedia = async (file) => {
-    const locale = $("[data-media-locale]").value;
+  const uploadCurrentMedia = async (file, locale) => {
     if (!["image/jpeg","image/png","image/webp","image/avif"].includes(file.type) || file.size > 8 * 1024 * 1024) {
       showToast("Choose a JPEG, PNG, WebP or AVIF image under 8 MiB.","error");
       return;
     }
     if (demoMode) {
-      state.media.push({name:file.name,url:URL.createObjectURL(file),size:file.size});
-      renderMedia();
-      showToast("Local preview added. It has not been uploaded.","info");
+      const url=URL.createObjectURL(file);
+      state.media.push({name:file.name,url,size:file.size});
+      setField("mediaSrc."+uiLocale(locale),url);
+      markDirty();
+      showToast("Local image preview selected. It has not been uploaded.","info");
       return;
     }
     if (state.returnDirty) {
@@ -664,7 +676,7 @@ if (root) {
       await refreshVariant(locale);
       markClean();
       showToast("Image uploaded and attached to the " + (locale==="en" ? "English" : "Chinese") + " draft.","success");
-      renderMedia();
+      renderVariantMedia();
     } catch(error) { handleApiError(error); }
   };
   root.addEventListener("click", async (event) => {
@@ -701,7 +713,26 @@ if (root) {
       else { showAdminBanner("Homepage and site-settings write APIs are not part of OpenAPI v1.0.0 yet. These controls are read-only until Agent 0 approves the extension.","warning"); showToast("No settings were saved; the API contract does not define this operation.","info"); }
     }
     if (name === "choose-upload") $("[data-media-input]").click();
-    if (name === "open-media") { state.returnPage=state.page; state.returnDirty=state.dirty; state.dirty=false; $("[data-action=back-to-editor]").hidden=state.returnPage!=="editor"; setPage("media"); renderMedia(); }
+    if (name === "upload-variant-media") {
+      const locale=action.dataset.locale;
+      const fileInput=root.querySelector('[data-variant-media-input="' + locale + '"]');
+      if (!fileInput) return;
+      if (!demoMode) {
+        try { await saveLiveDrafts(); }
+        catch(error) { handleApiError(error); return; }
+      }
+      fileInput.click();
+    }
+    if (name === "select-variant-media") {
+      const suffix=uiLocale(action.dataset.locale);
+      setField("mediaSrc."+suffix,action.dataset.src);
+      setField("mediaAlt."+suffix,action.dataset.alt);
+      setField("mediaCredit."+suffix,action.dataset.credit);
+      setField("mediaLicense."+suffix,action.dataset.license);
+      setField("mediaSource."+suffix,action.dataset.source);
+      markDirty();
+      showToast("Existing image selected for this language variant.","info");
+    }
     if (name === "add-navigation") { if (demoMode) showToast("Navigation preview only in development mode.","info"); else showToast("Navigation API is not defined in the approved contract yet.","info"); }
     if (name === "back-to-editor") { state.dirty=false; setPage("editor"); if(state.returnDirty) markDirty(); }
   });
