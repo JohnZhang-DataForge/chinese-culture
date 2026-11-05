@@ -20,8 +20,14 @@ test("CMS mutation gate rejects the production apex even when all flags are set"
   assert.throws(() => assertCmsMutationAllowed(validEnv, "https://chinese-culture.site"), /mutations are disabled/i);
 });
 
-test("CMS mutation gate rejects the canonical Pages hostname", () => {
-  assert.equal(cmsMutationEnabled(validEnv, "https://chinese-culture-79h.pages.dev"), false);
+test("CMS mutation gate rejects canonical and main/production Pages aliases", () => {
+  for (const host of [
+    "chinese-culture-79h.pages.dev",
+    "main.chinese-culture-79h.pages.dev",
+    "production.chinese-culture-79h.pages.dev"
+  ]) {
+    assert.equal(cmsMutationEnabled(validEnv, `https://${host}`), false);
+  }
 });
 
 test("CMS mutation gate requires explicit preview and owner authorization", () => {
