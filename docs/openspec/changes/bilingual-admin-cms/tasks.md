@@ -71,8 +71,8 @@
 - [ ] P4.8 Implement preview response with sanitized HTML.
 - [ ] P4.9 Implement secure media upload to the CMS branch and store metadata in D1.
 - [ ] P4.10 Implement D1-to-Markdown snapshot export for the exact requested revision.
-- [ ] P4.11 Implement submit-review, publish and unpublish PR operations; never merge or write main.
-- [ ] P4.12 Implement PR status lookup and submission-state reconciliation.
+- [ ] P4.11 Implement submit-review, publish and unpublish: update desired D1 status, append the submission revision, export that exact revision and create/update the PR; never merge or write main.
+- [ ] P4.12 Implement read-only PR status lookup for the latest D1 submission; GET requests must not mutate D1.
 - [ ] P4.13 Add backend unit, integration, permission, migration, concurrency and abuse tests.
 - [ ] P4.14 Document D1 export, restore and recovery procedures.
 
