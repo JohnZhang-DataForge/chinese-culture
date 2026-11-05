@@ -25,7 +25,7 @@ Status is based on tests that are actually executed. A skipped test is NOT TESTE
 | Invalid upload content | Admin security suite | Media API contract + owner-authorized preview | NOT TESTED |
 | GitHub API error handling | Backend unit/integration tests still required | Agent 5 supplies injectable client seam | NOT TESTED |
 | Static content schema and route generation | Astro build + `npm run verify` | Default CI | Existing CI PASS on main run #17 |
-| OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | Contract file now merged on main (Admin API v1.1.0) | Implemented; latest lint result pending |
+| OpenAPI syntax and structural lint | `npm run verify:openapi` (Redocly minimal ruleset) | Contract file merged on main (Admin API v1.1.0) | FAIL on run #41937704379: `components.responses` is nested under `components.parameters`, leaving response refs unresolved; Agent 0 notified |
 | Formatting/lint | Optional configured scripts | If scripts exist | No lint/format script configured on inspected main |
 | Secret leakage in built assets | Planned static secret scan | Add after backend secret contract is merged | NOT TESTED |
 | Apex DNS and Pages binding | Cloudflare control-plane read: apex CNAME is proxied to Pages; Pages custom domain validation is active | Cloudflare configuration | PASS (control plane); live HTTP probe NOT TESTED |
