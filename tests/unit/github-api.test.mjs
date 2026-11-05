@@ -107,6 +107,21 @@ if (!existsSync(helperPath)) {
     assert.equal(captured.init.headers.get("user-agent"), "chinese-culture-admin-cms");
   });
 
+
+  test("reads content only from an allow-listed repository path and selected branch", async () => {
+    let captured;
+    const result = await getRepositoryFile(env, filePath, allowedRoots, "cms/qa-agent6", async (url, init) => {
+      captured = { url, init };
+      return new Response('{"sha":"abc","content":"IyBRQQ=="}', { status: 200 });
+    });
+    const parsed = new URL(captured.url);
+    assert.equal(parsed.origin, "https://api.github.com");
+    assert.equal(parsed.searchParams.get("ref"), "cms/qa-agent6");
+    assert.equal(parsed.pathname, "/repos/JohnZhang-DataForge/chinese-culture/contents/src/content/qa-fixtures/example.md");
+    assert.equal(captured.init.method, "GET");
+    assert.equal(result.sha, "abc");
+  });
+
   test("writes UTF-8 content only to the selected content branch", async () => {
     let captured;
     const result = await putRepositoryFile(env, {
