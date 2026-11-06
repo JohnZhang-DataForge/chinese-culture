@@ -209,7 +209,8 @@ export function validateContentWrite(input) {
   const description = requiredString("description", 500);
   const category = requiredString("category", 100);
   const bodyMarkdown = typeof input.bodyMarkdown === "string" ? input.bodyMarkdown : "";
-  if (bodyMarkdown.length > 200000) errors.push({ field: "bodyMarkdown", message: "Maximum 200000 characters." });
+  if (typeof input.bodyMarkdown !== "string") errors.push({ field: "bodyMarkdown", message: "Required Markdown body string." });
+  else if (bodyMarkdown.length > 200000) errors.push({ field: "bodyMarkdown", message: "Maximum 200000 characters." });
   if (typeof input.featured !== "boolean") errors.push({ field: "featured", message: "Must be a boolean." });
 
   const optionalText = (field, max) => {
