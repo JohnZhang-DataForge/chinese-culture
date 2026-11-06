@@ -27,9 +27,7 @@ export async function onRequest(context) {
   const method = request.method.toUpperCase();
 
   if (!ALLOWED_METHODS.has(method)) {
-    return withApiSecurityHeaders(
-      denied("method_not_allowed", 405)
-    );
+    return denied("method_not_allowed", 405);
   }
 
   if (WRITE_METHODS.has(method)) {
