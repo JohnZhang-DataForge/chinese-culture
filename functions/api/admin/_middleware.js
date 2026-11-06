@@ -4,13 +4,22 @@ import {
   verifyAccessJwt
 } from "../../_lib/access-jwt.js";
 import { verifyCsrfToken } from "../../_lib/csrf.js";
-import { jsonResponse, withApiSecurityHeaders } from "../../_lib/http.js";
+import { CmsError, problemResponse } from "../../_lib/cms.js";
+import { withApiSecurityHeaders } from "../../_lib/http.js";
 
 const ALLOWED_METHODS = new Set(["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"]);
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 function denied(code = "forbidden", status = 403) {
-  return withApiSecurityHeaders(jsonResponse({ error: code }, status));
+  const title = status === 401 ? "Unauthorized" : status === 503 ? "Service Unavailable" : status === 405 ? "Method Not Allowed" : "Forbidden";
+  const detail = status === 503
+    ? "The CMS security configuration is unavailable."
+    : status === 401
+      ? "A valid Cloudflare Access identity is required."
+      : status === 405
+        ? "The requested method is not supported."
+        : "The request was denied.";
+  return withApiSecurityHeaders(problemResponse(new CmsError(status, code, title, detail)));
 }
 
 export async function onRequest(context) {
@@ -19,9 +28,7 @@ export async function onRequest(context) {
 
   if (!ALLOWED_METHODS.has(method)) {
     return withApiSecurityHeaders(
-      jsonResponse({ error: "method_not_allowed" }, 405, {
-        allow: "GET, HEAD, POST, PUT, PATCH, DELETE"
-      })
+      denied("method_not_allowed", 405)
     );
   }
 
