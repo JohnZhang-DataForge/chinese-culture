@@ -37,6 +37,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
   /content:
     get:
       tags: [Content]
@@ -89,6 +91,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '502':
           $ref: '#/components/responses/UpstreamFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
     post:
       tags: [Content]
       operationId: createContent
