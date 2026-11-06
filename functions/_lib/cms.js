@@ -60,7 +60,7 @@ export function requireLocale(value) {
 }
 
 export async function readContentBody(request) {
-  return readJsonBody(request, 256 * 1024);
+  return readJsonBody(request, 1024 * 1024);
 }
 
 function parseJson(value, fallback = []) {
