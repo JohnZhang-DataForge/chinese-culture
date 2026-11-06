@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS content_variants (
   content_id TEXT NOT NULL,
   locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN')),
   collection TEXT NOT NULL CHECK (collection IN ('lessons', 'culture', 'festivals', 'books', 'events')),
-  slug TEXT NOT NULL CHECK (slug GLOB '[a-z0-9]*' AND slug NOT GLOB '*[^a-z0-9-]*' AND slug NOT GLOB '-*' AND slug NOT GLOB '*-'),
+  slug TEXT NOT NULL CHECK (slug GLOB '[a-z0-9]*' AND slug NOT GLOB '*[^a-z0-9-]*' AND slug NOT GLOB '-*' AND slug NOT GLOB '*-' AND slug NOT LIKE '%--%'),
   title TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 180),
   description TEXT NOT NULL CHECK (length(trim(description)) BETWEEN 1 AND 500),
   seo_title TEXT,
