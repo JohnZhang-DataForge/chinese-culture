@@ -13,6 +13,7 @@
     }
   ],
   "vars": {
-    "ADMIN_ORIGIN": "https://chinese-culture.site"
+    "ADMIN_ORIGIN": "https://chinese-culture.site",
+    "CF_ACCESS_TEAM_DOMAIN": "https://yanbozhang.cloudflareaccess.com"
   }
 }
