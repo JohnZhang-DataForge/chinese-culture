@@ -1,5 +1,18 @@
 {
+  "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "chinese-culture",
   "compatibility_date": "2026-11-04",
-  "pages_build_output_dir": "./dist"
+  "pages_build_output_dir": "./dist",
+  "d1_databases": [
+    {
+      "binding": "CMS_DB",
+      "database_name": "chinese-culture-cms",
+      "database_id": "8b6f6c98-06fe-49eb-adbc-690d4b57c058",
+      "preview_database_id": "CMS_DB",
+      "migrations_dir": "database/migrations"
+    }
+  ],
+  "vars": {
+    "ADMIN_ORIGIN": "https://chinese-culture.site"
+  }
 }
