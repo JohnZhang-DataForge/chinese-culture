@@ -1,4 +1,4 @@
-export const supportedLocales = ["zh-cn", "es"] as const;
+export const supportedLocales = ["en", "zh-cn", "es"] as const;
 export type Locale = "en" | "zh-cn" | "es";
 
 export const localeNames: Record<Locale, string> = {
@@ -39,6 +39,13 @@ export const ui = {
 } as const;
 
 export const localizedSections = {
+  en: [
+    { route: "learn", collection: "lessons", nav: "Learn", eyebrow: "Guided learning", title: "Start with the foundations.", description: "An approachable introduction to language, customs, celebrations and creative traditions — one idea at a time.", note: "Read in order or choose any starting point." },
+    { route: "culture", collection: "culture", nav: "Culture", eyebrow: "Explore by curiosity", title: "Many traditions. Many perspectives.", description: "Discover objects, ideas and creative practices that connect past and present.", note: "Each story offers a starting point for further discovery." },
+    { route: "festivals", collection: "festivals", nav: "Festivals", eyebrow: "The calendar of culture", title: "Moments worth sharing.", description: "Explore the stories and community customs around celebrations across the year.", note: "Many festivals follow a traditional lunisolar calendar; their Gregorian dates change." },
+    { route: "books", collection: "books", nav: "Books", eyebrow: "The reading room", title: "A good story opens a door.", description: "Reading guides to classic works, ideas and the many worlds of Chinese literature.", note: "These are original guides, not unauthorized downloads of books." },
+    { route: "events", collection: null, nav: "Events", eyebrow: "Gather and learn", title: "Culture is something we share.", description: "Exhibitions, talks, workshops and celebrations can bring a story off the page and into everyday life.", note: "No verified events are listed yet." }
+  ],
   "zh-cn": [
     { route: "learn", collection: "lessonsZh", nav: "学习", eyebrow: "循序渐进", title: "从基础开始。", description: "循序了解语言、习俗、节庆与艺术传统，一次认识一个主题。", note: "按顺序阅读，或从任何感兴趣的主题开始。" },
     { route: "culture", collection: "cultureZh", nav: "文化", eyebrow: "随兴趣探索", title: "多样的传统，多元的视角。", description: "探索连接过去与现在的物件、思想和创作实践。", note: "每篇故事都是进一步探索的起点。" },
@@ -56,6 +63,13 @@ export const localizedSections = {
 } as const;
 
 export const homeCopy = {
+  en: {
+    eyebrow: "FRESH FROM THE CULTURE ATLAS", heading: "Discover something new", intro: "Stories, traditions and ideas worth exploring.",
+    all: "Explore all stories", topics: "FIND YOUR NEXT ADVENTURE", exploreTitle: "Explore the world of Chinese culture",
+    exploreIntro: "Pick a topic and follow your curiosity.", culture: "Arts & traditions", festivals: "Celebrate together",
+    learn: "Start discovering", books: "Stories & ideas", more: "More stories to discover", moreIntro: "There is always another story waiting around the corner.",
+    callout: "A world of stories is waiting.", calloutText: "Explore with curiosity. Discover with context. Share what you learn.", about: "About the project"
+  },
   "zh-cn": {
     eyebrow: "来自文化地图的新内容", heading: "发现新知", intro: "值得探索的故事、传统与思想。",
     all: "浏览全部故事", topics: "寻找下一段探索之旅", exploreTitle: "探索中国文化的广阔世界",
@@ -73,6 +87,13 @@ export const homeCopy = {
 } as const;
 
 export const localizedPages = {
+  en: {
+    about: { title: "About the project", eyebrow: "Our story", heading: "A window into a living culture.", intro: "Chinese Culture Atlas is an independent learning project for curious people around the world. We make thoughtful introductions to festivals, arts, language, literature and everyday practices.", paragraphs: ["Culture is not one fixed narrative. Practices vary across regions, communities, families and generations. A good introduction should help readers see that variety rather than reduce it to stereotypes.", "We distinguish between historical evidence, traditional stories and modern customs; we include reading links to help you go deeper. This website is educational, not an official cultural institution."], headings: ["What we believe", "How to begin"], note: "Editorial note: the site is in its first development phase. Further independent subject review and a public feedback contact channel are planned before full launch." },
+    accessibility: { title: "Accessibility", eyebrow: "For everyone", heading: "Learning should be accessible.", paragraphs: ["We design for readable text, keyboard-friendly navigation, visible focus indicators, clear headings and mobile access. We avoid automatic media playback and use Chinese characters alongside English explanation where possible.", "The site is under development and has not completed a formal accessibility audit. Testing with assistive technologies and fixing identified issues are launch requirements."] },
+    contact: { title: "Contact", eyebrow: "Stay in touch", heading: "A conversation is coming.", paragraphs: ["We have not yet published a verified project contact address. Please do not send personal information through unrelated accounts claiming to represent this site.", "Before public launch we plan to publish a clear channel for corrections, educational feedback and event inquiries."] },
+    "editorial-policy": { title: "Editorial policy", eyebrow: "Trust & learning", heading: "How we tell these stories.", headings: ["Clarity over certainty", "Sources and attribution", "Corrections", "Event listings"], paragraphs: ["We aim to make complex subjects approachable without pretending that a tradition has only one history or that all communities celebrate the same way. We distinguish historical scholarship from folklore and modern interpretation.", "Educational articles link to further sources when available. We write original summaries and respect the rights of authors, artists and translators. We do not host unauthorized book copies.", "We review substantive issues before revising articles. This project is still establishing a public contact channel and editorial review process, so please consider these pages a developing educational collection rather than an encyclopedia.", "We only intend to list events with verified organizer information, dates and official registration links. Events are not endorsements by the project."] },
+    privacy: { title: "Privacy", eyebrow: "Respect for readers", heading: "Privacy, by design.", paragraphs: ["This initial version is a static educational website. It has no visitor accounts, newsletter subscriptions, contact form, cookies intentionally set by our application, or site-integrated analytics.", "Our hosting provider may process ordinary request information, such as IP addresses, for security and delivery. We have not added third-party advertising trackers or visitor profiling services.", "If future versions add forms, analytics or accounts, we will revise this notice before enabling those features. This page should be reviewed against the actual deployed hosting configuration before public launch."] }
+  },
   "zh-cn": {
     about: { title: "关于项目", eyebrow: "我们的故事", heading: "一扇了解鲜活文化的窗口。", intro: "Chinese Culture Atlas 是一个面向世界各地好奇读者的独立学习项目。我们以平实而深入的方式介绍节日、艺术、语言、文学和日常生活。", paragraphs: ["文化并不是固定不变的单一叙事。不同地区、社群、家庭和世代的实践各不相同。好的介绍应帮助读者看见这种多样性，而不是将文化简化为刻板印象。", "我们会区分历史证据、传统故事和现代习俗，并提供延伸阅读链接。本网站用于教育学习，并非官方文化机构。"], headings: ["我们的理念", "如何开始"], note: "编辑说明：网站仍处于初期开发阶段。正式发布前，我们计划进行更多独立的主题审阅，并建立公开的反馈联系渠道。" },
     accessibility: { title: "无障碍访问", eyebrow: "面向每一个人", heading: "学习应该人人可及。", paragraphs: ["我们致力于提供易读的文字、支持键盘操作的导航、清晰可见的焦点提示、明确的标题层级和移动设备访问体验。我们避免自动播放媒体，并尽可能在英文说明旁提供汉字。", "网站仍在开发中，尚未完成正式的无障碍审计。正式发布前，必须使用辅助技术进行测试并修复发现的问题。"] },
