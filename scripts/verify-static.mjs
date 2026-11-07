@@ -2,10 +2,6 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import assert from "node:assert/strict";
-import {
-  GOOGLE_TRANSLATE_LANGUAGES,
-  buildGoogleTranslateUrl
-} from "../src/lib/google-translate-url.js";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
@@ -33,57 +29,8 @@ function walk(dir) {
 walk(dist);
 assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
 
-const samplePageUrl = "https://chinese-culture.site/culture/calligraphy/?topic=brush#history";
-const googleUrl = new URL(buildGoogleTranslateUrl(samplePageUrl, "ja"));
-assert.equal(googleUrl.origin, "https://chinese--culture-site.translate.goog", "Hyphenated source hostname must be encoded for translate.goog");
-assert.equal(googleUrl.pathname, "/culture/calligraphy/", "Current page path must be preserved");
-assert.equal(googleUrl.searchParams.get("topic"), "brush", "Original query parameters must be preserved");
-assert.equal(googleUrl.hash, "#history", "Current page fragment must be preserved");
-assert.equal(googleUrl.searchParams.get("_x_tr_sl"), "auto", "Source language must be auto-detected");
-assert.equal(googleUrl.searchParams.get("_x_tr_tl"), "ja", "Target language must be retained");
-assert.equal(googleUrl.searchParams.get("_x_tr_hl"), "en", "Google Translate interface language must be English");
-assert.equal(googleUrl.searchParams.get("_x_tr_pto"), "wapp", "Google Translate web-app mode must be enabled");
-assert.equal(googleUrl.searchParams.has("text"), false, "Do not pass the URL as text to the Translate input field");
-assert.equal(googleUrl.searchParams.has("op"), false, "Do not redirect to the empty Translate UI");
-
-const wwwUrl = new URL(buildGoogleTranslateUrl("https://www.example.com/about", "ca"));
-assert.equal(wwwUrl.hostname, "www-example-com.translate.goog", "Dots in hostnames must map to hyphens");
-
-const dashedHostUrl = new URL(buildGoogleTranslateUrl("https://foo-bar.example.com/", "es"));
-assert.equal(dashedHostUrl.hostname, "foo--bar-example-com.translate.goog", "Literal hostname hyphens must be doubled");
-
-const translatedPageUrl = "https://chinese--culture-site.translate.goog/culture/calligraphy/?topic=brush&_x_tr_sl=auto&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp#history";
-const switchedLanguageUrl = new URL(buildGoogleTranslateUrl(translatedPageUrl, "ca"));
-assert.equal(switchedLanguageUrl.hostname, "chinese--culture-site.translate.goog", "Switching language on an existing translated page must reuse the original proxy host");
-assert.equal(switchedLanguageUrl.searchParams.get("_x_tr_tl"), "ca", "Switching language must update the target language");
-assert.equal(switchedLanguageUrl.searchParams.get("topic"), "brush", "Switching language must preserve the source query");
-assert.equal(switchedLanguageUrl.hash, "#history", "Switching language must preserve the current fragment");
-assert.equal([...switchedLanguageUrl.searchParams.keys()].filter((key) => key.startsWith("_x_tr_")).length, 4, "Switching language must not accumulate translation parameters");
-
-const nestedLegacyProxyUrl = "https://chinese----culture-site-translate-goog.translate.goog/?_x_tr_sl=auto&_x_tr_tl=zh-TW&_x_tr_hl=en&_x_tr_pto=wapp";
-const recoveredLegacyProxyUrl = new URL(buildGoogleTranslateUrl(nestedLegacyProxyUrl, "ja"));
-assert.equal(recoveredLegacyProxyUrl.hostname, "chinese--culture-site.translate.goog", "Recover the original site even from a nested proxy URL created by the previous implementation");
-assert.equal(recoveredLegacyProxyUrl.searchParams.get("_x_tr_tl"), "ja", "A recovered nested proxy must use the newly selected language");
-
-assert.throws(() => buildGoogleTranslateUrl(samplePageUrl, "not-a-language"), RangeError);
-assert.throws(() => buildGoogleTranslateUrl("javascript:alert(1)", "es"), TypeError);
-assert.throws(() => buildGoogleTranslateUrl("http://localhost:4321/", "es"), TypeError);
-const languageCodes = GOOGLE_TRANSLATE_LANGUAGES.map(({ code }) => code);
-assert.ok(languageCodes.length >= 40, "Expected a broad set of target languages");
-assert.equal(new Set(languageCodes).size, languageCodes.length, "Duplicate target language code");
-
 const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
 assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
-assert.ok(homeHtml.includes('class="google-translate-menu"'), "Missing non-form Google Translate language menu");
-assert.ok(homeHtml.includes("Select Language"), "Missing selector placeholder");
-assert.ok(homeHtml.includes("Powered by"), "Missing Google Translate attribution");
-assert.ok(homeHtml.includes("Google</span> Translate"), "Missing Google Translate attribution text");
-assert.ok(homeHtml.includes('data-target-language="ca"'), "Missing Catalan language link");
-
-const componentSource = readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
-assert.ok(!componentSource.includes("translate_a/element.js"), "Retired Google Website Translator script must not be loaded");
-assert.ok(!componentSource.includes("google.translate.TranslateElement"), "Retired Google Website Translator API must not be used");
-assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(componentSource), "Language menu must not use native form controls");
 
 let linksChecked = 0;
 let htmlPagesChecked = 0;
@@ -94,8 +41,7 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     htmlPagesChecked++;
-    assert.ok(html.includes('class="google-translate-menu"'), "Missing Google Translate menu in " + file);
-    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Google Translate proxy warning risk: form control found in " + file);
+    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
       if (!href.startsWith("/")) continue;
@@ -116,4 +62,4 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
 },0);
 assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, form-free Google Translate menu, direct translated-page URL verified, no legacy widget or SSR Worker.");
+console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, translation widget removed, no SSR Worker.");

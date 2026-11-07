@@ -1,6 +1,5 @@
 ---
 import "../styles/global.css";
-import GoogleTranslate from "../components/GoogleTranslate.astro";
 const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life." } = Astro.props;
 const pageTitle = title === "Discover Chinese culture" ? "Chinese Culture Atlas — Discover, learn, connect" : title + " | Chinese Culture Atlas";
 const active = Astro.url.pathname;
@@ -28,7 +27,7 @@ const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{
       </a>
       <nav class="desktop-nav" aria-label="Primary">{nav.map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
       <details class="mobile-nav"><summary>Explore <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href="/about/">About</a></nav></details>
-      <div class="header-tools"><a class="header-about" href="/about/">About</a><GoogleTranslate /></div>
+      <div class="header-tools"><a class="header-about" href="/about/">About</a></div>
     </div>
   </header>
   <main id="main-content"><slot /></main>
