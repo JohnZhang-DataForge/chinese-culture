@@ -4,7 +4,7 @@ import GoogleTranslate from "../components/GoogleTranslate.astro";
 const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life." } = Astro.props;
 const pageTitle = title === "Discover Chinese culture" ? "Chinese Culture Atlas — Discover, learn, connect" : title + " | Chinese Culture Atlas";
 const active = Astro.url.pathname;
-const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{href:"/festivals/",label:"Festivals"},{href:"/books/",label:"Books"},{href:"/events/",label:"Events"},{href:"/about/",label:"About"}];
+const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{href:"/festivals/",label:"Festivals"},{href:"/books/",label:"Books"},{href:"/events/",label:"Events"}];
 ---
 <!doctype html>
 <html lang="en">
@@ -12,12 +12,14 @@ const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={description} />
-  <meta name="theme-color" content="#f5f1e9" />
+  <meta name="theme-color" content="#f7f5ef" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://images.unsplash.com" />
   <title>{pageTitle}</title>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="announcement-bar"><div class="wrap"><span>文化 · CULTURE</span><span>A field guide to a living heritage</span><span>DISCOVER WITH CURIOSITY</span></div></div>
   <header class="site-header">
     <div class="wrap header-inner">
       <a href="/" class="brand" aria-label="Chinese Culture Atlas home">
@@ -26,10 +28,10 @@ const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{
       </a>
       <nav class="desktop-nav" aria-label="Primary">{nav.map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
       <details class="mobile-nav">
-        <summary>Menu <span aria-hidden="true">☰</span></summary>
-        <nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}</nav>
+        <summary>Explore <span aria-hidden="true">☰</span></summary>
+        <nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href="/about/">About</a></nav>
       </details>
-      <GoogleTranslate />
+      <div class="header-tools"><a class="header-about" href="/about/">About</a><GoogleTranslate /></div>
     </div>
   </header>
   <main id="main-content"><slot /></main>
@@ -37,11 +39,11 @@ const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{
     <div class="wrap footer-top">
       <div><span class="footer-mark" aria-hidden="true">文化</span><p class="footer-title">Curiosity is a wonderful place to begin.</p><p class="footer-note">An independent, approachable cultural learning project.</p></div>
       <div class="footer-links">
-        <div><span class="footer-label">Explore</span><a href="/learn/">Learning paths</a><a href="/culture/">Culture library</a><a href="/festivals/">Festivals</a><a href="/books/">Books</a></div>
+        <div><span class="footer-label">Explore</span><a href="/learn/">Learning paths</a><a href="/culture/">Culture library</a><a href="/festivals/">Festivals</a><a href="/books/">Books</a><a href="/events/">Events</a></div>
         <div><span class="footer-label">The project</span><a href="/about/">Our approach</a><a href="/editorial-policy/">Editorial policy</a><a href="/privacy/">Privacy</a><a href="/accessibility/">Accessibility</a></div>
       </div>
     </div>
-    <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} Chinese Culture Atlas</span><span>Built as a fast, accessible, static learning resource.</span></div>
+    <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} Chinese Culture Atlas</span><span>Built for curious minds, everywhere.</span></div>
   </footer>
 </body>
 </html>
