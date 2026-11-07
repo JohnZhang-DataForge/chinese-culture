@@ -8,7 +8,7 @@ level: "Beginner"
 order: 2
 readingMinutes: 5
 featured: true
-image: "https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1200&q=85"
+image: "https://images.hogeschoolrotterdam.nl/Blob/63ff6718dad8481a9e033e77c142a07c/5d8a4223f8464afbb1e0a4d03c553e46.jpg?height=630&mode=crop&width=1200"
 imageAlt: "Notebook and writing tools on a desk"
 ---
 ## One writing tradition, many spoken voices
