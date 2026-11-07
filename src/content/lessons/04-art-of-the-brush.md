@@ -7,8 +7,8 @@ pinyin: "bǐmò"
 level: "Beginner"
 order: 4
 readingMinutes: 5
-image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Artist's paintbrushes and colorful art materials"
+image: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "A person painting Chinese calligraphy with a brush"
 ---
 ## More than a tool
 
