@@ -14,7 +14,7 @@ const required = [
   "zh-cn/learn/index.html","zh-cn/culture/index.html","zh-cn/festivals/index.html","zh-cn/books/index.html","zh-cn/events/index.html",
   "es/learn/index.html","es/culture/index.html","es/festivals/index.html","es/books/index.html","es/events/index.html",
   "zh-cn/about/index.html","zh-cn/accessibility/index.html","zh-cn/contact/index.html","zh-cn/editorial-policy/index.html","zh-cn/privacy/index.html",
-  "es/about/index.html","es/accessibility/index.html","es/contact/index.html","es/editorial-policy/index.html","es/privacy/index.html","404.html"
+  "es/about/index.html","es/accessibility/index.html","es/contact/index.html","es/editorial-policy/index.html","es/privacy/index.html","zh-cn/learn/01-a-living-culture/index.html","es/learn/01-a-living-culture/index.html","zh-cn/learn/02-language-and-writing/index.html","es/learn/02-language-and-writing/index.html","zh-cn/learn/03-festivals-and-calendars/index.html","es/learn/03-festivals-and-calendars/index.html","zh-cn/learn/04-art-of-the-brush/index.html","es/learn/04-art-of-the-brush/index.html","zh-cn/learn/05-stories-and-reading/index.html","es/learn/05-stories-and-reading/index.html","zh-cn/culture/calligraphy-and-the-brush/index.html","es/culture/calligraphy-and-the-brush/index.html","zh-cn/culture/family-tables-and-hospitality/index.html","es/culture/family-tables-and-hospitality/index.html","zh-cn/culture/reading-a-painting/index.html","es/culture/reading-a-painting/index.html","zh-cn/festivals/dragon-boat-festival/index.html","es/festivals/dragon-boat-festival/index.html","zh-cn/festivals/mid-autumn-festival/index.html","es/festivals/mid-autumn-festival/index.html","zh-cn/festivals/spring-festival/index.html","es/festivals/spring-festival/index.html","zh-cn/books/journey-to-the-west/index.html","es/books/journey-to-the-west/index.html","zh-cn/books/the-analects/index.html","es/books/the-analects/index.html","404.html"
 ];
 assert.ok(existsSync(dist), "Build output missing. Run npm run build.");
 for (const path of required) assert.ok(existsSync(join(dist,path)), "Missing page " + path);
@@ -41,6 +41,7 @@ const spanishHome = readFileSync(join(dist,"es/index.html"),"utf8");
 assert.ok(chineseHome.includes('<html lang="zh-CN"'), "Chinese home page must declare zh-CN");
 assert.ok(spanishHome.includes('<html lang="es"'), "Spanish home page must declare es");
 assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
+assert.ok(chineseHome.includes('href="/es/"') && spanishHome.includes('href="/zh-cn/"'), "Language selector must link to same-domain locale home pages");
 
 let linksChecked = 0;
 let htmlPagesChecked = 0;
