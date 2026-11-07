@@ -13,7 +13,7 @@ This amendment replaces the GitHub-only content persistence decision with Cloudf
 
 ## Outcomes
 
-1. Readers can use the public website in English and Simplified Chinese.
+1. Readers can use the public website in English, Simplified Chinese and Spanish.
 2. Every translated page has a stable shared content identity and a clear language counterpart.
 3. Authorized editors can create, edit, preview, save and submit content using a browser CMS.
 4. Cloudflare D1 stores the authoritative content records, including passage text, metadata, locale variants, draft state and revision history.
@@ -25,7 +25,7 @@ This amendment replaces the GitHub-only content persistence decision with Cloudf
 
 ## In scope
 
-- Locale-aware Astro routes for en and zh-CN.
+- Locale-aware Astro routes for en, zh-CN and es.
 - One shared content schema and one Admin API contract.
 - Cloudflare D1 as the canonical store for conceptual content items, locale variants, Markdown bodies, editorial metadata, draft state and revision history.
 - D1 migrations checked into the repository and local D1 development/test support.
@@ -53,8 +53,8 @@ This amendment replaces the GitHub-only content persistence decision with Cloudf
 
 ### Public localization
 
-- **LOC-001:** The site SHALL support locale identifiers en and zh-CN.
-- **LOC-002:** Public URLs SHALL use /en/ and /zh-cn/ prefixes, including the default English locale.
+- **LOC-001:** The site SHALL support locale identifiers en, zh-CN and es.
+- **LOC-002:** Public URLs SHALL use /en/, /zh-cn/ and /es/ prefixes, including the default English locale.
 - **LOC-003:** The root URL / SHALL lead to the English landing page while preserving an explicit language-selection affordance.
 - **LOC-004:** Existing unprefixed public routes SHALL redirect to their equivalent /en/ routes. Existing content slugs SHALL remain stable during the initial migration.
 - **LOC-005:** Each localized page SHALL emit correct lang, canonical and alternate hreflang metadata.
@@ -124,8 +124,8 @@ This amendment replaces the GitHub-only content persistence decision with Cloudf
 
 The release is accepted only when all of the following are demonstrated:
 
-1. Both /en/ and /zh-cn/ home pages render with correct language metadata.
-2. Existing English content and reviewed Chinese translations are present in D1 with stable content IDs and slugs.
+1. The /en/, /zh-cn/ and /es/ home pages render with correct language metadata.
+2. Existing English content and reviewed Chinese and Spanish translations are present in D1 with stable content IDs and locale-specific slugs.
 3. D1 migrations can create the complete schema in a clean local database.
 4. The import/seed process is idempotent and preserves existing content.
 5. An authenticated editor can create a content item, edit its text, save it, reload it from D1 and see the same content.
@@ -161,7 +161,7 @@ The release is accepted only when all of the following are demonstrated:
 1. **P0 — Contract amendment:** approve D1 persistence, update the Admin API contract and publish the new ownership/implementation sequence.
 2. **P1 — Database and identity foundation:** bind the provisioned D1 database, add migrations/local development, configure Access and GitHub App.
 3. **P2 — Bilingual public frontend:** locale routes, metadata, language switch, compatibility redirects and generated-snapshot filtering.
-4. **P3 — Content migration:** stable IDs, English import, Chinese translations and idempotent D1 seed.
+4. **P3 — Content migration:** stable IDs, English import, Chinese and Spanish translations, and idempotent D1 seed.
 5. **P4 — Admin backend:** Pages Functions authentication, D1 CRUD/revisions, media handling, D1-to-GitHub snapshot export and PR operations.
 6. **P5 — Admin frontend:** dashboard, editor, translation management, preview, media and PR state.
 7. **P6 — QA and hardening:** CI gates, D1 migration/seed tests, contract tests, security tests, browser/a11y testing and recovery drills.

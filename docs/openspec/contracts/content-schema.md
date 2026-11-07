@@ -9,8 +9,8 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 
 ## 1. Locale and route values
 
-- Supported locale identifiers: en, zh-CN.
-- URL locale segments: en, zh-cn.
+- Supported locale identifiers: en, zh-CN, es.
+- URL locale segments: en, zh-cn, es.
 - Public route pattern: /{localeSegment}/{section}/{slug}/.
 - Sections: learn, culture, festivals, books, events.
 - Default route / redirects to /en/.
@@ -22,7 +22,7 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 
 contentId identifies the conceptual content item and is immutable. Every locale variant of the same item MUST use exactly the same contentId. Locale variants have independent slugs, titles, descriptions, body text, publication status and timestamps.
 
-The unique key is (contentId, locale). A contentId can have at most one record per supported locale. A language switch looks up the other variant by contentId; it MUST NOT derive the translated slug from the current slug.
+The unique key is (contentId, locale). A contentId can have at most one record per supported locale. A language switch resolves the counterpart by contentId; it MUST NOT assume locale slugs are equal. The current public static release keeps article slugs aligned across locales, while the CMS contract supports locale-specific slugs.
 
 A locale variant is a full editorial document, not a machine-generated runtime overlay. A translation may be drafted or unpublished while another locale is published.
 
@@ -129,7 +129,7 @@ Save Draft always persists status=draft on the CMS branch. Submit-for-review cre
 ## 7. Validation rules
 
 1. contentId must be a valid UUID and must not change when editing or translating.
-2. locale must be exactly en or zh-CN.
+2. locale must be exactly en, zh-CN or es.
 3. slug must match ^[a-z0-9]+(?:-[a-z0-9]+)*$.
 4. title, description and category must be non-empty.
 5. status must be one of draft, published or unpublished.
@@ -139,7 +139,7 @@ Save Draft always persists status=draft on the CMS branch. Submit-for-review cre
 9. seoTitle and seoDescription, when present, must be non-empty plain text within API length limits; otherwise public metadata falls back to title and description.
 10. contentId/locale must be unique across the repository.
 11. collection/locale/slug must be unique.
-12. zh-CN records must contain Simplified Chinese content; en records use English as the primary language.
+12. zh-CN records must contain Simplified Chinese content; es records must contain Spanish content; en records use English as the primary language.
 13. Every image in a published record must have alt and rights metadata.
 14. No draft or unpublished record may generate a public route, sitemap entry, public search record or featured card.
 15. Content source links must be HTTPS; redirects and external URL status are checked by QA where feasible.

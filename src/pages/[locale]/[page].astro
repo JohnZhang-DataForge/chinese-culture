@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { supportedLocales, localizedPages } from "../../i18n/site";
+
+export function getStaticPaths() {
+  const pageSlugs = ["about", "accessibility", "contact", "editorial-policy", "privacy"];
+  return supportedLocales.flatMap((locale) => pageSlugs.map((page) => ({
+    params: { locale, page }, props: { locale, page }
+  })));
+}
+const { locale, page } = Astro.props;
+const content = (localizedPages as any)[locale][page];
+---
+<BaseLayout title={content.title} locale={locale}>
+  <div class="wrap static-page"><span class="eyebrow">{content.eyebrow}</span><h1>{content.heading}</h1><div class="prose">
+    {content.intro && <p>{content.intro}</p>}
+    {content.headings?.map((heading: string, index: number) => <><h2>{heading}</h2><p>{content.paragraphs[index]}</p></>)}
+    {!content.headings && content.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
+    {content.headings && content.paragraphs.slice(content.headings.length).map((paragraph: string) => <p>{paragraph}</p>)}
+    {content.note && <div class="callout">{content.note}</div>}
+    {page === "about" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"浏览入门课程": "Explora las lecciones para principiantes"}</a></p>}
+    {page === "accessibility" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"探索入门课程":"Explora las lecciones para principiantes"}</a></p>}
+  </div></div>
+</BaseLayout>

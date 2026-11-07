@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { supportedLocales, localizedSections, ui } from "../../../i18n/site";
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const locale of supportedLocales) {
+    for (const config of localizedSections[locale].filter((section) => section.collection)) {
+      const entries = await getCollection(config.collection as any);
+      for (const entry of entries) paths.push({ params: { locale, section: config.route, slug: entry.id }, props: { locale, config, entry } });
+    }
+  }
+  return paths;
+}
+const { locale, config, entry } = Astro.props;
+const labels = ui[locale];
+const { Content } = await render(entry);
+const inSection = (await getCollection(config.collection as any)).sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
+const related = inSection.filter((other: any) => other.id !== entry.id).slice(0,3);
+---
+<BaseLayout title={entry.data.title} description={entry.data.description} locale={locale}>
+  <header class="entry-hero"><div class="wrap">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href={"/"+locale+"/"}>{labels.home}</a><span aria-hidden="true">/</span><a href={"/"+locale+"/"+config.route+"/"}>{config.nav}</a><span aria-hidden="true">/</span><span>{entry.data.title}</span></nav>
+    <span class="eyebrow">{entry.data.category}</span>
+    {entry.data.chinese && <div class="entry-chinese" lang="zh-Hans">{entry.data.chinese}</div>}
+    <h1>{entry.data.title}</h1><p class="lead">{entry.data.description}</p>
+    <div class="entry-meta"><span>{entry.data.readingMinutes} {labels.minRead}</span>{entry.data.level && <span>{entry.data.level}</span>}<span>{labels.originalGuide}</span></div>
+  </div></header>
+  {entry.data.image && <div class="article-cover wrap"><img src={entry.data.image} alt={entry.data.imageAlt ?? entry.data.title} fetchpriority="high" /></div>}
+  <div class="wrap article-layout">
+    <article class="prose"><Content /><hr /><p><a href={"/"+locale+"/"+config.route+"/"}>← {labels.back} {config.nav}</a></p></article>
+    <aside class="article-aside" aria-label={labels.keepExploring}><h2>{labels.keepExploring}</h2><p>{locale==="zh-cn"?"沿着另一条线索继续探索，看看它会带你去哪里。":"Sigue otro hilo y descubre adónde te lleva."}</p><ul>{related.map((item: any)=><li><a href={"/"+locale+"/"+config.route+"/"+item.id+"/"}>{item.data.title} ↗</a></li>)}</ul><p><a href={"/"+locale+"/editorial-policy/"}>{labels.editorial}</a></p></aside>
+  </div>
+</BaseLayout>
