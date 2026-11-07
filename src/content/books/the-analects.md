@@ -5,6 +5,8 @@ category: "Philosophy & classics"
 chinese: "论语"
 pinyin: "Lúnyǔ"
 readingMinutes: 6
+image: "https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=1200&q=85"
+imageAlt: "Open books and reading materials"
 ---
 ## What kind of book is it?
 
