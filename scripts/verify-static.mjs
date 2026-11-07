@@ -45,7 +45,7 @@ assert.ok(chineseHome.includes('<html lang="zh-CN"'), "Chinese home page must de
 assert.ok(spanishHome.includes('<html lang="es"'), "Spanish home page must declare es");
 assert.ok(englishHome.includes('<html lang="en"'), "English home page must declare en");
 assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
-assert.ok(chineseHome.includes('href="/es/"') && spanishHome.includes('href="/zh-cn/"'), "Language selector must link to same-domain locale home pages");
+assert.ok(englishHome.includes('href="/zh-cn/"') && chineseHome.includes('href="/es/"') && spanishHome.includes('href="/en/"'), "Language selector must link to same-domain locale home pages");
 
 let linksChecked = 0;
 let htmlPagesChecked = 0;
