@@ -11,9 +11,9 @@ const {config}=Astro.props;
 const entries=(await getCollection(config.collection)).sort((a,b)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
 ---
 <BaseLayout title={config.nav} description={config.description}>
-  <section class="page-hero"><div class="wrap"><span class="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p class="lead">{config.description}</p></div></section>
+  <section class="page-hero page-hero-photo" style={"--section-photo: url(\'" + config.image + "\')"}><div class="wrap"><span class="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p class="lead">{config.description}</p></div></section>
   <div class="wrap"><p class="index-note">{config.note} · {entries.length} {entries.length===1?"guide":"guides"} available.</p></div>
   <section class="collection-grid"><div class="wrap">
-    <div class="cards">{entries.map((entry,i)=><StoryCard href={"/"+config.route+"/"+entry.id+"/"} title={entry.data.title} description={entry.data.description} category={entry.data.category} readingMinutes={entry.data.readingMinutes} chinese={entry.data.chinese} number={i+1}/>)}</div>
+    <div class="cards">{entries.map((entry,i)=><StoryCard href={"/"+config.route+"/"+entry.id+"/"} title={entry.data.title} description={entry.data.description} category={entry.data.category} readingMinutes={entry.data.readingMinutes} chinese={entry.data.chinese} number={i+1} image={entry.data.image} imageAlt={entry.data.imageAlt}/>)}</div>
   </div></section>
 </BaseLayout>
