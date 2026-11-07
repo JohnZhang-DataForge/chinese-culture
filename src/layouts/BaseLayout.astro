@@ -16,11 +16,11 @@ const pageTitle = title === "Discover Chinese culture" ? (language === "zh-cn" ?
 const active = Astro.url.pathname;
 const navRoutes = ["learn", "culture", "festivals", "books", "events"];
 const nav = navRoutes.map((route, index) => ({
-  href: (language === "en" ? "" : "/" + language) + "/" + route + "/",
+  href: "/" + language + "/" + route + "/",
   label: language === "en" ? english.nav[index] : labels.nav[index]
 }));
 const unprefixedPath = active.replace(/^\/(zh-cn|es)(?=\/|$)/, "") || "/";
-const languageHref = (target) => target === "en" ? unprefixedPath : "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath);
+const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath);
 ---
 <!doctype html>
 <html lang={language === "zh-cn" ? "zh-CN" : language}>
@@ -32,8 +32,8 @@ const languageHref = (target) => target === "en" ? unprefixedPath : "/" + target
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://images.unsplash.com" />
   <title>{pageTitle}</title>
-  <link rel="canonical" href={"https://chinese-culture.site" + active} />
-  <link rel="alternate" hreflang="en" href={"https://chinese-culture.site" + unprefixedPath} />
+  <link rel="canonical" href={"https://chinese-culture.site/" + language + (unprefixedPath === "/" ? "/" : unprefixedPath)} />
+  <link rel="alternate" hreflang="en" href={"https://chinese-culture.site/en" + unprefixedPath} />
   <link rel="alternate" hreflang="zh-CN" href={"https://chinese-culture.site" + languageHref("zh-cn")} />
   <link rel="alternate" hreflang="es" href={"https://chinese-culture.site" + languageHref("es")} />
 </head>
@@ -42,12 +42,12 @@ const languageHref = (target) => target === "en" ? unprefixedPath : "/" + target
   <div class="top-ribbon"><div class="wrap"><span>文化 CHINESE CULTURE ATLAS</span><span>{language === "zh-cn" ? "探索 · 学习 · 欢庆" : language === "es" ? "Explora · Aprende · Celebra" : "Explore · Learn · Celebrate"}</span><span>{language === "zh-cn" ? "为好奇的心灵而创" : language === "es" ? "HECHO PARA MENTES CURIOSAS" : "MADE FOR CURIOUS MINDS"}</span></div></div>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a href={language === "en" ? "/" : "/" + language + "/"} class="brand" aria-label="Chinese Culture Atlas home">
+      <a href={"/" + language + "/"} class="brand" aria-label="Chinese Culture Atlas home">
         <span class="brand-symbol" aria-hidden="true">文</span>
         <span class="brand-type"><span class="brand-kicker">{language === "zh-cn" ? "探索世界的窗口" : language === "es" ? "UN MUNDO POR DESCUBRIR" : "A WORLD OF DISCOVERY"}</span><strong>CHINESE CULTURE <span>ATLAS</span></strong></span>
       </a>
       <nav class="desktop-nav" aria-label="Primary">{nav.slice(0,4).map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
-      <details class="mobile-nav"><summary>{labels.explore} <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.about}</a></nav></details>
+      <details class="mobile-nav"><summary>{labels.explore} <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href={"/" + language + "/about/"}>{labels.about}</a></nav></details>
       <div class="header-tools">
         <a class="header-about" href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.about}</a>
         <details class="language-switcher">
@@ -67,7 +67,7 @@ const languageHref = (target) => target === "en" ? unprefixedPath : "/" + target
       <div><span class="footer-mark" aria-hidden="true">文化</span><p class="footer-title">{labels.footerTitle}</p><p class="footer-note">{labels.footerNote}</p></div>
       <div class="footer-links">
         <div><span class="footer-label">{labels.exploreLabel}</span>{nav.map((n) => <a href={n.href}>{n.label}</a>)}</div>
-        <div><span class="footer-label">{labels.projectLabel}</span><a href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.approach}</a><a href={(language === "en" ? "" : "/" + language) + "/editorial-policy/"}>{labels.editorial}</a><a href={(language === "en" ? "" : "/" + language) + "/privacy/"}>{labels.privacy}</a><a href={(language === "en" ? "" : "/" + language) + "/accessibility/"}>{labels.accessibility}</a></div>
+        <div><span class="footer-label">{labels.projectLabel}</span><a href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.approach}</a><a href={"/" + language + "/editorial-policy/"}>{labels.editorial}</a><a href={"/" + language + "/privacy/"}>{labels.privacy}</a><a href={"/" + language + "/accessibility/"}>{labels.accessibility}</a></div>
       </div>
     </div>
     <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} Chinese Culture Atlas</span><span>{labels.footerBottom}</span></div>
