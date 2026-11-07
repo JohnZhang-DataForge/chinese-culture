@@ -5,8 +5,8 @@ category: "Festival guide"
 chinese: "端午节"
 pinyin: "Duānwǔ Jié"
 readingMinutes: 6
-image: "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Traditional celebration lights in an Asian city"
+image: "https://images.unsplash.com/photo-1549163950-d16f273c8960?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Dragon boats racing in Hong Kong, China"
 ---
 ## A festival on the fifth day
 
