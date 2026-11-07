@@ -6,6 +6,8 @@ chinese: "书法"
 pinyin: "shūfǎ"
 readingMinutes: 6
 featured: true
+image: "https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1800&q=85"
+imageAlt: "Brush pen and ink writing on paper"
 ---
 ## Writing you can see
 
