@@ -24,5 +24,13 @@ export const collections = {
   lessons: fromFolder("lessons"),
   culture: fromFolder("culture"),
   festivals: fromFolder("festivals"),
-  books: fromFolder("books")
+  books: fromFolder("books"),
+  lessonsZh: fromFolder("zh-cn/lessons"),
+  cultureZh: fromFolder("zh-cn/culture"),
+  festivalsZh: fromFolder("zh-cn/festivals"),
+  booksZh: fromFolder("zh-cn/books"),
+  lessonsEs: fromFolder("es/lessons"),
+  cultureEs: fromFolder("es/culture"),
+  festivalsEs: fromFolder("es/festivals"),
+  booksEs: fromFolder("es/books")
 };
