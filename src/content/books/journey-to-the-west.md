@@ -5,8 +5,8 @@ category: "Classic fiction"
 chinese: "西游记"
 pinyin: "Xīyóu Jì"
 readingMinutes: 6
-image: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Open book in warm natural light"
+image: "https://upload.wikimedia.org/wikipedia/commons/e/e4/The_Journey_to_the_West%2C_Shidetang_Hall_of_Jinling_in_1592.jpg"
+imageAlt: "Illustrated pages from a 1592 edition of Journey to the West"
 ---
 ## Before you begin
 
