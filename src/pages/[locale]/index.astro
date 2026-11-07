@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import StoryCard from "../../components/StoryCard.astro";
 import { getCollection } from "astro:content";
 import { supportedLocales, localizedSections, homeCopy } from "../../i18n/site";
 
@@ -14,27 +13,191 @@ const contentSections = sections.filter((section) => section.collection);
 const collections = await Promise.all(contentSections.map((section) => getCollection(section.collection as any)));
 const stories = contentSections.flatMap((section, index) =>
   collections[index].map((entry: any) => ({
-    entry, section: section.route,
-    href: "/" + locale + "/" + section.route + "/" + entry.id + "/"
+    entry,
+    href: "/" + locale + "/" + section.route + "/" + entry.id + "/",
+    section: section.route,
+    sectionLabel: section.nav
   }))
-).sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
-const featured = stories.filter((story) => story.entry.data.featured).slice(0, 3);
-const latest = stories.filter((story) => !featured.some((item) => item.href === story.href)).slice(0, 6);
+).filter((story) => story.entry.data.image)
+ .sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
+
+const featuredStories = stories.filter((story) => story.entry.data.featured).slice(0, 5);
+const heroStories = featuredStories.length ? featuredStories : stories.slice(0, 3);
+const heroIds = new Set(heroStories.map((story) => story.href));
+const feedStories = stories.filter((story) => !heroIds.has(story.href));
+const latestStories = feedStories.slice(0, 8);
+const moreStories = feedStories.slice(8);
+
+const fallbackBySection: Record<string, string> = {
+  learn: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1400&q=85",
+  culture: "https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1400&q=85",
+  festivals: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1400&q=85",
+  books: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1400&q=85"
+};
+const tileImages: Record<string, {src:string;fallback:string;alt:Record<string,string>}> = {
+  learn: {
+    src: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1100&q=85",
+    fallback: "https://images.unsplash.com/photo-1744699013747-090188297e5e?auto=format&fit=crop&w=1100&q=85",
+    alt: {en:"The Great Wall winding across a mountain ridge", "zh-cn":"蜿蜒于群山之间的中国长城", es:"La Gran Muralla serpenteando entre las montañas"}
+  },
+  culture: {
+    src: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1100&q=85",
+    fallback: "https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1100&q=85",
+    alt: {en:"A brush and ink used for Chinese calligraphy", "zh-cn":"用于中国书法的毛笔与墨", es:"Pincel y tinta para la caligrafía china"}
+  },
+  festivals: {
+    src: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1100&q=85",
+    fallback: "https://images.unsplash.com/photo-1549163950-d16f273c8960?auto=format&fit=crop&w=1100&q=85",
+    alt: {en:"Traditional Chinese temple architecture and festive details", "zh-cn":"中国传统寺庙建筑与节庆装饰", es:"Arquitectura tradicional china y detalles festivos"}
+  },
+  books: {
+    src: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1100&q=85",
+    fallback: "https://images.unsplash.com/photo-1648769170333-fd01106d8873?auto=format&fit=crop&w=1100&q=85",
+    alt: {en:"An open book in a quiet reading space", "zh-cn":"安静阅读空间中的一本打开的书", es:"Un libro abierto en un espacio tranquilo de lectura"}
+  }
+};
+const labels = {
+  en: {featured:"FEATURED STORY",read:"Read the article",auto:"AUTO PLAY",latest:"FRESH FROM THE CULTURE ATLAS",latestTitle:"Discover something new",latestIntro:"Stories, traditions and ideas worth exploring.",all:"Explore all stories",topics:"FIND YOUR NEXT ADVENTURE",topicsTitle:"Explore the world of Chinese culture",topicsIntro:"Pick a topic and follow your curiosity.",more:"KEEP EXPLORING",moreTitle:"More stories to discover",moreIntro:"There is always another story waiting around the corner.",photoCredit:"Photography via Unsplash"},
+  "zh-cn": {featured:"精选故事",read:"阅读文章",auto:"自动播放",latest:"文化地图 · 最新内容",latestTitle:"发现新知",latestIntro:"值得探索的故事、传统与思想。",all:"浏览全部故事",topics:"寻找下一段探索之旅",topicsTitle:"探索中国文化的广阔世界",topicsIntro:"选择一个主题，跟随好奇心继续前行。",more:"继续探索",moreTitle:"更多精彩故事",moreIntro:"前方总有另一个故事等待发现。",photoCredit:"图片来源：Unsplash"},
+  es: {featured:"HISTORIA DESTACADA",read:"Leer el artículo",auto:"REPRODUCCIÓN",latest:"NOVEDADES DEL ATLAS CULTURAL",latestTitle:"Descubre algo nuevo",latestIntro:"Historias, tradiciones e ideas que merecen ser exploradas.",all:"Ver todas las historias",topics:"ENCUENTRA TU PRÓXIMA AVENTURA",topicsTitle:"Explora el mundo de la cultura china",topicsIntro:"Elige un tema y sigue tu curiosidad.",more:"SIGUE EXPLORANDO",moreTitle:"Más historias por descubrir",moreIntro:"Siempre hay otra historia esperando a la vuelta de la esquina.",photoCredit:"Fotografías de Unsplash"}
+}[locale];
 const categoryName = (route: string) => sections.find((section) => section.route === route)?.nav ?? route;
+const sectionTitle = (route: string) => sections.find((section) => section.route === route)?.title ?? route;
+const sectionDescription = (route: string) => sections.find((section) => section.route === route)?.description ?? "";
+const tileRoutes = ["culture","festivals","learn","books"];
+const tileLabels = {
+  en: {culture:"Arts & traditions",festivals:"Celebrate together",learn:"Start discovering",books:"Stories & ideas"},
+  "zh-cn": {culture:"艺术与传统",festivals:"一起庆祝",learn:"开始探索",books:"故事与思想"},
+  es: {culture:"Artes y tradiciones",festivals:"Celebremos juntos",learn:"Empieza a descubrir",books:"Historias e ideas"}
+}[locale];
 ---
 <BaseLayout title="Discover Chinese culture" description={copy.intro} locale={locale}>
-  <section class="page-hero"><div class="wrap"><span class="eyebrow">文化 · CHINESE CULTURE ATLAS</span><h1>{copy.heading}</h1><p class="lead">{copy.intro}</p></div></section>
-  <section class="section"><div class="wrap">
-    <div class="section-heading"><div><span class="eyebrow">{copy.eyebrow}</span><h2>{copy.heading}</h2></div><p>{copy.intro}</p></div>
-    <div class="cards">{featured.map((story, index) => <StoryCard href={story.href} title={story.entry.data.title} description={story.entry.data.description} category={categoryName(story.section)} readingMinutes={story.entry.data.readingMinutes} chinese={story.entry.data.chinese} number={index+1} image={story.entry.data.image} imageAlt={story.entry.data.imageAlt} />)}</div>
-  </div></section>
-  <section class="section section-soft"><div class="wrap">
-    <div class="section-heading"><div><span class="eyebrow">{copy.topics}</span><h2>{copy.exploreTitle}</h2></div><p>{copy.exploreIntro}</p></div>
-    <div class="cards">{sections.map((section) => <StoryCard href={"/"+locale+"/"+section.route+"/"} title={section.title} description={section.description} category={section.nav} chinese={section.route==="learn"?"学":section.route==="culture"?"文":section.route==="festivals"?"节":section.route==="books"?"书":"会"} />)}</div>
-  </div></section>
-  {latest.length > 0 && <section class="section"><div class="wrap">
-    <div class="section-heading"><div><span class="eyebrow">{copy.more}</span><h2>{copy.more}</h2></div><p>{copy.moreIntro}</p></div>
-    <div class="cards">{latest.map((story, index) => <StoryCard href={story.href} title={story.entry.data.title} description={story.entry.data.description} category={categoryName(story.section)} readingMinutes={story.entry.data.readingMinutes} chinese={story.entry.data.chinese} number={index+1} image={story.entry.data.image} imageAlt={story.entry.data.imageAlt} />)}</div>
-  </div></section>}
-  <section class="home-bottom-callout"><div class="wrap"><span class="callout-chinese">文化</span><div><span class="section-kicker">CHINESE CULTURE ATLAS</span><h2>{copy.callout}</h2><p>{copy.calloutText}</p></div><a class="pill-button pill-white" href={"/"+locale+"/about/"}>{copy.about} <span>→</span></a></div></section>
+  <div class="image-led-home">
+    <section class="feature-carousel" aria-label={labels.featured} data-feature-carousel>
+      <div class="feature-slides">
+        {heroStories.map((story, index) => <a class:list={["feature-slide", index === 0 && "is-active"]} href={story.href} data-feature-slide={index} aria-hidden={index === 0 ? "false" : "true"} tabindex={index === 0 ? 0 : -1}>
+          <img class="feature-slide-photo" src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} data-fallback={fallbackBySection[story.section]} />
+          <span class="feature-slide-shade"></span>
+          <span class="feature-slide-content">
+            <span class="feature-label"><i></i> {labels.featured} <b>· {categoryName(story.section)}</b></span>
+            <span class="feature-slide-title">{story.entry.data.title}</span>
+            <span class="feature-slide-description">{story.entry.data.description}</span>
+            <span class="feature-slide-cta">{labels.read} <b>↗</b></span>
+          </span>
+          <span class="feature-slide-count">{String(index + 1).padStart(2, "0")} <i></i> {String(heroStories.length).padStart(2, "0")}</span>
+        </a>)}
+      </div>
+      {heroStories.length > 1 && <div class="feature-controls" aria-label={labels.featured + " controls"}>
+        <button class="feature-arrow feature-prev" type="button" aria-label={locale==="zh-cn"?"上一张":locale==="es"?"Anterior":"Previous featured article"}>←</button>
+        <div class="feature-dots" role="group" aria-label={locale==="zh-cn"?"选择精选文章":locale==="es"?"Elegir historia destacada":"Choose featured article"}>
+          {heroStories.map((story, index) => <button class:list={["feature-dot", index === 0 && "is-active"]} type="button" data-feature-dot={index} aria-label={(locale==="zh-cn"?"显示精选文章 ":locale==="es"?"Mostrar historia destacada ":"Show featured article ") + (index + 1) + ": " + story.entry.data.title} aria-pressed={index === 0 ? "true" : "false"}></button>)}
+        </div>
+        <button class="feature-arrow feature-next" type="button" aria-label={locale==="zh-cn"?"下一张":locale==="es"?"Siguiente":"Next featured article"}>→</button>
+        <span class="feature-auto-label">{labels.auto}</span>
+      </div>}
+    </section>
+
+    <section class="home-news wrap">
+      <div class="news-heading">
+        <div><span class="section-kicker">{labels.latest}</span><h2>{labels.latestTitle}</h2><p>{labels.latestIntro}</p></div>
+        <a class="all-link" href={"/"+locale+"/culture/"}>{labels.all} <span>→</span></a>
+      </div>
+      <div class="news-grid">
+        {latestStories.map((story, index) => <a class="news-card" href={story.href}>
+          <div class="news-card-photo" style={"--card-fallback: url('" + fallbackBySection[story.section] + "')"}>
+            <img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading={index < 4 ? "eager" : "lazy"} data-fallback={fallbackBySection[story.section]} />
+            <span class="news-card-number">{String(index + 1).padStart(2, "0")}</span>
+          </div>
+          <div class="news-card-copy"><span class="news-card-category">{categoryName(story.section)}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">{labels.read} <b>↗</b></span></div>
+        </a>)}
+      </div>
+    </section>
+
+    <section class="visual-topics">
+      <div class="wrap">
+        <div class="news-heading"><div><span class="section-kicker">{labels.topics}</span><h2>{labels.topicsTitle}</h2><p>{labels.topicsIntro}</p></div></div>
+        <div class="visual-topic-grid">
+          {tileRoutes.map((route, index) => <a href={"/"+locale+"/"+route+"/"} class:list={["visual-topic", "topic-"+(route==="culture"?"art":route==="festivals"?"festival":route==="learn"?"learn":"books")]}>
+            <img src={tileImages[route].src} data-fallback={tileImages[route].fallback} alt={tileImages[route].alt[locale]} aria-hidden="true" loading="lazy" />
+            <span>{String(index+1).padStart(2,"0")} / {categoryName(route).toUpperCase()}</span>
+            <strong>{tileLabels[route]}</strong>
+            <b>{copy.all} ↗</b>
+          </a>)}
+        </div>
+      </div>
+    </section>
+
+    {moreStories.length > 0 && <section class="home-news wrap more-stories">
+      <div class="news-heading"><div><span class="section-kicker">{labels.more}</span><h2>{labels.moreTitle}</h2><p>{labels.moreIntro}</p></div></div>
+      <div class="news-grid">
+        {moreStories.map((story, index) => <a class="news-card" href={story.href}>
+          <div class="news-card-photo" style={"--card-fallback: url('" + fallbackBySection[story.section] + "')"}>
+            <img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" data-fallback={fallbackBySection[story.section]} />
+            <span class="news-card-number">{String(index + 9).padStart(2, "0")}</span>
+          </div>
+          <div class="news-card-copy"><span class="news-card-category">{categoryName(story.section)}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">{labels.read} <b>↗</b></span></div>
+        </a>)}
+      </div>
+    </section>}
+    <section class="home-bottom-callout">
+      <div class="wrap"><span class="callout-chinese">文化</span><div><span class="section-kicker">CHINESE CULTURE ATLAS</span><h2>{copy.callout}</h2><p>{copy.calloutText}</p></div><a class="pill-button pill-white" href={"/"+locale+"/about/"}>{copy.about} <span>→</span></a></div>
+    </section>
+    <p class="unsplash-credit wrap">{labels.photoCredit}</p>
+  </div>
+  <script>
+    const carousel = document.querySelector("[data-feature-carousel]");
+    if (carousel) {
+      const slides = Array.from(carousel.querySelectorAll("[data-feature-slide]"));
+      const dots = Array.from(carousel.querySelectorAll("[data-feature-dot]"));
+      const previous = carousel.querySelector(".feature-prev");
+      const next = carousel.querySelector(".feature-next");
+      let activeIndex = 0;
+      let timer;
+      let paused = false;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const show = (index) => {
+        activeIndex = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+          const active = i === activeIndex;
+          slide.classList.toggle("is-active", active);
+          slide.setAttribute("aria-hidden", String(!active));
+          slide.setAttribute("tabindex", active ? "0" : "-1");
+        });
+        dots.forEach((dot, i) => {
+          const active = i === activeIndex;
+          dot.classList.toggle("is-active", active);
+          dot.setAttribute("aria-pressed", String(active));
+        });
+      };
+      const stop = () => window.clearInterval(timer);
+      const start = () => {
+        stop();
+        if (!reduceMotion && slides.length > 1 && !paused && !document.hidden) {
+          timer = window.setInterval(() => show(activeIndex + 1), 6500);
+        }
+      };
+      previous?.addEventListener("click", () => { show(activeIndex - 1); start(); });
+      next?.addEventListener("click", () => { show(activeIndex + 1); start(); });
+      dots.forEach((dot) => dot.addEventListener("click", () => { show(Number(dot.dataset.featureDot)); start(); }));
+      carousel.addEventListener("mouseenter", () => { paused = true; stop(); });
+      carousel.addEventListener("mouseleave", () => { paused = false; start(); });
+      carousel.addEventListener("focusin", () => { paused = true; stop(); });
+      carousel.addEventListener("focusout", (event) => { if (!carousel.contains(event.relatedTarget)) { paused = false; start(); } });
+      document.addEventListener("visibilitychange", start);
+    }
+    document.querySelectorAll("img[data-fallback]").forEach((img) => {
+      img.addEventListener("error", () => {
+        const fallback = img.dataset.fallback;
+        if (fallback && img.src !== fallback) {
+          img.src = fallback;
+          img.dataset.fallback = "";
+        } else {
+          img.closest(".news-card-photo")?.classList.add("image-unavailable");
+          img.closest(".feature-slide")?.classList.add("image-unavailable");
+          img.closest(".visual-topic")?.classList.add("image-unavailable");
+          img.remove();
+        }
+      });
+    });
+  </script>
 </BaseLayout>
