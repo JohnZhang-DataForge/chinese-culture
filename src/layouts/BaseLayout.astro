@@ -62,7 +62,6 @@ const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : 
       </div>
     </div>
   </header>
-  {language !== "en" && <div class="translation-note" role="note"><div class="wrap">{language === "zh-cn" ? "译文由 AI 辅助生成，尚待人工审校；如发现问题，欢迎反馈。" : "Traducción asistida por IA, pendiente de revisión humana. Agradecemos tus sugerencias y correcciones."}</div></div>}
   <main id="main-content"><slot /></main>
   <footer class="site-footer">
     <div class="wrap footer-top">
