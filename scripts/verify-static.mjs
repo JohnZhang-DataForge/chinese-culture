@@ -41,7 +41,7 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     htmlPagesChecked++;
-    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Google Translate proxy warning risk: form control found in " + file);
+    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
       if (!href.startsWith("/")) continue;
