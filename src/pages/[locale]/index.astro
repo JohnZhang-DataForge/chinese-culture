@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import StoryCard from "../../components/StoryCard.astro";
+import { getCollection } from "astro:content";
+import { supportedLocales, localizedSections, homeCopy } from "../../i18n/site";
+
+export function getStaticPaths() {
+  return supportedLocales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+const { locale } = Astro.props;
+const sections = localizedSections[locale];
+const copy = homeCopy[locale];
+const contentSections = sections.filter((section) => section.collection);
+const collections = await Promise.all(contentSections.map((section) => getCollection(section.collection as any)));
+const stories = contentSections.flatMap((section, index) =>
+  collections[index].map((entry: any) => ({
+    entry, section: section.route,
+    href: "/" + locale + "/" + section.route + "/" + entry.id + "/"
+  }))
+).sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
+const featured = stories.filter((story) => story.entry.data.featured).slice(0, 3);
+const latest = stories.filter((story) => !featured.some((item) => item.href === story.href)).slice(0, 6);
+const categoryName = (route: string) => sections.find((section) => section.route === route)?.nav ?? route;
+---
+<BaseLayout title="Discover Chinese culture" description={copy.intro} locale={locale}>
+  <section class="page-hero"><div class="wrap"><span class="eyebrow">文化 · CHINESE CULTURE ATLAS</span><h1>{copy.heading}</h1><p class="lead">{copy.intro}</p></div></section>
+  <section class="section"><div class="wrap">
+    <div class="section-heading"><div><span class="eyebrow">{copy.eyebrow}</span><h2>{copy.heading}</h2></div><p>{copy.intro}</p></div>
+    <div class="cards">{featured.map((story, index) => <StoryCard href={story.href} title={story.entry.data.title} description={story.entry.data.description} category={categoryName(story.section)} readingMinutes={story.entry.data.readingMinutes} chinese={story.entry.data.chinese} number={index+1} image={story.entry.data.image} imageAlt={story.entry.data.imageAlt} />)}</div>
+  </div></section>
+  <section class="section section-soft"><div class="wrap">
+    <div class="section-heading"><div><span class="eyebrow">{copy.topics}</span><h2>{copy.exploreTitle}</h2></div><p>{copy.exploreIntro}</p></div>
+    <div class="cards">{sections.map((section) => <StoryCard href={"/"+locale+"/"+section.route+"/"} title={section.title} description={section.description} category={section.nav} chinese={section.route==="learn"?"学":section.route==="culture"?"文":section.route==="festivals"?"节":section.route==="books"?"书":"会"} />)}</div>
+  </div></section>
+  {latest.length > 0 && <section class="section"><div class="wrap">
+    <div class="section-heading"><div><span class="eyebrow">{copy.more}</span><h2>{copy.more}</h2></div><p>{copy.moreIntro}</p></div>
+    <div class="cards">{latest.map((story, index) => <StoryCard href={story.href} title={story.entry.data.title} description={story.entry.data.description} category={categoryName(story.section)} readingMinutes={story.entry.data.readingMinutes} chinese={story.entry.data.chinese} number={index+1} image={story.entry.data.image} imageAlt={story.entry.data.imageAlt} />)}</div>
+  </div></section>}
+  <section class="home-bottom-callout"><div class="wrap"><span class="callout-chinese">文化</span><div><span class="section-kicker">CHINESE CULTURE ATLAS</span><h2>{copy.callout}</h2><p>{copy.calloutText}</p></div><a class="pill-button pill-white" href={"/"+locale+"/about/"}>{copy.about} <span>→</span></a></div></section>
+</BaseLayout>
