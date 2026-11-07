@@ -14,28 +14,47 @@ const stories = [
   ...culture.map((entry) => ({ entry, href: "/culture/" + entry.id + "/", section: "CULTURE" })),
   ...festivals.map((entry) => ({ entry, href: "/festivals/" + entry.id + "/", section: "FESTIVALS" })),
   ...books.map((entry) => ({ entry, href: "/books/" + entry.id + "/", section: "BOOKS" }))
-].sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
+].filter((story) => story.entry.data.image)
+ .sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
 
-const featuredStory = stories.find((story) => story.entry.data.featured && story.entry.data.image) ?? stories.find((story) => story.entry.data.image);
-const otherStories = stories.filter((story) => story !== featuredStory && story.entry.data.image);
-const latestStories = otherStories.slice(0, 8);
-const moreStories = otherStories.slice(8);
+const featuredStories = stories.filter((story) => story.entry.data.featured).slice(0, 5);
+const heroStories = featuredStories.length ? featuredStories : stories.slice(0, 3);
+const heroIds = new Set(heroStories.map((story) => story.entry.id));
+const feedStories = stories.filter((story) => !heroIds.has(story.entry.id));
+const latestStories = feedStories.slice(0, 8);
+const moreStories = feedStories.slice(8);
+const fallbackBySection = {
+  LEARN: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1200&q=85",
+  CULTURE: "https://images.hogeschoolrotterdam.nl/Blob/63ff6718dad8481a9e033e77c142a07c/5d8a4223f8464afbb1e0a4d03c553e46.jpg?height=630&mode=crop&width=1200",
+  FESTIVALS: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1200&q=85",
+  BOOKS: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=85"
+};
 ---
 <BaseLayout>
   <div class="image-led-home">
-    {featuredStory && <section class="top-feature" aria-label="Featured article">
-      <a class="top-feature-link" href={featuredStory.href}>
-        <img class="top-feature-photo" src={featuredStory.entry.data.image} alt={featuredStory.entry.data.imageAlt ?? featuredStory.entry.data.title} fetchpriority="high" />
-        <span class="top-feature-overlay"></span>
-        <span class="top-feature-content">
-          <span class="feature-label"><i></i> FEATURED STORY · {featuredStory.section}</span>
-          <span class="top-feature-title">{featuredStory.entry.data.title}</span>
-          <span class="top-feature-description">{featuredStory.entry.data.description}</span>
-          <span class="feature-read">Read the story <b>↗</b></span>
-        </span>
-        <span class="top-feature-count">01 <i></i> FEATURED</span>
-      </a>
-    </section>}
+    <section class="feature-carousel" aria-label="Featured articles" data-feature-carousel>
+      <div class="feature-slides">
+        {heroStories.map((story, index) => <a class:list={["feature-slide", index === 0 && "is-active"]} href={story.href} data-feature-slide={index} aria-hidden={index === 0 ? "false" : "true"} tabindex={index === 0 ? 0 : -1}>
+          <img class="feature-slide-photo" src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} fetchpriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} data-fallback={fallbackBySection[story.section]} />
+          <span class="feature-slide-shade"></span>
+          <span class="feature-slide-content">
+            <span class="feature-label"><i></i> FEATURED STORY <b>· {story.section}</b></span>
+            <span class="feature-slide-title">{story.entry.data.title}</span>
+            <span class="feature-slide-description">{story.entry.data.description}</span>
+            <span class="feature-slide-cta">Read the article <b>↗</b></span>
+          </span>
+          <span class="feature-slide-count">{String(index + 1).padStart(2, "0")} <i></i> {String(heroStories.length).padStart(2, "0")}</span>
+        </a>)}
+      </div>
+      {heroStories.length > 1 && <div class="feature-controls" aria-label="Featured article controls">
+        <button class="feature-arrow feature-prev" type="button" aria-label="Previous featured article">←</button>
+        <div class="feature-dots" role="group" aria-label="Choose featured article">
+          {heroStories.map((story, index) => <button class:list={["feature-dot", index === 0 && "is-active"]} type="button" data-feature-dot={index} aria-label={"Show featured article " + (index + 1) + ": " + story.entry.data.title} aria-pressed={index === 0 ? "true" : "false"}></button>)}
+        </div>
+        <button class="feature-arrow feature-next" type="button" aria-label="Next featured article">→</button>
+        <span class="feature-auto-label">AUTO PLAY</span>
+      </div>}
+    </section>
 
     <section class="home-news wrap">
       <div class="news-heading">
@@ -44,7 +63,10 @@ const moreStories = otherStories.slice(8);
       </div>
       <div class="news-grid">
         {latestStories.map((story, index) => <a class="news-card" href={story.href}>
-          <div class="news-card-photo"><img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" /><span class="news-card-number">{String(index + 2).padStart(2, "0")}</span></div>
+          <div class="news-card-photo" style={"--card-fallback: url('" + fallbackBySection[story.section] + "')"}>
+            <img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading={index < 4 ? "eager" : "lazy"} data-fallback={fallbackBySection[story.section]} />
+            <span class="news-card-number">{String(index + 1).padStart(2, "0")}</span>
+          </div>
           <div class="news-card-copy"><span class="news-card-category">{story.section}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">Read article <b>↗</b></span></div>
         </a>)}
       </div>
@@ -66,7 +88,10 @@ const moreStories = otherStories.slice(8);
       <div class="news-heading"><div><span class="section-kicker">KEEP EXPLORING</span><h2>More stories to discover</h2><p>There is always another story waiting around the corner.</p></div></div>
       <div class="news-grid">
         {moreStories.map((story, index) => <a class="news-card" href={story.href}>
-          <div class="news-card-photo"><img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" /><span class="news-card-number">{String(index + 10).padStart(2, "0")}</span></div>
+          <div class="news-card-photo" style={"--card-fallback: url('" + fallbackBySection[story.section] + "')"}>
+            <img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" data-fallback={fallbackBySection[story.section]} />
+            <span class="news-card-number">{String(index + 9).padStart(2, "0")}</span>
+          </div>
           <div class="news-card-copy"><span class="news-card-category">{story.section}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">Read article <b>↗</b></span></div>
         </a>)}
       </div>
@@ -76,4 +101,60 @@ const moreStories = otherStories.slice(8);
       <div class="wrap"><span class="callout-chinese">文化</span><div><span class="section-kicker">CHINESE CULTURE ATLAS</span><h2>A world of stories is waiting.</h2><p>Explore with curiosity. Discover with context. Share what you learn.</p></div><a class="pill-button pill-white" href="/about/">About the project <span>→</span></a></div>
     </section>
   </div>
+  <script>
+    const carousel = document.querySelector("[data-feature-carousel]");
+    if (carousel) {
+      const slides = Array.from(carousel.querySelectorAll("[data-feature-slide]"));
+      const dots = Array.from(carousel.querySelectorAll("[data-feature-dot]"));
+      const previous = carousel.querySelector(".feature-prev");
+      const next = carousel.querySelector(".feature-next");
+      let activeIndex = 0;
+      let timer;
+      let paused = false;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const show = (index) => {
+        activeIndex = (index + slides.length) % slides.length;
+        slides.forEach((slide, i) => {
+          const active = i === activeIndex;
+          slide.classList.toggle("is-active", active);
+          slide.setAttribute("aria-hidden", String(!active));
+          slide.setAttribute("tabindex", active ? "0" : "-1");
+        });
+        dots.forEach((dot, i) => {
+          const active = i === activeIndex;
+          dot.classList.toggle("is-active", active);
+          dot.setAttribute("aria-pressed", String(active));
+        });
+      };
+      const stop = () => window.clearInterval(timer);
+      const start = () => {
+        stop();
+        if (!reduceMotion && slides.length > 1 && !paused && !document.hidden) {
+          timer = window.setInterval(() => show(activeIndex + 1), 6500);
+        }
+      };
+      previous?.addEventListener("click", () => { show(activeIndex - 1); start(); });
+      next?.addEventListener("click", () => { show(activeIndex + 1); start(); });
+      dots.forEach((dot) => dot.addEventListener("click", () => { show(Number(dot.dataset.featureDot)); start(); }));
+      carousel.addEventListener("mouseenter", () => { paused = true; stop(); });
+      carousel.addEventListener("mouseleave", () => { paused = false; start(); });
+      carousel.addEventListener("focusin", () => { paused = true; stop(); });
+      carousel.addEventListener("focusout", (event) => { if (!carousel.contains(event.relatedTarget)) { paused = false; start(); } });
+      document.addEventListener("visibilitychange", start);
+      carousel.querySelectorAll("img[data-fallback]").forEach((img) => {
+        img.addEventListener("error", () => {
+          const fallback = img.dataset.fallback;
+          if (fallback && img.src !== fallback) {
+            img.src = fallback;
+            img.dataset.fallback = "";
+          } else {
+            img.closest(".news-card-photo")?.classList.add("image-unavailable");
+            img.closest(".feature-slide")?.classList.add("image-unavailable");
+            img.remove();
+          }
+        }, { once: true });
+      });
+      start();
+    }
+  </script>
 </BaseLayout>
