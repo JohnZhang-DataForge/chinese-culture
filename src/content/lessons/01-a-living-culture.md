@@ -8,6 +8,8 @@ level: "Beginner"
 order: 1
 readingMinutes: 5
 featured: true
+image: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1800&q=85"
+imageAlt: "Traditional Chinese architecture framed by a mountain landscape"
 ---
 ## What do we mean by culture?
 
