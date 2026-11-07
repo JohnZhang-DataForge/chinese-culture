@@ -49,7 +49,7 @@ const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : 
       <nav class="desktop-nav" aria-label="Primary">{nav.slice(0,4).map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
       <details class="mobile-nav"><summary>{labels.explore} <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href={"/" + language + "/about/"}>{labels.about}</a></nav></details>
       <div class="header-tools">
-        <a class="header-about" href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.about}</a>
+        <a class="header-about" href={"/" + language + "/about/"}>{labels.about}</a>
         <details class="language-switcher">
           <summary aria-label={labels.language}>{language === "zh-cn" ? "中文" : language === "es" ? "Español" : "EN"} <span aria-hidden="true">⌄</span></summary>
           <nav aria-label={labels.language}>
