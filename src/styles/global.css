@@ -460,3 +460,5 @@ body.culture-playful{background:#f4f5f7}
 @media(max-width:760px){.header-tools{gap:.55rem}.header-about{display:none}.language-switcher summary{padding:.38rem .5rem}}
 
 .translation-note{background:#eee9df;border-bottom:1px solid var(--line);color:#5d625b;font-size:.76rem;padding:.55rem 0}.translation-note .wrap{line-height:1.5}
+
+.unsplash-credit{padding:0 0 1.4rem;margin-top:-2.8rem;color:#77808a;font-size:.68rem;text-align:right}.unsplash-credit a{color:inherit;text-underline-offset:3px}
