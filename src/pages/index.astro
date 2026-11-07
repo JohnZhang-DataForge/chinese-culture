@@ -24,10 +24,10 @@ const feedStories = stories.filter((story) => !heroIds.has(story.href));
 const latestStories = feedStories.slice(0, 8);
 const moreStories = feedStories.slice(8);
 const fallbackBySection = {
-  LEARN: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1200&q=85",
-  CULTURE: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=85",
-  FESTIVALS: "https://images.unsplash.com/photo-1773809407794-f6e68eda5bf2?auto=format&fit=crop&w=1200&q=85",
-  BOOKS: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg/1280px-Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg"
+  LEARN: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1400&q=85",
+  CULTURE: "https://images.unsplash.com/photo-1747479332454-f2f9420556b8?auto=format&fit=crop&w=1400&q=85",
+  FESTIVALS: "https://images.unsplash.com/photo-1549163950-d16f273c8960?auto=format&fit=crop&w=1400&q=85",
+  BOOKS: "https://images.unsplash.com/photo-1648769170333-fd01106d8873?auto=format&fit=crop&w=1400&q=85"
 };
 ---
 <BaseLayout>
@@ -76,10 +76,10 @@ const fallbackBySection = {
       <div class="wrap">
         <div class="news-heading"><div><span class="section-kicker">FIND YOUR NEXT ADVENTURE</span><h2>Explore the world of Chinese culture</h2><p>Pick a topic and follow your curiosity.</p></div></div>
         <div class="visual-topic-grid">
-          <a href="/culture/" class="visual-topic topic-art"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>01 / CULTURE</span><strong>Arts &amp; traditions</strong><b>Explore ↗</b></a>
-          <a href="/festivals/" class="visual-topic topic-festival"><img src="https://images.unsplash.com/photo-1773809407794-f6e68eda5bf2?auto=format&fit=crop&w=1000&q=85" data-fallback="https://upload.wikimedia.org/wikipedia/commons/5/55/Red_lanterns%2C_Spring_Festival%2C_Ditan_Park_Beijing.JPG" alt="" aria-hidden="true" loading="lazy" /><span>02 / FESTIVALS</span><strong>Celebrate together</strong><b>Explore ↗</b></a>
-          <a href="/learn/" class="visual-topic topic-learn"><img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>03 / LEARNING</span><strong>Start discovering</strong><b>Explore ↗</b></a>
-          <a href="/books/" class="visual-topic topic-books"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/The_Journey_to_the_West%2C_Shidetang_Hall_of_Jinling_in_1592.jpg" data-fallback="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg/1280px-Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg" alt="" aria-hidden="true" loading="lazy" /><span>04 / BOOKS</span><strong>Stories &amp; ideas</strong><b>Explore ↗</b></a>
+          <a href="/culture/" class="visual-topic topic-art"><img src="https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>01 / CULTURE</span><strong>Arts &amp; traditions</strong><b>Explore ↗</b></a>
+          <a href="/festivals/" class="visual-topic topic-festival"><img src="https://images.unsplash.com/photo-1772764058009-e6cb2203d773?auto=format&fit=crop&w=1000&q=85" data-fallback="https://upload.wikimedia.org/wikipedia/commons/5/55/Red_lanterns%2C_Spring_Festival%2C_Ditan_Park_Beijing.JPG" alt="" aria-hidden="true" loading="lazy" /><span>02 / FESTIVALS</span><strong>Celebrate together</strong><b>Explore ↗</b></a>
+          <a href="/learn/" class="visual-topic topic-learn"><img src="https://images.unsplash.com/photo-1744699013747-090188297e5e?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>03 / LEARNING</span><strong>Start discovering</strong><b>Explore ↗</b></a>
+          <a href="/books/" class="visual-topic topic-books"><img src="https://images.unsplash.com/photo-1763225037262-75d0cb46f9c2?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1648769170333-fd01106d8873?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>04 / BOOKS</span><strong>Stories &amp; ideas</strong><b>Explore ↗</b></a>
         </div>
       </div>
     </section>
