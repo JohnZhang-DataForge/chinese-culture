@@ -9,8 +9,8 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 
 ## 1. Locale and route values
 
-- Supported locale identifiers: en, zh-CN.
-- URL locale segments: en, zh-cn.
+- Supported locale identifiers: en, zh-CN, es.
+- URL locale segments: en, zh-cn, es.
 - Public route pattern: /{localeSegment}/{section}/{slug}/.
 - Sections: learn, culture, festivals, books, events.
 - Default route / redirects to /en/.
@@ -129,7 +129,7 @@ Save Draft always persists status=draft on the CMS branch. Submit-for-review cre
 ## 7. Validation rules
 
 1. contentId must be a valid UUID and must not change when editing or translating.
-2. locale must be exactly en or zh-CN.
+2. locale must be exactly en, zh-CN or es.
 3. slug must match ^[a-z0-9]+(?:-[a-z0-9]+)*$.
 4. title, description and category must be non-empty.
 5. status must be one of draft, published or unpublished.
@@ -139,7 +139,7 @@ Save Draft always persists status=draft on the CMS branch. Submit-for-review cre
 9. seoTitle and seoDescription, when present, must be non-empty plain text within API length limits; otherwise public metadata falls back to title and description.
 10. contentId/locale must be unique across the repository.
 11. collection/locale/slug must be unique.
-12. zh-CN records must contain Simplified Chinese content; en records use English as the primary language.
+12. zh-CN records must contain Simplified Chinese content; es records must contain Spanish content; en records use English as the primary language.
 13. Every image in a published record must have alt and rights metadata.
 14. No draft or unpublished record may generate a public route, sitemap entry, public search record or featured card.
 15. Content source links must be HTTPS; redirects and external URL status are checked by QA where feasible.
