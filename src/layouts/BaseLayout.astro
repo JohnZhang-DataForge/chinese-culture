@@ -19,7 +19,7 @@ const nav = navRoutes.map((route, index) => ({
   href: "/" + language + "/" + route + "/",
   label: language === "en" ? english.nav[index] : labels.nav[index]
 }));
-const unprefixedPath = active.replace(/^\/(zh-cn|es)(?=\/|$)/, "") || "/";
+const unprefixedPath = active.replace(/^\/(en|zh-cn|es)(?=\/|$)/, "") || "/";
 const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath);
 ---
 <!doctype html>
