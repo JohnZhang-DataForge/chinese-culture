@@ -12,7 +12,7 @@ const english = {
   footerBottom: "Keep exploring. Keep discovering."
 };
 const labels = language === "en" ? english : ui[language];
-const pageTitle = title === "Discover Chinese culture" ? "Chinese Culture Atlas — Discover, learn, connect" : title + " | Chinese Culture Atlas";
+const pageTitle = title === "Discover Chinese culture" ? (language === "zh-cn" ? "中国文化地图 — 探索、学习、感受" : language === "es" ? "Atlas de la Cultura China — Descubre, aprende, conecta" : "Chinese Culture Atlas — Discover, learn, connect") : title + " | Chinese Culture Atlas";
 const active = Astro.url.pathname;
 const navRoutes = ["learn", "culture", "festivals", "books", "events"];
 const nav = navRoutes.map((route, index) => ({
