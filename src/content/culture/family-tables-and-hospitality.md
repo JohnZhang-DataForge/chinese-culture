@@ -5,8 +5,8 @@ category: "Everyday life"
 chinese: "家"
 pinyin: "jiā"
 readingMinutes: 5
-image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "A table filled with shared dishes"
+image: "https://images.unsplash.com/photo-1703945530505-2f06e3e1cf97?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Traditional Chinese home-style dishes shared at a family meal in Chongqing"
 ---
 ## An ordinary place to learn
 

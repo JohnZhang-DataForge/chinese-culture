@@ -23,6 +23,7 @@ const related=inSection.filter((other)=>other.id!==entry.id).slice(0,3);
     <h1>{entry.data.title}</h1><p class="lead">{entry.data.description}</p>
     <div class="entry-meta"><span>{entry.data.readingMinutes} min read</span>{entry.data.level && <span>{entry.data.level}</span>}<span>Original learning guide</span></div>
   </div></header>
+  {entry.data.image && <div class="article-cover wrap"><img src={entry.data.image} alt={entry.data.imageAlt ?? entry.data.title} fetchpriority="high" /></div>}
   <div class="wrap article-layout">
     <article class="prose"><Content /><hr /><p><a href={"/"+config.route+"/"}>← Back to {config.nav.toLowerCase()}</a></p></article>
     <aside class="article-aside" aria-label="Continue exploring"><h2>Keep exploring</h2><p>Follow another thread and see where it takes you.</p><ul>{related.map((item)=><li><a href={"/"+config.route+"/"+item.id+"/"}>{item.data.title} ↗</a></li>)}</ul><p><a href="/editorial-policy/">Our editorial approach</a></p></aside>

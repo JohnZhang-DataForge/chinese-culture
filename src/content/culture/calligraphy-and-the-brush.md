@@ -6,8 +6,8 @@ chinese: "书法"
 pinyin: "shūfǎ"
 readingMinutes: 6
 featured: true
-image: "https://images.hogeschoolrotterdam.nl/Blob/63ff6718dad8481a9e033e77c142a07c/5d8a4223f8464afbb1e0a4d03c553e46.jpg?height=630&mode=crop&width=1200"
-imageAlt: "Brush pen and ink writing on paper"
+image: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "A person painting Chinese calligraphy with a brush"
 ---
 ## Writing you can see
 

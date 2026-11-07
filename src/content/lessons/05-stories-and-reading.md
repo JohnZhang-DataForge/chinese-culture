@@ -7,8 +7,8 @@ pinyin: "gùshi"
 level: "Beginner"
 order: 5
 readingMinutes: 5
-image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "A collection of books on a shelf"
+image: "https://images.unsplash.com/photo-1763225037262-75d0cb46f9c2?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Antique Chinese book with handwritten text and illustrations"
 ---
 ## Stories travel
 

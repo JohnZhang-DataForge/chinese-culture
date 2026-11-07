@@ -8,8 +8,8 @@ level: "Beginner"
 order: 3
 readingMinutes: 5
 featured: true
-image: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Traditional Chinese temple and festival decorations"
+image: "https://images.unsplash.com/photo-1601658996129-431877c1d0e5?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Traditional Chinese paper lanterns for a festival in China"
 ---
 ## Two ways of marking time
 
