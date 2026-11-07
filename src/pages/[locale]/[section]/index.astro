@@ -14,9 +14,16 @@ const labels = ui[locale];
 const entries = config.collection
   ? (await getCollection(config.collection as any)).sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title))
   : [];
+const sectionPhotos: Record<string,string> = {
+  learn: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1800&q=85",
+  culture: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1800&q=85",
+  festivals: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1800&q=85",
+  books: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1800&q=85",
+  events: "https://images.unsplash.com/photo-1549163950-d16f273c8960?auto=format&fit=crop&w=1800&q=85"
+};
 ---
 <BaseLayout title={config.nav} description={config.description} locale={locale}>
-  <section class="page-hero"><div class="wrap"><span class="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p class="lead">{config.description}</p></div></section>
+  <section class="page-hero-photo" style={"--section-photo: url('" + sectionPhotos[config.route] + "')"}><div class="wrap"><span class="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p class="lead">{config.description}</p></div></section>
   {config.route === "events" ? <section class="section"><div class="wrap"><div class="empty-state"><span class="eyebrow">{labels.upcoming}</span><h2>{labels.noEvents}</h2><p>{labels.eventNote}</p><p><a class="button" href={"/"+locale+"/festivals/"}>{labels.exploreFestivals} ↗</a></p></div></div></section> : <>
     <div class="wrap"><p class="index-note">{config.note} · {entries.length} {labels.guides}</p></div>
     <section class="collection-grid"><div class="wrap"><div class="cards">{entries.map((entry: any,i: number)=><StoryCard href={"/"+locale+"/"+config.route+"/"+entry.id+"/"} title={entry.data.title} description={entry.data.description} category={entry.data.category} readingMinutes={entry.data.readingMinutes} chinese={entry.data.chinese} number={i+1} image={entry.data.image} imageAlt={entry.data.imageAlt}/>)}</div></div></section>
