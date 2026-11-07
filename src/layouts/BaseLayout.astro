@@ -1,12 +1,29 @@
 ---
 import "../styles/global.css";
-const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life." } = Astro.props;
+import { localeNames, ui } from "../i18n/site";
+const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life.", locale = "en" } = Astro.props;
+const language = locale === "zh-cn" || locale === "es" ? locale : "en";
+const english = {
+  skip: "Skip to content", nav: ["Learn", "Culture", "Festivals", "Books", "Events"],
+  about: "About", explore: "Explore", language: "Language",
+  footerTitle: "A world of stories is waiting.", footerNote: "An independent, approachable cultural learning project.",
+  exploreLabel: "Explore", projectLabel: "The project", approach: "Our approach",
+  editorial: "Editorial policy", privacy: "Privacy", accessibility: "Accessibility",
+  footerBottom: "Keep exploring. Keep discovering."
+};
+const labels = language === "en" ? english : ui[language];
 const pageTitle = title === "Discover Chinese culture" ? "Chinese Culture Atlas — Discover, learn, connect" : title + " | Chinese Culture Atlas";
 const active = Astro.url.pathname;
-const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{href:"/festivals/",label:"Festivals"},{href:"/books/",label:"Books"},{href:"/events/",label:"Events"}];
+const navRoutes = ["learn", "culture", "festivals", "books", "events"];
+const nav = navRoutes.map((route, index) => ({
+  href: (language === "en" ? "" : "/" + language) + "/" + route + "/",
+  label: language === "en" ? english.nav[index] : labels.nav[index]
+}));
+const unprefixedPath = active.replace(/^\/(zh-cn|es)(?=\/|$)/, "") || "/";
+const languageHref = (target) => target === "en" ? unprefixedPath : "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath);
 ---
 <!doctype html>
-<html lang="en">
+<html lang={language === "zh-cn" ? "zh-CN" : language}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,31 +32,44 @@ const nav = [{href:"/learn/",label:"Learn"},{href:"/culture/",label:"Culture"},{
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://images.unsplash.com" />
   <title>{pageTitle}</title>
+  <link rel="alternate" hreflang="en" href={"https://chinese-culture.site" + unprefixedPath} />
+  <link rel="alternate" hreflang="zh-CN" href={"https://chinese-culture.site" + languageHref("zh-cn")} />
+  <link rel="alternate" hreflang="es" href={"https://chinese-culture.site" + languageHref("es")} />
 </head>
 <body class="culture-playful">
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <a class="skip-link" href="#main-content">{labels.skip}</a>
   <div class="top-ribbon"><div class="wrap"><span>文化 CHINESE CULTURE ATLAS</span><span>Explore · Learn · Celebrate</span><span>MADE FOR CURIOUS MINDS</span></div></div>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a href="/" class="brand" aria-label="Chinese Culture Atlas home">
+      <a href={language === "en" ? "/" : "/" + language + "/"} class="brand" aria-label="Chinese Culture Atlas home">
         <span class="brand-symbol" aria-hidden="true">文</span>
         <span class="brand-type"><span class="brand-kicker">A WORLD OF DISCOVERY</span><strong>CHINESE CULTURE <span>ATLAS</span></strong></span>
       </a>
-      <nav class="desktop-nav" aria-label="Primary">{nav.map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
-      <details class="mobile-nav"><summary>Explore <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href="/about/">About</a></nav></details>
-      <div class="header-tools"><a class="header-about" href="/about/">About</a></div>
+      <nav class="desktop-nav" aria-label="Primary">{nav.slice(0,4).map((n) => <a href={n.href} aria-current={active.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}</nav>
+      <details class="mobile-nav"><summary>{labels.explore} <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile">{nav.map((n) => <a href={n.href}>{n.label}</a>)}<a href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.about}</a></nav></details>
+      <div class="header-tools">
+        <a class="header-about" href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.about}</a>
+        <details class="language-switcher">
+          <summary aria-label={labels.language}>{language === "zh-cn" ? "中文" : language === "es" ? "Español" : "EN"} <span aria-hidden="true">⌄</span></summary>
+          <nav aria-label={labels.language}>
+            <a href={languageHref("en")} lang="en" aria-current={language === "en" ? "page" : undefined}>{localeNames.en}</a>
+            <a href={languageHref("zh-cn")} lang="zh-CN" aria-current={language === "zh-cn" ? "page" : undefined}>{localeNames["zh-cn"]}</a>
+            <a href={languageHref("es")} lang="es" aria-current={language === "es" ? "page" : undefined}>{localeNames.es}</a>
+          </nav>
+        </details>
+      </div>
     </div>
   </header>
   <main id="main-content"><slot /></main>
   <footer class="site-footer">
     <div class="wrap footer-top">
-      <div><span class="footer-mark" aria-hidden="true">文化</span><p class="footer-title">A world of stories is waiting.</p><p class="footer-note">An independent, approachable cultural learning project.</p></div>
+      <div><span class="footer-mark" aria-hidden="true">文化</span><p class="footer-title">{labels.footerTitle}</p><p class="footer-note">{labels.footerNote}</p></div>
       <div class="footer-links">
-        <div><span class="footer-label">Explore</span><a href="/learn/">Learning paths</a><a href="/culture/">Culture library</a><a href="/festivals/">Festivals</a><a href="/books/">Books</a><a href="/events/">Events</a></div>
-        <div><span class="footer-label">The project</span><a href="/about/">Our approach</a><a href="/editorial-policy/">Editorial policy</a><a href="/privacy/">Privacy</a><a href="/accessibility/">Accessibility</a></div>
+        <div><span class="footer-label">{labels.exploreLabel}</span>{nav.map((n) => <a href={n.href}>{n.label}</a>)}</div>
+        <div><span class="footer-label">{labels.projectLabel}</span><a href={(language === "en" ? "" : "/" + language) + "/about/"}>{labels.approach}</a><a href={(language === "en" ? "" : "/" + language) + "/editorial-policy/"}>{labels.editorial}</a><a href={(language === "en" ? "" : "/" + language) + "/privacy/"}>{labels.privacy}</a><a href={(language === "en" ? "" : "/" + language) + "/accessibility/"}>{labels.accessibility}</a></div>
       </div>
     </div>
-    <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} Chinese Culture Atlas</span><span>Keep exploring. Keep discovering.</span></div>
+    <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} Chinese Culture Atlas</span><span>{labels.footerBottom}</span></div>
   </footer>
 </body>
 </html>
