@@ -38,8 +38,8 @@ const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
 assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
 const chineseHome = readFileSync(join(dist,"zh-cn/index.html"),"utf8");
 const spanishHome = readFileSync(join(dist,"es/index.html"),"utf8");
-assert.ok(chineseHome.includes("<html lang=\\"zh-CN\\"") || chineseHome.includes("<html lang=\\"zh-CN\\""), "Chinese home page must declare zh-CN");
-assert.ok(spanishHome.includes("<html lang=\\"es\\""), "Spanish home page must declare es");
+assert.ok(chineseHome.includes('<html lang="zh-CN"'), "Chinese home page must declare zh-CN");
+assert.ok(spanishHome.includes('<html lang="es"'), "Spanish home page must declare es");
 assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
 
 let linksChecked = 0;
