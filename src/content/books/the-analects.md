@@ -5,8 +5,8 @@ category: "Philosophy & classics"
 chinese: "论语"
 pinyin: "Lúnyǔ"
 readingMinutes: 6
-image: "https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Open books and reading materials"
+image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg/1280px-Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg"
+imageAlt: "Ancient Chinese bamboo slips bearing classical writing"
 ---
 ## What kind of book is it?
 
