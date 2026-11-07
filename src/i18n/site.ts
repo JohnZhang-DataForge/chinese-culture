@@ -8,6 +8,20 @@ export const localeNames: Record<Locale, string> = {
 };
 
 export const ui = {
+  en: {
+    skip: "Skip to content", nav: ["Learn", "Culture", "Festivals", "Books", "Events"], about: "About",
+    explore: "Explore", language: "Language", footerTitle: "A world of stories is waiting.",
+    footerNote: "An independent, approachable cultural learning project.", exploreLabel: "Explore",
+    projectLabel: "The project", approach: "Our approach", editorial: "Editorial policy",
+    privacy: "Privacy", accessibility: "Accessibility", footerBottom: "Keep exploring. Keep discovering.",
+    read: "Read the article", minRead: "min read", keepExploring: "Keep exploring",
+    back: "Back to", guides: "guides", guide: "guide", originalGuide: "Original learning guide",
+    home: "Home", events: "Events", upcoming: "Upcoming events",
+    eventHeading: "Culture is something we share.", eventIntro: "Exhibitions, talks, workshops and celebrations can bring a story off the page and into everyday life.",
+    noEvents: "No verified events listed yet.", eventNote: "We are establishing an editorial process to check dates, organizers, location details and registration links before posting announcements. We will not publish invented or outdated events.",
+    exploreFestivals: "Explore festival traditions", aboutTitle: "About the project", accessibilityTitle: "Accessibility",
+    contactTitle: "Contact", editorialTitle: "Editorial policy", privacyTitle: "Privacy"
+  },
   "zh-cn": {
     skip: "跳转到正文", nav: ["学习", "文化", "节日", "书籍", "活动"], about: "关于我们",
     explore: "探索", language: "语言", footerTitle: "一个充满故事的世界正等待你来发现。",
