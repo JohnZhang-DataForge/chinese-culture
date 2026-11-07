@@ -9,7 +9,12 @@ const required = [
   "index.html","learn/index.html","culture/index.html",
   "festivals/index.html","books/index.html","events/index.html",
   "about/index.html","contact/index.html","privacy/index.html",
-  "accessibility/index.html","editorial-policy/index.html","404.html"
+  "accessibility/index.html","editorial-policy/index.html",
+  "zh-cn/index.html","es/index.html",
+  "zh-cn/learn/index.html","zh-cn/culture/index.html","zh-cn/festivals/index.html","zh-cn/books/index.html","zh-cn/events/index.html",
+  "es/learn/index.html","es/culture/index.html","es/festivals/index.html","es/books/index.html","es/events/index.html",
+  "zh-cn/about/index.html","zh-cn/accessibility/index.html","zh-cn/contact/index.html","zh-cn/editorial-policy/index.html","zh-cn/privacy/index.html",
+  "es/about/index.html","es/accessibility/index.html","es/contact/index.html","es/editorial-policy/index.html","es/privacy/index.html","404.html"
 ];
 assert.ok(existsSync(dist), "Build output missing. Run npm run build.");
 for (const path of required) assert.ok(existsSync(join(dist,path)), "Missing page " + path);
@@ -31,6 +36,11 @@ assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
 
 const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
 assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
+const chineseHome = readFileSync(join(dist,"zh-cn/index.html"),"utf8");
+const spanishHome = readFileSync(join(dist,"es/index.html"),"utf8");
+assert.ok(chineseHome.includes("<html lang=\\"zh-CN\\"") || chineseHome.includes("<html lang=\\"zh-CN\\""), "Chinese home page must declare zh-CN");
+assert.ok(spanishHome.includes("<html lang=\\"es\\""), "Spanish home page must declare es");
+assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
 
 let linksChecked = 0;
 let htmlPagesChecked = 0;
@@ -62,4 +72,4 @@ const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)
 },0);
 assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
 assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" routes, "+entryDirs+" guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, translation widget removed, no SSR Worker.");
+console.log("PASS: "+required.length+" required routes, "+entryDirs+" English guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, English/Chinese/Spanish localization routes present, no SSR Worker.");
