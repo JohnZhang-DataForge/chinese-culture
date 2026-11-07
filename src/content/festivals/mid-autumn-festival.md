@@ -6,8 +6,8 @@ chinese: "中秋节"
 pinyin: "Zhōngqiū Jié"
 readingMinutes: 5
 featured: true
-image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=85"
-imageAlt: "Traditional Asian lanterns and night-time city lights"
+image: "https://images.unsplash.com/photo-1695915820497-f3ea7b070433?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Mid-Autumn Festival mooncakes and tea arranged on a table"
 ---
 ## Looking toward the moon
 
