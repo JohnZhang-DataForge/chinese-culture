@@ -424,3 +424,25 @@ body.culture-playful{background:#f4f5f7}
 .visual-topic.image-unavailable{background:linear-gradient(135deg,#405b59,#8c9d8a)}
 .visual-topic.image-unavailable:after{content:"文化";position:absolute;right:1rem;top:1rem;font:2rem Georgia,serif;color:#fff8}
 @media(prefers-reduced-motion:reduce){.visual-topic>img{transition:none}}
+
+/* Photo-led Chinese culture sections and article covers */
+.page-hero-photo{position:relative;isolation:isolate;overflow:hidden;background:#263d3b;color:#fff;min-height:390px;display:flex;align-items:center;border:0}
+.page-hero-photo:before{content:"";position:absolute;inset:0;z-index:-2;background-image:var(--section-photo);background-size:cover;background-position:center 48%}
+.page-hero-photo:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(13,25,27,.82),rgba(13,25,27,.45) 60%,rgba(13,25,27,.15))}
+.page-hero-photo .wrap{padding-top:4rem;padding-bottom:4rem}
+.page-hero-photo .eyebrow{color:#ffe2a0}
+.page-hero-photo h1{color:#fff;max-width:900px;text-shadow:0 2px 18px #0005}
+.page-hero-photo .lead{color:#f5f4ef;max-width:650px}
+.story-card{padding:0;overflow:hidden;min-height:420px;background:var(--paper)}
+.story-card-image{height:190px;overflow:hidden;background:#e7e0d3}
+.story-card-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.story-card:hover .story-card-image img{transform:scale(1.045)}
+.story-card .card-upper,.story-card .card-body,.story-card .card-foot{margin-left:1.35rem;margin-right:1.35rem}
+.story-card .card-upper{padding-top:1.2rem}
+.story-card .card-body{padding-top:1rem}
+.story-card .card-foot{margin-top:auto;margin-bottom:1.2rem}
+.article-cover{padding-top:2rem}
+.article-cover img{display:block;width:100%;max-height:560px;object-fit:cover;border-radius:18px}
+.entry-hero{padding-top:3rem}
+@media(max-width:760px){.page-hero-photo{min-height:340px}.page-hero-photo .wrap{padding-top:3rem;padding-bottom:3rem}.story-card{min-height:390px}.story-card-image{height:170px}.article-cover{padding-top:1rem}.article-cover img{max-height:330px;border-radius:12px}}
+@media(prefers-reduced-motion:reduce){.story-card-image img{transition:none}}
