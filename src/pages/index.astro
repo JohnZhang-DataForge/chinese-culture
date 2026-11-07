@@ -19,8 +19,8 @@ const stories = [
 
 const featuredStories = stories.filter((story) => story.entry.data.featured).slice(0, 5);
 const heroStories = featuredStories.length ? featuredStories : stories.slice(0, 3);
-const heroIds = new Set(heroStories.map((story) => story.entry.id));
-const feedStories = stories.filter((story) => !heroIds.has(story.entry.id));
+const heroIds = new Set(heroStories.map((story) => story.href));
+const feedStories = stories.filter((story) => !heroIds.has(story.href));
 const latestStories = feedStories.slice(0, 8);
 const moreStories = feedStories.slice(8);
 const fallbackBySection = {
@@ -152,7 +152,7 @@ const fallbackBySection = {
             img.closest(".feature-slide")?.classList.add("image-unavailable");
             img.remove();
           }
-        }, { once: true });
+        });
       });
       start();
     }
