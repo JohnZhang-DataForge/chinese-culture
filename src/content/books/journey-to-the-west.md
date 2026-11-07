@@ -5,6 +5,8 @@ category: "Classic fiction"
 chinese: "西游记"
 pinyin: "Xīyóu Jì"
 readingMinutes: 6
+image: "https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1200&q=85"
+imageAlt: "Open book in warm natural light"
 ---
 ## Before you begin
 

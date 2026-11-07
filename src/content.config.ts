@@ -10,7 +10,9 @@ const schema = z.object({
   level: z.string().optional(),
   order: z.number().optional(),
   readingMinutes: z.number().int().positive().default(5),
-  featured: z.boolean().default(false)
+  featured: z.boolean().default(false),
+  image: z.string().url().optional(),
+  imageAlt: z.string().optional()
 });
 function fromFolder(name: string) {
   return defineCollection({

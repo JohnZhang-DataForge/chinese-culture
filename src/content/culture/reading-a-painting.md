@@ -6,6 +6,8 @@ chinese: "画"
 pinyin: "huà"
 readingMinutes: 5
 featured: true
+image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=85"
+imageAlt: "Framed paintings displayed in an art gallery"
 ---
 ## Why “read” a painting?
 

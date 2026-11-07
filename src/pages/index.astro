@@ -1,100 +1,79 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import StoryCard from "../components/StoryCard.astro";
 import { getCollection } from "astro:content";
 
-const lessons = (await getCollection("lessons")).sort((a,b)=>(a.data.order??99)-(b.data.order??99)).slice(0,3);
-const traditions = (await getCollection("culture")).slice(0,4);
-const festivals = (await getCollection("festivals")).slice(0,2);
-const books = (await getCollection("books")).slice(0,2);
-const featuredFestival = festivals[0];
+const [lessons, culture, festivals, books] = await Promise.all([
+  getCollection("lessons"),
+  getCollection("culture"),
+  getCollection("festivals"),
+  getCollection("books")
+]);
+
+const stories = [
+  ...lessons.map((entry) => ({ entry, href: "/learn/" + entry.id + "/", section: "LEARN" })),
+  ...culture.map((entry) => ({ entry, href: "/culture/" + entry.id + "/", section: "CULTURE" })),
+  ...festivals.map((entry) => ({ entry, href: "/festivals/" + entry.id + "/", section: "FESTIVALS" })),
+  ...books.map((entry) => ({ entry, href: "/books/" + entry.id + "/", section: "BOOKS" }))
+].sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
+
+const featuredStory = stories.find((story) => story.entry.data.featured && story.entry.data.image) ?? stories.find((story) => story.entry.data.image);
+const otherStories = stories.filter((story) => story !== featuredStory && story.entry.data.image);
+const latestStories = otherStories.slice(0, 8);
+const moreStories = otherStories.slice(8);
 ---
 <BaseLayout>
-  <div class="playful-home">
-    <section class="welcome-banner">
-      <div class="welcome-inner">
-        <div class="welcome-copy">
-          <span class="home-kicker"><span class="kicker-dot"></span> YOUR ADVENTURE STARTS HERE</span>
-          <h1>A whole world<br />of <em>Chinese culture</em><br />to discover!</h1>
-          <p>Explore traditions, stories, celebrations, art and ideas — one fascinating discovery at a time.</p>
-          <div class="welcome-actions">
-            <a class="pill-button pill-white" href="/learn/">Start exploring <span>→</span></a>
-            <a class="welcome-link" href="/culture/">Browse the culture library</a>
-          </div>
-          <div class="welcome-pagination" aria-label="Featured collection"><span class="page-dot active"></span><span class="page-dot"></span><span class="page-dot"></span><small>01 / 03 · DISCOVER SOMETHING NEW</small></div>
-        </div>
-        <div class="welcome-art" role="img" aria-label="Illustrated Chinese-inspired landscape with mountains, sun and a traditional pavilion">
-          <div class="art-sun"></div><div class="art-cloud cloud-one"></div><div class="art-cloud cloud-two"></div>
-          <div class="art-mountain mountain-back"></div><div class="art-mountain mountain-front"></div>
-          <div class="art-water"></div><div class="art-pavilion"><span></span><i></i></div>
-          <div class="art-label">山水之间<br/><small>BETWEEN MOUNTAINS &amp; WATER</small></div>
-          <span class="art-floating art-flower">✿</span><span class="art-floating art-bird">⌁</span>
-        </div>
-        <span class="welcome-decoration decoration-one">福</span><span class="welcome-decoration decoration-two">春</span>
+  <div class="image-led-home">
+    {featuredStory && <section class="top-feature" aria-label="Featured article">
+      <a class="top-feature-link" href={featuredStory.href}>
+        <img class="top-feature-photo" src={featuredStory.entry.data.image} alt={featuredStory.entry.data.imageAlt ?? featuredStory.entry.data.title} fetchpriority="high" />
+        <span class="top-feature-overlay"></span>
+        <span class="top-feature-content">
+          <span class="feature-label"><i></i> FEATURED STORY · {featuredStory.section}</span>
+          <span class="top-feature-title">{featuredStory.entry.data.title}</span>
+          <span class="top-feature-description">{featuredStory.entry.data.description}</span>
+          <span class="feature-read">Read the story <b>↗</b></span>
+        </span>
+        <span class="top-feature-count">01 <i></i> FEATURED</span>
+      </a>
+    </section>}
+
+    <section class="home-news wrap">
+      <div class="news-heading">
+        <div><span class="section-kicker">FRESH FROM THE CULTURE ATLAS</span><h2>Discover something new</h2><p>Stories, traditions and ideas worth exploring.</p></div>
+        <a class="all-link" href="/culture/">Explore all stories <span>→</span></a>
+      </div>
+      <div class="news-grid">
+        {latestStories.map((story, index) => <a class="news-card" href={story.href}>
+          <div class="news-card-photo"><img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" /><span class="news-card-number">{String(index + 2).padStart(2, "0")}</span></div>
+          <div class="news-card-copy"><span class="news-card-category">{story.section}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">Read article <b>↗</b></span></div>
+        </a>)}
       </div>
     </section>
 
-    <section class="quick-explore wrap">
-      <div class="section-title-row"><div><span class="section-kicker">PICK YOUR PATH</span><h2>Where will curiosity take you?</h2></div><a class="all-link" href="/culture/">Explore everything <span>→</span></a></div>
-      <div class="category-grid">
-        <a class="category-card category-coral" href="/culture/"><span class="category-emoji">🎨</span><strong>Arts &amp; culture</strong><small>Art, craft and everyday life</small><span class="category-arrow">↗</span></a>
-        <a class="category-card category-gold" href="/festivals/"><span class="category-emoji">🏮</span><strong>Festivals</strong><small>Celebrations through the year</small><span class="category-arrow">↗</span></a>
-        <a class="category-card category-blue" href="/learn/"><span class="category-emoji">🧭</span><strong>Learn</strong><small>Friendly guides for curious minds</small><span class="category-arrow">↗</span></a>
-        <a class="category-card category-green" href="/books/"><span class="category-emoji">📚</span><strong>Books &amp; ideas</strong><small>Stories worth sharing</small><span class="category-arrow">↗</span></a>
-        <a class="category-card category-lilac" href="/events/"><span class="category-emoji">🎏</span><strong>Events</strong><small>Meet, make and experience</small><span class="category-arrow">↗</span></a>
-      </div>
-    </section>
-
-    <section class="spotlight-section">
+    <section class="visual-topics">
       <div class="wrap">
-        <div class="section-title-row"><div><span class="section-kicker">A LITTLE INSPIRATION</span><h2>Featured discoveries</h2><p class="section-subtitle">Interesting places to begin your next cultural adventure.</p></div><a class="all-link" href="/culture/">See all stories <span>→</span></a></div>
-        <div class="spotlight-grid">
-          <a class="spotlight-card spotlight-large" href="/culture/">
-            <div class="spotlight-image image-calligraphy"><span class="image-character">書</span><span class="image-caption">ARTS &amp; TRADITIONS</span></div>
-            <div class="spotlight-info"><div><span class="card-eyebrow">MAKE A DISCOVERY</span><h3>The beauty of Chinese arts</h3><p>Explore the creativity, craft and stories behind timeless traditions.</p></div><span class="round-arrow">↗</span></div>
-          </a>
-          <a class="spotlight-card" href="/festivals/">
-            <div class="spotlight-image image-lantern"><span class="image-caption">FESTIVALS &amp; SEASONS</span></div>
-            <div class="spotlight-info"><div><span class="card-eyebrow">CELEBRATE TOGETHER</span><h3>Traditions that bring us together</h3><p>Discover the meaning behind festive moments.</p></div><span class="round-arrow">↗</span></div>
-          </a>
-          <a class="spotlight-card" href="/learn/">
-            <div class="spotlight-image image-learning"><span class="image-caption">LEARNING PATHS</span></div>
-            <div class="spotlight-info"><div><span class="card-eyebrow">START WITH THE BASICS</span><h3>Small steps, big discoveries</h3><p>Build your knowledge with friendly introductions.</p></div><span class="round-arrow">↗</span></div>
-          </a>
+        <div class="news-heading"><div><span class="section-kicker">FIND YOUR NEXT ADVENTURE</span><h2>Explore the world of Chinese culture</h2><p>Pick a topic and follow your curiosity.</p></div></div>
+        <div class="visual-topic-grid">
+          <a href="/culture/" class="visual-topic topic-art"><span>01 / CULTURE</span><strong>Arts &amp; traditions</strong><b>Explore ↗</b></a>
+          <a href="/festivals/" class="visual-topic topic-festival"><span>02 / FESTIVALS</span><strong>Celebrate together</strong><b>Explore ↗</b></a>
+          <a href="/learn/" class="visual-topic topic-learn"><span>03 / LEARNING</span><strong>Start discovering</strong><b>Explore ↗</b></a>
+          <a href="/books/" class="visual-topic topic-books"><span>04 / BOOKS</span><strong>Stories &amp; ideas</strong><b>Explore ↗</b></a>
         </div>
       </div>
     </section>
 
-    <section class="story-section wrap">
-      <div class="section-title-row"><div><span class="section-kicker">YOUR NEXT CHAPTER</span><h2>Learn something wonderful</h2><p class="section-subtitle">Bite-sized guides to help you explore with confidence.</p></div><a class="all-link" href="/learn/">All learning guides <span>→</span></a></div>
-      <div class="cards playful-cards">{lessons.map((item,i)=><StoryCard href={"/learn/"+item.id+"/"} title={item.data.title} description={item.data.description} category={"START HERE · 0"+(i+1)} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
-    </section>
-
-    <section class="festival-banner">
-      <div class="festival-banner-art" role="img" aria-label="Red lanterns and warm lights at a Chinese festival"><span class="festival-sticker">一起<br/>庆祝!</span></div>
-      <div class="festival-banner-copy"><span class="section-kicker">CELEBRATE THE MOMENTS</span><h2>Every season<br/>has a story.</h2><p>From family gatherings to colorful festivals, discover the customs, food and meaning that make each celebration special.</p>
-        {featuredFestival ? <a class="pill-button pill-white" href={"/festivals/"+featuredFestival.id+"/"}>Explore a festival <span>→</span></a> : <a class="pill-button pill-white" href="/festivals/">Explore festivals <span>→</span></a>}
+    {moreStories.length > 0 && <section class="home-news wrap more-stories">
+      <div class="news-heading"><div><span class="section-kicker">KEEP EXPLORING</span><h2>More stories to discover</h2><p>There is always another story waiting around the corner.</p></div></div>
+      <div class="news-grid">
+        {moreStories.map((story, index) => <a class="news-card" href={story.href}>
+          <div class="news-card-photo"><img src={story.entry.data.image} alt={story.entry.data.imageAlt ?? story.entry.data.title} loading="lazy" /><span class="news-card-number">{String(index + 10).padStart(2, "0")}</span></div>
+          <div class="news-card-copy"><span class="news-card-category">{story.section}</span><h3>{story.entry.data.title}</h3><p>{story.entry.data.description}</p><span class="news-card-read">Read article <b>↗</b></span></div>
+        </a>)}
       </div>
-    </section>
+    </section>}
 
-    <section class="culture-section wrap">
-      <div class="section-title-row"><div><span class="section-kicker">CULTURE, UP CLOSE</span><h2>Stories to spark your imagination</h2><p class="section-subtitle">Take a closer look at the ideas, objects and traditions that shape daily life.</p></div><a class="all-link" href="/culture/">Discover more <span>→</span></a></div>
-      <div class="cards playful-cards">{traditions.map((item)=><StoryCard href={"/culture/"+item.id+"/"} title={item.data.title} description={item.data.description} category={item.data.category} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
-    </section>
-
-    <section class="reading-feature">
-      <div class="wrap reading-feature-inner">
-        <div class="reading-art"><span class="book-sun"></span><span class="book-character">知</span><span class="book-label">THE READING CORNER</span></div>
-        <div class="reading-copy"><span class="section-kicker">OPEN A BOOK, OPEN A WORLD</span><h2>Big ideas.<br/><em>Wonderful stories.</em></h2><p>Meet the books, thinkers and timeless ideas that have shaped Chinese culture.</p>
-          <div class="reading-links">{books.map((item)=><a href={"/books/"+item.id+"/"}><span>{item.data.title}</span><b>↗</b></a>)}{books.length===0 && <a href="/books/"><span>Explore the reading room</span><b>↗</b></a>}</div>
-          <a class="pill-button pill-red" href="/books/">Visit the reading corner <span>→</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="community-cta wrap">
-      <div class="community-icon">你好!</div>
-      <div><span class="section-kicker">EVERYONE IS WELCOME</span><h2>Come curious.<br/>Leave inspired.</h2><p>Culture is a conversation. Join us to discover new perspectives, share what you learn and keep exploring.</p><a class="pill-button pill-red" href="/about/">Get to know us <span>→</span></a></div>
+    <section class="home-bottom-callout">
+      <div class="wrap"><span class="callout-chinese">文化</span><div><span class="section-kicker">CHINESE CULTURE ATLAS</span><h2>A world of stories is waiting.</h2><p>Explore with curiosity. Discover with context. Share what you learn.</p></div><a class="pill-button pill-white" href="/about/">About the project <span>→</span></a></div>
     </section>
   </div>
 </BaseLayout>

@@ -6,6 +6,8 @@ chinese: "春节"
 pinyin: "Chūnjié"
 readingMinutes: 6
 featured: true
+image: "https://images.unsplash.com/photo-1513415564515-763d91423dac?auto=format&fit=crop&w=1800&q=85"
+imageAlt: "Red lanterns and festive Chinese New Year decorations"
 ---
 ## What is Spring Festival?
 
