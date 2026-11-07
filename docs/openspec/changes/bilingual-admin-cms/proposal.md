@@ -125,7 +125,7 @@ This amendment replaces the GitHub-only content persistence decision with Cloudf
 The release is accepted only when all of the following are demonstrated:
 
 1. The /en/, /zh-cn/ and /es/ home pages render with correct language metadata.
-2. Existing English content and reviewed Chinese translations are present in D1 with stable content IDs and slugs.
+2. Existing English content and reviewed Chinese and Spanish translations are present in D1 with stable content IDs and locale-specific slugs.
 3. D1 migrations can create the complete schema in a clean local database.
 4. The import/seed process is idempotent and preserves existing content.
 5. An authenticated editor can create a content item, edit its text, save it, reload it from D1 and see the same content.
