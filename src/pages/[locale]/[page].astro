@@ -2,8 +2,8 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { supportedLocales, localizedPages } from "../../i18n/site";
 
-const pageSlugs = ["about", "accessibility", "contact", "editorial-policy", "privacy"];
 export function getStaticPaths() {
+  const pageSlugs = ["about", "accessibility", "contact", "editorial-policy", "privacy"];
   return supportedLocales.flatMap((locale) => pageSlugs.map((page) => ({
     params: { locale, page }, props: { locale, page }
   })));
