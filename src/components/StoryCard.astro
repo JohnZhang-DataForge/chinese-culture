@@ -1,8 +1,9 @@
 ---
-interface Props {href:string;title:string;description:string;category:string;readingMinutes?:number;chinese?:string;number?:number;}
-const {href,title,description,category,readingMinutes,chinese,number} = Astro.props;
+interface Props {href:string;title:string;description:string;category:string;readingMinutes?:number;chinese?:string;number?:number;image?:string;imageAlt?:string;}
+const {href,title,description,category,readingMinutes,chinese,number,image,imageAlt} = Astro.props;
 ---
 <a class="story-card" href={href}>
+  {image && <div class="story-card-image"><img src={image} alt={imageAlt ?? title} loading="lazy" /></div>}
   <div class="card-upper"><span class="card-type">{category}</span><span class="card-symbol" aria-hidden="true">{chinese ?? (number !== undefined ? String(number).padStart(2,"0") : "◆")}</span></div>
   <div class="card-body"><h3>{title}</h3><p>{description}</p></div>
   <div class="card-foot"><span>{readingMinutes ? readingMinutes + " min read" : "Explore the story"}</span><span class="card-arrow" aria-hidden="true">↗</span></div>
