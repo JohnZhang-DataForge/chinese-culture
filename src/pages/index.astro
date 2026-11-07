@@ -73,7 +73,7 @@ const featuredFestival = festivals[0];
     <section class="festival-banner">
       <div class="festival-banner-art" role="img" aria-label="Red lanterns and warm lights at a Chinese festival"><span class="festival-sticker">一起<br/>庆祝!</span></div>
       <div class="festival-banner-copy"><span class="section-kicker">CELEBRATE THE MOMENTS</span><h2>Every season<br/>has a story.</h2><p>From family gatherings to colorful festivals, discover the customs, food and meaning that make each celebration special.</p>
-        {#if featuredFestival}<a class="pill-button pill-white" href={"/festivals/"+featuredFestival.id+"/"}>Explore a festival <span>→</span></a>{:else}<a class="pill-button pill-white" href="/festivals/">Explore festivals <span>→</span></a>{/if}
+        {featuredFestival ? <a class="pill-button pill-white" href={"/festivals/"+featuredFestival.id+"/"}>Explore a festival <span>→</span></a> : <a class="pill-button pill-white" href="/festivals/">Explore festivals <span>→</span></a>}
       </div>
     </section>
 
