@@ -22,7 +22,7 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 
 contentId identifies the conceptual content item and is immutable. Every locale variant of the same item MUST use exactly the same contentId. Locale variants have independent slugs, titles, descriptions, body text, publication status and timestamps.
 
-The unique key is (contentId, locale). A contentId can have at most one record per supported locale. A language switch looks up the other variant by contentId; it MUST NOT derive the translated slug from the current slug.
+The unique key is (contentId, locale). A contentId can have at most one record per supported locale. A language switch resolves the counterpart by contentId; it MUST NOT assume locale slugs are equal. The current public static release keeps article slugs aligned across locales, while the CMS contract supports locale-specific slugs.
 
 A locale variant is a full editorial document, not a machine-generated runtime overlay. A translation may be drafted or unpublished while another locale is published.
 
