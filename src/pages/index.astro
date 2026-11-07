@@ -6,49 +6,95 @@ import { getCollection } from "astro:content";
 const lessons = (await getCollection("lessons")).sort((a,b)=>(a.data.order??99)-(b.data.order??99)).slice(0,3);
 const traditions = (await getCollection("culture")).slice(0,3);
 const festivals = (await getCollection("festivals")).slice(0,3);
+const books = (await getCollection("books")).slice(0,2);
 ---
 <BaseLayout>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">Stories · traditions · connections</span>
-        <h1>A culture with a thousand doorways. <em>Find yours.</em></h1>
-        <p class="lead">From the rhythms of festivals to the art of a single brushstroke, discover Chinese culture with clear, thoughtful guides made for curious minds.</p>
-        <div class="hero-actions"><a class="button" href="/learn/">Start exploring <span aria-hidden="true">↗</span></a><a class="button button-outline" href="/culture/">Browse the library</a></div>
+  <section class="home-hero">
+    <div class="home-hero-image" role="img" aria-label="Traditional Chinese mountain landscape"></div>
+    <div class="home-hero-shade"></div>
+    <div class="wrap home-hero-content">
+      <p class="hero-overline"><span></span> A living culture · An open invitation</p>
+      <p class="hero-script" aria-hidden="true">山 · 水 · 人</p>
+      <h1>Discover the stories<br />that shape <em>China.</em></h1>
+      <p class="home-hero-copy">A thoughtful guide to the traditions, ideas, art and everyday moments of Chinese culture — past and present.</p>
+      <div class="hero-actions">
+        <a class="button button-light" href="/learn/">Begin exploring <span aria-hidden="true">↗</span></a>
+        <a class="hero-text-link" href="/culture/">Explore the culture library <span aria-hidden="true">→</span></a>
       </div>
-      <div class="hero-art" aria-label="Decorative print with the Chinese characters for culture and tradition">
-        <div class="art-paper" aria-hidden="true"><div class="art-circle"></div><div class="art-text">文 化</div><div class="art-lines"></div><div class="art-stamp">知行</div><div class="art-side-note">THE ART OF DISCOVERY</div></div>
+    </div>
+    <div class="hero-image-caption"><span>01 / 文化 · CULTURE</span><span>Stories across time</span></div>
+  </section>
+
+  <section class="intro-strip">
+    <div class="wrap intro-strip-inner">
+      <span class="intro-mark" aria-hidden="true">文</span>
+      <p>Culture is not a museum piece. <strong>It is a living conversation</strong> between generations, places and people.</p>
+      <span class="intro-side-note">CURIOUS MINDS WELCOME</span>
+    </div>
+  </section>
+
+  <section class="section explore-section">
+    <div class="wrap">
+      <div class="section-topline"><span class="eyebrow">Explore the atlas</span><span class="section-index">01 — 05</span></div>
+      <div class="section-heading"><h2>Find a doorway<br />into the culture.</h2><p>Start with what interests you. Follow a story, discover a tradition, or explore an idea that has travelled across centuries.</p></div>
+      <div class="topic-grid">
+        <a class="topic-tile topic-large" href="/culture/"><span class="topic-number">01 / CULTURE</span><span class="topic-character">艺</span><span class="topic-title">Arts &amp; traditions</span><span class="topic-arrow">↗</span></a>
+        <a class="topic-tile topic-red" href="/festivals/"><span class="topic-number">02 / FESTIVALS</span><span class="topic-character">节</span><span class="topic-title">Festivals &amp; seasons</span><span class="topic-arrow">↗</span></a>
+        <a class="topic-tile topic-jade" href="/learn/"><span class="topic-number">03 / LEARNING</span><span class="topic-character">学</span><span class="topic-title">Learn the foundations</span><span class="topic-arrow">↗</span></a>
+        <a class="topic-tile topic-pale" href="/books/"><span class="topic-number">04 / READING</span><span class="topic-character">书</span><span class="topic-title">Books &amp; ideas</span><span class="topic-arrow">↗</span></a>
+        <a class="topic-tile topic-photo" href="/events/"><span class="topic-number">05 / COMMUNITY</span><span class="topic-character">会</span><span class="topic-title">Events &amp; experiences</span><span class="topic-arrow">↗</span></a>
       </div>
     </div>
   </section>
+
+  <section class="section section-paper">
+    <div class="wrap">
+      <div class="section-topline"><span class="eyebrow">A guided beginning</span><span class="section-index">02 — LEARN</span></div>
+      <div class="section-heading"><h2>Every journey<br />starts somewhere.</h2><p>Short, welcoming guides make big subjects easier to approach. Build a foundation, then follow your curiosity.</p></div>
+      <div class="cards editorial-cards">{lessons.map((item,i)=><StoryCard href={"/learn/"+item.id+"/"} title={item.data.title} description={item.data.description} category={"FIELD NOTE 0"+(i+1)} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
+      <div class="section-cta"><a class="text-link" href="/learn/">View the learning path <span>↗</span></a></div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="wrap">
-      <span class="eyebrow">01 / A good place to start</span>
-      <div class="section-heading"><h2>Small lessons.<br />Lasting discoveries.</h2><p>New to Chinese culture? Begin here. Each guide offers a clear idea, useful context, and a path to explore further.</p></div>
-      <div class="cards">{lessons.map((item,i)=><StoryCard href={"/learn/"+item.id+"/"} title={item.data.title} description={item.data.description} category={"Lesson "+String(i+1).padStart(2,"0")} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
-      <p style="margin-top:1.8rem"><a class="text-link" href="/learn/">Explore the complete learning path ↗</a></p>
+      <div class="section-topline"><span class="eyebrow">Objects, practices, perspectives</span><span class="section-index">03 — CULTURE</span></div>
+      <div class="section-heading"><h2>Look closer.<br /><em>Discover more.</em></h2><p>From the movement of a brush to the warmth of a shared table, ordinary details can reveal extraordinary stories.</p></div>
+      <div class="cards editorial-cards">{traditions.map((item)=><StoryCard href={"/culture/"+item.id+"/"} title={item.data.title} description={item.data.description} category={item.data.category} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
+      <div class="section-cta"><a class="text-link" href="/culture/">Explore all cultural stories <span>↗</span></a></div>
     </div>
   </section>
-  <section class="section section-soft">
-    <div class="wrap">
-      <span class="eyebrow">02 / Culture in focus</span>
-      <div class="section-heading"><h2>Every object holds a story.</h2><p>Art, ideas, crafts and ordinary rituals reveal many ways of seeing the world.</p></div>
-      <div class="cards">{traditions.map((item)=><StoryCard href={"/culture/"+item.id+"/"} title={item.data.title} description={item.data.description} category={item.data.category} readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
-      <p style="margin-top:1.8rem"><a class="text-link" href="/culture/">Discover more culture ↗</a></p>
+
+  <section class="festival-feature">
+    <div class="festival-photo" role="img" aria-label="Warm red lanterns glowing at a traditional celebration"></div>
+    <div class="festival-copy">
+      <span class="eyebrow">A year of meaning · 04</span>
+      <p class="festival-chinese" aria-hidden="true">团圆 · 庆典</p>
+      <h2>More than a date<br />on the calendar.</h2>
+      <p>Explore the stories behind the celebrations — the food, symbols, family customs and shared moments that bring people together.</p>
+      <a class="button button-light" href="/festivals/">Discover the festivals <span aria-hidden="true">↗</span></a>
     </div>
   </section>
-  <section class="section">
-    <div class="wrap">
-      <span class="eyebrow">03 / Across the calendar</span>
-      <div class="section-heading"><h2>Traditions that bring people together.</h2><p>Explore how annual celebrations connect stories, food, family and community.</p></div>
-      <div class="cards">{festivals.map((item)=><StoryCard href={"/festivals/"+item.id+"/"} title={item.data.title} description={item.data.description} category="Festival guide" readingMinutes={item.data.readingMinutes} chinese={item.data.chinese}/>)}</div>
-      <p style="margin-top:1.8rem"><a class="text-link" href="/festivals/">Explore festivals ↗</a></p>
+
+  <section class="section section-paper">
+    <div class="wrap reading-room">
+      <div class="reading-intro">
+        <span class="eyebrow">The reading room · 05</span>
+        <h2>Great ideas<br />invite us back.</h2>
+        <p>Meet influential works and enduring ideas through approachable reading guides.</p>
+        <a class="text-link" href="/books/">Enter the reading room <span>↗</span></a>
+      </div>
+      <div class="reading-list">
+        {books.map((item,i)=><a class="reading-item" href={"/books/"+item.id+"/"}><span class="reading-count">0{i+1}</span><span class="reading-item-main"><strong>{item.data.title}</strong><small>{item.data.description}</small></span><span class="reading-arrow">↗</span></a>)}
+        {books.length===0 && <p>New reading guides are being prepared.</p>}
+      </div>
     </div>
   </section>
-  <section class="section section-soft">
-    <div class="wrap feature-band">
-      <div aria-hidden="true" class="feature-kicker">知 · 行</div>
-      <div><span class="eyebrow">An invitation to be curious</span><h2>Learn with care.<br />Stay for the stories.</h2><p>Chinese culture has never been a single, unchanging story. We aim to introduce its many voices with context, respect and sources you can explore.</p><a class="text-link" href="/about/">About our approach ↗</a></div>
+
+  <section class="closing-invitation">
+    <div class="wrap closing-inner">
+      <span class="closing-seal" aria-hidden="true">知</span>
+      <div><span class="eyebrow">An open invitation</span><h2>Come with curiosity.<br /><em>Leave with a new perspective.</em></h2><p>Chinese culture is diverse, evolving and full of different voices. We are here to help you explore it with context, care and an open mind.</p><a class="button" href="/about/">Our approach <span aria-hidden="true">↗</span></a></div>
     </div>
   </section>
 </BaseLayout>
