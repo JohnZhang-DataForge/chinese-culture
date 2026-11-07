@@ -25,9 +25,9 @@ const latestStories = feedStories.slice(0, 8);
 const moreStories = feedStories.slice(8);
 const fallbackBySection = {
   LEARN: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1200&q=85",
-  CULTURE: "https://images.hogeschoolrotterdam.nl/Blob/63ff6718dad8481a9e033e77c142a07c/5d8a4223f8464afbb1e0a4d03c553e46.jpg?height=630&mode=crop&width=1200",
-  FESTIVALS: "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1200&q=85",
-  BOOKS: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=85"
+  CULTURE: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=85",
+  FESTIVALS: "https://images.unsplash.com/photo-1773809407794-f6e68eda5bf2?auto=format&fit=crop&w=1200&q=85",
+  BOOKS: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg/1280px-Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg"
 };
 ---
 <BaseLayout>
@@ -76,10 +76,10 @@ const fallbackBySection = {
       <div class="wrap">
         <div class="news-heading"><div><span class="section-kicker">FIND YOUR NEXT ADVENTURE</span><h2>Explore the world of Chinese culture</h2><p>Pick a topic and follow your curiosity.</p></div></div>
         <div class="visual-topic-grid">
-          <a href="/culture/" class="visual-topic topic-art"><span>01 / CULTURE</span><strong>Arts &amp; traditions</strong><b>Explore ↗</b></a>
-          <a href="/festivals/" class="visual-topic topic-festival"><span>02 / FESTIVALS</span><strong>Celebrate together</strong><b>Explore ↗</b></a>
-          <a href="/learn/" class="visual-topic topic-learn"><span>03 / LEARNING</span><strong>Start discovering</strong><b>Explore ↗</b></a>
-          <a href="/books/" class="visual-topic topic-books"><span>04 / BOOKS</span><strong>Stories &amp; ideas</strong><b>Explore ↗</b></a>
+          <a href="/culture/" class="visual-topic topic-art"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1455390582262-044c871b6f4c?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>01 / CULTURE</span><strong>Arts &amp; traditions</strong><b>Explore ↗</b></a>
+          <a href="/festivals/" class="visual-topic topic-festival"><img src="https://images.unsplash.com/photo-1773809407794-f6e68eda5bf2?auto=format&fit=crop&w=1000&q=85" data-fallback="https://upload.wikimedia.org/wikipedia/commons/5/55/Red_lanterns%2C_Spring_Festival%2C_Ditan_Park_Beijing.JPG" alt="" aria-hidden="true" loading="lazy" /><span>02 / FESTIVALS</span><strong>Celebrate together</strong><b>Explore ↗</b></a>
+          <a href="/learn/" class="visual-topic topic-learn"><img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1000&q=85" data-fallback="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1000&q=85" alt="" aria-hidden="true" loading="lazy" /><span>03 / LEARNING</span><strong>Start discovering</strong><b>Explore ↗</b></a>
+          <a href="/books/" class="visual-topic topic-books"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/The_Journey_to_the_West%2C_Shidetang_Hall_of_Jinling_in_1592.jpg" data-fallback="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg/1280px-Ancient_Chinese_Writing_on_Warring_States_Bamboo_Slips_1.jpg" alt="" aria-hidden="true" loading="lazy" /><span>04 / BOOKS</span><strong>Stories &amp; ideas</strong><b>Explore ↗</b></a>
         </div>
       </div>
     </section>
@@ -156,5 +156,17 @@ const fallbackBySection = {
       });
       start();
     }
+    document.querySelectorAll(".visual-topic img[data-fallback]").forEach((img) => {
+      img.addEventListener("error", () => {
+        const fallback = img.dataset.fallback;
+        if (fallback && img.src !== fallback) {
+          img.src = fallback;
+          img.dataset.fallback = "";
+        } else {
+          img.closest(".visual-topic")?.classList.add("image-unavailable");
+          img.remove();
+        }
+      });
+    });
   </script>
 </BaseLayout>
