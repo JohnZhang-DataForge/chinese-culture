@@ -8,8 +8,8 @@ level: "Beginner"
 order: 2
 readingMinutes: 5
 featured: true
-image: "https://images.hogeschoolrotterdam.nl/Blob/63ff6718dad8481a9e033e77c142a07c/5d8a4223f8464afbb1e0a4d03c553e46.jpg?height=630&mode=crop&width=1200"
-imageAlt: "Notebook and writing tools on a desk"
+image: "https://images.unsplash.com/photo-1753863580173-e292f00beeed?auto=format&fit=crop&w=1400&q=85"
+imageAlt: "Chinese calligraphy being painted with a traditional brush"
 ---
 ## One writing tradition, many spoken voices
 
