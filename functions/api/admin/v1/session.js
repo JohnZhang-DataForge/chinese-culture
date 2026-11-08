@@ -20,7 +20,7 @@ export async function onRequestGet(context) {
       role: "admin",
       csrfToken,
       repository: "JohnZhang-DataForge/chinese-culture",
-      capabilities: { preview: true, publish: isGithubAppConfigured(context.env), mediaUpload: false }
+      capabilities: { preview: true, publish: isGithubAppConfigured(context.env), mediaUpload: isGithubAppConfigured(context.env) }
     }));
   } catch (error) {
     return withApiSecurityHeaders(problemResponse(error));
