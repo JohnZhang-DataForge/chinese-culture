@@ -21,6 +21,7 @@ jobs:
       - run: npm test
       - run: node --check scripts/import-content-to-d1.mjs
       - run: npm run build
+      - run: node scripts/test-cms-local.mjs
       - run: npm run verify
       - name: Package deployable static site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
