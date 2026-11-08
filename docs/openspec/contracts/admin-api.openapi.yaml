@@ -158,7 +158,7 @@ paths:
       operationId: saveDraft
       summary: Create or update a draft in D1
       description: >
-        This operation persists status=draft and an immutable revision snapshot in D1. It does not create a GitHub commit or write to main. If-Match is required for existing variants.
+        This operation persists status=draft and an immutable revision snapshot in D1. It does not create a GitHub commit or write to main. If-Match is required for existing variants. Variants with an open publication or review PR are locked until that PR is closed or merged.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -320,10 +320,7 @@ paths:
       operationId: submitContent
       summary: Export the selected D1 revision to a pull request for review, publish or unpublish
       description: >
-        The API validates If-Match, applies the requested desired status in D1, appends a submission revision, then serializes that exact revision into a generated GitHub snapshot branch.
-        intent=review keeps status=draft; intent=publish sets status=published and publishedAt;
-        intent=unpublish sets status=unpublished and retains historical publishedAt. D1 remains the canonical source.
-        This endpoint never merges a PR.
+        The API validates If-Match and exports the exact current D1 revision into a generated GitHub branch and pull request. D1 status remains unchanged while review is open. When the PR is merged, the status endpoint synchronizes the publication state and records a new immutable revision. intent=review creates a non-public review snapshot; intent=publish updates the static article; intent=unpublish removes the public Markdown file. This endpoint never merges a PR.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -684,6 +681,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Source'
+        imageUrl:
+          type: string
+          format: uri
+          description: Existing HTTPS cover image URL imported from the static content source.
+        imageAlt:
+          type: string
+          maxLength: 300
         media:
           type: array
           items:
@@ -729,9 +733,12 @@ components:
           maxLength: 500
     SubmitResult:
       type: object
-      required: [contentId, locale, intent, branch, revision, pullRequest]
+      required: [contentId, locale, intent, branch, revision, submissionId, pullRequest]
       properties:
         contentId:
+          type: string
+          format: uuid
+        submissionId:
           type: string
           format: uuid
         locale:
@@ -758,7 +765,7 @@ components:
               enum: [open, closed, merged]
     PullRequestStatus:
       type: object
-      required: [number, url, state, mergeable, checks]
+      required: [number, url, state, merged, mergeable, checks]
       properties:
         number:
           type: integer
@@ -768,6 +775,8 @@ components:
         state:
           type: string
           enum: [open, closed, merged]
+        merged:
+          type: boolean
         mergeable:
           type: boolean
         checks:
