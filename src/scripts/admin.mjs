@@ -810,7 +810,9 @@ if (root) {
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (!demoMode) {
-    $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
+    $('[data-action="preview"], [data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow is not implemented yet. Draft editing and saving are available.";});
+    $('[data-variant-media-input]').forEach((field)=>{field.disabled=true;});
+    $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
   } else {
