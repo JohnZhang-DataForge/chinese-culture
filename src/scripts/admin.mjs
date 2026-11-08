@@ -22,7 +22,7 @@ if (root) {
     books:{title:"Books",singular:"book",apiCollection:"books",subtitle:"Manage book introductions and reading guides."},
     events:{title:"Events",singular:"event",apiCollection:"events",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null},etags:{en:null,"zh-CN":null},submissions:[]};
+  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null,es:null},etags:{en:null,"zh-CN":null,es:null},submissions:[]};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -137,7 +137,7 @@ if (root) {
   };
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
   const formChecked = (name) => Boolean(form.elements.namedItem(name)?.checked);
-  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : "en";
+  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : locale === "es" ? "es" : "en";
   const showAdminBanner = (message, kind = "warning") => {
     const banner = $("[data-admin-banner]");
     banner.hidden = !message;
@@ -158,6 +158,8 @@ if (root) {
       level:formValue("level." + suffix).trim(),
       chinese:locale === "en" ? formValue("chinese.en").trim() : "",
       pinyin:locale === "en" ? formValue("pinyin.en").trim() : "",
+      imageUrl:formValue("imageUrl." + suffix).trim(),
+      imageAlt:formValue("imageAlt." + suffix).trim(),
       mediaSrc:formValue("mediaSrc." + suffix).trim(),
       mediaAlt:formValue("mediaAlt." + suffix).trim(),
       mediaCredit:formValue("mediaCredit." + suffix).trim(),
@@ -171,8 +173,8 @@ if (root) {
   const formData = () => ({
     id:formValue("id"),
     type:formValue("type") || state.collection,
-    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN")},
-    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh")}}
+    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN"),es:localeFormData("es")},
+    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh"),es:formValue("seoTitle.es")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh"),es:formValue("seoDescription.es")}}
   });
   const setField = (name,value) => { const field = form.elements.namedItem(name); if (!field) return; if (field.type === "checkbox") field.checked = Boolean(value); else field.value = value ?? ""; };
   const markClean = () => { state.dirty = false; $("[data-save-state]").textContent = "All changes saved"; $("[data-save-state]").classList.remove("is-dirty"); };
@@ -216,7 +218,8 @@ if (root) {
       readingMinutes:value.readingMinutes,
       bodyMarkdown:value.bodyMarkdown,
       media,
-      sources:existing?.sources || []
+      sources:existing?.sources || [],
+      ...(value.imageUrl ? {imageUrl:value.imageUrl,imageAlt:value.imageAlt} : {})
     };
     Object.assign(payload,localizedSeoPayload(locale,value.seoTitle,value.seoDescription));
     if (value.level) payload.level = value.level;
@@ -275,7 +278,7 @@ if (root) {
     if (state.page === "languages") renderLanguages();
   };
   const loadVariantDetails = async (contentId) => {
-    const locales = ["en","zh-CN"];
+    const locales = ["en","zh-CN","es"];
     const results = await Promise.all(locales.map(async (locale) => {
       try {
         const result = await getContent(contentId,locale);
@@ -285,8 +288,8 @@ if (root) {
         throw error;
       }
     }));
-    state.variants = {en:null,"zh-CN":null};
-    state.etags = {en:null,"zh-CN":null};
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     results.forEach((result) => {
       state.variants[result.locale] = result.data;
       state.etags[result.locale] = result.etag;
@@ -313,6 +316,8 @@ if (root) {
       setField("featured." + suffix,variant?.featured ?? demo?.featured ?? value.featured ?? false);
       setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
       setField("level." + suffix,variant?.level ?? demo?.level ?? "");
+      setField("imageUrl." + suffix,variant?.imageUrl ?? demo?.imageUrl ?? "");
+      setField("imageAlt." + suffix,variant?.imageAlt ?? demo?.imageAlt ?? "");
       setField("mediaSrc." + suffix,variant?.media?.[0]?.src ?? demo?.mediaSrc ?? "");
       setField("mediaAlt." + suffix,variant?.media?.[0]?.alt ?? demo?.mediaAlt ?? "");
       setField("mediaCredit." + suffix,variant?.media?.[0]?.credit ?? demo?.mediaCredit ?? "");
@@ -344,8 +349,8 @@ if (root) {
     state.selectedId = item?.id || null;
     state.isNew = !item;
     state.dirty = false;
-    state.variants = {en:null,"zh-CN":null};
-    state.etags = {en:null,"zh-CN":null};
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     if (!demoMode && item) {
       setConnection("Loading content");
       try { await loadVariantDetails(item.id); }
@@ -391,7 +396,7 @@ if (root) {
     return result;
   };
   const saveLiveDrafts = async () => {
-    const locales = ["en","zh-CN"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
+    const locales = ["en","zh-CN","es"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
     if (!locales.length) throw new Error("Add content in English or 简体中文 before saving.");
     for (const locale of locales) {
       const payload = toApiPayload(locale);
@@ -421,7 +426,7 @@ if (root) {
   };
   const preview = async (openDialog = true) => {
     const value = formData();
-    const locale = state.previewLocale === "zh" ? "zh-CN" : "en";
+    const locale = state.previewLocale === "zh" ? "zh-CN" : state.previewLocale === "es" ? "es" : "en";
     const variant = value.locales[locale];
     if (!variant.title || !variant.description || !variant.bodyMarkdown.trim()) {
       showToast("Complete the selected language before previewing it.","error");
@@ -487,9 +492,9 @@ if (root) {
       return;
     }
     try {
-      const previouslyPublished = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "published");
+      const previouslyPublished = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "published");
       await saveLiveDrafts();
-      const locales = ["en","zh-CN"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
+      const locales = ["en","zh-CN","es"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
       if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
       const results = [];
       for (const locale of locales) {
@@ -535,7 +540,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(id);
-      const locales=["en","zh-CN"].filter((locale)=>state.variants[locale]);
+      const locales=["en","zh-CN","es"].filter((locale)=>state.variants[locale]);
       if(!locales.length) throw new Error("No editable language variants were found.");
       for(const locale of locales){
         const variant=state.variants[locale];
@@ -588,7 +593,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(state.pendingDelete);
-      const drafts = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
+      const drafts = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
       if (!drafts.length) throw new Error("Only an unsubmitted draft variant can be discarded. Published content must go through a reviewed unpublish workflow.");
       for (const locale of drafts) await discardDraft(state.pendingDelete,locale);
       state.pendingDelete = null;
