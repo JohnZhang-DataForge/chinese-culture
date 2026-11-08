@@ -104,6 +104,18 @@ async function main() {
   const list = await request("/api/admin/v1/content?locale=es&page=1&pageSize=100");
   if (!list.response.ok || !list.data?.items?.some((item) => item.contentId === id)) throw new Error("Spanish content list failed: " + JSON.stringify(list.data));
 
+  const mediaForm = new FormData();
+  mediaForm.append("file", new Blob([Uint8Array.of(0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a)], { type: "image/png" }), "smoke.png");
+  mediaForm.append("metadata", new Blob([JSON.stringify({ alt: "Test image", credit: "CMS integration test", license: "original" })], { type: "application/json" }), "metadata.json");
+  const mediaUpload = await request("/api/admin/v1/content/" + id + "/media?locale=en", {
+    method: "POST",
+    headers: { Origin: origin, "X-CSRF-Token": session.csrfToken, "If-Match": etag },
+    body: mediaForm
+  });
+  if (mediaUpload.response.status !== 503 || mediaUpload.data?.code !== "github_app_not_configured") {
+    throw new Error("Media upload should fail closed without GitHub App credentials: " + JSON.stringify(mediaUpload.data));
+  }
+
   const submit = await request("/api/admin/v1/content/" + id + "/submit?locale=en", { method: "POST", headers: { ...headers, "If-Match": etag }, body: JSON.stringify({ intent: "review", summary: "CI verifies publication fails closed without a GitHub App." }) });
   if (submit.response.status !== 503 || submit.data?.code !== "github_app_not_configured") {
     throw new Error("Publication should fail closed without GitHub App credentials: " + JSON.stringify(submit.data));
@@ -114,7 +126,7 @@ async function main() {
   const deleteEnglish = await request("/api/admin/v1/content/" + id + "/draft?locale=en", { method: "DELETE", headers });
   if (deleteEnglish.response.status !== 204) throw new Error("Delete English draft failed: " + JSON.stringify(deleteEnglish.data));
 
-  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, Spanish translation, safe preview, list, publication fail-closed and draft deletion.");
+  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
 }
 
 try {
