@@ -10,12 +10,12 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 ## 1. Locale and route values
 
 - Supported locale identifiers: en, zh-CN, es.
-- URL locale segments: en, zh-cn.
+- URL locale segments: en, zh-cn, es.
 - Public route pattern: /{localeSegment}/{section}/{slug}/.
 - Sections: learn, culture, festivals, books, events.
 - Default route / redirects to /en/.
 - Existing unprefixed routes redirect to the matching /en/ route.
-- File path: src/content/{collection}/{locale}/{slug}.md.
+- File path: English: `src/content/{collection}/{slug}.md`; Simplified Chinese: `src/content/zh-cn/{collection}/{slug}.md`; Spanish: `src/content/es/{collection}/{slug}.md`.
 - Media path: public/media/{contentId}/{safeFileName}.
 
 ## 2. Identity and translation relationship
@@ -48,7 +48,9 @@ A locale variant is a full editorial document, not a machine-generated runtime o
 | chinese | string | no | Chinese term annotation in English-language content; not a substitute for zh-CN translation |
 | pinyin | string | no | Pinyin annotation for chinese |
 | sources | array | no | Editorial source references; see below |
-| media | array | no | Image rights and accessibility metadata; see below |
+| imageUrl | HTTPS URL | no | Legacy/existing external cover image preserved from the current published source |
+| imageAlt | string | no | Alternative text for the legacy/existing cover image |
+| media | array | no | Newly uploaded image rights and accessibility metadata; see below |
 | tags | string[] | no | Localized or controlled taxonomy terms |
 
 Collection is inferred from the parent directory; do not duplicate it in frontmatter.
@@ -146,7 +148,7 @@ Save Draft writes status=draft and a new revision to D1. It does not create a Gi
 
 ## 8. Migration from current main into D1
 
-Current files are in src/content/{collection}/{slug}.md. They are migration inputs and the current public snapshot; they are not the future editorial source of truth. D1 stores the canonical content records. Files under src/content/{collection}/{locale}/{slug}.md on main are generated publication snapshots produced from approved D1 revisions.
+Current files are in `src/content/{collection}/{slug}.md`, `src/content/zh-cn/{collection}/{slug}.md` and `src/content/es/{collection}/{slug}.md`. They are migration inputs and the current public snapshot; they are not the future editorial source of truth. D1 stores the canonical content records. The same locale-specific paths on `main` are generated publication snapshots produced from approved D1 revisions.
 
 Agent 3 SHALL:
 - Inventory all current English Markdown files and preserve every original body, frontmatter value and existing public slug.
