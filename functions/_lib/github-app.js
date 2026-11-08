@@ -44,6 +44,14 @@ function pemBytes(pem) {
   return { bytes, pkcs1: normalized.includes("BEGIN RSA PRIVATE KEY") };
 }
 
+function base64(bytes) {
+  let binary = "";
+  for (let index = 0; index < bytes.length; index += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + 0x8000));
+  }
+  return btoa(binary);
+}
+
 function base64Url(bytes) {
   let binary = "";
   for (let index = 0; index < bytes.length; index += 0x8000) {
@@ -139,7 +147,7 @@ export async function writeRepositoryFile(token, repository, path, branchName, c
     method: "PUT",
     body: {
       message,
-      content: base64Url(bytes).replace(/-/g, "+").replace(/_/g, "/"),
+      content: base64(bytes),
       branch: branchName,
       ...(existingSha ? { sha: existingSha } : {})
     }
