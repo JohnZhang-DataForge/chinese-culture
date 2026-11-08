@@ -98,6 +98,7 @@ function toVariant(row, includeBody = true) {
 
   if (row.branch) result.branch = row.branch;
   if (row.pull_request_state) result.pullRequestState = row.pull_request_state;
+  if (row.pull_request_url) result.pullRequestUrl = row.pull_request_url;
   if (row.pending_media_json) {
     try {
       const pending = JSON.parse(row.pending_media_json);
