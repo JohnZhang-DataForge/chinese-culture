@@ -328,7 +328,7 @@ if (root) {
     setField("status","draft");
   };
   const renderVariantMedia = () => {
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const node=$('[data-variant-media-list="' + uiLocale(locale) + '"]');
       if(!node) return;
       const assets=state.variants[locale]?.media || [];
@@ -358,7 +358,8 @@ if (root) {
     } else if (demoMode && item) {
       state.variants = {
         en:item.title?.en ? {status:item.status,featured:item.featured} : null,
-        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null
+        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null,
+        es:item.title?.es ? {status:item.status,featured:item.featured} : null
       };
     }
     const editorItem = item ? {...item,variants:state.variants} : null;
@@ -397,7 +398,7 @@ if (root) {
   };
   const saveLiveDrafts = async () => {
     const locales = ["en","zh-CN","es"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
-    if (!locales.length) throw new Error("Add content in English or 简体中文 before saving.");
+    if (!locales.length) throw new Error("Add content in English, 简体中文 or Spanish before saving.");
     for (const locale of locales) {
       const payload = toApiPayload(locale);
       if (!state.selectedId) {
@@ -459,7 +460,7 @@ if (root) {
   const saveContent = async () => {
     if (demoMode) {
       const value = formData();
-      const complete = ["en","zh-CN"].filter((locale)=>localeIsComplete(value.locales[locale]));
+      const complete = ["en","zh-CN","es"].filter((locale)=>localeIsComplete(value.locales[locale]));
       if (!complete.length) { showToast("Complete at least one language version before saving.","error"); return; }
       const item = {
         id:state.selectedId || "demo-" + Date.now().toString(36),
