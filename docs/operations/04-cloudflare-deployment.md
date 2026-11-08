@@ -68,6 +68,10 @@ Successful release workflows:
 - Submit and merge an unpublish PR; verify public route removal while D1 revision history remains.
 - Perform and document a durable D1 export/restore test and Pages rollback.
 
+## Backup and recovery
+
+See [D1 Backup and Recovery](05-d1-backup-and-restore.md) for Time Travel, SQL export/import, verification queries and the current rehearsal evidence.
+
 ## Rollback
 
 - Public site: redeploy the previous known-good Pages deployment.
