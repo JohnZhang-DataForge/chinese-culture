@@ -274,6 +274,11 @@ if (root) {
       if (statuses.some((status)=>status && ["merged","closed"].includes(status.state))) {
         [enItems,zhItems,esItems] = await loadLocales();
         state.items = mergeSummaries(enItems,zhItems,esItems);
+        if (state.page === "editor" && state.selectedId) {
+          await loadVariantDetails(state.selectedId);
+          renderVariantMedia();
+          setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
+        }
       }
     }
     updateCounts();
@@ -335,17 +340,25 @@ if (root) {
     ["en","zh-CN","es"].forEach((locale) => {
       const node=$('[data-variant-media-list="' + uiLocale(locale) + '"]');
       if(!node) return;
-      const assets=state.variants[locale]?.media || [];
-      node.innerHTML=assets.length ? assets.map((asset,index) => {
+      const variant=state.variants[locale];
+      const assets=variant?.media || [];
+      const pending=variant?.pendingMedia || [];
+      const renderAsset=(asset,index,isPending=false) => {
         const source=asset.src || "";
-        return '<div class="variant-media-item"><img src="' + escapeHtml(source) + '" alt="' + escapeHtml(asset.alt || "") + '" /><div><strong>' + escapeHtml(source.split("/").pop()) + '</strong><small>' + escapeHtml(asset.license || "License not supplied") + '</small><button class="text-button" type="button" data-action="select-variant-media" data-locale="' + locale + '" data-src="' + escapeHtml(source) + '" data-alt="' + escapeHtml(asset.alt || "") + '" data-credit="' + escapeHtml(asset.credit || "") + '" data-license="' + escapeHtml(asset.license || "") + '" data-source="' + escapeHtml(asset.sourceUrl || "") + '">Use as cover</button></div></div>';
-      }).join("") : '<p class="field-hint">No images attached to this language variant yet.</p>';
+        const status=isPending ? '<small class="media-review-status">Awaiting media PR merge</small>' : '<small>' + escapeHtml(asset.license || "License not supplied") + '</small>';
+        const link=isPending && variant?.pullRequestUrl ? '<a class="text-button" href="' + escapeHtml(variant.pullRequestUrl) + '" target="_blank" rel="noopener noreferrer">Review PR #' + escapeHtml(String(variant.pullRequest || "")) + '</a>' : "";
+        const useButton=isPending ? "" : '<button class="text-button" type="button" data-action="select-variant-media" data-locale="' + locale + '" data-src="' + escapeHtml(source) + '" data-alt="' + escapeHtml(asset.alt || "") + '" data-credit="' + escapeHtml(asset.credit || "") + '" data-license="' + escapeHtml(asset.license || "") + '" data-source="' + escapeHtml(asset.sourceUrl || "") + '">Use as cover</button>';
+        return '<div class="variant-media-item"><img src="' + escapeHtml(source) + '" alt="' + escapeHtml(asset.alt || "") + '" /><div><strong>' + escapeHtml(source.split("/").pop()) + '</strong>' + status + link + useButton + '</div></div>';
+      };
+      const html=[...assets.map((asset,index)=>renderAsset(asset,index,false)),...pending.map((asset,index)=>renderAsset(asset,index,true))].join("");
+      node.innerHTML=html || '<p class="field-hint">No images attached to this language variant yet.</p>';
     });
   };
   const setEditorLock = (locked) => {
-    form.querySelectorAll("input,textarea,select").forEach((field)=>{ if (!field.hasAttribute("data-variant-media-input")) field.disabled=locked; });
+    form.querySelectorAll("input,textarea,select").forEach((field)=>{ field.disabled=locked || (field.hasAttribute("data-variant-media-input") && !state.capabilities.mediaUpload); });
     $("[data-action='save-draft'],[data-action='delete-current']").forEach((button)=>{button.disabled=locked;});
     $("[data-action='publish'],[data-action='unpublish']").forEach((button)=>{button.disabled=locked || !state.capabilities.publish;});
+    $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=locked || !state.capabilities.mediaUpload;});
     if (locked) showAdminBanner("This article has an open review pull request. Editing is locked until the pull request is merged or closed.", "warning");
     else showAdminBanner("", "success");
   };
@@ -700,7 +713,8 @@ if (root) {
       }
       await refreshVariant(locale);
       markClean();
-      showToast("Image uploaded and attached to the " + (locale==="en" ? "English" : "Chinese") + " draft.","success");
+      setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
+      showToast("Media PR #" + result.pullRequest.number + " created. Merge it before publishing the article.","success");
       renderVariantMedia();
     } catch(error) { handleApiError(error); }
   };
