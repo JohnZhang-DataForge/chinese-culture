@@ -338,6 +338,8 @@ export async function saveDraft(db, contentId, locale, value, expectedRevision, 
   if (!current) throw new CmsError(404, "not_found", "Not Found", "The requested locale variant does not exist.");
   if (current.collection !== value.collection) throw new CmsError(422, "collection_immutable", "Validation Failed", "The collection cannot be changed after content creation.");
   if (Number(current.revision) !== expectedRevision) throw new CmsError(409, "revision_conflict", "Conflict", "This content has changed since it was loaded. Reload it before saving.");
+  const openSubmission = await db.prepare("SELECT COUNT(*) AS total FROM cms_submissions WHERE content_id = ? AND locale = ? AND pr_state IN ('pending', 'open')").bind(contentId, locale).first();
+  if (Number(openSubmission?.total || 0) > 0) throw new CmsError(409, "submission_open", "Conflict", "This variant has an open review pull request. Close or merge it before editing again.");
 
   const now = new Date().toISOString();
   const revision = expectedRevision + 1;
