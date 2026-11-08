@@ -56,7 +56,12 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     htmlPagesChecked++;
-    assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
+    const relativePath = file.slice(dist.length + 1).replaceAll("\\", "/");
+    // The private Admin workspace is intentionally an interactive static shell;
+    // its native controls are hydrated by the authenticated same-origin API.
+    if (relativePath !== "admin/index.html") {
+      assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
+    }
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
       const href = fragment.split('"')[0];
       if (!href.startsWith("/")) continue;
