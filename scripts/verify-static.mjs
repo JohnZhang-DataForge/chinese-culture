@@ -47,6 +47,50 @@ assert.ok(englishHome.includes('<html lang="en"'), "English home page must decla
 assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
 assert.ok(englishHome.includes('href="/zh-cn/"') && chineseHome.includes('href="/es/"') && spanishHome.includes('href="/en/"'), "Language selector must link to same-domain locale home pages");
 
+
+const contentRoot = join(root, "src", "content");
+const localePaths = new Map();
+function walkContent(dir) {
+  for (const name of readdirSync(dir)) {
+    const file = join(dir, name);
+    if (statSync(file).isDirectory()) { walkContent(file); continue; }
+    if (!name.endsWith(".md")) continue;
+    const source = readFileSync(file, "utf8");
+    const frontmatter = source.match(/^---\\r?\\n([\\s\\S]*?)\\r?\\n---/);
+    assert.ok(frontmatter, "Missing content frontmatter: " + file);
+    const contentId = frontmatter[1].match(/^contentId:\\s*["']?([0-9a-f-]+)["']?\\s*$/m)?.[1];
+    const locale = frontmatter[1].match(/^locale:\\s*["']?([A-Za-z-]+)["']?\\s*$/m)?.[1];
+    const relativePath = file.slice(contentRoot.length + 1).replaceAll("\\\\", "/").split("/");
+    const collection = relativePath.length === 2 ? relativePath[0] : relativePath[1];
+    const section = collection === "lessons" ? "learn" : collection;
+    const slug = relativePath.at(-1).replace(/\\.md$/, "");
+    const localeSegment = locale === "zh-CN" ? "zh-cn" : locale;
+    assert.ok(contentId && localeSegment, "Missing content identity metadata: " + file);
+    const variants = localePaths.get(contentId) ?? {};
+    variants[locale] = { route: "/" + localeSegment + "/" + section + "/" + slug + "/", section };
+    localePaths.set(contentId, variants);
+  }
+}
+walkContent(contentRoot);
+assert.equal(localePaths.size, 13, "Expected 13 conceptual articles for locale route verification");
+for (const [contentId, variants] of localePaths) {
+  assert.deepEqual(new Set(Object.keys(variants)), new Set(["en", "zh-CN", "es"]), "Incomplete locale variants for " + contentId);
+  for (const locale of ["en", "zh-CN", "es"]) {
+    const route = variants[locale].route;
+    const htmlPath = join(dist, route, "index.html");
+    assert.ok(existsSync(htmlPath), "Missing localized article route: " + route);
+    const html = readFileSync(htmlPath, "utf8");
+    assert.ok(html.includes('<link rel="canonical" href="https://chinese-culture.site' + route + '">'), "Canonical URL mismatch for " + route);
+    for (const targetLocale of ["en", "zh-CN", "es"]) {
+      const targetSegment = targetLocale === "zh-CN" ? "zh-cn" : targetLocale;
+      const target = variants[targetLocale]?.route ?? ("/" + targetSegment + "/" + variants[locale].section + "/");
+      const hreflang = targetLocale === "zh-CN" ? "zh-CN" : targetLocale;
+      assert.ok(html.includes('<link rel="alternate" hreflang="' + hreflang + '" href="https://chinese-culture.site' + target + '">'), "hreflang target mismatch for " + route + " -> " + targetLocale);
+      assert.ok(html.includes('<a href="' + target + '" lang="' + hreflang + '"'), "Language switch target mismatch for " + route + " -> " + targetLocale);
+    }
+  }
+}
+
 let linksChecked = 0;
 let htmlPagesChecked = 0;
 function inspectLinks(dir) {
