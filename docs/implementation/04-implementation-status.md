@@ -1,61 +1,59 @@
-# Implementation Status and Known Gaps
+# Implementation Status
 
-**Updated:** 2026-11-05  
-**Stage:** MVP source merged to `main`; Cloudflare Pages Free Direct Upload project is provisioned; first production deployment awaits one protected API token.  
-**Hosting:** Cloudflare Pages Free Direct Upload. Project `chinese-culture` is created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev); no production deployment has yet been published.  
-**Main branch:** [main](https://github.com/JohnZhang-DataForge/chinese-culture/tree/main).
+**Updated:** 2026-11-09  
+**Production website:** https://chinese-culture.site  
+**CMS integration:** PR #33 — [D1 article CMS and reviewed publication workflow](https://github.com/JohnZhang-DataForge/chinese-culture/pull/33)
 
-## Implemented in source
+## Production website
 
-| Area | Source status | Notes |
-|---|---|---|
-| Astro static project | Added | Node build time, no adapter/SSR |
-| Cloudflare Pages config | Added | `pages_build_output_dir: ./dist`; no Functions or SSR |
-| Pages Direct Upload project | Provisioned | `chinese-culture`, production branch `main`; first upload pending token |
-| Shared layout and navigation | Added | Desktop and mobile using native HTML details |
-| Landing page | Added | Curated starter learning, articles and festivals |
-| Collection index and detail routes | Added | Generated from Markdown during build |
-| Beginner curriculum | 5 lessons drafted | Additional teaching review needed |
-| Culture articles | 3 drafted | Includes credible further-reading links |
-| Festival references | 3 drafted | Evergreen, not real-world event registration |
-| Book guides | 2 drafted | Original guidance, no hosted copyrighted book text |
-| Events | Placeholder with honest empty state | No verified current event information |
-| Informational pages | Added | About, contact-status, privacy, accessibility, editorial policy |
-| Responsive styles | Added | Mobile layout, focus, reduced motion |
-| Build CI | Added | GitHub Actions install/build/static verifier |
-| Pages deployment workflow | Added | Wrangler Direct Upload; requires one protected Pages Write token |
-| Public hosting | Project provisioned; deployment pending | Requires token secret, first deployment and browser smoke verification |
+- Astro static website is deployed to Cloudflare Pages.
+- English, Simplified Chinese and Spanish route trees are live.
+- Public articles remain static; visitors do not query D1 or CMS APIs.
+- Existing article carousel and public content pages are preserved.
 
-## Validation state
+## CMS architecture
 
-The latest successful main-branch CI run [#41922502515](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41922502515) passed: dependency install, Astro build, static verifier and deployment-artifact packaging. The build generated 25 pages, 29 files and passed the 700-link check. This is build verification, not proof of a live Pages deployment.
+| Layer | Current status |
+|---|---|
+| Admin UI /admin/ | Implemented, Cloudflare Access protected |
+| Admin API /api/admin/v1/ | CRUD, translation, preview, media, submission and PR status/sync routes implemented |
+| D1 CMS_DB | Database provisioned and bound; production migration/import pending PR #33 merge |
+| D1 content schema | Initial migration defined for articles, locale variants, revisions, media metadata and submissions |
+| Existing content importer | Idempotent importer for 39 Markdown variants (13 per locale), deterministic content IDs |
+| Local test path | Wrangler local D1 migration + Pages Functions integration smoke test |
+| GitHub publication | Repository-scoped GitHub App implementation complete; credentials/installation pending |
+| Media upload | File-signature and rights metadata validation; media-only PR; D1 attaches after merge |
+| Preview | Server-rendered safe Markdown preview |
+| Publication status | Read-only GET PR status + explicit CSRF-protected POST synchronization after merge |
 
-## Deployment state (2026-11-05)
+## Verified production security and deployment configuration
 
-- Cloudflare account connection is working; account ID is configured in the deployment workflow.
-- Pages project `chinese-culture` exists at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but its deployments list is empty and its latest/canonical deployment is null.
-- The GitHub Pages Git integration had an account-side installation error. This does not block Direct Upload; the project is intentionally deployed by GitHub Actions and Wrangler rather than Cloudflare's Git integration.
-- The deployment workflow is gated: push-triggered deployments remain skipped until repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`; manual `workflow_dispatch` is available after the token secret is added.
-- The connected Cloudflare API can inspect the Pages project and issue an upload token, but direct asset upload requires a short-lived JWT in a custom Authorization header. That upload step cannot be completed through the current API connector. The GitHub Actions Wrangler workflow is the supported release path.
-- Exact token setup and release steps are documented in [Cloudflare deployment status](../operations/04-cloudflare-deployment.md).
+- Cloudflare Access app protects /admin/* and /api/admin/*.
+- Exact-email allow policy is configured.
+- ADMIN_EMAIL is configured in Pages production.
+- ADMIN_CSRF_SECRET is stored as a Pages secret.
+- CMS_DB binding points to the provisioned chinese-culture-cms D1 database.
+- Pages deployment workflow has successfully deployed the Functions bundle and static output.
+- GitHub App credentials are not configured; the Admin session therefore advertises publish=false and mediaUpload=false until the manual setup is completed.
 
-## Remaining before public launch
+## Current release gates
 
-- Add GitHub repository secret `CLOUDFLARE_API_TOKEN` with the Cloudflare **Pages Write** role, scoped to the intended account only.
-- Run **Actions → Deploy Chinese Culture Atlas to Cloudflare Pages → Run workflow** on `main`.
-- Verify the production deployment, home page, nested article routes, 404 behavior, HTTPS and response headers.
-- Keep CI passing after any change; verify all internal links in build output.
-- Commit a lockfile and convert CI installs to `npm ci` for stronger reproducibility.
-- Test keyboard navigation, screen reader, responsive layouts and contrast in a browser.
-- Assign factual/editorial reviewers and check all source links and Chinese terms.
-- Replace pending public contact details with a verified method and approve privacy notice.
-- Add only real, source-verified events, or keep the empty state.
-- Record deployment ID, source SHA, timestamp and rollback target after first publication.
+1. Merge PR #33 after its CI passes.
+2. Confirm the CMS D1 bootstrap workflow applies the production migration.
+3. Confirm importer reports exactly 13 published variants in each of en, zh-CN and es, and 13 conceptual content items.
+4. Install the GitHub App on this repository only with Contents read/write, Pull Requests read/write and Checks read-only.
+5. Configure GITHUB_APP_ID, GITHUB_INSTALLATION_ID and GITHUB_APP_PRIVATE_KEY as Cloudflare Pages production variables/secrets.
+6. Run live Admin CRUD, translation, preview, media PR, publish PR, unpublish PR and merge-to-D1 synchronization acceptance tests.
+7. Document and test production D1 backup/restore and rollback.
 
-## Explicit exclusions
+## Known scope boundaries
 
-No live API, user accounts, SSR, always-on Node.js VPS, database, newsletter, payment/registration processing or third-party analytics.
+- The CMS publisher currently supports lessons, culture, festivals and books. The events page remains a static information page and is not yet a CMS content collection.
+- The existing locale switcher relies on matching slugs; full contentId-based locale matching and redirect consolidation remain follow-up work.
+- Media assets are stored in the repository under public/media/ through reviewed PRs. No separate R2 bucket is used.
+- The CMS does not auto-merge PRs or write directly to main.
+- Production D1 is not modified by CI. Only the dedicated CMS bootstrap workflow applies production migrations/imports after merge.
 
-## References
+## Acceptance principle
 
-[Repository map](../architecture/07-implemented-repository-map.md) · [Runbook](05-developer-runbook.md) · [Release log](../operations/03-change-log.md) · [Launch checklist](03-launch-checklist.md).
+Do not describe the CMS as fully production-ready until the migration/import, GitHub App setup, live CRUD/publication/media checks and backup/restore evidence all pass. The public static site remains available independently of these CMS release gates.
