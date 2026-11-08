@@ -2,7 +2,7 @@ import { filterContent, paginate, parseTags, translationStatus, wordCount, local
 import {
   AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
   getContent, createContent, createTranslation, saveDraft, previewContent,
-  uploadMedia, submitContent, discardDraft, getPullRequestStatus
+  uploadMedia, submitContent, discardDraft, getPullRequestStatus, syncPullRequest
 } from "../lib/admin-api.mjs";
 
 const root = document.querySelector("[data-admin-app]");
@@ -22,7 +22,7 @@ if (root) {
     books:{title:"Books",singular:"book",apiCollection:"books",subtitle:"Manage book introductions and reading guides."},
     events:{title:"Events",singular:"event",apiCollection:"events",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null},etags:{en:null,"zh-CN":null},submissions:[]};
+  const state = {items:demoItems.slice(),capabilities:{publish:false,mediaUpload:false,preview:true},page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null,es:null},etags:{en:null,"zh-CN":null,es:null},submissions:[]};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -70,22 +70,22 @@ if (root) {
   const updateCounts = () => {
     Object.keys(collectionNames).forEach((name) => {
       const node = $("[data-count='" + name + "']");
-      if (node) node.textContent = demoMode ? String(state.items.filter((item) => item.type === name).length) : "—";
+      if (node) node.textContent = String(state.items.filter((item) => item.type === name).length);
     });
     const published = state.items.filter((item) => item.statuses?.includes("published") || item.status === "published").length;
     const drafts = state.items.filter((item) => item.statuses?.includes("draft") || item.status === "draft").length;
-    const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh; }).length;
+    const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh || !t.es; }).length;
     const setStat = (name, value) => { const node = $("[data-stat='" + name + "']"); if (node) node.textContent = String(value); };
-    setStat("total", demoMode ? state.items.length : "—");
-    setStat("published", demoMode ? published : "—");
-    setStat("drafts", demoMode ? drafts : "—");
-    setStat("translations", demoMode ? incomplete : "—");
-    setStat("coverage", demoMode ? (state.items.length ? Math.round((state.items.length - incomplete) / state.items.length * 100) + "%" : "0%") : "—");
-    setStat("missing", demoMode ? incomplete : "—");
+    setStat("total", state.items.length);
+    setStat("published", published);
+    setStat("drafts", drafts);
+    setStat("translations", incomplete);
+    setStat("coverage", state.items.length ? Math.round((state.items.length - incomplete) / state.items.length * 100) + "%" : "0%");
+    setStat("missing", incomplete);
   };
   const languagePills = (item) => {
     const t = translationStatus(item);
-    return '<div class="language-pills"><span class="language-pill ' + (t.en ? "" : "missing") + '">EN</span><span class="language-pill ' + (t.zh ? "" : "missing") + '">中文</span></div>';
+    return '<div class="language-pills"><span class="language-pill ' + (t.en ? "" : "missing") + '">EN</span><span class="language-pill ' + (t.zh ? "" : "missing") + '">中文</span><span class="language-pill ' + (t.es ? "" : "missing") + '">ES</span></div>';
   };
   const statusPill = (status) => '<span class="status-pill status-' + escapeHtml(status) + '">' + escapeHtml(status) + '</span>';
   const renderList = () => {
@@ -97,12 +97,10 @@ if (root) {
     const result = paginate(filtered,state.pageNumber,state.pageSize);
     state.pageNumber = result.page;
     const rows = $("[data-content-rows]");
-    if (!demoMode) {
-      rows.innerHTML = '<tr><td colspan="8" class="table-empty">Connect this screen to the approved Agent 5 API contract to load live content. No sample records are shown in production.</td></tr>';
-    } else if (!result.items.length) {
+    if (!result.items.length) {
       rows.innerHTML = '<tr><td colspan="8" class="table-empty">No content matches these filters. Try another search or create a new item.</td></tr>';
     } else {
-      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.en || item.title.zh) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.en || item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
+      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
     }
     const summary = $("[data-pagination-summary]");
     if (summary) summary.textContent = "Showing " + result.start + "–" + result.end + " of " + result.total + " items";
@@ -110,34 +108,30 @@ if (root) {
     if (pageNumber) pageNumber.textContent = result.page + " / " + result.pages;
     $("[data-page-prev]").disabled = result.page <= 1;
     $("[data-page-next]").disabled = result.page >= result.pages;
+    $("[data-action='feature']").forEach((button)=>{button.disabled=!demoMode && !state.capabilities.publish;});
   };
   const renderDashboard = () => {
     updateCounts();
     const recent = state.items.slice().sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0,5);
     const rows = $("[data-recent-rows]");
-    if (!demoMode) {
-      rows.innerHTML = '<tr><td colspan="5" class="table-empty">Live dashboard metrics will appear when the Agent 5 API is connected.</td></tr>';
-      return;
-    }
-    rows.innerHTML = recent.map((item) => '<tr><td><div class="content-cell"><span class="content-thumb">文</span><span><strong>' + escapeHtml(item.title.en || item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + escapeHtml(collectionNames[item.type].title) + '</td><td>' + statusPill(item.status) + '</td><td>' + escapeHtml(item.updatedAt) + '</td><td><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '">→</button></td></tr>').join("");
+    if (!recent.length) { rows.innerHTML = '<tr><td colspan="5" class="table-empty">No content has been added yet.</td></tr>'; return; }
+    rows.innerHTML = recent.map((item) => '<tr><td><div class="content-cell"><span class="content-thumb">文</span><span><strong>' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + escapeHtml(collectionNames[item.type].title) + '</td><td>' + statusPill(item.status) + '</td><td>' + escapeHtml(item.updatedAt) + '</td><td><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '">→</button></td></tr>').join("");
   };
   const renderLanguages = () => {
     const tbody = $("[data-language-rows]");
-    if (!demoMode) {
-      tbody.innerHTML = '<tr><td colspan="5" class="table-empty">Translation coverage will load from the content API.</td></tr>';
-      return;
-    }
+    if (!state.items.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No content has been added yet.</td></tr>'; return; }
     tbody.innerHTML = Object.keys(collectionNames).map((name) => {
       const items = state.items.filter((item) => item.type === name);
       const en = items.filter((item) => translationStatus(item).en).length;
       const zh = items.filter((item) => translationStatus(item).zh).length;
-      const paired = items.filter((item) => { const t = translationStatus(item); return t.en && t.zh; }).length;
-      return '<tr><td>' + collectionNames[name].title + '</td><td>' + en + ' / ' + items.length + '</td><td>' + zh + ' / ' + items.length + '</td><td>' + paired + '</td><td>' + (items.length - paired) + '</td></tr>';
+      const es = items.filter((item) => translationStatus(item).es).length;
+      const paired = items.filter((item) => { const t = translationStatus(item); return t.en && t.zh && t.es; }).length;
+      return '<tr><td>' + collectionNames[name].title + '</td><td>' + en + ' / ' + items.length + '</td><td>' + zh + ' / ' + items.length + '</td><td>' + es + ' / ' + items.length + '</td><td>' + paired + '</td><td>' + (items.length - paired) + '</td></tr>';
     }).join("");
   };
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
   const formChecked = (name) => Boolean(form.elements.namedItem(name)?.checked);
-  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : "en";
+  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : locale === "es" ? "es" : "en";
   const showAdminBanner = (message, kind = "warning") => {
     const banner = $("[data-admin-banner]");
     banner.hidden = !message;
@@ -158,6 +152,8 @@ if (root) {
       level:formValue("level." + suffix).trim(),
       chinese:locale === "en" ? formValue("chinese.en").trim() : "",
       pinyin:locale === "en" ? formValue("pinyin.en").trim() : "",
+      imageUrl:formValue("imageUrl." + suffix).trim(),
+      imageAlt:formValue("imageAlt." + suffix).trim(),
       mediaSrc:formValue("mediaSrc." + suffix).trim(),
       mediaAlt:formValue("mediaAlt." + suffix).trim(),
       mediaCredit:formValue("mediaCredit." + suffix).trim(),
@@ -171,8 +167,8 @@ if (root) {
   const formData = () => ({
     id:formValue("id"),
     type:formValue("type") || state.collection,
-    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN")},
-    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh")}}
+    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN"),es:localeFormData("es")},
+    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh"),es:formValue("seoTitle.es")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh"),es:formValue("seoDescription.es")}}
   });
   const setField = (name,value) => { const field = form.elements.namedItem(name); if (!field) return; if (field.type === "checkbox") field.checked = Boolean(value); else field.value = value ?? ""; };
   const markClean = () => { state.dirty = false; $("[data-save-state]").textContent = "All changes saved"; $("[data-save-state]").classList.remove("is-dirty"); };
@@ -183,7 +179,7 @@ if (root) {
     const value = localeFormData(locale);
     const existing = state.variants[locale];
     if (!localeIsComplete(value)) {
-      throw new Error((locale === "en" ? "English" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
+      throw new Error((locale === "en" ? "English" : locale === "es" ? "Spanish" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
     }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug)) {
       throw new Error("URL slug must use lowercase letters, numbers and hyphens.");
@@ -193,14 +189,15 @@ if (root) {
       if (!value.mediaAlt || !value.mediaCredit || !value.mediaLicense) {
         throw new Error("Add image alt text, credit and license before saving a cover image.");
       }
-      media = [{
+      const selectedMedia = {
         src:value.mediaSrc,
         alt:value.mediaAlt,
         decorative:false,
         credit:value.mediaCredit,
         license:value.mediaLicense,
         ...(value.mediaSource ? {sourceUrl:value.mediaSource} : {})
-      }];
+      };
+      media = [selectedMedia, ...media.filter((asset)=>asset.src !== value.mediaSrc)];
     } else if (existing?.media?.length && !value.mediaSrc) {
       media = existing.media;
     }
@@ -216,7 +213,8 @@ if (root) {
       readingMinutes:value.readingMinutes,
       bodyMarkdown:value.bodyMarkdown,
       media,
-      sources:existing?.sources || []
+      sources:existing?.sources || [],
+      ...(value.imageUrl ? {imageUrl:value.imageUrl,imageAlt:value.imageAlt} : {})
     };
     Object.assign(payload,localizedSeoPayload(locale,value.seoTitle,value.seoDescription));
     if (value.level) payload.level = value.level;
@@ -226,11 +224,11 @@ if (root) {
     return payload;
   };
   const mapCollectionToUi = (collection) => collection === "culture" ? "articles" : collection;
-  const mergeSummaries = (enItems, zhItems) => {
+  const mergeSummaries = (...groups) => {
     const merged = new Map();
     const add = (summary) => {
       const id = summary.contentId;
-      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null},categories:{en:"",zh:""},pullRequest:null});
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:"",es:""},description:{en:"",zh:"",es:""},body:{en:"",zh:"",es:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null,es:null},categories:{en:"",zh:"",es:""},pullRequest:null,pullRequestState:null});
       const item = merged.get(id);
       const locale = summary.locale;
       const suffix = uiLocale(locale);
@@ -245,9 +243,10 @@ if (root) {
       item.featured = item.featured || Boolean(summary.featured);
       if (!item.updatedAt || Date.parse(summary.updatedAt) > Date.parse(item.updatedAt)) item.updatedAt = summary.updatedAt;
       if (summary.pullRequest) item.pullRequest = summary.pullRequest;
+      if (summary.pullRequestState) item.pullRequestState = summary.pullRequestState;
       item.translationLocales = [...new Set([...(item.translationLocales || []),...(summary.translationLocales || []),locale])];
     };
-    enItems.forEach(add); zhItems.forEach(add);
+    groups.flat().forEach(add);
     return [...merged.values()].map((item) => {
       item.statuses = [...new Set(item.statuses)];
       item.status = item.statuses.length > 1 ? (item.statuses.every((x)=>x===item.statuses[0]) ? item.statuses[0] : "mixed") : (item.statuses[0] || "draft");
@@ -267,15 +266,29 @@ if (root) {
     return items;
   };
   const loadAllContent = async () => {
-    const [enItems,zhItems] = await Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN")]);
-    state.items = mergeSummaries(enItems,zhItems);
+    const loadLocales = () => Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN"),fetchAllSummaries("es")]);
+    let [enItems,zhItems,esItems] = await loadLocales();
+    state.items = mergeSummaries(enItems,zhItems,esItems);
+    const trackedPullRequests = [...new Set(state.items.filter((item)=>item.pullRequest && ["pending","open"].includes(item.pullRequestState)).map((item)=>item.pullRequest))];
+    if (trackedPullRequests.length) {
+      const statuses = await Promise.all(trackedPullRequests.map(async (number)=>{const status=await getPullRequestStatus(number).catch(()=>null);if(status && ["merged","closed"].includes(status.state)) await syncPullRequest(number).catch(()=>null);return status;}));
+      if (statuses.some((status)=>status && ["merged","closed"].includes(status.state))) {
+        [enItems,zhItems,esItems] = await loadLocales();
+        state.items = mergeSummaries(enItems,zhItems,esItems);
+        if (state.page === "editor" && state.selectedId) {
+          await loadVariantDetails(state.selectedId);
+          renderVariantMedia();
+          setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
+        }
+      }
+    }
     updateCounts();
     if (state.page === "dashboard") renderDashboard();
     if (state.page === "content") renderList();
     if (state.page === "languages") renderLanguages();
   };
   const loadVariantDetails = async (contentId) => {
-    const locales = ["en","zh-CN"];
+    const locales = ["en","zh-CN","es"];
     const results = await Promise.all(locales.map(async (locale) => {
       try {
         const result = await getContent(contentId,locale);
@@ -285,8 +298,8 @@ if (root) {
         throw error;
       }
     }));
-    state.variants = {en:null,"zh-CN":null};
-    state.etags = {en:null,"zh-CN":null};
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     results.forEach((result) => {
       state.variants[result.locale] = result.data;
       state.etags[result.locale] = result.etag;
@@ -298,7 +311,7 @@ if (root) {
     const value = item || {};
     setField("id",value.id || "");
     setField("type",value.type || state.collection);
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const suffix = uiLocale(locale);
       const variant = value.variants?.[locale] || null;
       const demo = value.locales?.[locale] || null;
@@ -313,6 +326,8 @@ if (root) {
       setField("featured." + suffix,variant?.featured ?? demo?.featured ?? value.featured ?? false);
       setField("readingMinutes." + suffix,variant?.readingMinutes ?? demo?.readingMinutes ?? 5);
       setField("level." + suffix,variant?.level ?? demo?.level ?? "");
+      setField("imageUrl." + suffix,variant?.imageUrl ?? demo?.imageUrl ?? "");
+      setField("imageAlt." + suffix,variant?.imageAlt ?? demo?.imageAlt ?? "");
       setField("mediaSrc." + suffix,variant?.media?.[0]?.src ?? demo?.mediaSrc ?? "");
       setField("mediaAlt." + suffix,variant?.media?.[0]?.alt ?? demo?.mediaAlt ?? "");
       setField("mediaCredit." + suffix,variant?.media?.[0]?.credit ?? demo?.mediaCredit ?? "");
@@ -323,15 +338,30 @@ if (root) {
     setField("status","draft");
   };
   const renderVariantMedia = () => {
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const node=$('[data-variant-media-list="' + uiLocale(locale) + '"]');
       if(!node) return;
-      const assets=state.variants[locale]?.media || [];
-      node.innerHTML=assets.length ? assets.map((asset,index) => {
+      const variant=state.variants[locale];
+      const assets=variant?.media || [];
+      const pending=variant?.pendingMedia || [];
+      const renderAsset=(asset,index,isPending=false) => {
         const source=asset.src || "";
-        return '<div class="variant-media-item"><img src="' + escapeHtml(source) + '" alt="' + escapeHtml(asset.alt || "") + '" /><div><strong>' + escapeHtml(source.split("/").pop()) + '</strong><small>' + escapeHtml(asset.license || "License not supplied") + '</small><button class="text-button" type="button" data-action="select-variant-media" data-locale="' + locale + '" data-src="' + escapeHtml(source) + '" data-alt="' + escapeHtml(asset.alt || "") + '" data-credit="' + escapeHtml(asset.credit || "") + '" data-license="' + escapeHtml(asset.license || "") + '" data-source="' + escapeHtml(asset.sourceUrl || "") + '">Use as cover</button></div></div>';
-      }).join("") : '<p class="field-hint">No images attached to this language variant yet.</p>';
+        const status=isPending ? '<small class="media-review-status">Awaiting media PR merge</small>' : '<small>' + escapeHtml(asset.license || "License not supplied") + '</small>';
+        const link=isPending && variant?.pullRequestUrl ? '<a class="text-button" href="' + escapeHtml(variant.pullRequestUrl) + '" target="_blank" rel="noopener noreferrer">Review PR #' + escapeHtml(String(variant.pullRequest || "")) + '</a>' : "";
+        const useButton=isPending ? "" : '<button class="text-button" type="button" data-action="select-variant-media" data-locale="' + locale + '" data-src="' + escapeHtml(source) + '" data-alt="' + escapeHtml(asset.alt || "") + '" data-credit="' + escapeHtml(asset.credit || "") + '" data-license="' + escapeHtml(asset.license || "") + '" data-source="' + escapeHtml(asset.sourceUrl || "") + '">Use as cover</button>';
+        return '<div class="variant-media-item"><img src="' + escapeHtml(source) + '" alt="' + escapeHtml(asset.alt || "") + '" /><div><strong>' + escapeHtml(source.split("/").pop()) + '</strong>' + status + link + useButton + '</div></div>';
+      };
+      const html=[...assets.map((asset,index)=>renderAsset(asset,index,false)),...pending.map((asset,index)=>renderAsset(asset,index,true))].join("");
+      node.innerHTML=html || '<p class="field-hint">No images attached to this language variant yet.</p>';
     });
+  };
+  const setEditorLock = (locked) => {
+    form.querySelectorAll("input,textarea,select").forEach((field)=>{ field.disabled=locked || (field.hasAttribute("data-variant-media-input") && !state.capabilities.mediaUpload); });
+    $("[data-action='save-draft'],[data-action='delete-current']").forEach((button)=>{button.disabled=locked;});
+    $("[data-action='publish'],[data-action='unpublish']").forEach((button)=>{button.disabled=locked || !state.capabilities.publish;});
+    $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=locked || !state.capabilities.mediaUpload;});
+    if (locked) showAdminBanner("This article has an open review pull request. Editing is locked until the pull request is merged or closed.", "warning");
+    else showAdminBanner("", "success");
   };
   const updateStatusControls = () => {
     const variants = Object.values(state.variants).filter(Boolean);
@@ -344,8 +374,9 @@ if (root) {
     state.selectedId = item?.id || null;
     state.isNew = !item;
     state.dirty = false;
-    state.variants = {en:null,"zh-CN":null};
-    state.etags = {en:null,"zh-CN":null};
+    form.querySelectorAll("input,textarea,select").forEach((field)=>{if(!field.hasAttribute("data-variant-media-input"))field.disabled=false;});
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     if (!demoMode && item) {
       setConnection("Loading content");
       try { await loadVariantDetails(item.id); }
@@ -353,7 +384,8 @@ if (root) {
     } else if (demoMode && item) {
       state.variants = {
         en:item.title?.en ? {status:item.status,featured:item.featured} : null,
-        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null
+        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null,
+        es:item.title?.es ? {status:item.status,featured:item.featured} : null
       };
     }
     const editorItem = item ? {...item,variants:state.variants} : null;
@@ -364,6 +396,7 @@ if (root) {
     $("[data-editor-heading]").textContent = item ? "Edit content" : "Create " + collectionNames[state.collection].singular;
     updateTranslationIndicators();
     updateStatusControls();
+    setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
     renderVariantMedia();
     $("[data-action='back-to-list']").dataset.backTo = state.collection;
     setPage("editor");
@@ -371,7 +404,7 @@ if (root) {
     if (!demoMode) setConnection(state.session ? "Connected as " + state.session.email : "API session pending");
   };
   const updateTranslationIndicators = () => {
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const suffix = uiLocale(locale);
       const title = formValue("title." + suffix);
       const desc = formValue("description." + suffix);
@@ -391,8 +424,8 @@ if (root) {
     return result;
   };
   const saveLiveDrafts = async () => {
-    const locales = ["en","zh-CN"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
-    if (!locales.length) throw new Error("Add content in English or 简体中文 before saving.");
+    const locales = ["en","zh-CN","es"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
+    if (!locales.length) throw new Error("Add content in English, 简体中文 or Spanish before saving.");
     for (const locale of locales) {
       const payload = toApiPayload(locale);
       if (!state.selectedId) {
@@ -421,7 +454,7 @@ if (root) {
   };
   const preview = async (openDialog = true) => {
     const value = formData();
-    const locale = state.previewLocale === "zh" ? "zh-CN" : "en";
+    const locale = state.previewLocale === "zh" ? "zh-CN" : state.previewLocale === "es" ? "es" : "en";
     const variant = value.locales[locale];
     if (!variant.title || !variant.description || !variant.bodyMarkdown.trim()) {
       showToast("Complete the selected language before previewing it.","error");
@@ -439,7 +472,7 @@ if (root) {
       try {
         if (!state.selectedId) await saveLiveDrafts();
         const payload = toApiPayload(locale);
-        const result = await previewContent(state.selectedId,{locale,metadata:payload,bodyMarkdown:payload.bodyMarkdown});
+        const result = await previewContent(state.selectedId,{content:payload});
         $("[data-preview-title]", document).textContent = variant.title;
         $("[data-preview-description]", document).textContent = variant.description;
         $("[data-preview-category]", document).textContent = variant.category;
@@ -454,7 +487,7 @@ if (root) {
   const saveContent = async () => {
     if (demoMode) {
       const value = formData();
-      const complete = ["en","zh-CN"].filter((locale)=>localeIsComplete(value.locales[locale]));
+      const complete = ["en","zh-CN","es"].filter((locale)=>localeIsComplete(value.locales[locale]));
       if (!complete.length) { showToast("Complete at least one language version before saving.","error"); return; }
       const item = {
         id:state.selectedId || "demo-" + Date.now().toString(36),
@@ -481,15 +514,16 @@ if (root) {
     } catch (error) { handleApiError(error); }
   };
   const submitWorkflow = async (intent) => {
+    if (!demoMode && !state.capabilities.publish) { showToast("Publication is not configured yet. A GitHub App with repository write access is required.", "error"); return; }
     if (demoMode) {
       await saveContent();
       showToast(intent === "publish" ? "Publish request previewed in development mode." : "Unpublish request previewed in development mode.","info");
       return;
     }
     try {
-      const previouslyPublished = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "published");
+      const previouslyPublished = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "published");
       await saveLiveDrafts();
-      const locales = ["en","zh-CN"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
+      const locales = ["en","zh-CN","es"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
       if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
       const results = [];
       for (const locale of locales) {
@@ -528,6 +562,7 @@ if (root) {
     } catch (error) { handleApiError(error); }
   };
   const toggleFeatured = async (id) => {
+    if (!demoMode && !state.capabilities.publish) { showToast("Featured changes require the GitHub App publication integration.", "error"); return; }
     if (demoMode) {
       const item=state.items.find((entry)=>entry.id===id);
       if(item){item.featured=!item.featured;renderList();showToast(item.featured?"Added to featured content.":"Removed from featured content.","info");}
@@ -535,7 +570,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(id);
-      const locales=["en","zh-CN"].filter((locale)=>state.variants[locale]);
+      const locales=["en","zh-CN","es"].filter((locale)=>state.variants[locale]);
       if(!locales.length) throw new Error("No editable language variants were found.");
       for(const locale of locales){
         const variant=state.variants[locale];
@@ -556,7 +591,8 @@ if (root) {
           bodyMarkdown:variant.bodyMarkdown,
           readingMinutes:variant.readingMinutes || 5,
           media:variant.media || [],
-          sources:variant.sources || []
+          sources:variant.sources || [],
+          ...(variant.imageUrl ? {imageUrl:variant.imageUrl,imageAlt:variant.imageAlt || ""} : {})
         };
         if(variant.order !== undefined) payload.order=variant.order;
         if(variant.level) payload.level=variant.level;
@@ -588,7 +624,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(state.pendingDelete);
-      const drafts = ["en","zh-CN"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
+      const drafts = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
       if (!drafts.length) throw new Error("Only an unsubmitted draft variant can be discarded. Published content must go through a reviewed unpublish workflow.");
       for (const locale of drafts) await discardDraft(state.pendingDelete,locale);
       state.pendingDelete = null;
@@ -617,10 +653,14 @@ if (root) {
       setConnection("Checking Access session");
       const session = await getAdminSession();
       state.session = session;
+      state.capabilities = session.capabilities || {preview:true,publish:false,mediaUpload:false};
       const email = $("[data-session-email]",document);
       const role = $("[data-session-role]",document);
       if (email) email.textContent = session.email;
       if (role) role.textContent = session.role;
+      $("[data-action='publish'],[data-action='unpublish'],[data-action='feature']").forEach((button)=>{button.disabled=!state.capabilities.publish;button.title=state.capabilities.publish?"Create a reviewed GitHub publication pull request":"Configure the GitHub App integration to enable publication";});
+      $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=!state.capabilities.mediaUpload;button.title=state.capabilities.mediaUpload?"Upload media in a reviewed GitHub pull request":"Configure the GitHub App integration to enable media uploads";});
+      $("[data-variant-media-input]").forEach((input)=>{input.disabled=!state.capabilities.mediaUpload;});
       setConnection("Connected");
       showAdminBanner("", "success");
       await loadAllContent();
@@ -676,7 +716,8 @@ if (root) {
       }
       await refreshVariant(locale);
       markClean();
-      showToast("Image uploaded and attached to the " + (locale==="en" ? "English" : "Chinese") + " draft.","success");
+      setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
+      showToast("Media PR #" + result.pullRequest.number + " created. Merge it before publishing the article.","success");
       renderVariantMedia();
     } catch(error) { handleApiError(error); }
   };
@@ -810,7 +851,7 @@ if (root) {
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (!demoMode) {
-    $('[data-action="preview"], [data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow is not implemented yet. Draft editing and saving are available.";});
+    $('[data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow requires the GitHub publication/media integration.";});
     $('[data-variant-media-input]').forEach((field)=>{field.disabled=true;});
     $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});

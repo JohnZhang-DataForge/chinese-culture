@@ -1,50 +1,58 @@
-# Deployment and Environments — Cloudflare Workers Free
+# Deployment and Environments — Cloudflare Pages + D1 CMS
 
-**Status:** Proposed · **No deployment has been created.** This file is a procedure design, not runnable configuration.
+**Status:** Partially implemented and deployed. Public routes remain static; authenticated editorial APIs run as Cloudflare Pages Functions.
 
-## Environment model
+## Production components
 
-| Environment | Location | Role |
+| Component | Verified configuration | Role |
 |---|---|---|
-| Local | Developer machine | Preview Astro site using Node.js tools; no persistent production server |
-| CI build | GitHub Actions or approved build runner | Reproducible Astro static generation and tests |
-| Preview | Cloudflare preview deployment / subdomain | Review candidate static files without affecting public site |
-| Production | Cloudflare Workers Static Assets — Free | Deliver all public pages and assets |
+| Public site | Cloudflare Pages project `chinese-culture` | Serves prerendered Astro HTML/CSS/JS/media |
+| Build output | `dist/` | Static site artifact |
+| Pages Functions | `functions/api/admin/v1/` | Authenticated CMS APIs only |
+| D1 binding | `CMS_DB` | Private editorial database binding |
+| D1 database | `chinese-culture-cms` | Canonical article/translation/revision/submission storage |
+| Access app | `chinese-culture.site/admin` | Protects both `/admin/*` and `/api/admin/*` destinations |
+| Access policy | Exact administrator email allowlist | Deny-by-default access |
+| Admin origin | `https://chinese-culture.site` | Same-origin mutation check |
 
-Prefer a free `workers.dev` URL initially; custom domains are optional and may have registration cost.
+## Deployment workflow
 
-## No runtime Node server
+1. GitHub Actions runs unit tests, a local-only D1 migration check, Astro build and static output verification.
+2. The Pages deployment workflow deploys `dist/` and the Pages Functions bundle to the existing Pages project.
+3. The CMS bootstrap workflow runs only when migration/import code reaches `main`. It applies unapplied D1 migrations remotely, then imports the existing published article variants idempotently.
+4. Editorial publication creates a GitHub branch and pull request. It never writes directly to `main` or auto-merges.
+5. Merging the reviewed content PR triggers the normal Pages deployment. Public pages are generated from the Markdown snapshot on `main`.
 
-Node.js executes while **building** the site. The production content is HTML, CSS, JS and media served by Cloudflare; no permanent Node server is launched. In future, request-driven Workers may execute compatible JavaScript/Node APIs only within free quota.
+## Local development and environment isolation
 
-## Planned release workflow (future implementation)
+See [CMS D1 local development runbook](../runbooks/cms-d1-local-development.md).
 
-1. Choose domain/hostname and authorize Cloudflare account access.
-2. Implement Astro static generation **without** SSR or Cloudflare server adapter for the normal page routes.
-3. Set CI to run a supported, pinned Node.js version and build static output.
-4. Run checks for Markdown metadata, link integrity, accessibility, media rights and build success.
-5. Deploy only generated static artifacts with restricted Cloudflare credentials.
-6. Validate preview routes, CDN behavior, 404 pages, HTTPS, images and redirects.
-7. Verify that normal visits are **static asset requests**, not Worker script invocations.
-8. Review resource usage against Free caps, approve release and record artifact/commit.
-9. If issues occur, redeploy last-known-good output and correct source via Git PR.
+- Local migration command: `npx wrangler d1 migrations apply chinese-culture-cms --local`.
+- Local Pages Functions runtime: `npx wrangler pages dev dist`.
+- Automated tests use only local D1 state.
+- The production migration/import workflow is separate and explicit. Tests must never use `--remote`.
 
-## Cloudflare-specific limits
+## Security configuration
 
-Static asset requests are free and unlimited. As of November 2026, dynamic Worker requests are limited to 100,000/day and 10 ms CPU/request on Free, with 128 MB memory, 50 subrequests/request, up to 20,000 assets/version, and 25 MiB max per asset. Re-check [official billing](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/) and [platform limits](https://developers.cloudflare.com/workers/platform/limits/) before deployment.
+- Cloudflare Access protects both the Admin page and Admin API paths.
+- Pages Functions verify the Access JWT issuer, audience, signature, expiry and administrator email.
+- Mutating requests require the exact configured Origin and an identity-bound CSRF token.
+- `ADMIN_CSRF_SECRET` is a Pages secret and is not committed to Git.
+- The local-only auth bypass is restricted to localhost plus an exact local `ADMIN_ORIGIN`; it is not enabled in production.
+- The GitHub App is not yet configured. Publication remains disabled until an app restricted to this repository is installed and its ID, installation ID and private key are stored as Pages secrets.
+- Media upload remains disabled pending the approved storage/branch implementation.
 
-## Release gates
+## Release gates still outstanding
 
-- All core site pages prerendered.
-- No billable services, database, Worker SSR or background jobs provisioned without authorization.
-- No secrets or internal-only Markdown copied to public assets.
-- No external calls required to render regular articles.
-- Verified preview and production content, domain/HTTPS, links, accessibility and safe rollback.
+- Apply production migration and verify the 39 existing article variants are imported with all three locales.
+- Verify D1 CRUD/save/reload/translation/preview against production after Access login.
+- Create a repository-scoped GitHub App with Contents read/write, Pull Requests read/write and Checks read-only; no main-branch direct write or merge permission.
+- Configure GitHub App Pages secrets and test publish/review/unpublish PR flows.
+- Implement and test media upload with mandatory rights/accessibility metadata.
+- Complete D1 backup/restore and publication rollback evidence.
 
-## Deferred
+## Rollback
 
-Native sign-up, dynamic event registration, authenticated tools, API routes and SSR require a separate design/ADR and an explicit budget. No GitHub Actions YAML, Cloudflare config or other code is added by this documentation change.
-
-## Reference
-
-[Cloudflare deployment architecture](06-cloudflare-free-node-deployment.md)
+- Public site: redeploy the previous known-good Pages artifact/commit.
+- Content publication: revert the content PR through a new reviewed PR; do not edit D1 directly to hide a public-site regression.
+- D1 schema: use the automatic pre-migration backup and a documented restore procedure; do not manually drop or rewrite production tables.

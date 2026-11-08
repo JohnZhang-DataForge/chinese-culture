@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-static.mjs",
-    "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main"
+    "deploy": "npm run build && npm run verify && wrangler pages deploy dist --project-name=chinese-culture --branch=main",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "astro": "^5.16.0"

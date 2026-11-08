@@ -41,8 +41,17 @@ export async function onRequest(context) {
     }
   }
 
+  const requestUrl = new URL(request.url);
+  const localAuthBypass = requestUrl.hostname === "localhost"
+    && requestUrl.origin === context.env.ADMIN_ORIGIN
+    && context.env.CMS_LOCAL_AUTH_BYPASS === "true"
+    && typeof context.env.ADMIN_EMAIL === "string"
+    && context.env.ADMIN_EMAIL.includes("@");
+
   try {
-    context.data.admin = await verifyAccessJwt(request, context.env);
+    context.data.admin = localAuthBypass
+      ? { email: context.env.ADMIN_EMAIL, role: "admin", issuer: "local-development" }
+      : await verifyAccessJwt(request, context.env);
   } catch (error) {
     if (error instanceof AccessConfigError) return denied("admin_api_not_configured", 503);
     if (error instanceof AccessAuthError) {

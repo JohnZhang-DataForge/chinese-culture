@@ -74,3 +74,12 @@ Hardcoded the non-secret Cloudflare account ID in the deployment workflow and re
 ## 2026-11-05 — Enable deployment after repository secret setup
 
 The user confirmed that repository secret `CLOUDFLARE_API_TOKEN` has been added. Removed the extra `CLOUDFLARE_DEPLOY_ENABLED` variable gate so pushes to `main` trigger the Pages Direct Upload deployment automatically. Pull requests remain non-deploying. This commit triggers the first production deployment; success must be verified from the resulting Actions run and Pages deployment record.
+
+## 2026-11-09 — CMS production-readiness integration
+
+- Extended the content contract to three locale variants (en, zh-CN, es) and preserved the existing 39 public Markdown articles with deterministic content IDs and legacy Unsplash cover URLs.
+- Added an idempotent D1 importer and a production-only bootstrap workflow; production migration/import is triggered after the integration PR reaches main.
+- Completed live D1 Admin UI integration, secure preview, GitHub App publication/media PR generation, explicit PR status synchronization and D1 revision updates after merge.
+- Added local Pages Functions/D1 integration tests, GitHub App JWT tests and media signature validation.
+- Verified the Cloudflare Pages deployment, CMS_DB binding, Cloudflare Access coverage for both Admin and Admin API paths, exact-email policy, ADMIN_EMAIL and CSRF secret configuration.
+- Remaining manual release gate: install the repository-scoped GitHub App and configure GITHUB_APP_ID, GITHUB_INSTALLATION_ID and GITHUB_APP_PRIVATE_KEY as Pages production variables/secrets. Production D1 bootstrap/import and live end-to-end publication tests remain pending until merge and App setup.

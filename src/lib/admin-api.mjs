@@ -179,3 +179,7 @@ export function discardDraft(contentId, locale, fetcher = fetch) {
 export function getPullRequestStatus(number, fetcher = fetch) {
   return requestAdminApi(ADMIN_API_BASE + "/pull-requests/" + encodeURIComponent(number), {}, fetcher);
 }
+
+export function syncPullRequest(number, fetcher = fetch) {
+  return requestAdminApi(ADMIN_API_BASE + "/pull-requests/" + encodeURIComponent(number) + "/sync", { method: "POST", body: {} }, fetcher);
+}

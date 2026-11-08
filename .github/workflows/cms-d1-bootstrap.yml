@@ -1,0 +1,49 @@
+name: Bootstrap Chinese Culture CMS database
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "database/migrations/**"
+      - "scripts/import-content-to-d1.mjs"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chinese-culture-cms-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  migrate-and-import:
+    name: Apply D1 migrations and import published articles
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Apply remote D1 migrations
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: dff021f8489d2c316a14575c76de16d4
+          command: d1 migrations apply chinese-culture-cms --remote
+
+      - name: Import current published content idempotently
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: dff021f8489d2c316a14575c76de16d4
+          CMS_D1_DATABASE_ID: 8b6f6c98-06fe-49eb-adbc-690d4b57c058
+          CMS_SOURCE_COMMIT: ${{ github.sha }}
+        run: node scripts/import-content-to-d1.mjs

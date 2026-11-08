@@ -7,9 +7,9 @@ import {
 } from "../src/lib/admin-api.mjs";
 
 const records = [
-  {id:"one",slug:"one",type:"articles",title:{en:"Brush art",zh:"书法"},description:{en:"A guide",zh:"指南"},body:{en:"Text",zh:"正文"},status:"published",tags:["art"],translationLocales:["en","zh-CN"]},
+  {id:"one",slug:"one",type:"articles",title:{en:"Brush art",zh:"书法"},description:{en:"A guide",zh:"指南"},body:{en:"Text",zh:"正文"},status:"published",tags:["art"],translationLocales:["en","zh-CN","es"]},
   {id:"two",slug:"two",type:"articles",title:{en:"Festival guide",zh:""},description:{en:"A guide",zh:""},body:{en:"Text",zh:""},status:"draft",tags:["festival"],translationLocales:["en"]},
-  {id:"three",slug:"three",type:"books",title:{en:"The Analects",zh:"论语"},description:{en:"A book",zh:"一本书"},body:{en:"Text",zh:"正文"},status:"published",tags:["classic"],translationLocales:["en","zh-CN"]}
+  {id:"three",slug:"three",type:"books",title:{en:"The Analects",zh:"论语"},description:{en:"A book",zh:"一本书"},body:{en:"Text",zh:"正文"},status:"published",tags:["classic"],translationLocales:["en","zh-CN","es"]}
 ];
 
 test("filters content by title, ID, status and translation completeness", () => {
@@ -19,6 +19,7 @@ test("filters content by title, ID, status and translation completeness", () => 
   assert.equal(filterContent([{...records[0],status:"mixed",statuses:["published","draft"]}],{status:"published"}).length,1);
   assert.equal(filterContent(records,{language:"complete"}).length,2);
   assert.equal(filterContent(records,{language:"missing-zh"}).length,1);
+  assert.equal(filterContent(records,{language:"missing-es"}).length,1);
 });
 
 test("pagination clamps page bounds and returns stable summary", () => {
@@ -31,9 +32,9 @@ test("pagination clamps page bounds and returns stable summary", () => {
   assert.equal(paginate([],1,10).start,0);
 });
 
-test("translation status uses canonical zh-CN locale", () => {
-  assert.deepEqual(translationStatus(records[0]),{en:true,zh:true});
-  assert.deepEqual(translationStatus(records[1]),{en:true,zh:false});
+test("translation status uses canonical zh-CN and Spanish locales", () => {
+  assert.deepEqual(translationStatus(records[0]),{en:true,zh:true,es:true});
+  assert.deepEqual(translationStatus(records[1]),{en:true,zh:false,es:false});
 });
 
 test("tags are trimmed, de-duplicated and empty entries removed", () => {
@@ -52,6 +53,9 @@ test("localized SEO fields map independently for English and Simplified Chinese"
   });
   assert.deepEqual(localizedSeoPayload("zh-CN","中国文化指南","了解中国传统与历史。"),{
     locale:"zh-CN",seoTitle:"中国文化指南",seoDescription:"了解中国传统与历史。"
+  });
+  assert.deepEqual(localizedSeoPayload("es","Guía de cultura china","Explore tradiciones e historia."),{
+    locale:"es",seoTitle:"Guía de cultura china",seoDescription:"Explore tradiciones e historia."
   });
   assert.deepEqual(localizedSeoPayload("zh-CN","",""),{locale:"zh-CN"});
 });

@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Project stage:** Static Astro MVP source and initial editorial content were merged into **main** through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after passing build checks. Cloudflare Pages project is provisioned; first public deployment awaits a protected Pages Write API token. Documentation includes both proposed long-term plans and the concrete implemented baseline.
+**Project stage:** The static multilingual Astro website is deployed to Cloudflare Pages. PR #32 integrated the first D1-backed CMS foundation: protected Admin shell, Pages Functions CRUD/preview APIs, Cloudflare D1 binding, Access protection and an idempotent importer for the existing 39 English/Chinese/Spanish article variants. The next production-readiness PR completes migration/import automation and publication PR integration. Media upload and GitHub App credentials remain outstanding.
 
 ## Start here
 
@@ -12,7 +12,9 @@
 | [Developer runbook](implementation/05-developer-runbook.md) | Local preview, build, checks and Cloudflare deploy |
 | [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
 | [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
-| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified account state, required Pages Write token and release steps |
+| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified Pages, Functions, D1 and Access state |
+| [CMS local runbook](runbooks/cms-d1-local-development.md) | Isolated local D1 migrations and Pages Functions development |
+| [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum repository permissions and Cloudflare Pages secret configuration |
 
 ## Long-term planning areas
 
@@ -30,7 +32,7 @@
 
 ## Architecture baseline
 
-**Node.js builds Astro**, which prerenders all normal pages to `dist/`. **Cloudflare Pages Free Direct Upload** distributes those assets. No Pages Functions, runtime API, database or permanent Node.js process is part of the MVP. See [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
+**Node.js builds Astro**, which prerenders public pages to `dist/`; Cloudflare Pages serves them as static assets. The public article experience has no D1/API dependency. The private editorial workspace at `/admin/` uses Cloudflare Access and Pages Functions under `/api/admin/v1/`, with the `CMS_DB` binding to Cloudflare D1. D1 is the canonical editorial store; reviewed GitHub PRs generate the static Markdown snapshots consumed by Astro. GitHub App publication credentials and media upload are still pending. See [CMS local runbook](runbooks/cms-d1-local-development.md), [deployment model](architecture/04-deployment-and-environments.md), [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
 
 ## Document conventions
 

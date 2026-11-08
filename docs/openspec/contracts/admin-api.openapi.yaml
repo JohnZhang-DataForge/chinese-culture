@@ -158,7 +158,7 @@ paths:
       operationId: saveDraft
       summary: Create or update a draft in D1
       description: >
-        This operation persists status=draft and an immutable revision snapshot in D1. It does not create a GitHub commit or write to main. If-Match is required for existing variants.
+        This operation persists status=draft and an immutable revision snapshot in D1. It does not create a GitHub commit or write to main. If-Match is required for existing variants. Variants with an open publication or review PR are locked until that PR is closed or merged.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -267,12 +267,9 @@ paths:
     post:
       tags: [Media]
       operationId: uploadMedia
-      summary: Upload an image to the current CMS snapshot branch and store its metadata in D1
+      summary: Upload an image as a reviewed GitHub pull request
       description: >
-        Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and
-        AVIF. SVG, HTML and other formats are rejected. The Pages Function validates
-        file signatures, commits the asset to a CMS snapshot branch and stores its
-        rights/accessibility metadata in D1.
+        Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and AVIF. SVG, HTML and other formats are rejected. The Pages Function validates the declared image type and required rights/accessibility metadata, commits the asset to a GitHub branch and opens a review PR. D1 attaches the media record only after that PR is merged. The article remains locked while the media PR is open.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -291,7 +288,7 @@ paths:
                   $ref: '#/components/schemas/MediaUploadMetadata'
       responses:
         '201':
-          description: Media committed to the CMS branch
+          description: Media committed to a review branch and awaiting PR merge
           content:
             application/json:
               schema:
@@ -320,10 +317,7 @@ paths:
       operationId: submitContent
       summary: Export the selected D1 revision to a pull request for review, publish or unpublish
       description: >
-        The API validates If-Match, applies the requested desired status in D1, appends a submission revision, then serializes that exact revision into a generated GitHub snapshot branch.
-        intent=review keeps status=draft; intent=publish sets status=published and publishedAt;
-        intent=unpublish sets status=unpublished and retains historical publishedAt. D1 remains the canonical source.
-        This endpoint never merges a PR.
+        The API validates If-Match and exports the exact current D1 revision into a generated GitHub branch and pull request. D1 status remains unchanged while review is open. When the PR is merged, POST /pull-requests/{number}/sync synchronizes the publication state and records a new immutable revision. GET /pull-requests/{number} remains read-only. intent=review creates a non-public review snapshot; intent=publish updates the static article; intent=unpublish removes the public Markdown file. This endpoint never merges a PR.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -403,6 +397,37 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/UpstreamFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /pull-requests/{number}/sync:
+    post:
+      tags: [Publishing]
+      operationId: syncMergedPullRequest
+      summary: Synchronize a merged or closed publication PR into D1
+      description: This explicit mutation endpoint verifies the live GitHub PR state and updates the CMS submission and publication revision. The GET status endpoint is read-only.
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: PR state synchronized
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '502':
           $ref: '#/components/responses/UpstreamFailure'
         '503':
@@ -505,7 +530,7 @@ components:
   schemas:
     Locale:
       type: string
-      enum: [en, zh-CN]
+      enum: [en, zh-CN, es]
     Collection:
       type: string
       enum: [lessons, culture, festivals, books, events]
@@ -684,6 +709,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Source'
+        imageUrl:
+          type: string
+          format: uri
+          description: Existing HTTPS cover image URL imported from the static content source.
+        imageAlt:
+          type: string
+          maxLength: 300
         media:
           type: array
           items:
@@ -729,9 +761,12 @@ components:
           maxLength: 500
     SubmitResult:
       type: object
-      required: [contentId, locale, intent, branch, revision, pullRequest]
+      required: [contentId, locale, intent, branch, revision, submissionId, pullRequest]
       properties:
         contentId:
+          type: string
+          format: uuid
+        submissionId:
           type: string
           format: uuid
         locale:
@@ -758,7 +793,7 @@ components:
               enum: [open, closed, merged]
     PullRequestStatus:
       type: object
-      required: [number, url, state, mergeable, checks]
+      required: [number, url, state, merged, mergeable, checks]
       properties:
         number:
           type: integer
@@ -768,6 +803,8 @@ components:
         state:
           type: string
           enum: [open, closed, merged]
+        merged:
+          type: boolean
         mergeable:
           type: boolean
         checks:
@@ -843,18 +880,22 @@ components:
           format: uri
     MediaUploadResult:
       type: object
-      required: [src, publicUrl, contentType, size, blobSha, metadata]
+      required: [src, metadata, pullRequest, revision]
       properties:
         src:
           type: string
-        publicUrl:
-          type: string
-          format: uri
-        contentType:
-          type: string
-        size:
-          type: integer
-        blobSha:
+        pullRequest:
+          type: object
+          required: [number, url, state]
+          properties:
+            number:
+              type: integer
+            url:
+              type: string
+              format: uri
+            state:
+              type: string
+        revision:
           type: string
         metadata:
           $ref: '#/components/schemas/MediaMetadata'
