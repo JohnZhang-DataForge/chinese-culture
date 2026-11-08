@@ -1,41 +1,36 @@
 # Test Strategy and Quality Gates
 
-**Status:** GitHub Actions build and extended internal-link checks PASS; full browser testing pending.
+**Status:** Static build and route verification implemented; browser E2E and formal accessibility audit not yet implemented.
 
 ## Automated checks
 
-The GitHub Actions workflow `.github/workflows/site-ci.yml` runs:
+The workflow `.github/workflows/site-ci.yml` runs on pull requests and pushes to `main`:
 
-1. Install npm dependencies in Node.js 22.
-2. `npm run build` (Astro static output).
-3. `npm run verify` (Node static-output guardrails).
+1. Checkout source.
+2. Set up Node.js 22.
+3. Install dependencies with npm.
+4. Run `npm run build`.
+5. Run `npm run verify`.
+6. On main pushes, upload a short-lived `chinese-culture-dist` artifact.
 
-The verifier asserts:
-- `dist/` exists and key public routes have generated HTML.
-- No `dist/_worker.js` exists (unexpected SSR output).
-- Wrangler has the correct `./dist` asset directory and no Worker `main` script.
-- Build includes at most 20,000 files, each at most 25 MiB, within current Free static asset limits.
-- Every local href found in generated HTML points to an existing static file/route; at least 13 guide pages exist.
-- The homepage has expected project branding.
+The separate Pages deployment workflow repeats build and verify, checks the protected Cloudflare token and uploads `dist/` using Wrangler.
 
-**Evidence:** Initial [GitHub Actions run #41717562416](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41717562416) succeeded (25 pages built; 29 static files; no SSR). **Latest verified [run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724): 25 static pages, 13 article/lesson guides, 29 static files, 700 local links validated, no SSR Worker.** A prior intermediate run #41717877814 caught a syntax error in the newly added test and was superseded by the corrected passing run.
+## Static verifier coverage
 
-## Manual testing before release
+`scripts/verify-static.mjs` checks required routes, no SSR Worker output, Pages build directory, project name, absence of a Worker entrypoint, file count, per-file size, homepage branding, internal local links and a minimum of 13 educational pages.
 
-- Home, indexes, articles and legal/information pages on small and wide screens.
-- Native mobile menu: click/touch, keyboard, focus order, Escape handling where appropriate.
-- Layout at 200% zoom; no horizontal scroll blocking content.
-- Screen reader headings, navigation landmarks and links.
-- Mixed English and Chinese character display and legibility.
-- External educational links and factual/rights review.
-- Empty Events state, missing-route/404, privacy disclosure and no tracking requests.
-- Browser console and network inspection for unexpected script calls or external assets.
-- Preview over HTTPS and Cloudflare Workers Free usage.
+## Latest evidence
 
-## Security & runtime gates
+- [CI run #41932129795](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129795) — success on main commit `539b37c9bfa5363f7149c95563bd549957eeff3d`.
+- [Pages deployment run #41932129872](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41932129872) — success.
+- Detailed prior verifier output: 25 generated pages, 13 guides, 29 files and 700 local links in [run #41718018724](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41718018724).
 
-No secrets in Git, no forced paid services, no SSR or database. Check actual Cloudflare deployment asset behavior instead of inferring it from config alone.
+## Not currently automated
 
-## Exit criteria
+No Playwright package, browser test runner, bilingual route tests, admin/API/auth tests, upload tests, visual regression or accessibility automation is present in the inspected package/workflows.
 
-The project may be **merged** only after CI passes and code review is complete. It may be **publicly launched** only after content/rights review, browser/a11y tests, account authorization and production verification.
+## Manual release checks
+
+Check page rendering at desktop and mobile sizes, navigation by keyboard and touch, skip link and focus state, 200% zoom, headings, contrast, Chinese glyph rendering, external links, image rights, Events empty state, 404 behavior, browser console, HTTPS, response headers, custom-domain validation and deployment commit SHA.
+
+See [Testing Guide](testing-guide.md) for the current checklist.

@@ -1,41 +1,73 @@
-# Documentation Index
+# Chinese Culture Atlas — Documentation Index
 
-**Project stage:** Static Astro MVP source and initial editorial content were merged into **main** through [PR #1](https://github.com/JohnZhang-DataForge/chinese-culture/pull/1) after passing build checks. Cloudflare Pages project is provisioned; first public deployment awaits a protected Pages Write API token. Documentation includes both proposed long-term plans and the concrete implemented baseline.
+**Documentation snapshot:** 2026-11-05  
+**Verified main baseline:** `539b37c9bfa5363f7149c95563bd549957eeff3d`.
+
+This index distinguishes the current deployed implementation from the proposed bilingual CMS program. A proposal or open PR is not proof of a production feature.
 
 ## Start here
 
-| Area | Contents |
+| Need | Document |
 |---|---|
-| [Implementation status](implementation/04-implementation-status.md) | What exists today, gaps, verification evidence |
-| [Repository map](architecture/07-implemented-repository-map.md) | Files, ownership and how source becomes static HTML |
-| [Content schema and routes](architecture/08-content-schema-and-routing.md) | Metadata requirements and author workflow |
-| [Developer runbook](implementation/05-developer-runbook.md) | Local preview, build, checks and Cloudflare deploy |
-| [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
-| [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
-| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified account state, required Pages Write token and release steps |
+| Understand the deployed system | [System overview](architecture/system-overview.md) |
+| Understand Pages, CI and static hosting | [Cloudflare Pages architecture](architecture/cloudflare-pages-architecture.md) |
+| Check domain, DNS and canonical redirects | [Custom-domain architecture](architecture/custom-domain-architecture.md) |
+| Understand current and proposed locale routes | [Bilingual routing](architecture/bilingual-routing.md) |
+| Understand current and proposed content schema | [Localization content model](architecture/localization-content-model.md) |
+| Understand the CMS target and integration risks | [Admin CMS architecture](architecture/admin-cms-architecture.md) |
+| Understand current and proposed authentication | [Authentication and authorization](architecture/authentication-authorization.md) |
+| Understand publishing semantics | [Content publishing workflow](architecture/content-publishing-workflow.md) |
+| Understand GitHub workflows and credentials | [GitHub integration](architecture/github-integration.md) |
+| Understand static assets and proposed uploads | [Media management](architecture/media-management.md) |
 
-## Long-term planning areas
+## Architecture
 
-| Folder | Focus |
-|---|---|
-| [plan/](plan/01-vision-and-goals.md) | Mission, audience, scope, budget, outreach |
-| [structure/](structure/01-information-architecture.md) | Sitemap, page types and taxonomy |
-| [architecture/](architecture/01-technology-selection.md) | Technical decisions and deployment |
-| [content/](content/01-editorial-strategy.md) | Editorial policy, learning, books and events |
-| [design/](design/01-experience-and-visual-direction.md) | Visual direction, accessibility and localization |
-| [implementation/](implementation/01-phase-by-phase-plan.md) | Milestones, backlog, quality gates |
-| [operations/](operations/01-security-privacy-and-legal.md) | Copyright, privacy and maintenance |
-| [decisions/](decisions/ADR-0001-static-first-hosting.md) | Architecture decision records |
-| [templates/](templates/article-brief.md) | Content and ADR briefs |
+- [System overview](architecture/system-overview.md)
+- [Cloudflare Pages architecture](architecture/cloudflare-pages-architecture.md)
+- [Custom-domain architecture](architecture/custom-domain-architecture.md)
+- [Bilingual routing](architecture/bilingual-routing.md)
+- [Localization content model](architecture/localization-content-model.md)
+- [Admin CMS architecture](architecture/admin-cms-architecture.md)
+- [Authentication and authorization](architecture/authentication-authorization.md)
+- [Content publishing workflow](architecture/content-publishing-workflow.md)
+- [GitHub integration](architecture/github-integration.md)
+- [Media management](architecture/media-management.md)
 
-## Architecture baseline
+## Implementation and owner guides
 
-**Node.js builds Astro**, which prerenders all normal pages to `dist/`. **Cloudflare Pages Free Direct Upload** distributes those assets. No Pages Functions, runtime API, database or permanent Node.js process is part of the MVP. See [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
+- [Implementation status](implementation/implementation-status.md)
+- [Administrator user guide](implementation/admin-user-guide.md)
+- [Localization guide](implementation/localization-guide.md)
+- [Content management guide](implementation/content-management-guide.md)
+- [Development guide](implementation/development-guide.md)
+- [Deployment guide](implementation/deployment-guide.md)
+- [Testing guide](implementation/testing-guide.md)
 
-## Document conventions
+**Important:** A production Admin CMS is not merged or deployed. Agent 4's draft UI is mock-only in development. Use the GitHub publishing process until the real backend and Access protection are released.
 
-- Keep accepted architecture decisions as ADRs, with reasons and superseding changes.
-- Update this index, implementation status, repository map and change log in PRs that add or restructure major functionality.
-- Clearly distinguish **written**, **built**, **tested**, **deployed** and **publicly launched**.
-- Keep educational citations and image rights in source Markdown, and never invent event schedules.
-- The private GitHub repository may be the source for a public static site, but private design notes must not be packaged into public assets.
+## Operations
+
+- [Domain and DNS change log](operations/domain-dns-change-log.md)
+- [Cloudflare configuration](operations/cloudflare-configuration.md)
+- [Admin credential setup](operations/admin-credential-setup.md)
+- [GitHub and deployment token setup](operations/github-token-setup.md)
+- [Security operations](operations/security-operations.md)
+- [Rollback procedure](operations/rollback-procedure.md)
+- [Incident recovery](operations/incident-recovery.md)
+- [Backup and recovery](operations/backup-and-recovery.md)
+
+## Agent 0 shared contract proposal
+
+[Agent 0 OpenSpec PR #3](https://github.com/JohnZhang-DataForge/chinese-culture/pull/3) contains the proposed content schema, Admin API, architecture, ownership and integration protocol. It is Proposed, not Ready or merged. Do not create a parallel contract or assume the target features are already deployed.
+
+## Existing project planning material
+
+Product plans, information architecture, editorial strategy, design direction, implementation roadmap, ADRs and content templates remain in their existing folders. Consult the implementation status and current architecture documents before assuming a planned feature exists.
+
+## Documentation rules
+
+- Distinguish proposed, coded, tested, deployed and publicly verified states.
+- Describe only behavior supported by source, configuration or operational evidence.
+- Keep secrets and private keys out of Git and documentation.
+- Update implementation status, repository map, relevant architecture pages and change log after each major feature is merged.
+- Agent 0 owns `docs/openspec/`; Agent 7 must not edit that directory.

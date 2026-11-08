@@ -1,44 +1,37 @@
-# Repository and Documentation Structure
+# Repository Structure
 
-**Status:** Implemented baseline · **Updated:** 2026-11-04
+**Status:** Implemented baseline · **Updated:** 2026-11-05.
 
-The architecture has moved from planning-only to a static Astro application. The exact inventory is maintained in [the repository map](07-implemented-repository-map.md).
+The exact source inventory is maintained in [Implemented Repository Map](07-implemented-repository-map.md).
 
-## Current areas
+## Current top-level structure
 
-- `README.md`: project entry point, commands and status
-- `package.json`: Node/Astro/Wrangler dependencies and scripts
-- `astro.config.mjs`: `output: static`, with trailing-slash URLs
-- `wrangler.jsonc`: Cloudflare Workers Free static asset directory, no script `main`
-- `public/`: favicon, robots and HTTP security headers
-- `src/pages/`: homepage, dynamic collection pages and static information pages
-- `src/content/`: original Markdown lessons, articles, festivals and book guides
-- `src/content.config.ts`: shared frontmatter validation
-- `src/layouts/`: common public HTML shell
-- `src/components/`: reusable content card
-- `src/styles/`: color, typography, layout and responsive styles
-- `src/lib/`: section-to-collection route mapping
-- `scripts/`: Node-based static build checks
-- `.github/workflows/`: PR and main branch build CI (no deployment)
-- `docs/`: living requirements, ADRs, status, operations and templates
+- `src/pages/`: Astro public routes.
+- `src/layouts/`: shared page shell.
+- `src/components/`: reusable components.
+- `src/styles/`: global CSS.
+- `src/content/`: lessons, culture, festivals and books Markdown collections.
+- `src/content.config.ts`: Astro collection schema and loaders.
+- `src/lib/sections.ts`: section-to-collection route metadata.
+- `public/`: static favicon, headers and robots file.
+- `scripts/verify-static.mjs`: static-output checks.
+- `.github/workflows/site-ci.yml`: pull-request and main CI.
+- `.github/workflows/pages-deploy.yml`: main-branch Pages Direct Upload.
+- `docs/`: architecture, implementation, operations and planning documentation.
 
 ## Content routing
 
-- `src/content/lessons/*.md` → `/learn/<file-id>/`
-- `src/content/culture/*.md` → `/culture/<file-id>/`
-- `src/content/festivals/*.md` → `/festivals/<file-id>/`
-- `src/content/books/*.md` → `/books/<file-id>/`
+- `src/content/lessons/*.md` → `/learn/<slug>/`
+- `src/content/culture/*.md` → `/culture/<slug>/`
+- `src/content/festivals/*.md` → `/festivals/<slug>/`
+- `src/content/books/*.md` → `/books/<slug>/`
 
-Routes are generated at build time using Astro content collections. No runtime database query is needed. See [metadata and routes](08-content-schema-and-routing.md).
+Astro generates the collection pages during build time. The filename becomes the entry ID and public slug.
 
-## Design constraints
+## Workflow
 
-No API/SSR/Node runtime server. Cloudflare serves HTML, CSS, JS and static files from build output. All visitor-facing text lives in source or Markdown; no third-party embedded analytics or image requests.
+The CI workflow runs on pull requests and pushes to `main`. The separate deployment workflow runs on pushes to `main` and manual dispatch. The previous statement that the workflows were build-only is obsolete.
 
-## Documentation responsibilities
+## Scope boundary
 
-Plan changes belong under `docs/plan/`. Architecture changes update an ADR and `docs/architecture/`. Code/content changes update [implementation status](../implementation/04-implementation-status.md) and [change log](../operations/03-change-log.md). Do not label unreleased code as publicly deployed.
-
-## Future additions
-
-Approved publishing media, client-side search if justified, translation support and verified events. Accounts, forms and dynamic APIs remain deferred pending new design and privacy review.
+Agent 7 owns the architecture, implementation and operations documentation directories. Agent 0 owns `docs/openspec/`. Application source and other agents' implementation files are not modified by this documentation work.
