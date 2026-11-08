@@ -1,7 +1,7 @@
 # Shared Content Contract v1
 
 **Contract ID:** CC-CONTENT-001  
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Owner:** Agent 0  
 **Consumers:** Agent 2 (Astro schema/routing), Agent 3 (migration/translation), Agent 4 (CMS forms), Agent 5 (API validation), Agent 6 (tests).
 
@@ -9,7 +9,7 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 
 ## 1. Locale and route values
 
-- Supported locale identifiers: en, zh-CN.
+- Supported locale identifiers: en, zh-CN, es.
 - URL locale segments: en, zh-cn.
 - Public route pattern: /{localeSegment}/{section}/{slug}/.
 - Sections: learn, culture, festivals, books, events.
@@ -31,7 +31,7 @@ A locale variant is a full editorial document, not a machine-generated runtime o
 | Field | Type | Required | Rules |
 |---|---|---:|---|
 | contentId | string | yes | Immutable UUID; canonical lowercase UUID form |
-| locale | enum | yes | en or zh-CN |
+| locale | enum | yes | en, zh-CN or es |
 | slug | string | yes | Locale-specific kebab-case slug; unique per collection/locale |
 | title | string | yes | Non-empty localized title |
 | description | string | yes | Non-empty localized summary; plain text |
@@ -129,7 +129,7 @@ Save Draft writes status=draft and a new revision to D1. It does not create a Gi
 ## 7. Validation rules
 
 1. contentId must be a valid UUID and must not change when editing or translating.
-2. locale must be exactly en or zh-CN.
+2. locale must be exactly en, zh-CN or es.
 3. slug must match ^[a-z0-9]+(?:-[a-z0-9]+)*$.
 4. title, description and category must be non-empty.
 5. status must be one of draft, published or unpublished.
@@ -139,7 +139,7 @@ Save Draft writes status=draft and a new revision to D1. It does not create a Gi
 9. seoTitle and seoDescription, when present, must be non-empty plain text within API length limits; otherwise public metadata falls back to title and description.
 10. contentId/locale must be unique across the repository.
 11. collection/locale/slug must be unique.
-12. zh-CN records must contain Simplified Chinese content; en records use English as the primary language.
+12. zh-CN records must contain Simplified Chinese content; en records use English; es records use Spanish.
 13. Every image in a published record must have alt and rights metadata.
 14. No draft or unpublished record may generate a public route, sitemap entry, public search record or featured card.
 15. Content source links must be HTTPS; redirects and external URL status are checked by QA where feasible.
@@ -172,3 +172,10 @@ Schema additions, removals or semantic changes require:
 - Agent 0 approval.
 - Updates to Astro schema, API schemas, CMS validation, fixtures and tests.
 - No unilateral schema edits by Agents 2, 3, 4 or 5.
+
+
+## 11. Spanish and legacy cover metadata amendment (v1.2.0)
+
+The CMS supports three full locale variants: `en`, `zh-CN` and `es`. Spanish uses the `/es/` route segment and is stored as locale `es`. Existing Spanish Markdown files are already published on the live site and must be imported unchanged with the same immutable contentId as their English and Chinese counterparts.
+
+Existing external cover images are preserved separately as `imageUrl` and `imageAlt`. They are not treated as newly uploaded media and no image credit or license may be inferred. New uploaded media continues to require the complete rights and accessibility metadata defined in this contract.
