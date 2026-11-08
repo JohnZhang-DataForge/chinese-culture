@@ -138,6 +138,16 @@ for (const variant of variants) {
 }
 
 if (!variants.length) throw new Error("No supported Markdown articles found.");
+for (const locale of ["en", "zh-CN", "es"]) {
+  const count = variants.filter((variant) => variant.locale === locale).length;
+  if (count !== 13) throw new Error("Expected 13 existing " + locale + " articles, found " + count + ". Refusing an incomplete initial import.");
+}
+for (const variant of variants) {
+  if (!variant.title || !variant.description || !variant.category || !variant.bodyMarkdown.trim()) {
+    throw new Error("Required article content is missing in " + variant.sourcePath);
+  }
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(variant.slug)) throw new Error("Invalid slug in " + variant.sourcePath);
+}
 for (const [contentId, records] of byContent) {
   const locales = new Set(records.map((record) => record.locale));
   if (locales.size !== records.length) throw new Error("Duplicate locale variant for " + contentId);
@@ -161,7 +171,7 @@ for (const [contentId, records] of byContent) {
       revision: "1"
     };
     statements.push(query(
-      "INSERT OR IGNORE INTO content_variants (content_id, locale, collection, slug, title, description, seo_title, seo_description, category, body_markdown, status, featured, updated_at, published_at, display_order, reading_minutes, level, chinese, pinyin, tags_json, sources_json, media_json, image_url, image_alt, source_path, revision, last_mutation_id) VALUES (?, ?, ?, ?, ?, ?, '', '', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
+      "INSERT OR IGNORE INTO content_variants (content_id, locale, collection, slug, title, description, seo_title, seo_description, category, body_markdown, status, featured, updated_at, published_at, display_order, reading_minutes, level, chinese, pinyin, tags_json, sources_json, media_json, image_url, image_alt, source_path, revision, last_mutation_id) VALUES (?, ?, ?, ?, ?, ?, '', '', ?, ?, ?, ?, ?, NULLIF(?, ''), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)",
       [
         record.contentId, record.locale, record.collection, record.slug, record.title, record.description,
         record.category, record.bodyMarkdown, record.status, record.featured, record.updatedAt,
