@@ -14,6 +14,7 @@
 | [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
 | [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified Pages, Functions, D1 and Access state |
 | [CMS local runbook](runbooks/cms-d1-local-development.md) | Isolated local D1 migrations and Pages Functions development |
+| [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum repository permissions and Cloudflare Pages secret configuration |
 
 ## Long-term planning areas
 
