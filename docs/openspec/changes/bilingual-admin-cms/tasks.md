@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status:** D1 persistence amendment proposed; implementation starts after the updated contracts are merged.
+**Status:** Implementation in progress; D1 is canonical, GitHub is the reviewed snapshot channel. Spanish locale is included in the CMS contract.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -18,9 +18,9 @@
 ## P1 — Database and identity foundation
 
 ### Agent 5 — D1 and backend foundation
-- [ ] P1.1 Verify the provisioned D1 database chinese-culture-cms and bind it as CMS_DB using database ID 8b6f6c98-06fe-49eb-adbc-690d4b57c058.
-- [ ] P1.2 Update wrangler.jsonc without changing the existing Pages project, output directory or compatibility date unnecessarily.
-- [ ] P1.3 Add ordered SQL migrations under database/migrations/.
+- [x] P1.1 Verify the provisioned D1 database chinese-culture-cms and bind it as CMS_DB using database ID 8b6f6c98-06fe-49eb-adbc-690d4b57c058.
+- [x] P1.2 Update wrangler.jsonc without changing the existing Pages project, output directory or compatibility date unnecessarily.
+- [x] P1.3 Add ordered SQL migrations under database/migrations/.
 - [ ] P1.4 Define local D1 preview configuration and document that Pages local development uses local D1 state, not the remote production database.
 - [ ] P1.5 Configure Cloudflare Access policy for /admin/* and /api/admin/*.
 - [ ] P1.6 Configure Pages Functions secrets and role mapping without committing secret values.
