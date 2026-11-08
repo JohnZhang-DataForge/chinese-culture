@@ -8,7 +8,6 @@
       "binding": "CMS_DB",
       "database_name": "chinese-culture-cms",
       "database_id": "8b6f6c98-06fe-49eb-adbc-690d4b57c058",
-      "preview_database_id": "CMS_DB",
       "migrations_dir": "database/migrations"
     }
   ],
