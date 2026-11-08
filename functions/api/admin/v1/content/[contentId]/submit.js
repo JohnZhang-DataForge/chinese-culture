@@ -41,8 +41,11 @@ function toPublicMarkdown(variant) {
   if (typeof variant.order === "number") lines.push("order: " + variant.order);
   lines.push("readingMinutes: " + Number(variant.readingMinutes || 5));
   lines.push("featured: " + (variant.featured ? "true" : "false"));
-  if (variant.imageUrl) lines.push("image: " + yaml(variant.imageUrl));
-  if (variant.imageAlt) lines.push("imageAlt: " + yaml(variant.imageAlt));
+  const cover = variant.media?.[0];
+  const imageUrl = cover?.src || variant.imageUrl;
+  const imageAlt = cover?.alt || variant.imageAlt;
+  if (imageUrl) lines.push("image: " + yaml(imageUrl));
+  if (imageAlt) lines.push("imageAlt: " + yaml(imageAlt));
   lines.push("---", "", String(variant.bodyMarkdown || "").replace(/^\n+|\n+$/g, ""), "");
   return lines.join("\n");
 }
