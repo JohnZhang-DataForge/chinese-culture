@@ -98,6 +98,7 @@ function toVariant(row, includeBody = true) {
 
   if (row.branch) result.branch = row.branch;
   if (row.pull_request_state) result.pullRequestState = row.pull_request_state;
+  if (row.pending_media_json) result.pendingMedia = parseJson(row.pending_media_json);
   if (includeBody) {
     result.bodyMarkdown = row.body_markdown || "";
     result.sources = parseJson(row.sources_json);
@@ -121,7 +122,8 @@ const VARIANT_SELECT = [
   "(SELECT group_concat(locale, ',') FROM (SELECT locale FROM content_variants WHERE content_id = v.content_id ORDER BY locale)) AS translation_locales,",
   "(SELECT branch FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS branch,",
   "(SELECT pr_number FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request,",
-  "(SELECT pr_state FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request_state",
+  "(SELECT pr_state FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request_state,",
+  "(SELECT snapshot_json FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale AND s.intent = 'media' AND s.pr_state IN ('pending', 'open') ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pending_media_json",
   "FROM content_variants v"
 ].join(" ");
 
