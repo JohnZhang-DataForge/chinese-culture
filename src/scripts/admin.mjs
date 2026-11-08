@@ -342,6 +342,13 @@ if (root) {
       }).join("") : '<p class="field-hint">No images attached to this language variant yet.</p>';
     });
   };
+  const setEditorLock = (locked) => {
+    form.querySelectorAll("input,textarea,select").forEach((field)=>{ if (!field.hasAttribute("data-variant-media-input")) field.disabled=locked; });
+    $("[data-action='save-draft'],[data-action='delete-current']").forEach((button)=>{button.disabled=locked;});
+    $("[data-action='publish'],[data-action='unpublish']").forEach((button)=>{button.disabled=locked || !state.capabilities.publish;});
+    if (locked) showAdminBanner("This article has an open review pull request. Editing is locked until the pull request is merged or closed.", "warning");
+    else showAdminBanner("", "success");
+  };
   const updateStatusControls = () => {
     const variants = Object.values(state.variants).filter(Boolean);
     const hasPublished = variants.some((variant) => variant.status === "published");
@@ -353,6 +360,7 @@ if (root) {
     state.selectedId = item?.id || null;
     state.isNew = !item;
     state.dirty = false;
+    form.querySelectorAll("input,textarea,select").forEach((field)=>{if(!field.hasAttribute("data-variant-media-input"))field.disabled=false;});
     state.variants = {en:null,"zh-CN":null,es:null};
     state.etags = {en:null,"zh-CN":null,es:null};
     if (!demoMode && item) {
@@ -374,6 +382,7 @@ if (root) {
     $("[data-editor-heading]").textContent = item ? "Edit content" : "Create " + collectionNames[state.collection].singular;
     updateTranslationIndicators();
     updateStatusControls();
+    setEditorLock(Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState)));
     renderVariantMedia();
     $("[data-action='back-to-list']").dataset.backTo = state.collection;
     setPage("editor");
