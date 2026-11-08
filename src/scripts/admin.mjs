@@ -445,7 +445,7 @@ if (root) {
       try {
         if (!state.selectedId) await saveLiveDrafts();
         const payload = toApiPayload(locale);
-        const result = await previewContent(state.selectedId,{locale,metadata:payload,bodyMarkdown:payload.bodyMarkdown});
+        const result = await previewContent(state.selectedId,{content:payload});
         $("[data-preview-title]", document).textContent = variant.title;
         $("[data-preview-description]", document).textContent = variant.description;
         $("[data-preview-category]", document).textContent = variant.category;
@@ -816,7 +816,7 @@ if (root) {
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (!demoMode) {
-    $('[data-action="preview"], [data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow is not implemented yet. Draft editing and saving are available.";});
+    $('[data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow requires the GitHub publication/media integration.";});
     $('[data-variant-media-input]').forEach((field)=>{field.disabled=true;});
     $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
