@@ -227,7 +227,7 @@ if (root) {
     const merged = new Map();
     const add = (summary) => {
       const id = summary.contentId;
-      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:"",es:""},description:{en:"",zh:"",es:""},body:{en:"",zh:"",es:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null,es:null},categories:{en:"",zh:"",es:""},pullRequest:null});
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:"",es:""},description:{en:"",zh:"",es:""},body:{en:"",zh:"",es:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null,es:null},categories:{en:"",zh:"",es:""},pullRequest:null,pullRequestState:null});
       const item = merged.get(id);
       const locale = summary.locale;
       const suffix = uiLocale(locale);
@@ -242,6 +242,7 @@ if (root) {
       item.featured = item.featured || Boolean(summary.featured);
       if (!item.updatedAt || Date.parse(summary.updatedAt) > Date.parse(item.updatedAt)) item.updatedAt = summary.updatedAt;
       if (summary.pullRequest) item.pullRequest = summary.pullRequest;
+      if (summary.pullRequestState) item.pullRequestState = summary.pullRequestState;
       item.translationLocales = [...new Set([...(item.translationLocales || []),...(summary.translationLocales || []),locale])];
     };
     groups.flat().forEach(add);
@@ -264,8 +265,17 @@ if (root) {
     return items;
   };
   const loadAllContent = async () => {
-    const [enItems,zhItems,esItems] = await Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN"),fetchAllSummaries("es")]);
+    const loadLocales = () => Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN"),fetchAllSummaries("es")]);
+    let [enItems,zhItems,esItems] = await loadLocales();
     state.items = mergeSummaries(enItems,zhItems,esItems);
+    const trackedPullRequests = [...new Set(state.items.filter((item)=>item.pullRequest && ["pending","open"].includes(item.pullRequestState)).map((item)=>item.pullRequest))];
+    if (trackedPullRequests.length) {
+      const statuses = await Promise.all(trackedPullRequests.map((number)=>getPullRequestStatus(number).catch(()=>null)));
+      if (statuses.some((status)=>status && ["merged","closed"].includes(status.state))) {
+        [enItems,zhItems,esItems] = await loadLocales();
+        state.items = mergeSummaries(enItems,zhItems,esItems);
+      }
+    }
     updateCounts();
     if (state.page === "dashboard") renderDashboard();
     if (state.page === "content") renderList();
