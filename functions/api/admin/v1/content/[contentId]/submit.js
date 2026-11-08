@@ -42,7 +42,7 @@ function toPublicMarkdown(variant) {
   lines.push("readingMinutes: " + Number(variant.readingMinutes || 5));
   lines.push("featured: " + (variant.featured ? "true" : "false"));
   const cover = variant.media?.[0];
-  const imageUrl = cover?.src || variant.imageUrl;
+  const imageUrl = cover?.src ? (cover.src.startsWith("/") ? "https://chinese-culture.site" + cover.src : cover.src) : variant.imageUrl;
   const imageAlt = cover?.alt || variant.imageAlt;
   if (imageUrl) lines.push("image: " + yaml(imageUrl));
   if (imageAlt) lines.push("imageAlt: " + yaml(imageAlt));
