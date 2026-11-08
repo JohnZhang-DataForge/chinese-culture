@@ -2,7 +2,7 @@ import { filterContent, paginate, parseTags, translationStatus, wordCount, local
 import {
   AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
   getContent, createContent, createTranslation, saveDraft, previewContent,
-  uploadMedia, submitContent, discardDraft, getPullRequestStatus
+  uploadMedia, submitContent, discardDraft, getPullRequestStatus, syncPullRequest
 } from "../lib/admin-api.mjs";
 
 const root = document.querySelector("[data-admin-app]");
@@ -270,7 +270,7 @@ if (root) {
     state.items = mergeSummaries(enItems,zhItems,esItems);
     const trackedPullRequests = [...new Set(state.items.filter((item)=>item.pullRequest && ["pending","open"].includes(item.pullRequestState)).map((item)=>item.pullRequest))];
     if (trackedPullRequests.length) {
-      const statuses = await Promise.all(trackedPullRequests.map((number)=>getPullRequestStatus(number).catch(()=>null)));
+      const statuses = await Promise.all(trackedPullRequests.map(async (number)=>{const status=await getPullRequestStatus(number).catch(()=>null);if(status && ["merged","closed"].includes(status.state)) await syncPullRequest(number).catch(()=>null);return status;}));
       if (statuses.some((status)=>status && ["merged","closed"].includes(status.state))) {
         [enItems,zhItems,esItems] = await loadLocales();
         state.items = mergeSummaries(enItems,zhItems,esItems);
