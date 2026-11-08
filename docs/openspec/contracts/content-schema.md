@@ -16,7 +16,7 @@ This document is normative. Do not introduce a parallel frontmatter model. A con
 - Default route / redirects to /en/.
 - Existing unprefixed routes redirect to the matching /en/ route.
 - File path: English: `src/content/{collection}/{slug}.md`; Simplified Chinese: `src/content/zh-cn/{collection}/{slug}.md`; Spanish: `src/content/es/{collection}/{slug}.md`.
-- Media path: public/media/{contentId}/{safeFileName}.
+- Media path: `public/media/{contentId}/{locale}/{randomUuid}.{ext}`; public URL path is `/media/{contentId}/{locale}/{randomUuid}.{ext}`.
 
 ## 2. Identity and translation relationship
 
@@ -71,7 +71,7 @@ Media:
 - license: required string; use a documented value such as original, CC BY 4.0, public-domain-verified, or permission-granted
 - sourceUrl: optional HTTPS URL; required when credit/license needs an external source reference
 
-The media record is required for every image used in a published article. A rights statement must not be inferred from the file extension or uploader identity.
+Newly uploaded media requires a complete rights/accessibility record. The upload is committed to a dedicated GitHub branch and reviewed PR; D1 attaches the media record only after that PR merges. The article remains locked while the media PR is open. Existing HTTPS cover images imported from the live site are preserved in `imageUrl`/`imageAlt` as a legacy exception; no license or credit may be inferred.
 
 ## 5. Example: English and Chinese variants
 
@@ -121,12 +121,12 @@ The example UUID is illustrative only. Agent 3 must assign unique IDs to actual 
 | State | Canonical editorial storage | Generated GitHub snapshot | Public build |
 |---|---|---|---|
 | draft | D1 content variant + immutable revision | none on Save Draft; a draft snapshot is generated only when submitted for review | excluded |
-| published | D1 desired status + immutable revision | CMS branch/PR snapshot; becomes the main-branch snapshot only after reviewed merge | included only after the merged snapshot is deployed |
-| unpublished | D1 desired status + immutable revision | CMS branch/PR snapshot; becomes the main-branch snapshot only after reviewed merge | excluded after the merged snapshot is deployed |
+| published | D1 status changes to published only after the matching publish PR merges; a new immutable revision records the transition | CMS branch/PR snapshot; becomes the main-branch snapshot only after reviewed merge | included only after the merged snapshot is deployed |
+| unpublished | D1 status changes to unpublished only after the matching unpublish PR merges; a new immutable revision records the transition | CMS branch/PR snapshot; becomes the main-branch snapshot only after reviewed merge | excluded after the merged snapshot is deployed |
 
 featured is independent of status. The public site must always apply status=published before featured filtering. D1 is the canonical editable source; files under src/content/ on main are generated static publication snapshots, not the CMS authoring store.
 
-Save Draft writes status=draft and a new revision to D1. It does not create a GitHub branch or commit. Submit-for-review exports the selected D1 revision to a CMS-owned branch with status=draft and opens or updates a PR. Publish changes the desired D1 status to published, sets publishedAt and appends a revision, then exports that exact revision to a PR; the page becomes public only after a human-authorized merge and successful Pages deployment. Unpublish changes the desired D1 status to unpublished, appends a revision and exports it to a PR; the public route is removed only after the reviewed merge and successful Pages deployment. The CMS API never merges a PR or writes directly to main.
+Save Draft writes status=draft and a new revision to D1. It does not create a GitHub branch or commit. Submit-for-review exports a non-public editorial snapshot to a CMS-owned branch and opens a PR under `content-reviews/`; merging that PR does not publish the article. Publish exports the current D1 draft to the locale's public Markdown path. D1 remains unchanged while the PR is open; after a human-authorized merge, the explicit PR-sync endpoint changes D1 status to published, sets publishedAt and appends a new immutable revision. Unpublish exports a deletion of the public Markdown file; D1 remains published while the PR is open and changes to unpublished only after the reviewed merge and PR-sync. Media upload commits an asset to a separate review PR; D1 attaches its media metadata only after that PR merges. The CMS API never merges a PR or writes directly to main.
 
 ## 7. Validation rules
 
