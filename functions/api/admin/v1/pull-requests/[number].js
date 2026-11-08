@@ -89,6 +89,7 @@ export async function onRequestGet(context) {
       state,
       merged: Boolean(pull.merged),
       url: pull.html_url,
+      mergeable: Boolean(pull.mergeable),
       checks,
       ...(sync ? { databaseSync: sync } : {})
     }));
