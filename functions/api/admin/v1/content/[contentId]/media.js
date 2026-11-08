@@ -23,6 +23,15 @@ function expectedRevision(value) {
   return Number(match[1]);
 }
 
+function matchesImageSignature(bytes, mime) {
+  const ascii = (start, end) => String.fromCharCode(...bytes.subarray(start, end));
+  if (mime === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mime === "image/png") return bytes.length >= 8 && [0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a].every((value,index)=>bytes[index]===value);
+  if (mime === "image/webp") return bytes.length >= 12 && ascii(0,4) === "RIFF" && ascii(8,12) === "WEBP";
+  if (mime === "image/avif") return bytes.length >= 12 && ascii(4,8) === "ftyp" && ["avif","avis"].includes(ascii(8,12));
+  return false;
+}
+
 function parseMetadata(raw) {
   let metadata;
   try {
@@ -70,6 +79,11 @@ export async function onRequestPost(context) {
       .bind(contentId, locale).first();
     if (Number(open?.total || 0) > 0) throw new CmsError(409, "submission_open", "Conflict", "This variant already has an open review pull request.");
 
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes.length !== file.size || !matchesImageSignature(bytes, file.type)) {
+      throw new CmsError(415, "invalid_image_signature", "Unsupported Media Type", "The uploaded bytes do not match the declared image format.");
+    }
+
     const now = new Date().toISOString();
     submissionId = crypto.randomUUID();
     const branchName = "cms/" + contentId + "/" + locale + "/media-r" + revision + "-" + submissionId.slice(0, 8);
@@ -85,7 +99,7 @@ export async function onRequestPost(context) {
     const token = await getInstallationToken(context.env);
     const baseSha = await getMainCommit(token, REPOSITORY);
     await createBranch(token, REPOSITORY, branchName, baseSha);
-    await writeRepositoryBinaryFile(token, REPOSITORY, path, branchName, new Uint8Array(await file.arrayBuffer()), "cms: add licensed article media");
+    await writeRepositoryBinaryFile(token, REPOSITORY, path, branchName, bytes, "cms: add licensed article media");
 
     const pr = await createRepositoryPullRequest(token, REPOSITORY, {
       title: "[CMS] Add article media: " + variant.title + " (" + locale + ")",
