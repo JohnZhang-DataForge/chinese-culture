@@ -22,7 +22,7 @@ if (root) {
     books:{title:"Books",singular:"book",apiCollection:"books",subtitle:"Manage book introductions and reading guides."},
     events:{title:"Events",singular:"event",apiCollection:"events",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null,es:null},etags:{en:null,"zh-CN":null,es:null},submissions:[]};
+  const state = {items:demoItems.slice(),capabilities:{publish:false,mediaUpload:false,preview:true},page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null,es:null},etags:{en:null,"zh-CN":null,es:null},submissions:[]};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -70,18 +70,18 @@ if (root) {
   const updateCounts = () => {
     Object.keys(collectionNames).forEach((name) => {
       const node = $("[data-count='" + name + "']");
-      if (node) node.textContent = demoMode ? String(state.items.filter((item) => item.type === name).length) : "—";
+      if (node) node.textContent = String(state.items.filter((item) => item.type === name).length);
     });
     const published = state.items.filter((item) => item.statuses?.includes("published") || item.status === "published").length;
     const drafts = state.items.filter((item) => item.statuses?.includes("draft") || item.status === "draft").length;
     const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh || !t.es; }).length;
     const setStat = (name, value) => { const node = $("[data-stat='" + name + "']"); if (node) node.textContent = String(value); };
-    setStat("total", demoMode ? state.items.length : "—");
-    setStat("published", demoMode ? published : "—");
-    setStat("drafts", demoMode ? drafts : "—");
-    setStat("translations", demoMode ? incomplete : "—");
-    setStat("coverage", demoMode ? (state.items.length ? Math.round((state.items.length - incomplete) / state.items.length * 100) + "%" : "0%") : "—");
-    setStat("missing", demoMode ? incomplete : "—");
+    setStat("total", state.items.length);
+    setStat("published", published);
+    setStat("drafts", drafts);
+    setStat("translations", incomplete);
+    setStat("coverage", state.items.length ? Math.round((state.items.length - incomplete) / state.items.length * 100) + "%" : "0%");
+    setStat("missing", incomplete);
   };
   const languagePills = (item) => {
     const t = translationStatus(item);
@@ -97,12 +97,10 @@ if (root) {
     const result = paginate(filtered,state.pageNumber,state.pageSize);
     state.pageNumber = result.page;
     const rows = $("[data-content-rows]");
-    if (!demoMode) {
-      rows.innerHTML = '<tr><td colspan="8" class="table-empty">Connect this screen to the approved Agent 5 API contract to load live content. No sample records are shown in production.</td></tr>';
-    } else if (!result.items.length) {
+    if (!result.items.length) {
       rows.innerHTML = '<tr><td colspan="8" class="table-empty">No content matches these filters. Try another search or create a new item.</td></tr>';
     } else {
-      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.en || item.title.zh) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.en || item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
+      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.en || item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
     }
     const summary = $("[data-pagination-summary]");
     if (summary) summary.textContent = "Showing " + result.start + "–" + result.end + " of " + result.total + " items";
@@ -115,24 +113,19 @@ if (root) {
     updateCounts();
     const recent = state.items.slice().sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0,5);
     const rows = $("[data-recent-rows]");
-    if (!demoMode) {
-      rows.innerHTML = '<tr><td colspan="5" class="table-empty">Live dashboard metrics will appear when the Agent 5 API is connected.</td></tr>';
-      return;
-    }
+    if (!recent.length) { rows.innerHTML = '<tr><td colspan="5" class="table-empty">No content has been added yet.</td></tr>'; return; }
     rows.innerHTML = recent.map((item) => '<tr><td><div class="content-cell"><span class="content-thumb">文</span><span><strong>' + escapeHtml(item.title.en || item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + escapeHtml(collectionNames[item.type].title) + '</td><td>' + statusPill(item.status) + '</td><td>' + escapeHtml(item.updatedAt) + '</td><td><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '">→</button></td></tr>').join("");
   };
   const renderLanguages = () => {
     const tbody = $("[data-language-rows]");
-    if (!demoMode) {
-      tbody.innerHTML = '<tr><td colspan="5" class="table-empty">Translation coverage will load from the content API.</td></tr>';
-      return;
-    }
+    if (!state.items.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No content has been added yet.</td></tr>'; return; }
     tbody.innerHTML = Object.keys(collectionNames).map((name) => {
       const items = state.items.filter((item) => item.type === name);
       const en = items.filter((item) => translationStatus(item).en).length;
       const zh = items.filter((item) => translationStatus(item).zh).length;
-      const paired = items.filter((item) => { const t = translationStatus(item); return t.en && t.zh; }).length;
-      return '<tr><td>' + collectionNames[name].title + '</td><td>' + en + ' / ' + items.length + '</td><td>' + zh + ' / ' + items.length + '</td><td>' + paired + '</td><td>' + (items.length - paired) + '</td></tr>';
+      const es = items.filter((item) => translationStatus(item).es).length;
+      const paired = items.filter((item) => { const t = translationStatus(item); return t.en && t.zh && t.es; }).length;
+      return '<tr><td>' + collectionNames[name].title + '</td><td>' + en + ' / ' + items.length + '</td><td>' + zh + ' / ' + items.length + '</td><td>' + es + ' / ' + items.length + '</td><td>' + paired + '</td><td>' + (items.length - paired) + '</td></tr>';
     }).join("");
   };
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
@@ -487,6 +480,7 @@ if (root) {
     } catch (error) { handleApiError(error); }
   };
   const submitWorkflow = async (intent) => {
+    if (!demoMode && !state.capabilities.publish) { showToast("Publication is not configured yet. A GitHub App with repository write access is required.", "error"); return; }
     if (demoMode) {
       await saveContent();
       showToast(intent === "publish" ? "Publish request previewed in development mode." : "Unpublish request previewed in development mode.","info");
@@ -534,6 +528,7 @@ if (root) {
     } catch (error) { handleApiError(error); }
   };
   const toggleFeatured = async (id) => {
+    if (!demoMode && !state.capabilities.publish) { showToast("Featured changes require the GitHub App publication integration.", "error"); return; }
     if (demoMode) {
       const item=state.items.find((entry)=>entry.id===id);
       if(item){item.featured=!item.featured;renderList();showToast(item.featured?"Added to featured content.":"Removed from featured content.","info");}
@@ -623,10 +618,12 @@ if (root) {
       setConnection("Checking Access session");
       const session = await getAdminSession();
       state.session = session;
+      state.capabilities = session.capabilities || {preview:true,publish:false,mediaUpload:false};
       const email = $("[data-session-email]",document);
       const role = $("[data-session-role]",document);
       if (email) email.textContent = session.email;
       if (role) role.textContent = session.role;
+      $("[data-action='publish'],[data-action='unpublish'],[data-action='feature']").forEach((button)=>{button.disabled=!state.capabilities.publish;button.title=state.capabilities.publish?"Create a reviewed GitHub publication pull request":"Configure the GitHub App integration to enable publication";});
       setConnection("Connected");
       showAdminBanner("", "success");
       await loadAllContent();
