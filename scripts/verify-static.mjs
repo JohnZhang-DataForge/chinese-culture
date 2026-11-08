@@ -58,8 +58,8 @@ function walkContent(dir) {
     const source = readFileSync(file, "utf8");
     const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     assert.ok(frontmatter, "Missing content frontmatter: " + file);
-    const contentId = frontmatter[1].match(/^contentId:\\s*["']?([0-9a-f-]+)["']?\\s*$/m)?.[1];
-    const locale = frontmatter[1].match(/^locale:\\s*["']?([A-Za-z-]+)["']?\\s*$/m)?.[1];
+    const contentId = frontmatter[1].match(/^contentId:\s*["']?([0-9a-f-]+)["']?\s*$/m)?.[1];
+    const locale = frontmatter[1].match(/^locale:\s*["']?([A-Za-z-]+)["']?\s*$/m)?.[1];
     const relativePath = file.slice(contentRoot.length + 1).replaceAll(String.fromCharCode(92), "/").split("/");
     const collection = relativePath.length === 2 ? relativePath[0] : relativePath[1];
     const section = collection === "lessons" ? "learn" : collection;
