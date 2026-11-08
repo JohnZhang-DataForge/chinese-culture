@@ -505,7 +505,7 @@ components:
   schemas:
     Locale:
       type: string
-      enum: [en, zh-CN]
+      enum: [en, zh-CN, es]
     Collection:
       type: string
       enum: [lessons, culture, festivals, books, events]
