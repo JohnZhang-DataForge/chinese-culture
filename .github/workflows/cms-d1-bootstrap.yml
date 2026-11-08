@@ -38,7 +38,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: dff021f8489d2c316a14575c76de16d4
-          command: d1 migrations apply chinese-culture-cms --remote --yes
+          command: d1 migrations apply chinese-culture-cms --remote
 
       - name: Import current published content idempotently
         env:
