@@ -83,3 +83,13 @@ The user confirmed that repository secret `CLOUDFLARE_API_TOKEN` has been added.
 - Added local Pages Functions/D1 integration tests, GitHub App JWT tests and media signature validation.
 - Verified the Cloudflare Pages deployment, CMS_DB binding, Cloudflare Access coverage for both Admin and Admin API paths, exact-email policy, ADMIN_EMAIL and CSRF secret configuration.
 - Remaining manual release gate: install the repository-scoped GitHub App and configure GITHUB_APP_ID, GITHUB_INSTALLATION_ID and GITHUB_APP_PRIVATE_KEY as Pages production variables/secrets. Production D1 bootstrap/import and live end-to-end publication tests remain pending until merge and App setup.
+
+## 2026-11-09 — Production D1 bootstrap and article import verified
+
+- PR #34 merged as `5d34c496133a6bbf86a8f53e6b10f53d93d92ded`, correcting the multilingual importer grouping check.
+- Production bootstrap workflow [#42531011592](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011592) completed successfully; remote D1 migration and article import both passed.
+- Main CI [#42531011576](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011576) and Pages deployment [#42531011639](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011639) passed.
+- Direct production D1 read-back: 13 content items, 39 locale variants (13 each en/zh-CN/es), 39 revision snapshots and zero pending submissions.
+- Data integrity checks: all content IDs have exactly three locales; no missing required title/description/body; no collection mismatch; every current revision has a matching immutable snapshot; all 39 variants remain published.
+- Existing Unsplash cover URLs and localized alt text were retained.
+- Remaining gates: repository-scoped GitHub App installation and secrets, authenticated live Admin mutation tests, reviewed media/publish/unpublish end-to-end acceptance, and durable backup/restore validation.
