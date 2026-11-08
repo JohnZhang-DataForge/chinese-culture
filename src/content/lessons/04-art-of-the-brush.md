@@ -1,4 +1,6 @@
 ---
+contentId: "e72ec0af-7676-5740-9786-64d18c0541f6"
+locale: "en"
 title: "The Brush as a Way of Seeing"
 description: "Explore how writing, painting and poetry connect in Chinese artistic traditions."
 category: "Lesson 04 · Arts"

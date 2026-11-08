@@ -21,7 +21,9 @@ const nav = navRoutes.map((route, index) => ({
 }));
 const routeWithoutLocale = active.replace(/^\/(en|zh-cn|es)(?=\/|$)/, "") || "/";
 const unprefixedPath = routeWithoutLocale === "/404/" || routeWithoutLocale === "/404.html" ? "/" : routeWithoutLocale;
-const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath);
+const pathSegments = unprefixedPath.split("/").filter(Boolean);
+const fallbackLocalePath = pathSegments.length > 1 ? "/" + pathSegments[0] + "/" : unprefixedPath;
+const languageHref = (target) => alternateUrls[target] ?? (Object.keys(alternateUrls).length ? "/" + target + fallbackLocalePath : "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath));
 ---
 <!doctype html>
 <html lang={language === "zh-cn" ? "zh-CN" : language}>
@@ -33,8 +35,8 @@ const languageHref = (target) => "/" + target + (unprefixedPath === "/" ? "/" : 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://images.unsplash.com" />
   <title>{pageTitle}</title>
-  <link rel="canonical" href={"https://chinese-culture.site/" + language + (unprefixedPath === "/" ? "/" : unprefixedPath)} />
-  <link rel="alternate" hreflang="en" href={"https://chinese-culture.site/en" + unprefixedPath} />
+  <link rel="canonical" href={"https://chinese-culture.site" + languageHref(language)} />
+  <link rel="alternate" hreflang="en" href={"https://chinese-culture.site" + languageHref("en")} />
   <link rel="alternate" hreflang="zh-CN" href={"https://chinese-culture.site" + languageHref("zh-cn")} />
   <link rel="alternate" hreflang="es" href={"https://chinese-culture.site" + languageHref("es")} />
 </head>

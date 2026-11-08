@@ -1,4 +1,6 @@
 ---
+contentId: "0710c953-d178-5939-b8ec-f22b8f2288a3"
+locale: "en"
 title: "Mid-Autumn Festival: A Moon Shared Across Distance"
 description: "Meet the moon, mooncakes and stories of gathering and longing."
 category: "Festival guide"

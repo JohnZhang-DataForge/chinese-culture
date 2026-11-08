@@ -1,4 +1,6 @@
 ---
+contentId: "d70cd442-b7db-542a-9bda-1d090e8d8cae"
+locale: "es"
 title: "Idioma y escritura: primeros pasos"
 description: "Descubra cómo se relacionan los caracteres, la pronunciación y las distintas variedades habladas."
 category: "Lección 02 · Idioma"

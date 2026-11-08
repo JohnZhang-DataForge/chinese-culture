@@ -1,4 +1,6 @@
 ---
+contentId: "f904ad26-55a6-5d58-9936-48caa9f97915"
+locale: "es"
 title: "Alrededor de la mesa familiar"
 description: "Una introducción cercana a las comidas compartidas, la hospitalidad y la diversidad de las costumbres locales."
 category: "Vida cotidiana"

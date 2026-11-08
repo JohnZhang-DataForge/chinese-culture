@@ -1,4 +1,6 @@
 ---
+contentId: "c873fe07-bbfa-5f91-95a0-53698ffbaf93"
+locale: "zh-CN"
 title: "节日与中国历法"
 description: "了解节日日期为何会在公历中移动，以及它们对不同社群的意义。"
 category: "第 03 课 · 节庆"

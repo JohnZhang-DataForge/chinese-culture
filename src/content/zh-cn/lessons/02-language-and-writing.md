@@ -1,4 +1,6 @@
 ---
+contentId: "d70cd442-b7db-542a-9bda-1d090e8d8cae"
+locale: "zh-CN"
 title: "语言与文字：入门"
 description: "了解汉字、发音以及不同口语变体之间的关系。"
 category: "第 02 课 · 语言"

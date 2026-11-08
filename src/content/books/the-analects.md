@@ -1,4 +1,6 @@
 ---
+contentId: "d08f19c2-f2fc-5ef3-9af2-30953e991cd9"
+locale: "en"
 title: "The Analects: A Reader's Guide"
 description: "Approach a classical collection of conversations and teachings with historical context."
 category: "Philosophy & classics"

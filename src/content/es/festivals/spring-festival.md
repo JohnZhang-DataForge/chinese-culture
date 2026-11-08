@@ -1,4 +1,6 @@
 ---
+contentId: "32a7cfb3-26e2-5ee2-9751-5e91f3e5f95f"
+locale: "es"
 title: "Festival de Primavera: recibir un nuevo año"
 description: "Comprenda una temporada de preparativos, reencuentros, buenos deseos y diversidad local."
 category: "Guía de festivales"

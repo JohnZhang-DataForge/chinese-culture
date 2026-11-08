@@ -2,6 +2,8 @@ import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
 const schema = z.object({
+  contentId: z.string().uuid(),
+  locale: z.enum(["en", "zh-CN", "es"]),
   title: z.string(),
   description: z.string(),
   category: z.string(),

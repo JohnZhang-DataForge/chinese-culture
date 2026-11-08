@@ -1,4 +1,6 @@
 ---
+contentId: "d70cd442-b7db-542a-9bda-1d090e8d8cae"
+locale: "en"
 title: "Language and Writing: First Steps"
 description: "Learn how characters, pronunciation and different spoken varieties fit together."
 category: "Lesson 02 · Language"

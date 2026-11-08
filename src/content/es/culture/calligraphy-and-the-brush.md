@@ -1,4 +1,6 @@
 ---
+contentId: "c7f001f4-5fd2-579a-b639-860b7a8d53b7"
+locale: "es"
 title: "La caligrafía y el pincel"
 description: "Por qué el trazo del pincel es lenguaje y arte dentro de una larga tradición china."
 category: "Artes y oficios"

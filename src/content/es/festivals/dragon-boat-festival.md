@@ -1,4 +1,6 @@
 ---
+contentId: "0c92d33c-d6ab-55c3-b4cd-27cddf950caf"
+locale: "es"
 title: "Festival del Bote del Dragón: agua, memoria y comunidad"
 description: "Explore el Duanwu a través de las regatas, la comida tradicional y distintas historias sobre sus orígenes."
 category: "Guía de festivales"

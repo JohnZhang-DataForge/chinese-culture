@@ -1,4 +1,6 @@
 ---
+contentId: "c81c9a06-f8a0-5382-944e-6e861052bd3f"
+locale: "es"
 title: "Cómo contemplar una pintura china"
 description: "Descubra el trazo del pincel, las inscripciones y el espacio que rodea una imagen."
 category: "Artes visuales"

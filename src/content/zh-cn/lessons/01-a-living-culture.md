@@ -1,4 +1,6 @@
 ---
+contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2"
+locale: "zh-CN"
 title: "一种鲜活的文化，而非单一的故事"
 description: "从“文化”一词背后的人群、地方与不断变化的传统开始了解中国。"
 category: "第 01 课 · 基础"

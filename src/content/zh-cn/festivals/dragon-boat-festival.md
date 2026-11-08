@@ -1,4 +1,6 @@
 ---
+contentId: "0c92d33c-d6ab-55c3-b4cd-27cddf950caf"
+locale: "zh-CN"
 title: "端午节：江河、记忆与社群"
 description: "通过龙舟竞渡、传统食物和不同起源故事了解端午节。"
 category: "节日指南"

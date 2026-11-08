@@ -1,4 +1,6 @@
 ---
+contentId: "c7f001f4-5fd2-579a-b639-860b7a8d53b7"
+locale: "zh-CN"
 title: "书法与毛笔"
 description: "了解毛笔线条为何在悠久的中国传统中兼具语言与艺术之美。"
 category: "艺术与工艺"

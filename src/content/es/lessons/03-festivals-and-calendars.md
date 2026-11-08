@@ -1,4 +1,6 @@
 ---
+contentId: "c873fe07-bbfa-5f91-95a0-53698ffbaf93"
+locale: "es"
 title: "Fiestas y calendario chino"
 description: "Por qué las celebraciones cambian de fecha en el calendario gregoriano y qué significan para las comunidades."
 category: "Lección 03 · Celebraciones"

@@ -1,4 +1,6 @@
 ---
+contentId: "5e6ce811-787f-523b-81e2-761c7ee6017d"
+locale: "zh-CN"
 title: "《西游记》：读者指南"
 description: "认识孙悟空，以及这部经典冒险故事的丰富层次。"
 category: "古典小说"

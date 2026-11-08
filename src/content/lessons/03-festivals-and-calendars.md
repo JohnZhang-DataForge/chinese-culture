@@ -1,4 +1,6 @@
 ---
+contentId: "c873fe07-bbfa-5f91-95a0-53698ffbaf93"
+locale: "en"
 title: "Festivals and the Chinese Calendar"
 description: "Why celebrations move across the Gregorian calendar and what they mean to communities."
 category: "Lesson 03 · Celebrations"

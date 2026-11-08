@@ -1,4 +1,6 @@
 ---
+contentId: "e72ec0af-7676-5740-9786-64d18c0541f6"
+locale: "zh-CN"
 title: "以笔为眼：一种观看世界的方式"
 description: "探索中国艺术传统中书法、绘画与诗歌如何彼此连接。"
 category: "第 04 课 · 艺术"
