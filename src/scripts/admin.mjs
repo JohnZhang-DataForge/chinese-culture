@@ -658,6 +658,8 @@ if (root) {
       if (email) email.textContent = session.email;
       if (role) role.textContent = session.role;
       $("[data-action='publish'],[data-action='unpublish'],[data-action='feature']").forEach((button)=>{button.disabled=!state.capabilities.publish;button.title=state.capabilities.publish?"Create a reviewed GitHub publication pull request":"Configure the GitHub App integration to enable publication";});
+      $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=!state.capabilities.mediaUpload;button.title=state.capabilities.mediaUpload?"Upload media in a reviewed GitHub pull request":"Configure the GitHub App integration to enable media uploads";});
+      $("[data-variant-media-input]").forEach((input)=>{input.disabled=!state.capabilities.mediaUpload;});
       setConnection("Connected");
       showAdminBanner("", "success");
       await loadAllContent();
