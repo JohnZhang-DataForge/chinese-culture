@@ -1,76 +1,54 @@
 # Cloudflare Pages Deployment — Current State and Release Steps
 
-**Updated:** 2026-11-05  
+**Updated:** 2026-11-09  
 **Target:** Cloudflare Pages Free, Direct Upload  
 **Repository:** `JohnZhang-DataForge/chinese-culture`  
 **Project:** `chinese-culture`  
-**Production URL:** [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev)  
+**Production domain:** [https://chinese-culture.site](https://chinese-culture.site)  
 **Cloudflare account ID:** `dff021f8489d2c316a14575c76de16d4`
 
-## Verified account and repository state
+## Verified production state
 
-- The Cloudflare connection can access the intended account and Pages project.
-- The Pages project `chinese-culture` exists and its production branch is `main`.
-- The Pages deployments API currently returns an empty list; `latest_deployment` and `canonical_deployment` are null. The site is not yet publicly deployed.
-- The Cloudflare Git integration attempt returned account-side error `8000011`. A Direct Upload project cannot be converted to Git integration (error `8000069` when attempting to change its `source` object).
-- GitHub Actions build CI passed on main commit `2e4417a7a6bd9e556d6bc63b0a0e57219d3ef334`: 25 generated pages, 29 output files, 700 internal links and a deployable `chinese-culture-dist` artifact.
-- The deploy workflow initially skipped main pushes unless `CLOUDFLARE_DEPLOY_ENABLED=true`. After the repository secret was added, the gate was removed so pushes to `main` trigger production deployment automatically. Pull requests remain non-deploying.
+- Pages project `chinese-culture` exists and production branch is `main`.
+- Production deployment is active on the custom domain.
+- The Pages deployment configuration includes the `CMS_DB` D1 binding for database `chinese-culture-cms`.
+- Pages Functions are enabled and deployed with the site.
+- Cloudflare Access application `Chinese Culture Admin` protects `/admin`, `/admin/*`, `/api/admin` and `/api/admin/*`.
+- The Access allow policy is restricted to the designated administrator email. Pages production variables include `ADMIN_EMAIL`; `ADMIN_CSRF_SECRET` is stored as a Pages secret.
+- D1 is provisioned but remains empty until the CMS bootstrap workflow applies the migration and imports existing articles after the integration PR is merged.
+- The GitHub App has not yet been installed/configured. Publish and media actions remain disabled until the App ID, installation ID and private key are stored as Pages production secrets.
 
-## Selected release path: GitHub Actions + Wrangler Direct Upload
+## Deployment and bootstrap workflows
 
-The website remains a pure static Astro build deployed to Cloudflare Pages Free. We do not need Cloudflare's GitHub App integration. GitHub Actions checks out the private source, builds Astro, verifies the output, then Wrangler uploads `dist/` to the existing Pages project.
+- `.github/workflows/site-ci.yml` runs Node tests, local-only D1 migration validation, importer syntax checks, Astro build, local Pages Functions/D1 integration tests and static verification.
+- `.github/workflows/pages-deploy.yml` deploys the static artifact and Pages Functions to the existing Pages project.
+- `.github/workflows/cms-d1-bootstrap.yml` applies remote D1 migrations and runs the idempotent article import only when migration/import code reaches `main`, or when manually dispatched.
+- The production migration workflow is separate from CI. Automated tests must never use `--remote`.
 
-The connected Cloudflare API can inspect the Pages project and issue a short-lived upload JWT, but the subsequent asset-upload request requires that JWT in a custom Authorization header. The current connected API action does not expose that header override, so this session cannot complete the raw asset upload directly. The supported CI route below uses Wrangler and a protected API token.
+## Security configuration
 
-## One-time owner action
-
-Create a least-privilege account API token and add it to GitHub:
-
-1. In Cloudflare Dashboard, open **Manage Account → Account API Tokens**.
-2. Choose **Create Token** and use the account-owned token flow.
-3. Grant only the **Pages Write** role.
-4. Restrict the token to the account with ID `dff021f8489d2c316a14575c76de16d4`. Do not grant Zone, DNS, Workers or unrelated permissions.
-5. Create the token and copy it to a secure password manager. Cloudflare displays the secret only once.
-6. In GitHub, open [repository Actions secrets](https://github.com/JohnZhang-DataForge/chinese-culture/settings/secrets/actions).
-7. Add repository secret `CLOUDFLARE_API_TOKEN` with the token value.
-
-The workflow already contains the non-secret account ID. No `CLOUDFLARE_ACCOUNT_ID` secret is needed. Never paste the API token into chat or commit it to the repository.
-
-If account-owned API tokens are not available, an account administrator with API Token Provisioning or Super Administrator access must create the token.
-
-## Trigger the first deployment
-
-1. Open [GitHub Actions](https://github.com/JohnZhang-DataForge/chinese-culture/actions).
-2. Select **Deploy Chinese Culture Atlas to Cloudflare Pages**.
-3. Choose **Run workflow** on branch `main`.
-4. Wait for install, Astro build, static verification and Wrangler deployment to complete.
-5. Open the production URL and run the release checks below.
-
-Every push to `main` now triggers production deployment automatically after the protected Pages token is configured. Pull requests do not deploy.
+- Cloudflare Access protects the Admin UI and API paths with an exact email allowlist.
+- Pages Functions verify Access JWT issuer, audience, signature, expiry and administrator email.
+- Mutating requests require the exact configured Origin and an identity-bound CSRF token.
+- `ADMIN_CSRF_SECRET` is a Pages secret and is not committed to Git.
+- Local auth bypass is restricted to localhost plus an exact local `ADMIN_ORIGIN`; it is not enabled in production.
+- GitHub App publication permissions are documented in [GitHub App setup](../runbooks/github-app-publication.md). The App must be installed on this repository only and must not have merge, branch-protection or main-branch bypass permissions.
 
 ## Release verification
 
-Do not claim production success until all of the following are confirmed:
+Do not claim full CMS production acceptance until all are confirmed:
 
-- GitHub Actions deployment job completed successfully.
-- Cloudflare Pages shows a production deployment for branch `main`.
-- Deployment commit SHA matches the main commit used for the build.
-- Homepage returns HTTP 200 over HTTPS.
-- A nested route such as `/learn/` and an article route load correctly.
-- CSS, favicon, robots.txt and security headers are served.
-- A missing route returns the designed 404 page.
-- Mobile navigation and keyboard focus are checked in a browser.
-
-Record deployment ID, commit SHA, deployment time and rollback target in the change log.
+- CMS integration PR merged and main CI passed.
+- Production D1 migration applied and 39 article variants imported (13 each for en, zh-CN and es).
+- D1 CRUD/save/reload/translation/preview smoke test passes after Access login.
+- GitHub App secrets configured and session advertises `publish: true`, `mediaUpload: true`.
+- Test media PR merges and media metadata attaches to D1 only after merge.
+- Test publish PR merges, Pages deploy completes and public static page is live.
+- Test unpublish PR merges, public route is removed and D1 history remains.
+- D1 backup/export/restore and Pages rollback are documented and tested.
 
 ## Rollback
 
-If the new deployment fails browser smoke tests, use Cloudflare Pages deployment history to promote/redeploy the last-known-good deployment. Do not delete the project or change its Direct Upload mode as a troubleshooting shortcut.
-
-## References
-
-- [Cloudflare account-owned API tokens](https://developers.cloudflare.com/fundamentals/api/get-started/account-owned-tokens/)
-- [Cloudflare Pages API token roles](https://developers.cloudflare.com/workers/authorization/workers/)
-- [Cloudflare Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/)
-- [Cloudflare Direct Upload with CI](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)
-- [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/)
+- Public site: redeploy the previous known-good Pages deployment.
+- Content publication: revert the content PR through a new reviewed PR; do not edit D1 directly to hide a public-site regression.
+- D1 schema: use the documented backup/restore procedure before destructive schema operations. Do not manually drop or rewrite production tables.
