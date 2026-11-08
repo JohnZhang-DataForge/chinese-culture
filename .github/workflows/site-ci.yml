@@ -16,6 +16,8 @@ jobs:
           node-version: '22'
           package-manager-cache: false
       - run: npm install --no-audit --no-fund
+      - name: Validate CMS schema on an isolated local D1 database
+        run: npx wrangler d1 migrations apply chinese-culture-cms --local
       - run: npm test
       - run: node --check scripts/import-content-to-d1.mjs
       - run: npm run build
