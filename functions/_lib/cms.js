@@ -97,6 +97,7 @@ function toVariant(row, includeBody = true) {
   };
 
   if (row.branch) result.branch = row.branch;
+  if (row.pull_request_state) result.pullRequestState = row.pull_request_state;
   if (includeBody) {
     result.bodyMarkdown = row.body_markdown || "";
     result.sources = parseJson(row.sources_json);
@@ -119,7 +120,8 @@ const VARIANT_SELECT = [
   "SELECT v.*,",
   "(SELECT group_concat(locale, ',') FROM (SELECT locale FROM content_variants WHERE content_id = v.content_id ORDER BY locale)) AS translation_locales,",
   "(SELECT branch FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS branch,",
-  "(SELECT pr_number FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request",
+  "(SELECT pr_number FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request,",
+  "(SELECT pr_state FROM cms_submissions s WHERE s.content_id = v.content_id AND s.locale = v.locale ORDER BY s.created_at DESC, s.submission_id DESC LIMIT 1) AS pull_request_state",
   "FROM content_variants v"
 ].join(" ");
 
