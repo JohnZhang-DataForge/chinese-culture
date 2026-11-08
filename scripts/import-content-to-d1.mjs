@@ -150,6 +150,7 @@ for (const variant of variants) {
 for (const [contentId, records] of byContent) {
   const locales = new Set(records.map((record) => record.locale));
   if (locales.size !== records.length) throw new Error("Duplicate locale variant for " + contentId);
+  if (records.length !== 3 || !["en", "zh-CN", "es"].every((locale) => locales.has(locale))) throw new Error("Every imported article must have English, Simplified Chinese and Spanish variants: " + contentId);
   const statements = [
     query(
       "INSERT OR IGNORE INTO content_items (content_id, collection, created_at, source_commit) VALUES (?, ?, ?, ?)",
@@ -195,6 +196,11 @@ const verify = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCO
 const verifyPayload = await verify.json();
 if (!verify.ok || !verifyPayload?.success) throw new Error("D1 verification query failed.");
 const counts = verifyPayload.result?.[0]?.results || [];
+const countByLocale = new Map(counts.map((row) => [row.locale, Number(row.total)]));
+for (const locale of ["en", "zh-CN", "es"]) {
+  if (countByLocale.get(locale) !== 13) throw new Error("D1 import verification expected 13 " + locale + " published variants, found " + (countByLocale.get(locale) || 0) + ".");
+}
+if (byContent.size !== 13) throw new Error("D1 import expected 13 conceptual content items, found " + byContent.size + ".");
 console.log(JSON.stringify({
   importedMarkdownFiles: variants.length,
   conceptualItems: byContent.size,
