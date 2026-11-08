@@ -98,7 +98,12 @@ function toVariant(row, includeBody = true) {
 
   if (row.branch) result.branch = row.branch;
   if (row.pull_request_state) result.pullRequestState = row.pull_request_state;
-  if (row.pending_media_json) result.pendingMedia = parseJson(row.pending_media_json);
+  if (row.pending_media_json) {
+    try {
+      const pending = JSON.parse(row.pending_media_json);
+      if (pending?.media && typeof pending.media === "object") result.pendingMedia = [pending.media];
+    } catch {}
+  }
   if (includeBody) {
     result.bodyMarkdown = row.body_markdown || "";
     result.sources = parseJson(row.sources_json);
