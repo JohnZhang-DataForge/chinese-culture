@@ -320,7 +320,7 @@ paths:
       operationId: submitContent
       summary: Export the selected D1 revision to a pull request for review, publish or unpublish
       description: >
-        The API validates If-Match and exports the exact current D1 revision into a generated GitHub branch and pull request. D1 status remains unchanged while review is open. When the PR is merged, the status endpoint synchronizes the publication state and records a new immutable revision. intent=review creates a non-public review snapshot; intent=publish updates the static article; intent=unpublish removes the public Markdown file. This endpoint never merges a PR.
+        The API validates If-Match and exports the exact current D1 revision into a generated GitHub branch and pull request. D1 status remains unchanged while review is open. When the PR is merged, POST /pull-requests/{number}/sync synchronizes the publication state and records a new immutable revision. GET /pull-requests/{number} remains read-only. intent=review creates a non-public review snapshot; intent=publish updates the static article; intent=unpublish removes the public Markdown file. This endpoint never merges a PR.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -400,6 +400,37 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '502':
+          $ref: '#/components/responses/UpstreamFailure'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+  /pull-requests/{number}/sync:
+    post:
+      tags: [Publishing]
+      operationId: syncMergedPullRequest
+      summary: Synchronize a merged or closed publication PR into D1
+      description: This explicit mutation endpoint verifies the live GitHub PR state and updates the CMS submission and publication revision. The GET status endpoint is read-only.
+      security:
+        - CloudflareAccess: []
+          CsrfToken: []
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: PR state synchronized
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '502':
           $ref: '#/components/responses/UpstreamFailure'
         '503':
