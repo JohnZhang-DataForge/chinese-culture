@@ -16,7 +16,7 @@ writeFileSync(devVars, [
   "CMS_LOCAL_AUTH_BYPASS=true"
 ].join("\n") + "\n", { mode: 0o600 });
 
-const child = spawn("npx", ["wrangler", "pages", "dev", "dist", "--ip", "127.0.0.1", "--port", "8788"], {
+const child = spawn("npx", ["wrangler", "pages", "dev", "dist", "--ip", "0.0.0.0", "--port", "8788"], {
   cwd: root,
   detached: true,
   stdio: ["ignore", "pipe", "pipe"],
