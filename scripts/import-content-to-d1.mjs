@@ -101,23 +101,22 @@ function query(sql, params = []) {
   return { sql, params: params.map(asText) };
 }
 
-async function executeBatch(statements) {
+async function executeStatement(statement) {
   const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + API_TOKEN,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ batch: statements })
+    body: JSON.stringify(statement)
   });
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload?.success) {
     throw new Error("Cloudflare D1 import request failed: " + JSON.stringify(payload?.errors || payload || { status: response.status }));
   }
-  const results = payload.result || [];
-  const failed = results.find((result) => result.success === false);
-  if (failed) throw new Error("A D1 batch statement failed: " + JSON.stringify(failed));
-  return results;
+  const result = payload.result?.[0];
+  if (result?.success === false) throw new Error("A D1 import statement failed: " + JSON.stringify(result));
+  return result;
 }
 
 const variants = [];
@@ -185,7 +184,7 @@ for (const [contentId, records] of byContent) {
       [record.contentId + ":" + record.locale + ":1", record.contentId, record.locale, "migration@system.local", JSON.stringify(snapshot), IMPORTED_AT]
     ));
   }
-  await executeBatch(statements);
+  for (const statement of statements) await executeStatement(statement);
 }
 
 const verify = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/d1/database/${DATABASE_ID}/query`, {
