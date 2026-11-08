@@ -179,7 +179,7 @@ if (root) {
     const value = localeFormData(locale);
     const existing = state.variants[locale];
     if (!localeIsComplete(value)) {
-      throw new Error((locale === "en" ? "English" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
+      throw new Error((locale === "en" ? "English" : locale === "es" ? "Spanish" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
     }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug)) {
       throw new Error("URL slug must use lowercase letters, numbers and hyphens.");
@@ -189,14 +189,15 @@ if (root) {
       if (!value.mediaAlt || !value.mediaCredit || !value.mediaLicense) {
         throw new Error("Add image alt text, credit and license before saving a cover image.");
       }
-      media = [{
+      const selectedMedia = {
         src:value.mediaSrc,
         alt:value.mediaAlt,
         decorative:false,
         credit:value.mediaCredit,
         license:value.mediaLicense,
         ...(value.mediaSource ? {sourceUrl:value.mediaSource} : {})
-      }];
+      };
+      media = [selectedMedia, ...media.filter((asset)=>asset.src !== value.mediaSrc)];
     } else if (existing?.media?.length && !value.mediaSrc) {
       media = existing.media;
     }
