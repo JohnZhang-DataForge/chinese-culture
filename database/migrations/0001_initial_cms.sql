@@ -7,12 +7,13 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS content_items (
   content_id TEXT PRIMARY KEY NOT NULL,
   collection TEXT NOT NULL CHECK (collection IN ('lessons', 'culture', 'festivals', 'books', 'events')),
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL,
+  source_commit TEXT
 );
 
 CREATE TABLE IF NOT EXISTS content_variants (
   content_id TEXT NOT NULL,
-  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN')),
+  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN', 'es')),
   collection TEXT NOT NULL CHECK (collection IN ('lessons', 'culture', 'festivals', 'books', 'events')),
   slug TEXT NOT NULL CHECK (slug GLOB '[a-z0-9]*' AND slug NOT GLOB '*[^a-z0-9-]*' AND slug NOT GLOB '-*' AND slug NOT GLOB '*-' AND slug NOT LIKE '%--%'),
   title TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 180),
@@ -33,6 +34,9 @@ CREATE TABLE IF NOT EXISTS content_variants (
   tags_json TEXT NOT NULL DEFAULT '[]',
   sources_json TEXT NOT NULL DEFAULT '[]',
   media_json TEXT NOT NULL DEFAULT '[]',
+  image_url TEXT,
+  image_alt TEXT,
+  source_path TEXT,
   revision INTEGER NOT NULL DEFAULT 1 CHECK (revision >= 1),
   last_mutation_id TEXT NOT NULL,
   PRIMARY KEY (content_id, locale),
@@ -53,7 +57,7 @@ CREATE INDEX IF NOT EXISTS idx_content_variants_status_featured
 CREATE TABLE IF NOT EXISTS content_revisions (
   revision_id TEXT PRIMARY KEY NOT NULL,
   content_id TEXT NOT NULL,
-  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN')),
+  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN', 'es')),
   revision INTEGER NOT NULL CHECK (revision >= 1),
   actor_email TEXT NOT NULL,
   snapshot_json TEXT NOT NULL,
@@ -68,7 +72,7 @@ CREATE INDEX IF NOT EXISTS idx_content_revisions_history
 CREATE TABLE IF NOT EXISTS cms_submissions (
   submission_id TEXT PRIMARY KEY NOT NULL,
   content_id TEXT NOT NULL,
-  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN')),
+  locale TEXT NOT NULL CHECK (locale IN ('en', 'zh-CN', 'es')),
   revision INTEGER NOT NULL CHECK (revision >= 1),
   intent TEXT NOT NULL CHECK (intent IN ('review', 'publish', 'unpublish')),
   branch TEXT,
