@@ -267,12 +267,9 @@ paths:
     post:
       tags: [Media]
       operationId: uploadMedia
-      summary: Upload an image to the current CMS snapshot branch and store its metadata in D1
+      summary: Upload an image as a reviewed GitHub pull request
       description: >
-        Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and
-        AVIF. SVG, HTML and other formats are rejected. The Pages Function validates
-        file signatures, commits the asset to a CMS snapshot branch and stores its
-        rights/accessibility metadata in D1.
+        Maximum file size 8 MiB. Allowed image formats are JPEG, PNG, WebP and AVIF. SVG, HTML and other formats are rejected. The Pages Function validates the declared image type and required rights/accessibility metadata, commits the asset to a GitHub branch and opens a review PR. D1 attaches the media record only after that PR is merged. The article remains locked while the media PR is open.
       security:
         - CloudflareAccess: []
           CsrfToken: []
@@ -291,7 +288,7 @@ paths:
                   $ref: '#/components/schemas/MediaUploadMetadata'
       responses:
         '201':
-          description: Media committed to the CMS branch
+          description: Media committed to a review branch and awaiting PR merge
           content:
             application/json:
               schema:
@@ -883,18 +880,22 @@ components:
           format: uri
     MediaUploadResult:
       type: object
-      required: [src, publicUrl, contentType, size, blobSha, metadata]
+      required: [src, metadata, pullRequest, revision]
       properties:
         src:
           type: string
-        publicUrl:
-          type: string
-          format: uri
-        contentType:
-          type: string
-        size:
-          type: integer
-        blobSha:
+        pullRequest:
+          type: object
+          required: [number, url, state]
+          properties:
+            number:
+              type: integer
+            url:
+              type: string
+              format: uri
+            state:
+              type: string
+        revision:
           type: string
         metadata:
           $ref: '#/components/schemas/MediaMetadata'
