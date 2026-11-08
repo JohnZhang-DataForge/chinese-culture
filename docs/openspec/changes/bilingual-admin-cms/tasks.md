@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status:** Implementation PR in progress; D1 is canonical, GitHub is the reviewed snapshot channel. Spanish locale and reviewed media uploads are included. Production bootstrap runs after merge; GitHub App credentials are a manual security setup gate.
+**Status:** Core implementation merged (PR #33); importer fix merged (PR #34); production D1 bootstrap and 39-variant import PASS. GitHub App credentials and authenticated live publication acceptance remain release gates.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -11,13 +11,13 @@
 - [x] P0.4 Update Admin API OpenAPI to v1.2.0 with D1 revision/ETag semantics.
 - [x] P0.5 Freeze Cloudflare Access + Pages Functions + CMS_DB + GitHub App snapshot-export design.
 - [x] P0.6 Update agent ownership, integration order and migration/rollback rules.
-- [ ] P0.7 Merge the architecture/contracts PR after CI and review pass.
+- [x] P0.7 Merge the architecture/contracts PR after CI and review pass (included in CMS integration PR #33).
 
 **Exit:** Agents 1–7 receive the exact contract versions and may begin only their assigned files.
 
 ## P1 — Database and identity foundation
 
-Production D1 is provisioned and bound; migration/import execution is intentionally triggered by the CMS bootstrap workflow only after this PR reaches main. Cloudflare Access policy and administrator/CSRF settings are already configured and verified.
+Production D1 is provisioned, migrated and populated. Bootstrap run #42531011592 passed; direct D1 checks confirmed 13 content items, 39 locale variants and 39 revision snapshots. Cloudflare Access policy and administrator/CSRF settings are configured.
 
 ### Agent 5 — D1 and backend foundation
 - [x] P1.1 Verify the provisioned D1 database chinese-culture-cms and bind it as CMS_DB using database ID 8b6f6c98-06fe-49eb-adbc-690d4b57c058.
@@ -29,7 +29,7 @@ Production D1 is provisioned and bound; migration/import execution is intentiona
 - [x] P1.7 Verify Access JWT validation and deny-by-default behavior.
 
 ### Agent 0 — GitHub App integration approval
-- [ ] P1.8 Verify the GitHub App is installed only on JohnZhang-DataForge/chinese-culture with the minimum Contents and Pull Requests permissions.
+- [ ] P1.8 Install and verify the GitHub App only on JohnZhang-DataForge/chinese-culture with minimum Contents, Pull Requests and Checks permissions.
 - [ ] P1.9 Confirm the App cannot merge PRs, change branch protection or write directly to main.
 
 **Exit:** D1 binding and local migrations work; unauthenticated CMS access is denied; GitHub App can write only to CMS branches and create/update PRs.
@@ -73,7 +73,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 - [x] P4.6 Implement atomic revision history and optimistic concurrency; stale If-Match returns 409.
 - [x] P4.7 Implement the idempotent seed/import tool for Agent 3's approved dataset.
 - [x] P4.8 Implement preview response with sanitized HTML.
-- [x] P4.9 Implement secure media upload to the CMS branch and store metadata in D1.
+- [x] P4.9 Implement secure media upload as a reviewed GitHub PR; attach media metadata to D1 only after merge.
 - [x] P4.10 Implement D1-to-Markdown snapshot export for the exact requested revision.
 - [x] P4.11 Implement review/publish/unpublish PR generation. D1 status changes only after a reviewed PR merges and the explicit POST sync endpoint records the publication transition; never merge or write main.
 - [x] P4.12 Implement read-only GET PR status lookup plus an explicit CSRF-protected POST sync endpoint; GET requests never mutate D1.
@@ -127,14 +127,14 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 ## P8 — Integration and release (Agent 0)
 
-The production Pages project is verified to deploy the Functions bundle and CMS_DB binding. Production D1 migration/import, GitHub App installation/secrets, live D1 CRUD, publish/unpublish acceptance, backup/restore and final report remain release gates.
+The production Pages project deploys Functions and CMS_DB. Production migration/import is complete and read-back verified (13 items, 39 variants, 39 revisions). GitHub App setup, authenticated Admin CRUD, reviewed media/publication acceptance and durable backup/restore remain release gates.
 
-- [ ] P8.1 Re-read latest main and all open PRs; update each PR against current main.
-- [ ] P8.2 Review file ownership, contracts, tests, security and deployment compatibility.
-- [ ] P8.3 Merge in dependency order documented in integration-protocol.md.
+- [x] P8.1 Re-read latest main and all open PRs; update each PR against current main for PRs #33 and #34.
+- [x] P8.2 Review file ownership, contracts, tests, security and deployment compatibility for the merged CMS implementation.
+- [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33 then importer fix PR #34).
 - [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding.
 - [x] P8.5 Verify chinese-culture.site and canonical redirects.
-- [ ] P8.6 Run D1-backed content create/edit/save/reload/translation/preview smoke tests.
+- [ ] P8.6 Run authenticated production Admin content create/edit/save/reload/translation/preview smoke tests (database import and read-only SQL validation passed; browser/API mutation acceptance remains pending).
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
 - [ ] P8.9 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.
