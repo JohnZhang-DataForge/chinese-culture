@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status:** Core implementation merged (PR #33); importer fix merged (PR #34); production D1 bootstrap and 39-variant import PASS. GitHub App credentials and authenticated live publication acceptance remain release gates.
+**Status:** Core implementation merged (PR #33); importer fix merged (PR #34); production D1 bootstrap and 39-variant import PASS. PR #35 implements contentId-based public locale routing. GitHub App credentials and authenticated live publication acceptance remain release gates.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -40,7 +40,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 - [x] P2.1 Implement /en/, /zh-cn/ and /es/ route generation.
 - [x] P2.2 Implement shared locale-aware layout and navigation.
-- [ ] P2.3 Implement language switch by contentId (current snapshot switch relies on matching slugs; contentId frontmatter/linkage remains pending).
+- [ ] P2.3 Implement language switch by contentId (implemented in PR #35; awaiting merge and production deployment).
 - [x] P2.4 Add lang, canonical, hreflang and x-default metadata.
 - [ ] P2.5 Add redirects from existing unprefixed URLs.
 - [x] P2.6 Keep public rendering static and consume only generated src/content/ snapshots on main.
@@ -118,7 +118,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 - [x] P7.1 Update README and documentation index to reflect D1-backed editorial storage.
 - [x] P7.2 Update architecture map, static hosting ADR references, repository map and authoring guide.
-- [ ] P7.3 Document D1 database ID/binding name, migration commands and local-only workflow (done); add production backup/restore procedure and test.
+- [ ] P7.3 Document D1 database ID/binding name, migration commands and local-only workflow (done); D1 Time Travel/export/restore runbook added; native SQL dump download/import rehearsal remains pending.
 - [x] P7.4 Document that src/content/ is generated publication output and D1 is canonical.
 - [ ] P7.5 Update operations runbooks and cost/limit monitoring guidance.
 - [x] P7.6 Record actual CI, Cloudflare binding, Access and Pages deployment evidence.
@@ -138,6 +138,6 @@ The production Pages project deploys Functions and CMS_DB. Production migration/
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
 - [ ] P8.9 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.
-- [ ] P8.10 Test D1 backup/export/restore and Pages rollback; write the final production acceptance report.
+- [ ] P8.10 Native SQL dump download/import test and Pages rollback remain pending; the isolated row-level D1 restore rehearsal passed and is documented in the operations runbook.
 
 **Exit:** All proposal acceptance criteria are evidenced; only then mark this OpenSpec change complete.
