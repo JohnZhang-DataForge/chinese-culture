@@ -104,10 +104,10 @@ export async function onRequestPost(context) {
     }
 
     const open = await db.prepare(
-      "SELECT submission_id, pr_number, pr_url, pr_state FROM cms_submissions WHERE content_id = ? AND locale = ? AND revision = ? AND intent = ? AND pr_state IN ('pending', 'open') ORDER BY created_at DESC LIMIT 1"
+      "SELECT submission_id, branch, pr_number, pr_url, pr_state FROM cms_submissions WHERE content_id = ? AND locale = ? AND revision = ? AND intent = ? AND pr_state IN ('pending', 'open') ORDER BY created_at DESC LIMIT 1"
     ).bind(contentId, locale, revision, intent).first();
     if (open?.pr_url && open?.pr_number) {
-      return withApiSecurityHeaders(jsonResponse({ submissionId: open.submission_id, pullRequest: { number: Number(open.pr_number), url: open.pr_url, state: open.pr_state } }));
+      return withApiSecurityHeaders(jsonResponse({ contentId, locale, intent, branch: open.branch, revision: String(revision), submissionId: open.submission_id, pullRequest: { number: Number(open.pr_number), url: open.pr_url, state: open.pr_state } }));
     }
 
     const now = new Date().toISOString();
@@ -163,7 +163,7 @@ export async function onRequestPost(context) {
     await db.prepare("UPDATE cms_submissions SET pr_number = ?, pr_url = ?, pr_state = 'open', updated_at = ? WHERE submission_id = ?")
       .bind(pr.number, pr.html_url, new Date().toISOString(), submissionId).run();
     return withApiSecurityHeaders(jsonResponse({
-      submissionId,
+      contentId, locale, intent, branch: branchName, revision: String(revision), submissionId,
       pullRequest: { number: pr.number, url: pr.html_url, state: pr.state || "open" }
     }, 201));
   } catch (error) {
