@@ -577,7 +577,8 @@ if (root) {
           bodyMarkdown:variant.bodyMarkdown,
           readingMinutes:variant.readingMinutes || 5,
           media:variant.media || [],
-          sources:variant.sources || []
+          sources:variant.sources || [],
+          ...(variant.imageUrl ? {imageUrl:variant.imageUrl,imageAlt:variant.imageAlt || ""} : {})
         };
         if(variant.order !== undefined) payload.order=variant.order;
         if(variant.level) payload.level=variant.level;
