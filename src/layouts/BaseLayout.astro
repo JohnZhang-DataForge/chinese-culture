@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import { localeNames, ui } from "../i18n/site";
-const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life.", locale = "en" } = Astro.props;
+const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life.", locale = "en", alternateUrls = {} } = Astro.props;
 const language = locale === "zh-cn" || locale === "es" ? locale : "en";
 const english = {
   skip: "Skip to content", nav: ["Learn", "Culture", "Festivals", "Books", "Events"],
