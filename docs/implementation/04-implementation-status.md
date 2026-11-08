@@ -67,7 +67,14 @@ The production bootstrap workflow, main CI and Pages deployment all completed su
 3. Sign in to Admin through Cloudflare Access and perform live create/edit/save/reload/translation/preview tests.
 4. Perform a reviewed media PR, merge it, and verify the media record attaches to D1 only after merge.
 5. Perform publish and unpublish PR acceptance, including Pages deployment and D1 status synchronization.
-6. Complete a durable D1 backup/export/restore test and record the recovery procedure.
+6. Complete native SQL dump download/import acceptance; configure an independently retained backup archive only if the desired retention justifies its cost.
+
+## Backup and recovery
+
+- D1 Time Travel is enabled by Cloudflare; retention depends on the D1 plan (Cloudflare documents 7 days for Workers Free and 30 days for Workers Paid).
+- An isolated row-level restore rehearsal passed: the current migration was applied to a disposable D1 database, all 13 content items, 39 variants and 39 revisions were restored exactly, and foreign-key validation was clean. The disposable database was deleted.
+- The D1 SQL export API completed an export job, but the generated SQL file has not yet been downloaded and imported. Native SQL dump restore remains unverified; see [D1 Backup and Recovery](../operations/05-d1-backup-and-restore.md).
+- No independently retained R2 backup archive or scheduled export workflow is currently configured.
 
 ## Known scope boundaries
 
