@@ -74,7 +74,7 @@ if (root) {
     });
     const published = state.items.filter((item) => item.statuses?.includes("published") || item.status === "published").length;
     const drafts = state.items.filter((item) => item.statuses?.includes("draft") || item.status === "draft").length;
-    const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh; }).length;
+    const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh || !t.es; }).length;
     const setStat = (name, value) => { const node = $("[data-stat='" + name + "']"); if (node) node.textContent = String(value); };
     setStat("total", demoMode ? state.items.length : "—");
     setStat("published", demoMode ? published : "—");
@@ -229,11 +229,11 @@ if (root) {
     return payload;
   };
   const mapCollectionToUi = (collection) => collection === "culture" ? "articles" : collection;
-  const mergeSummaries = (enItems, zhItems) => {
+  const mergeSummaries = (...groups) => {
     const merged = new Map();
     const add = (summary) => {
       const id = summary.contentId;
-      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:""},description:{en:"",zh:""},body:{en:"",zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null},categories:{en:"",zh:""},pullRequest:null});
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:"",es:""},description:{en:"",zh:"",es:""},body:{en:"",zh:"",es:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null,es:null},categories:{en:"",zh:"",es:""},pullRequest:null});
       const item = merged.get(id);
       const locale = summary.locale;
       const suffix = uiLocale(locale);
@@ -250,7 +250,7 @@ if (root) {
       if (summary.pullRequest) item.pullRequest = summary.pullRequest;
       item.translationLocales = [...new Set([...(item.translationLocales || []),...(summary.translationLocales || []),locale])];
     };
-    enItems.forEach(add); zhItems.forEach(add);
+    groups.flat().forEach(add);
     return [...merged.values()].map((item) => {
       item.statuses = [...new Set(item.statuses)];
       item.status = item.statuses.length > 1 ? (item.statuses.every((x)=>x===item.statuses[0]) ? item.statuses[0] : "mixed") : (item.statuses[0] || "draft");
@@ -270,8 +270,8 @@ if (root) {
     return items;
   };
   const loadAllContent = async () => {
-    const [enItems,zhItems] = await Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN")]);
-    state.items = mergeSummaries(enItems,zhItems);
+    const [enItems,zhItems,esItems] = await Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN"),fetchAllSummaries("es")]);
+    state.items = mergeSummaries(enItems,zhItems,esItems);
     updateCounts();
     if (state.page === "dashboard") renderDashboard();
     if (state.page === "content") renderList();
@@ -301,7 +301,7 @@ if (root) {
     const value = item || {};
     setField("id",value.id || "");
     setField("type",value.type || state.collection);
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const suffix = uiLocale(locale);
       const variant = value.variants?.[locale] || null;
       const demo = value.locales?.[locale] || null;
