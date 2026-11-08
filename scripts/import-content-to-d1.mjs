@@ -131,7 +131,14 @@ for (const localeRoot of LOCALE_ROOTS) {
 const byContent = new Map();
 for (const variant of variants) {
   const existing = byContent.get(variant.contentId);
-  if (existing && existing.collection !== variant.collection) throw new Error("Content ID collection mismatch.");
+  // The map stores an array because each conceptual article has one record per locale.
+  // Compare collection against the first locale variant, not against the array itself.
+  if (existing && existing[0].collection !== variant.collection) {
+    throw new Error(
+      "Content ID collection mismatch for " + variant.contentId +
+      ": expected " + existing[0].collection + ", received " + variant.collection + "."
+    );
+  }
   if (!byContent.has(variant.contentId)) byContent.set(variant.contentId, []);
   byContent.get(variant.contentId).push(variant);
 }
