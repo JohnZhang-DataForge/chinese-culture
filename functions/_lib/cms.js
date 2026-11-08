@@ -1,7 +1,7 @@
 import { RequestValidationError, readJsonBody } from "./http.js";
 
 const COLLECTIONS = new Set(["lessons", "culture", "festivals", "books", "events"]);
-const LOCALES = new Set(["en", "zh-CN"]);
+const LOCALES = new Set(["en", "zh-CN", "es"]);
 const STATUSES = new Set(["draft", "published", "unpublished"]);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -9,7 +9,7 @@ const WRITE_FIELDS = new Set([
   "locale", "collection", "slug", "title", "description", "seoTitle",
   "seoDescription", "category", "featured", "publishedAt", "order",
   "readingMinutes", "level", "chinese", "pinyin", "sources", "media",
-  "tags", "bodyMarkdown"
+  "tags", "bodyMarkdown", "imageUrl", "imageAlt"
 ]);
 
 export class CmsError extends Error {
@@ -54,7 +54,7 @@ export function requireContentId(value) {
 
 export function requireLocale(value) {
   if (!LOCALES.has(value)) {
-    throw new CmsError(400, "invalid_locale", "Bad Request", "locale must be en or zh-CN.");
+    throw new CmsError(400, "invalid_locale", "Bad Request", "locale must be en, zh-CN or es.");
   }
   return value;
 }
@@ -102,6 +102,8 @@ function toVariant(row, includeBody = true) {
     result.sources = parseJson(row.sources_json);
     result.media = parseJson(row.media_json);
   }
+  if (row.image_url) result.imageUrl = row.image_url;
+  if (row.image_alt) result.imageAlt = row.image_alt;
   if (row.seo_title) result.seoTitle = row.seo_title;
   if (row.seo_description) result.seoDescription = row.seo_description;
   if (row.published_at) result.publishedAt = row.published_at;
@@ -223,6 +225,12 @@ export function validateContentWrite(input) {
   };
 
   const seoTitle = optionalText("seoTitle", 180);
+  let imageUrl;
+  if (input.imageUrl !== undefined && input.imageUrl !== "") {
+    try { const parsed = new URL(input.imageUrl); if (parsed.protocol !== "https:") throw new Error(); imageUrl = parsed.toString(); }
+    catch { errors.push({ field: "imageUrl", message: "Must be a valid HTTPS image URL." }); }
+  }
+  const imageAlt = input.imageAlt === undefined ? undefined : (typeof input.imageAlt === "string" && input.imageAlt.length <= 300 ? input.imageAlt.trim() : (errors.push({ field: "imageAlt", message: "Must be text of at most 300 characters." }), undefined));
   const seoDescription = optionalText("seoDescription", 300);
   const level = optionalText("level", 80);
   const chinese = optionalText("chinese", 120);
@@ -258,7 +266,7 @@ export function validateContentWrite(input) {
   return {
     locale, collection, slug, title, description, seoTitle, seoDescription,
     category, featured: input.featured, publishedAt, order, readingMinutes,
-    level, chinese, pinyin,
+    level, chinese, pinyin, imageUrl, imageAlt,
     sources: sources.map(validateSource),
     media: media.map(validateMedia),
     tags: tags.map((tag) => tag.trim()),
@@ -281,6 +289,8 @@ function snapshotFor(contentId, value, status, updatedAt, revision, publishedAt)
   if (value.level) snapshot.level = value.level;
   if (value.chinese) snapshot.chinese = value.chinese;
   if (value.pinyin) snapshot.pinyin = value.pinyin;
+  if (value.imageUrl) snapshot.imageUrl = value.imageUrl;
+  if (value.imageAlt) snapshot.imageAlt = value.imageAlt;
   return snapshot;
 }
 
@@ -288,8 +298,8 @@ function variantInsert(db, contentId, value, now, actorEmail) {
   const mutationId = crypto.randomUUID();
   const snapshot = snapshotFor(contentId, value, "draft", now, 1, value.publishedAt);
   return [
-    db.prepare("INSERT INTO content_variants (content_id, locale, collection, slug, title, description, seo_title, seo_description, category, body_markdown, status, featured, updated_at, published_at, display_order, reading_minutes, level, chinese, pinyin, tags_json, sources_json, media_json, revision, last_mutation_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)")
-      .bind(contentId, value.locale, value.collection, value.slug, value.title, value.description, value.seoTitle ?? null, value.seoDescription ?? null, value.category, value.bodyMarkdown, value.featured ? 1 : 0, now, value.publishedAt ?? null, value.order ?? null, value.readingMinutes, value.level ?? null, value.chinese ?? null, value.pinyin ?? null, JSON.stringify(value.tags), JSON.stringify(value.sources), JSON.stringify(value.media), mutationId),
+    db.prepare("INSERT INTO content_variants (content_id, locale, collection, slug, title, description, seo_title, seo_description, category, body_markdown, status, featured, updated_at, published_at, display_order, reading_minutes, level, chinese, pinyin, tags_json, sources_json, media_json, image_url, image_alt, revision, last_mutation_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)")
+      .bind(contentId, value.locale, value.collection, value.slug, value.title, value.description, value.seoTitle ?? null, value.seoDescription ?? null, value.category, value.bodyMarkdown, value.featured ? 1 : 0, now, value.publishedAt ?? null, value.order ?? null, value.readingMinutes, value.level ?? null, value.chinese ?? null, value.pinyin ?? null, JSON.stringify(value.tags), JSON.stringify(value.sources), JSON.stringify(value.media), value.imageUrl ?? null, value.imageAlt ?? null, mutationId),
     db.prepare("INSERT INTO content_revisions (revision_id, content_id, locale, revision, actor_email, snapshot_json, created_at) VALUES (?, ?, ?, 1, ?, ?, ?)")
       .bind(crypto.randomUUID(), contentId, value.locale, actorEmail, JSON.stringify(snapshot), now)
   ];
@@ -336,8 +346,8 @@ export async function saveDraft(db, contentId, locale, value, expectedRevision, 
   const snapshot = snapshotFor(contentId, value, "draft", now, revision, publishedAt);
 
   const results = await db.batch([
-    db.prepare("UPDATE content_variants SET slug = ?, title = ?, description = ?, seo_title = ?, seo_description = ?, category = ?, body_markdown = ?, status = 'draft', featured = ?, updated_at = ?, published_at = ?, display_order = ?, reading_minutes = ?, level = ?, chinese = ?, pinyin = ?, tags_json = ?, sources_json = ?, media_json = ?, revision = revision + 1, last_mutation_id = ? WHERE content_id = ? AND locale = ? AND revision = ?")
-      .bind(value.slug, value.title, value.description, value.seoTitle ?? null, value.seoDescription ?? null, value.category, value.bodyMarkdown, value.featured ? 1 : 0, now, publishedAt, value.order ?? null, value.readingMinutes, value.level ?? null, value.chinese ?? null, value.pinyin ?? null, JSON.stringify(value.tags), JSON.stringify(value.sources), JSON.stringify(value.media), mutationId, contentId, locale, expectedRevision),
+    db.prepare("UPDATE content_variants SET slug = ?, title = ?, description = ?, seo_title = ?, seo_description = ?, category = ?, body_markdown = ?, status = 'draft', featured = ?, updated_at = ?, published_at = ?, display_order = ?, reading_minutes = ?, level = ?, chinese = ?, pinyin = ?, tags_json = ?, sources_json = ?, media_json = ?, image_url = ?, image_alt = ?, revision = revision + 1, last_mutation_id = ? WHERE content_id = ? AND locale = ? AND revision = ?")
+      .bind(value.slug, value.title, value.description, value.seoTitle ?? null, value.seoDescription ?? null, value.category, value.bodyMarkdown, value.featured ? 1 : 0, now, publishedAt, value.order ?? null, value.readingMinutes, value.level ?? null, value.chinese ?? null, value.pinyin ?? null, JSON.stringify(value.tags), JSON.stringify(value.sources), JSON.stringify(value.media), value.imageUrl ?? null, value.imageAlt ?? null, mutationId, contentId, locale, expectedRevision),
     db.prepare("INSERT INTO content_revisions (revision_id, content_id, locale, revision, actor_email, snapshot_json, created_at) SELECT ?, content_id, locale, revision, ?, ?, ? FROM content_variants WHERE content_id = ? AND locale = ? AND revision = ? AND last_mutation_id = ?")
       .bind(crypto.randomUUID(), actorEmail, JSON.stringify(snapshot), now, contentId, locale, revision, mutationId)
   ]);
