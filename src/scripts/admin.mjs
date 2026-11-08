@@ -85,7 +85,7 @@ if (root) {
   };
   const languagePills = (item) => {
     const t = translationStatus(item);
-    return '<div class="language-pills"><span class="language-pill ' + (t.en ? "" : "missing") + '">EN</span><span class="language-pill ' + (t.zh ? "" : "missing") + '">中文</span></div>';
+    return '<div class="language-pills"><span class="language-pill ' + (t.en ? "" : "missing") + '">EN</span><span class="language-pill ' + (t.zh ? "" : "missing") + '">中文</span><span class="language-pill ' + (t.es ? "" : "missing") + '">ES</span></div>';
   };
   const statusPill = (status) => '<span class="status-pill status-' + escapeHtml(status) + '">' + escapeHtml(status) + '</span>';
   const renderList = () => {
@@ -377,7 +377,7 @@ if (root) {
     if (!demoMode) setConnection(state.session ? "Connected as " + state.session.email : "API session pending");
   };
   const updateTranslationIndicators = () => {
-    ["en","zh-CN"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const suffix = uiLocale(locale);
       const title = formValue("title." + suffix);
       const desc = formValue("description." + suffix);
