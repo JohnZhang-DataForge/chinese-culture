@@ -154,6 +154,13 @@ export async function writeRepositoryFile(token, repository, path, branchName, c
   });
 }
 
+export async function writeRepositoryBinaryFile(token, repository, path, branchName, bytes, message) {
+  return githubRequest("/repos/" + repository + "/contents/" + encodePath(path), token, {
+    method: "PUT",
+    body: { message, content: base64(bytes), branch: branchName }
+  });
+}
+
 export async function deleteRepositoryFile(token, repository, path, branchName, existingSha, message) {
   return githubRequest("/repos/" + repository + "/contents/" + encodePath(path), token, {
     method: "DELETE",
