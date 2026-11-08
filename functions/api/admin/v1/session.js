@@ -1,4 +1,5 @@
 import { createCsrfToken } from "../../../_lib/csrf.js";
+import { isGithubAppConfigured } from "../../../_lib/github-app.js";
 import { CmsError, problemResponse } from "../../../_lib/cms.js";
 import { jsonResponse, withApiSecurityHeaders } from "../../../_lib/http.js";
 
@@ -18,7 +19,8 @@ export async function onRequestGet(context) {
       email: admin.email,
       role: "admin",
       csrfToken,
-      repository: "JohnZhang-DataForge/chinese-culture"
+      repository: "JohnZhang-DataForge/chinese-culture",
+      capabilities: { preview: true, publish: isGithubAppConfigured(context.env), mediaUpload: false }
     }));
   } catch (error) {
     return withApiSecurityHeaders(problemResponse(error));
