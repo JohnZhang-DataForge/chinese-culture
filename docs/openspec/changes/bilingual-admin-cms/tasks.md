@@ -36,7 +36,7 @@ Production D1 is provisioned, migrated and populated. Bootstrap run #42531011592
 
 ## P2 — Public multilingual frontend (Agent 2)
 
-The existing static frontend already serves English, Simplified Chinese and Spanish route trees. ContentId-based locale matching, redirect consolidation and D1 publication-state filtering remain separate follow-up work.
+The static frontend serves English, Simplified Chinese and Spanish route trees. ContentId-based locale matching, legacy redirects, published-only rendering, sitemap generation and missing-translation fallbacks are implemented.
 
 - [x] P2.1 Implement /en/, /zh-cn/ and /es/ route generation.
 - [x] P2.2 Implement shared locale-aware layout and navigation.
@@ -45,7 +45,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 - [x] P2.5 Add redirects from existing unprefixed URLs (verified in `public/_redirects`; production smoke confirms `www` → apex).
 - [x] P2.6 Keep public rendering static and consume only generated src/content/ snapshots on main.
 - [x] P2.7 Filter all public routes, sitemap and featured modules to status=published (legacy Markdown defaults to published; CMS publication snapshots write explicit `status: published`).
-- [x] P2.8 Add missing-translation states and multilingual 404 behavior (404 selects English, Simplified Chinese or Spanish by route locale, then browser language).
+- [x] P2.8 Add missing-translation states and multilingual 404 behavior (language menu explains unavailable article translations and falls back to the corresponding section; 404 selects English, Simplified Chinese or Spanish by route locale, then browser language).
 - [x] P2.9 Preserve existing visual design and accessibility.
 
 **Exit:** Localized routes and static build tests pass with schema-valid published snapshots; no public D1/API dependency exists.
