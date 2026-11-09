@@ -117,8 +117,8 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     htmlPagesChecked++;
-    const relativePath = file.slice(dist.length + 1).replaceAll("\", "/");
-    // Public pages must retain the shared keyboard and screen-reader foundations.
+    const relativePath = file.slice(dist.length + 1).replaceAll("\\", "/");
+    // Public pages must retain shared keyboard and screen-reader foundations.
     if (relativePath !== "admin/index.html") {
       assert.match(html, /<html[^>]*\blang="[^"]+"/i, "Missing document language: " + relativePath);
       assert.match(html, /<a[^>]*class="skip-link"[^>]*href="#main-content"/i, "Missing keyboard skip link: " + relativePath);
