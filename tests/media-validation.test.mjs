@@ -17,12 +17,12 @@ test("image signature validation rejects mismatched and truncated payloads", () 
 });
 
 test("media metadata requires accessible alt text, credit and license", () => {
-  assert.deepEqual(parseMetadata({
+  assert.deepEqual(parseMetadata(JSON.stringify({
     alt: "A red paper lantern",
     credit: "Original photography",
     license: "CC BY 4.0",
     sourceUrl: "https://example.org/image"
-  }), {
+  })), {
     alt: "A red paper lantern",
     credit: "Original photography",
     license: "CC BY 4.0",
@@ -31,10 +31,10 @@ test("media metadata requires accessible alt text, credit and license", () => {
 });
 
 test("media metadata rejects missing fields, overlong alt text and non-HTTPS sources", () => {
-  assert.throws(() => parseMetadata({ alt: "", credit: "Credit", license: "Original" }), (error) => error.code === "invalid_media_alt");
-  assert.throws(() => parseMetadata({ alt: "Alt", credit: "", license: "Original" }), (error) => error.code === "invalid_media_credit");
-  assert.throws(() => parseMetadata({ alt: "Alt", credit: "Credit", license: "" }), (error) => error.code === "invalid_media_license");
-  assert.throws(() => parseMetadata({ alt: "x".repeat(301), credit: "Credit", license: "Original" }), (error) => error.code === "invalid_media_alt");
-  assert.throws(() => parseMetadata({ alt: "Alt", credit: "Credit", license: "Original", sourceUrl: "http://example.org/image" }), (error) => error.code === "invalid_media_source");
+  assert.throws(() => parseMetadata(JSON.stringify({ alt: "", credit: "Credit", license: "Original" })), (error) => error.code === "invalid_media_alt");
+  assert.throws(() => parseMetadata(JSON.stringify({ alt: "Alt", credit: "", license: "Original" })), (error) => error.code === "invalid_media_credit");
+  assert.throws(() => parseMetadata(JSON.stringify({ alt: "Alt", credit: "Credit", license: "" })), (error) => error.code === "invalid_media_license");
+  assert.throws(() => parseMetadata(JSON.stringify({ alt: "x".repeat(301), credit: "Credit", license: "Original" })), (error) => error.code === "invalid_media_alt");
+  assert.throws(() => parseMetadata(JSON.stringify({ alt: "Alt", credit: "Credit", license: "Original", sourceUrl: "http://example.org/image" })), (error) => error.code === "invalid_media_source");
   assert.throws(() => parseMetadata("not-json"), (error) => error.code === "invalid_media_metadata");
 });
