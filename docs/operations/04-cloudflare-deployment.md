@@ -93,3 +93,13 @@ Pull-request previews use `wrangler.preview.jsonc`, not the production `wrangler
 - Fork-origin PRs do not receive a Pages preview deployment because the workflow skips them.
 
 The preview binding isolation is guarded by `tests/preview-config.test.mjs`. Do not add a D1 binding or copy production secrets into `wrangler.preview.jsonc`.
+
+### Preview acceptance evidence (2026-11-10)
+
+- [PR preview workflow #42724399464](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724399464) succeeded after deploying the PR branch with the minimal preview Wrangler config.
+- Preview alias: https://pr-51.chinese-culture-79h.pages.dev
+- Chromium smoke passed for `/en/`, `/zh-cn/` and `/es/`, and verified `/admin/` is production-built (`data-demo=false`, `noindex`) with no demo article content.
+- Unauthenticated `GET /api/admin/v1/session` returned HTTP 401 (`unauthorized`); the API is fail-closed without a Cloudflare Access JWT.
+- Cloudflare Pages project configuration shows preview env vars empty and no preview D1 binding; production `CMS_DB` remains bound only to production.
+- Preview configuration uses `wrangler.preview.jsonc`, which deliberately omits D1 and production variables. The workflow copies it to the default `wrangler.jsonc` only in the ephemeral GitHub Actions workspace because Wrangler Pages does not support custom config paths.
+- This preview acceptance does not replace authenticated production CRUD acceptance.
