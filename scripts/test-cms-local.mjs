@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { existsSync, unlinkSync, writeFileSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 
@@ -44,6 +44,48 @@ async function waitUntilReady() {
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
   throw new Error("Wrangler Pages dev did not become ready.\n" + logs);
+}
+
+function readLocalRevisionHistory(contentId, locale) {
+  const sql = "SELECT revision, snapshot_json FROM content_revisions WHERE content_id = '" +
+    contentId.replaceAll("'", "''") + "' AND locale = '" + locale.replaceAll("'", "''") +
+    "' ORDER BY revision ASC;";
+  const result = spawnSync("npx", [
+    "wrangler", "d1", "execute", "chinese-culture-cms", "--local", "--json", "--command", sql
+  ], { cwd: root, encoding: "utf8", timeout: 30000 });
+  if (result.status !== 0) {
+    throw new Error("Could not inspect local D1 revision history.\\n" + (result.stderr || result.stdout));
+  }
+
+  const output = result.stdout.trim();
+  let parsed;
+  for (let index = 0; index < output.length; index += 1) {
+    if (output[index] !== "[" && output[index] !== "{") continue;
+    try { parsed = JSON.parse(output.slice(index)); break; } catch {}
+  }
+  if (!parsed) throw new Error("Wrangler did not return parseable JSON for revision history: " + output);
+
+  const findRows = (value) => {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        const rows = findRows(item);
+        if (rows) return rows;
+      }
+    } else if (value && typeof value === "object") {
+      if (Array.isArray(value.results)) return value.results;
+      for (const item of Object.values(value)) {
+        const rows = findRows(item);
+        if (rows) return rows;
+      }
+    }
+    return null;
+  };
+  const rows = findRows(parsed);
+  if (!rows) throw new Error("Wrangler JSON did not contain D1 query rows: " + output);
+  return rows.map((row) => ({
+    revision: Number(row.revision),
+    snapshot: typeof row.snapshot_json === "string" ? JSON.parse(row.snapshot_json) : null
+  }));
 }
 
 async function main() {
@@ -98,6 +140,16 @@ async function main() {
     throw new Error("A rejected stale write must not alter the latest D1 revision: " + JSON.stringify(afterStaleWrite.data));
   }
 
+  const revisionHistory = readLocalRevisionHistory(id, "en");
+  if (revisionHistory.length !== 2 ||
+      revisionHistory[0].revision !== 1 ||
+      revisionHistory[1].revision !== 2 ||
+      revisionHistory[0].snapshot?.title !== payload.title ||
+      revisionHistory[1].snapshot?.title !== updatedPayload.title) {
+    throw new Error("D1 must retain exactly the two immutable content_revisions snapshots after the rejected stale write: " +
+      JSON.stringify(revisionHistory));
+  }
+
   const spanish = {
     ...payload,
     locale: "es",
@@ -140,7 +192,7 @@ async function main() {
   const deleteEnglish = await request("/api/admin/v1/content/" + id + "/draft?locale=en", { method: "DELETE", headers });
   if (deleteEnglish.response.status !== 204) throw new Error("Delete English draft failed: " + JSON.stringify(deleteEnglish.data));
 
-  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, stale-write conflict protection, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
+  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, immutable D1 revision snapshots, stale-write conflict protection, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
 }
 
 try {
