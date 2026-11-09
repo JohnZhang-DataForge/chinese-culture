@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-10):** PR #41 D1 immutable revision-history assertions, PR #42 content-schema/translation validation and PR #43 OpenAPI lint/route-drift validation are merged; PR #42 and #43 CI runs passed. Main baseline: `bb856368a61407e2f5a43484aeb743a5a00701cb`. Production D1 last verified at 13 conceptual items, 39 locale variants, 39 revisions, 0 submissions and no FK violations; this is historical evidence, not a fresh production query for this update. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, preview deployment/browser smoke, main branch protection, native SQL dump restore and Pages rollback.
+**Status (2026-11-10):** Main baseline `c2394e0e81461a2f11dd7788ab6ae938adbb50b3`; PRs #45–#49 merged. Main CI #42721883379 and Pages deployment #42721883894 passed. Admin Chromium regression coverage includes editor flows and three-locale preview switching. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, isolated Pages preview/browser smoke (P6.8 in progress), main branch protection, native SQL dump restore and Pages rollback. Historical production D1 counts remain documented in the operations runbook and have not been re-queried in this update.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
