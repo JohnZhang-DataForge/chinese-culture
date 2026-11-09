@@ -6,7 +6,8 @@ import { sections } from "../../lib/sections";
 export async function getStaticPaths() {
   const grouped=await Promise.all(sections.map(async (config)=>{
     const entries=await getCollection(config.collection);
-    return entries.map((entry)=>({params:{section:config.route,slug:entry.id},props:{entry,config}}));
+    return entries.filter((entry)=>(entry.data.status ?? "published")==="published")
+      .map((entry)=>({params:{section:config.route,slug:entry.id},props:{entry,config}}));
   }));
   return grouped.flat();
 }
