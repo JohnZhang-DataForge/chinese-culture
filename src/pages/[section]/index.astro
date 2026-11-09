@@ -8,7 +8,9 @@ export function getStaticPaths() {
   return sections.map((config)=>({params:{section:config.route},props:{config}}));
 }
 const {config}=Astro.props;
-const entries=(await getCollection(config.collection)).sort((a,b)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
+const entries=(await getCollection(config.collection))
+  .filter((entry)=>(entry.data.status ?? "published")==="published")
+  .sort((a,b)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
 ---
 <BaseLayout title={config.nav} description={config.description}>
   <section class="page-hero page-hero-photo" style={"--section-photo: url(\'" + config.image + "\')"}><div class="wrap"><span class="eyebrow">{config.eyebrow}</span><h1>{config.title}</h1><p class="lead">{config.description}</p></div></section>
