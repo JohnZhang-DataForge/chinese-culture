@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status:** Core implementation merged (PR #33); importer fix merged (PR #34); production D1 bootstrap and 39-variant import PASS. PR #35 implements contentId-based public locale routing. GitHub App credentials and authenticated live publication acceptance remain release gates.
+**Status:** PR #33 core implementation, PR #34 importer fix and PR #35 contentId-based locale routing are merged. Main commit `25a1661a10cc4a27dc183437785b5aee11162b97` is deployed to Cloudflare Pages; production D1 migration/import and direct read-only verification PASS (13 content items, 39 variants, 39 revisions, 0 submissions, no incomplete locale groups or FK violations). Remaining release gates: authenticated browser CRUD/preview, GitHub App installation and reviewed publication lifecycle, native SQL dump download/import, and Pages rollback rehearsal.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -40,7 +40,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 - [x] P2.1 Implement /en/, /zh-cn/ and /es/ route generation.
 - [x] P2.2 Implement shared locale-aware layout and navigation.
-- [ ] P2.3 Implement language switch by contentId (implemented in PR #35; awaiting merge and production deployment).
+- [x] P2.3 Implement language switch by contentId (PR #35 merged and deployed; CI verifies canonical, hreflang and switch destinations for all 39 locale variants).
 - [x] P2.4 Add lang, canonical, hreflang and x-default metadata.
 - [ ] P2.5 Add redirects from existing unprefixed URLs.
 - [x] P2.6 Keep public rendering static and consume only generated src/content/ snapshots on main.
@@ -78,7 +78,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 - [x] P4.11 Implement review/publish/unpublish PR generation. D1 status changes only after a reviewed PR merges and the explicit POST sync endpoint records the publication transition; never merge or write main.
 - [x] P4.12 Implement read-only GET PR status lookup plus an explicit CSRF-protected POST sync endpoint; GET requests never mutate D1.
 - [x] P4.13 Add backend unit, integration, permission, migration, concurrency and abuse tests.
-- [ ] P4.14 Document D1 export, restore and recovery procedures.
+- [x] P4.14 Document D1 export, restore and recovery procedures (runbook added; native SQL dump download/import rehearsal remains a separate acceptance gate).
 
 **Exit:** Contract tests pass; CRUD round-trips through D1; stale-write, unauthorized, oversized-media, migration and GitHub-failure cases are demonstrated.
 
@@ -118,7 +118,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 - [x] P7.1 Update README and documentation index to reflect D1-backed editorial storage.
 - [x] P7.2 Update architecture map, static hosting ADR references, repository map and authoring guide.
-- [ ] P7.3 Document D1 database ID/binding name, migration commands and local-only workflow (done); D1 Time Travel/export/restore runbook added; native SQL dump download/import rehearsal remains pending.
+- [x] P7.3 Document D1 database ID/binding name, migration commands and local-only workflow; D1 Time Travel/export/restore runbook added. Native SQL dump download/import rehearsal remains pending.
 - [x] P7.4 Document that src/content/ is generated publication output and D1 is canonical.
 - [ ] P7.5 Update operations runbooks and cost/limit monitoring guidance.
 - [x] P7.6 Record actual CI, Cloudflare binding, Access and Pages deployment evidence.
@@ -127,12 +127,12 @@ The existing static frontend already serves English, Simplified Chinese and Span
 
 ## P8 — Integration and release (Agent 0)
 
-The production Pages project deploys Functions and CMS_DB. Production migration/import is complete and read-back verified (13 items, 39 variants, 39 revisions). GitHub App setup, authenticated Admin CRUD, reviewed media/publication acceptance and durable backup/restore remain release gates.
+The production Pages project deploys Functions and CMS_DB. PR #35 is merged and deployed. Production D1 import and direct read-back verified (13 items, 39 variants, 39 revisions; all locale groups complete; no FK violations). Main workflows #42538125290 (Pages), #42538125227 (D1 migration/import) and #42538125223 (CI) all succeeded. GitHub App setup, authenticated Admin CRUD, reviewed media/publication acceptance and native SQL dump restore remain release gates.
 
 - [x] P8.1 Re-read latest main and all open PRs; update each PR against current main for PRs #33 and #34.
 - [x] P8.2 Review file ownership, contracts, tests, security and deployment compatibility for the merged CMS implementation.
-- [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33 then importer fix PR #34).
-- [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding.
+- [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33, importer fix PR #34, then contentId/locale routing PR #35).
+- [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding (deployment run #42538125290 succeeded; project retains custom domains and production branch main).
 - [x] P8.5 Verify chinese-culture.site and canonical redirects.
 - [ ] P8.6 Run authenticated production Admin content create/edit/save/reload/translation/preview smoke tests (database import and read-only SQL validation passed; browser/API mutation acceptance remains pending).
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
