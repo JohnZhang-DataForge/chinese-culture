@@ -12,7 +12,7 @@ const copy = homeCopy[locale];
 const contentSections = sections.filter((section) => section.collection);
 const collections = await Promise.all(contentSections.map((section) => getCollection(section.collection as any)));
 const stories = contentSections.flatMap((section, index) =>
-  collections[index].map((entry: any) => ({
+  collections[index].filter((entry: any) => (entry.data.status ?? "published") === "published").map((entry: any) => ({
     entry,
     href: "/" + locale + "/" + section.route + "/" + entry.id + "/",
     section: section.route,
