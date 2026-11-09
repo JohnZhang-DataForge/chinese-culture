@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-09):** PRs #33–#38 are merged. Latest Main `1a71d306a6b08ea82ef893b3d67344f3b470c4fd` is deployed to Cloudflare Pages. Main CI #42540733033 and Pages deployment plus production smoke #42540733018 passed. Production D1 baseline remains 13 content items, 39 variants, 39 revisions, 0 submissions, complete locale groups and no FK violations. PR #39 implements published-only routes/sitemap and multilingual 404; remaining gates: authenticated browser CRUD/preview, repository-scoped GitHub App setup and reviewed publication lifecycle, native SQL dump download/import, accessibility/preview browser tests and Pages rollback rehearsal.
+**Status (2026-11-09):** PR #39 is merged. Latest Main `601e36d9605e406a0fdc57dde2004aafd53bd183` was deployed successfully (Pages run #42621971861); follow-up production smoke/CI for the sitemap and multilingual 404 plus stale-write conflict coverage passed on `bb74ecabfe23399e1ec2983f01face1853064ba8` (CI #42622578083; Pages #42622578025). Production D1 remains 13 content items, 39 published variants (13 per locale), 39 revisions, 0 submissions and no FK violations. Current remaining gates: repository-scoped GitHub App installation/secrets and reviewed publish/unpublish acceptance, authenticated production CRUD, direct revision-history assertion, media validation tests (PR in progress), accessibility/browser tests, main branch protection, native SQL dump restore and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -103,7 +103,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [ ] P6.1 Add content schema and translation-pair CI validation.
 - [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0.
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
-- [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts.
+- [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (CRUD and stale `If-Match` rejection now run in Pages Functions integration CI; direct `content_revisions` row assertion remains).
 - [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [ ] P6.7 Add media validation tests.
@@ -133,7 +133,7 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [x] P8.2 Review file ownership, contracts, tests, security and deployment compatibility for the merged CMS implementation.
 - [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33, importer fix PR #34, then contentId/locale routing PR #35).
 - [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding (deployment run #42538125290 succeeded; project retains custom domains and production branch main).
-- [x] P8.5 Verify production locale routes and domain redirects: six public routes returned HTTP 200 with expected language; `www.chinese-culture.site` returned HTTP 301 to apex in smoke run #42539468756.
+- [x] P8.5 Verify production locale routes and domain redirects: six public routes returned HTTP 200 with expected language; `www.chinese-culture.site` returned HTTP 301 to apex; follow-up smoke #42622578025 also verified public sitemap and localized 404 pages.
 - [ ] P8.6 Run authenticated production Admin content create/edit/save/reload/translation/preview smoke tests (database import and read-only SQL validation passed; browser/API mutation acceptance remains pending).
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
