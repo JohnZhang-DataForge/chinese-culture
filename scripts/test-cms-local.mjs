@@ -74,6 +74,7 @@ async function main() {
   const id = created.data.contentId;
   let etag = created.response.headers.get("etag");
   if (!etag) throw new Error("Create content did not return an ETag.");
+  const originalEtag = etag;
 
   const read = await request("/api/admin/v1/content/" + id + "?locale=en");
   if (!read.response.ok || read.data?.title !== payload.title) throw new Error("Read content failed: " + JSON.stringify(read.data));
@@ -83,6 +84,19 @@ async function main() {
   if (!updated.response.ok || updated.data?.title !== updatedPayload.title) throw new Error("Update content failed: " + JSON.stringify(updated.data));
   etag = updated.response.headers.get("etag");
   if (!etag || etag === '"1"') throw new Error("Draft update did not advance the revision ETag.");
+
+  const staleWrite = await request("/api/admin/v1/content/" + id + "?locale=en", {
+    method: "PUT",
+    headers: { ...headers, "If-Match": originalEtag },
+    body: JSON.stringify({ ...updatedPayload, title: "This stale write must be rejected." })
+  });
+  if (staleWrite.response.status !== 409 || staleWrite.data?.code !== "revision_conflict") {
+    throw new Error("A stale If-Match write must return 409 revision_conflict: " + JSON.stringify(staleWrite.data));
+  }
+  const afterStaleWrite = await request("/api/admin/v1/content/" + id + "?locale=en");
+  if (!afterStaleWrite.response.ok || afterStaleWrite.data?.title !== updatedPayload.title || afterStaleWrite.data?.revision !== "2") {
+    throw new Error("A rejected stale write must not alter the latest D1 revision: " + JSON.stringify(afterStaleWrite.data));
+  }
 
   const spanish = {
     ...payload,
@@ -126,7 +140,7 @@ async function main() {
   const deleteEnglish = await request("/api/admin/v1/content/" + id + "/draft?locale=en", { method: "DELETE", headers });
   if (deleteEnglish.response.status !== 204) throw new Error("Delete English draft failed: " + JSON.stringify(deleteEnglish.data));
 
-  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
+  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, stale-write conflict protection, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
 }
 
 try {
