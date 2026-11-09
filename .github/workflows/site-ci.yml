@@ -19,6 +19,8 @@ jobs:
       - name: Validate CMS schema on an isolated local D1 database
         run: npx wrangler d1 migrations apply chinese-culture-cms --local
       - run: npm test
+      - name: Validate content schema and locale translation identities
+        run: npm run validate:content
       - run: node --check scripts/import-content-to-d1.mjs
       - run: node --check scripts/smoke-production.mjs
       - run: npm run build

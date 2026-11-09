@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-09):** PR #39 is merged. Latest Main `601e36d9605e406a0fdc57dde2004aafd53bd183` was deployed successfully (Pages run #42621971861); follow-up production smoke/CI for the sitemap and multilingual 404 plus stale-write conflict coverage passed on `bb74ecabfe23399e1ec2983f01face1853064ba8` (CI #42622578083; Pages #42622578025). PR #40 media-validation and static-accessibility tests pass CI #42624578839. Production D1 remains 13 content items, 39 published variants (13 per locale), 39 revisions, 0 submissions and no FK violations. Current remaining gates: repository-scoped GitHub App installation/secrets and reviewed publish/unpublish acceptance, authenticated production CRUD, direct revision-history assertion, interactive accessibility/browser tests, main branch protection, native SQL dump restore and Pages rollback.
+**Status (2026-11-09):** PR #39 is merged. Latest Main `601e36d9605e406a0fdc57dde2004aafd53bd183` was deployed successfully (Pages run #42621971861); follow-up production smoke/CI for the sitemap and multilingual 404 plus stale-write conflict coverage passed on `bb74ecabfe23399e1ec2983f01face1853064ba8` (CI #42622578083; Pages #42622578025). PR #40 media-validation and static-accessibility tests pass CI #42624578839. PR #41 immutable D1 revision-history assertion merged with CI #42625364644 passing. Production D1 remains 13 content items, 39 published variants (13 per locale), 39 revisions, 0 submissions and no FK violations. Current remaining gates: repository-scoped GitHub App installation/secrets and reviewed publish/unpublish acceptance, authenticated production CRUD, direct revision-history assertion, interactive accessibility/browser tests, main branch protection, native SQL dump restore and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -100,10 +100,10 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 
 ## P6 — QA and CI (Agent 6)
 
-- [ ] P6.1 Add content schema and translation-pair CI validation.
+- [x] P6.1 Add content schema and translation-pair CI validation (`scripts/validate-content.mjs`, `tests/content-schema.test.mjs`, and the `validate:content` CI step). Legacy published Markdown keeps its established published-by-default behavior; locale folders, immutable IDs, route slugs, metadata types, media URLs/alt text and translation uniqueness/collection consistency are validated.
 - [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0.
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
-- [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (CRUD and stale `If-Match` rejection now run in Pages Functions integration CI; direct `content_revisions` row assertion remains).
+- [x] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (PR #41 queries local D1 `content_revisions` and asserts both immutable snapshots; CI #42625364644 passed).
 - [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [x] P6.7 Add media validation tests (PR #40 covers JPEG/PNG/WebP/AVIF signatures, malformed/truncated payloads, required alt/credit/license and HTTPS source URLs; CI #42624578839 passed).
