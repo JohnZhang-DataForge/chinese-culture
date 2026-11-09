@@ -37,12 +37,12 @@ Direct read-only queries against production D1 confirmed:
 
 Collection counts per language are books 2, culture 3, festivals 3 and lessons 5. A representative article read-back confirmed all three translations, body content, Unsplash cover URL and localized alt text were preserved.
 
-Successful release workflows for merged main `25a1661a10cc4a27dc183437785b5aee11162b97`:
-- [Main CI #42538125223](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125223)
-- [CMS D1 migration/import #42538125227](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125227)
-- [Pages deployment #42538125290](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125290)
-
-PR #35 was merged as commit `25a1661a10cc4a27dc183437785b5aee11162b97`. The production deployment ID is `fe5b985e-55e8-450c-87f1-fd29424a9aaf`; its deployment stage reported `success`.
+Latest production release for merged Main `46c50f3cc0e731179ebaa6fedf8dc57f7c3e83d9` (PR #36):
+- [Main CI #42539468779](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42539468779) — success.
+- [Pages deployment + production smoke #42539468756](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42539468756) — success.
+- Production deployment ID: `67df1ace-3a10-46f4-bee1-d1457ad760ec`.
+- Deployment preview: https://67df1ace.chinese-culture-79h.pages.dev
+- Smoke results: six public locale/home/article pages HTTP 200; `/admin/` and `/api/admin/v1/session` challenged by Cloudflare Access; `www` permanently redirected to apex with HTTP 301.
 
 ## Workflows and data safety
 
@@ -63,7 +63,7 @@ PR #35 was merged as commit `25a1661a10cc4a27dc183437785b5aee11162b97`. The prod
 
 ## Remaining acceptance gates
 
-- Sign in to Admin through Cloudflare Access and verify live D1 create/edit/save/reload/translation/preview behavior. This requires the designated administrator's browser session and remains pending.
+- Sign in to Admin through Cloudflare Access and verify live D1 create/edit/save/reload/translation/preview behavior. The unauthenticated Access challenge is now verified by production smoke; authenticated CRUD still requires the designated administrator's browser session and remains pending.
 - Configure the repository-scoped GitHub App and confirm the Admin session reports publish=true and mediaUpload=true.
 - Submit and merge a media PR; verify D1 attaches media only after merge.
 - Submit and merge a publish PR; verify Pages deployment and D1 status synchronization.

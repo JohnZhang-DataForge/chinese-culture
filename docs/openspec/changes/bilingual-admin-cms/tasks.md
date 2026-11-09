@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status:** PR #33 core implementation, PR #34 importer fix and PR #35 contentId-based locale routing are merged. Main commit `25a1661a10cc4a27dc183437785b5aee11162b97` is deployed to Cloudflare Pages; production D1 migration/import and direct read-only verification PASS (13 content items, 39 variants, 39 revisions, 0 submissions, no incomplete locale groups or FK violations). Remaining release gates: authenticated browser CRUD/preview, GitHub App installation and reviewed publication lifecycle, native SQL dump download/import, and Pages rollback rehearsal.
+**Status (2026-11-09):** PRs #33–#36 are merged. Latest Main `46c50f3cc0e731179ebaa6fedf8dc57f7c3e83d9` is deployed to Cloudflare Pages. Main CI #42539468779 and Pages deployment plus production smoke #42539468756 passed. The production smoke verified six public locale/home/article routes, Access challenges on `/admin/` and `/api/admin/v1/session`, and `www` → apex HTTP 301. Production D1 baseline remains 13 content items, 39 variants, 39 revisions, 0 submissions, complete locale groups and no FK violations. Remaining gates: authenticated browser CRUD/preview, repository-scoped GitHub App setup and reviewed publication lifecycle, native SQL dump download/import, accessibility/preview browser tests and Pages rollback rehearsal.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -133,11 +133,11 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [x] P8.2 Review file ownership, contracts, tests, security and deployment compatibility for the merged CMS implementation.
 - [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33, importer fix PR #34, then contentId/locale routing PR #35).
 - [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding (deployment run #42538125290 succeeded; project retains custom domains and production branch main).
-- [x] P8.5 Verify chinese-culture.site and canonical redirects.
+- [x] P8.5 Verify production locale routes and domain redirects: six public routes returned HTTP 200 with expected language; `www.chinese-culture.site` returned HTTP 301 to apex in smoke run #42539468756.
 - [ ] P8.6 Run authenticated production Admin content create/edit/save/reload/translation/preview smoke tests (database import and read-only SQL validation passed; browser/API mutation acceptance remains pending).
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
 - [ ] P8.9 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.
-- [ ] P8.10 Native SQL dump download/import test and Pages rollback remain pending; the isolated row-level D1 restore rehearsal passed and is documented in the operations runbook.
+- [ ] P8.10 Native SQL dump download/import test and Pages rollback remain pending; the isolated row-level D1 restore rehearsal passed. The export API produced a signed URL, but the execution environment could not download the SQL bytes (HTTP 403), so native dump restore is not claimed.
 
 **Exit:** All proposal acceptance criteria are evidenced; only then mark this OpenSpec change complete.
