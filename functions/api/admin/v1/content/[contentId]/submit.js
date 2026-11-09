@@ -41,7 +41,8 @@ export function toPublicMarkdown(variant) {
     "locale: " + yaml(variant.locale),
     "title: " + yaml(variant.title),
     "description: " + yaml(variant.description),
-    "category: " + yaml(variant.category)
+    "category: " + yaml(variant.category),
+    "status: \"published\""
   ];
   if (variant.chinese) lines.push("chinese: " + yaml(variant.chinese));
   if (variant.pinyin) lines.push("pinyin: " + yaml(variant.pinyin));
