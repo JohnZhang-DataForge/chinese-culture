@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-09):** PR #39 is merged. Latest Main `601e36d9605e406a0fdc57dde2004aafd53bd183` was deployed successfully (Pages run #42621971861); follow-up production smoke/CI for the sitemap and multilingual 404 plus stale-write conflict coverage passed on `bb74ecabfe23399e1ec2983f01face1853064ba8` (CI #42622578083; Pages #42622578025). PR #40 media-validation and static-accessibility tests pass CI #42624578839. PR #41 immutable D1 revision-history assertion merged with CI #42625364644 passing. Production D1 remains 13 content items, 39 published variants (13 per locale), 39 revisions, 0 submissions and no FK violations. Current remaining gates: repository-scoped GitHub App installation/secrets and reviewed publish/unpublish acceptance, authenticated production CRUD, direct revision-history assertion, interactive accessibility/browser tests, main branch protection, native SQL dump restore and Pages rollback.
+**Status (2026-11-10):** PR #41 D1 immutable revision-history assertions, PR #42 content-schema/translation validation and PR #43 OpenAPI lint/route-drift validation are merged; PR #42 and #43 CI runs passed. Main baseline: `bb856368a61407e2f5a43484aeb743a5a00701cb`. Production D1 last verified at 13 conceptual items, 39 locale variants, 39 revisions, 0 submissions and no FK violations; this is historical evidence, not a fresh production query for this update. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, preview deployment/browser smoke, main branch protection, native SQL dump restore and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -93,7 +93,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P5.7 Implement Save Draft to D1 and reload-after-save behavior.
 - [x] P5.8 Implement media upload and accessible metadata entry.
 - [x] P5.9 Implement submit-review/publish/unpublish actions and show D1 revision, PR, checks and live state.
-- [ ] P5.10 Add keyboard, responsive and accessibility tests (PR #40 adds static checks for document language, skip link, main/navigation landmarks, image alt text, focus-visible styles and responsive navigation; interactive browser/keyboard testing remains).
+- [x] P5.10 Add keyboard, responsive and accessibility tests (PR #40 static checks plus Playwright Chromium coverage for content filtering, editor creation, preview, draft save, keyboard focus and mobile navigation).
 - [x] P5.11 Hide or disable homepage settings, navigation settings and global media-library screens until their APIs are specified and implemented.
 
 **Exit:** End-to-end browser workflow works against the D1-backed Agent 5 API in a non-production environment.
@@ -101,7 +101,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 ## P6 — QA and CI (Agent 6)
 
 - [x] P6.1 Add content schema and translation-pair CI validation (`scripts/validate-content.mjs`, `tests/content-schema.test.mjs`, and the `validate:content` CI step). Legacy published Markdown keeps its established published-by-default behavior; locale folders, immutable IDs, route slugs, metadata types, media URLs/alt text and translation uniqueness/collection consistency are validated.
-- [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0 (`redocly lint`, unique operationId validation, and a Pages Functions route/method parity check).
+- [x] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0 (`redocly lint`, unique operationId validation, and a Pages Functions route/method parity check; PR #43 CI passed).
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
 - [x] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (PR #41 queries local D1 `content_revisions` and asserts both immutable snapshots; CI #42625364644 passed).
 - [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).

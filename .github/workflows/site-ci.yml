@@ -38,3 +38,18 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 1
+
+  admin-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm install --no-audit --no-fund
+      - name: Install Chromium for browser tests
+        run: npx playwright install --with-deps chromium
+      - name: Run Admin browser and responsive accessibility tests
+        run: npm run test:browser
