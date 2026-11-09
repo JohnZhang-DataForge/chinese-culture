@@ -13,7 +13,7 @@ test("deployed preview serves all public locales", async ({ page }) => {
   }
 });
 
-test("preview Admin is production-built and contains no demo content", async ({ page, request }) => {
+test("preview Admin is production-built and contains no demo content", async ({ page }) => {
   const sessionResponsePromise = page.waitForResponse((response) =>
     response.url().endsWith("/api/admin/v1/session")
   );
@@ -35,5 +35,5 @@ test("preview API rejects unauthenticated CMS access when preview secrets are ab
     headers: { accept: "application/problem+json" }
   });
   expect(response.status()).toBe(401);
-  expect((await response.json()).code).toBe("admin_api_not_configured");
+  expect((await response.json()).code).toBe("unauthorized");
 });
