@@ -24,7 +24,7 @@ test.describe("Admin editorial studio in local development preview", () => {
     });
 
     await page.goto("/admin/");
-    await page.getByRole("button", { name: /Create content/ }).click();
+    await page.locator('[data-action="new-content"]').click();
     await expect(page.locator('[data-page="editor"]')).toBeVisible();
 
     await page.locator('[name="title.en"]').fill("Browser QA story");
@@ -56,6 +56,8 @@ test.describe("Admin editorial studio in local development preview", () => {
     await expect(sidebar).toHaveClass(/is-open/);
     await page.keyboard.press("Escape");
     await expect(sidebar).not.toHaveClass(/is-open/);
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    await expect(sidebar).toHaveClass(/is-open/);
     await page.locator('[data-nav="languages"]').click();
     await expect(page.getByRole("heading", { name: "Language management" })).toBeVisible();
     await expect(page.locator("[data-language-rows]")).toContainText("Learning guides");
@@ -65,7 +67,7 @@ test.describe("Admin editorial studio in local development preview", () => {
     await page.goto("/admin/");
     await page.getByRole("button", { name: /Create content/ }).click();
     const title = page.locator('[name="title.en"]');
-    await title.focus();
+    await title.click();
     await expect(title).toBeFocused();
     await page.keyboard.press("Tab");
     const slug = page.locator('[name="slug.en"]');
