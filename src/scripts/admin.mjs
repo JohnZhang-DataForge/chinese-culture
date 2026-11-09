@@ -108,7 +108,7 @@ if (root) {
     if (pageNumber) pageNumber.textContent = result.page + " / " + result.pages;
     $("[data-page-prev]").disabled = result.page <= 1;
     $("[data-page-next]").disabled = result.page >= result.pages;
-    $("[data-action='feature']").forEach((button)=>{button.disabled=!demoMode && !state.capabilities.publish;});
+    $$("[data-action='feature']").forEach((button)=>{button.disabled=!demoMode && !state.capabilities.publish;});
   };
   const renderDashboard = () => {
     updateCounts();
@@ -357,9 +357,9 @@ if (root) {
   };
   const setEditorLock = (locked) => {
     form.querySelectorAll("input,textarea,select").forEach((field)=>{ field.disabled=locked || (field.hasAttribute("data-variant-media-input") && !state.capabilities.mediaUpload); });
-    $("[data-action='save-draft'],[data-action='delete-current']").forEach((button)=>{button.disabled=locked;});
-    $("[data-action='publish'],[data-action='unpublish']").forEach((button)=>{button.disabled=locked || !state.capabilities.publish;});
-    $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=locked || !state.capabilities.mediaUpload;});
+    $$("[data-action='save-draft'],[data-action='delete-current']").forEach((button)=>{button.disabled=locked;});
+    $$("[data-action='publish'],[data-action='unpublish']").forEach((button)=>{button.disabled=locked || !state.capabilities.publish;});
+    $$("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=locked || !state.capabilities.mediaUpload;});
     if (locked) showAdminBanner("This article has an open review pull request. Editing is locked until the pull request is merged or closed.", "warning");
     else showAdminBanner("", "success");
   };
@@ -658,9 +658,9 @@ if (root) {
       const role = $("[data-session-role]",document);
       if (email) email.textContent = session.email;
       if (role) role.textContent = session.role;
-      $("[data-action='publish'],[data-action='unpublish'],[data-action='feature']").forEach((button)=>{button.disabled=!state.capabilities.publish;button.title=state.capabilities.publish?"Create a reviewed GitHub publication pull request":"Configure the GitHub App integration to enable publication";});
-      $("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=!state.capabilities.mediaUpload;button.title=state.capabilities.mediaUpload?"Upload media in a reviewed GitHub pull request":"Configure the GitHub App integration to enable media uploads";});
-      $("[data-variant-media-input]").forEach((input)=>{input.disabled=!state.capabilities.mediaUpload;});
+      $$("[data-action='publish'],[data-action='unpublish'],[data-action='feature']").forEach((button)=>{button.disabled=!state.capabilities.publish;button.title=state.capabilities.publish?"Create a reviewed GitHub publication pull request":"Configure the GitHub App integration to enable publication";});
+      $$("[data-action='upload-variant-media']").forEach((button)=>{button.disabled=!state.capabilities.mediaUpload;button.title=state.capabilities.mediaUpload?"Upload media in a reviewed GitHub pull request":"Configure the GitHub App integration to enable media uploads";});
+      $$("[data-variant-media-input]").forEach((input)=>{input.disabled=!state.capabilities.mediaUpload;});
       setConnection("Connected");
       showAdminBanner("", "success");
       await loadAllContent();
@@ -851,9 +851,9 @@ if (root) {
   });
   if (form) form.addEventListener("submit",(event) => event.preventDefault());
   if (!demoMode) {
-    $('[data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow requires the GitHub publication/media integration.";});
-    $('[data-variant-media-input]').forEach((field)=>{field.disabled=true;});
-    $('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
+    $$('[data-action="publish"], [data-action="unpublish"], [data-action="upload-variant-media"]').forEach((button)=>{button.disabled=true;button.title="This workflow requires the GitHub publication/media integration.";});
+    $$('[data-variant-media-input]').forEach((field)=>{field.disabled=true;});
+    $$('[data-page="homepage"] input, [data-page="homepage"] textarea, [data-page="homepage"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="settings"] input, [data-page="settings"] textarea, [data-page="settings"] select').forEach((field)=>{field.disabled=true;});
     $$('[data-page="homepage"] [data-action="save-settings"], [data-page="settings"] [data-action="save-settings"], [data-page="settings"] [data-action="add-navigation"]').forEach((button)=>{button.disabled=true;});
   } else {
