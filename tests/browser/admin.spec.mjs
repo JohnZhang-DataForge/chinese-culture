@@ -75,7 +75,9 @@ test.describe("Admin editorial studio in local development preview", () => {
     await page.keyboard.press("Tab");
     const slug = page.locator('[name="slug.en"]');
     await expect(slug).toBeFocused();
-    await expect(page.getByLabel("Article body", { exact: true })).toBeVisible();
+    const articleBody = page.locator('[name="body.en"]');
+    await expect(articleBody).toBeVisible();
+    await expect(articleBody).toHaveAccessibleName("Article body Markdown supported. Use headings, lists, links and emphasis.");
     await expect(page.locator('[data-page="editor"]')).toBeVisible();
     const focusStyle = await slug.evaluate((element) => {
       const style = getComputedStyle(element);
