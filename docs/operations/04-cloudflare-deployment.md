@@ -37,10 +37,12 @@ Direct read-only queries against production D1 confirmed:
 
 Collection counts per language are books 2, culture 3, festivals 3 and lessons 5. A representative article read-back confirmed all three translations, body content, Unsplash cover URL and localized alt text were preserved.
 
-Successful release workflows:
-- [CMS D1 bootstrap #42531011592](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011592)
-- [Main CI #42531011576](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011576)
-- [Pages deployment #42531011639](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42531011639)
+Successful release workflows for merged main `25a1661a10cc4a27dc183437785b5aee11162b97`:
+- [Main CI #42538125223](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125223)
+- [CMS D1 migration/import #42538125227](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125227)
+- [Pages deployment #42538125290](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42538125290)
+
+PR #35 was merged as commit `25a1661a10cc4a27dc183437785b5aee11162b97`. The production deployment ID is `fe5b985e-55e8-450c-87f1-fd29424a9aaf`; its deployment stage reported `success`.
 
 ## Workflows and data safety
 
@@ -61,7 +63,7 @@ Successful release workflows:
 
 ## Remaining acceptance gates
 
-- Sign in to Admin through Cloudflare Access and verify live D1 create/edit/save/reload/translation/preview behavior.
+- Sign in to Admin through Cloudflare Access and verify live D1 create/edit/save/reload/translation/preview behavior. This requires the designated administrator's browser session and remains pending.
 - Configure the repository-scoped GitHub App and confirm the Admin session reports publish=true and mediaUpload=true.
 - Submit and merge a media PR; verify D1 attaches media only after merge.
 - Submit and merge a publish PR; verify Pages deployment and D1 status synchronization.
