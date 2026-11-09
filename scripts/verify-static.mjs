@@ -37,10 +37,10 @@ walk(dist);
 assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
 
 const cssSource = readFileSync(join(root, "src/styles/global.css"), "utf8");
-assert.match(cssSource, /:focus-visible\\s*\\{/, "Keyboard focus-visible styling is required");
-assert.match(cssSource, /\\.skip-link:focus\\s*\\{/, "Skip link must become visible on keyboard focus");
-assert.match(cssSource, /@media\\s*\\(/, "Responsive layout media queries are required");
-assert.match(cssSource, /\\.mobile-nav/, "Responsive navigation styles are required");
+assert.match(cssSource, /:focus-visible\s*\{/, "Keyboard focus-visible styling is required");
+assert.match(cssSource, /\.skip-link:focus\s*\{/, "Skip link must become visible on keyboard focus");
+assert.match(cssSource, /@media\s*\(/, "Responsive layout media queries are required");
+assert.match(cssSource, /\.mobile-nav/, "Responsive navigation styles are required");
 
 const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
 assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
@@ -117,16 +117,16 @@ function inspectLinks(dir) {
     if (!name.endsWith(".html")) continue;
     const html = readFileSync(file, "utf8");
     htmlPagesChecked++;
-    const relativePath = file.slice(dist.length + 1).replaceAll("\\", "/");
+    const relativePath = file.slice(dist.length + 1).replaceAll("\", "/");
     // Public pages must retain the shared keyboard and screen-reader foundations.
     if (relativePath !== "admin/index.html") {
-      assert.match(html, /<html[^>]*\\blang="[^"]+"/i, "Missing document language: " + relativePath);
+      assert.match(html, /<html[^>]*\blang="[^"]+"/i, "Missing document language: " + relativePath);
       assert.match(html, /<a[^>]*class="skip-link"[^>]*href="#main-content"/i, "Missing keyboard skip link: " + relativePath);
       assert.match(html, /<main[^>]*id="main-content"/i, "Missing main landmark: " + relativePath);
       assert.match(html, /<nav[^>]*aria-label=/i, "Navigation landmark needs an accessible name: " + relativePath);
-      assert.match(html, /<h1\\b/i, "Page needs a primary heading: " + relativePath);
-      for (const imageTag of html.match(/<img\\b[^>]*>/gi) || []) {
-        assert.match(imageTag, /\\balt=(?:"[^"]*"|'[^']*')/i, "Image missing alt text: " + relativePath);
+      assert.match(html, /<h1\b/i, "Page needs a primary heading: " + relativePath);
+      for (const imageTag of html.match(/<img\b[^>]*>/gi) || []) {
+        assert.match(imageTag, /\balt=(?:"[^"]*"|'[^']*')/i, "Image missing alt text: " + relativePath);
       }
     }
     // The private Admin workspace is intentionally an interactive static shell;
