@@ -51,6 +51,29 @@ for (const page of publicPages) {
   assert.ok(html.includes("Chinese Culture Atlas"), page.path + " should render the site shell");
 }
 
+const sitemapResponse = await request("/sitemap.xml");
+assert.equal(sitemapResponse.status, 200, "sitemap.xml should be publicly available");
+assert.match(sitemapResponse.headers.get("content-type") || "", /application\/xml|text\/xml/i, "sitemap should use an XML content type");
+const sitemap = await sitemapResponse.text();
+assert.ok(sitemap.includes("<urlset"), "sitemap should contain a urlset");
+assert.ok((sitemap.match(/<url>/g) || []).length >= 60, "sitemap should include localized static pages and published articles");
+for (const path of [
+  "/en/books/journey-to-the-west/",
+  "/zh-cn/books/journey-to-the-west/",
+  "/es/books/journey-to-the-west/"
+]) assert.ok(sitemap.includes("https://chinese-culture.site" + path), "sitemap should include " + path);
+
+for (const missing of [
+  { path: "/zh-cn/__production-smoke-missing-route__/", text: "这里暂时没有这个故事" },
+  { path: "/es/__production-smoke-missing-route__/", text: "Esta historia aún no está aquí" },
+  { path: "/en/__production-smoke-missing-route__/", text: "This path has no story yet." }
+]) {
+  const response = await request(missing.path);
+  assert.equal(response.status, 404, missing.path + " should return HTTP 404");
+  const html = await response.text();
+  assert.ok(html.includes(missing.text), missing.path + " should show the localized 404 message");
+}
+
 for (const path of ["/admin/", "/api/admin/v1/session"]) {
   const response = await request(path, { accept: "application/json" });
   const location = response.headers.get("location") || "";
@@ -73,6 +96,8 @@ assert.equal(new URL(www.headers.get("location") || "https://invalid.example").h
 
 console.log(JSON.stringify({
   publicPages: publicPages.length,
+  sitemap: "PASS",
+  localized404Pages: 3,
   accessProtectedPaths: ["/admin/", "/api/admin/v1/session"],
   wwwRedirect: www.status,
   result: "PASS"
