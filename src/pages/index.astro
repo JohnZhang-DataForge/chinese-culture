@@ -32,6 +32,7 @@ const fallbackBySection = {
 ---
 <BaseLayout>
   <div class="image-led-home">
+    <h1 class="visually-hidden">Chinese Culture Atlas</h1>
     <section class="feature-carousel" aria-label="Featured articles" data-feature-carousel>
       <div class="feature-slides">
         {heroStories.map((story, index) => <a class:list={["feature-slide", index === 0 && "is-active"]} href={story.href} data-feature-slide={index} aria-hidden={index === 0 ? "false" : "true"} tabindex={index === 0 ? 0 : -1}>

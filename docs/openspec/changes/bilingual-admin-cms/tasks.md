@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-09):** PRs #33–#38 are merged. Latest Main `1a71d306a6b08ea82ef893b3d67344f3b470c4fd` is deployed to Cloudflare Pages. Main CI #42540733033 and Pages deployment plus production smoke #42540733018 passed. Production D1 baseline remains 13 content items, 39 variants, 39 revisions, 0 submissions, complete locale groups and no FK violations. PR #39 implements published-only routes/sitemap and multilingual 404; remaining gates: authenticated browser CRUD/preview, repository-scoped GitHub App setup and reviewed publication lifecycle, native SQL dump download/import, accessibility/preview browser tests and Pages rollback rehearsal.
+**Status (2026-11-09):** PR #39 is merged. Latest Main `601e36d9605e406a0fdc57dde2004aafd53bd183` was deployed successfully (Pages run #42621971861); follow-up production smoke/CI for the sitemap and multilingual 404 plus stale-write conflict coverage passed on `bb74ecabfe23399e1ec2983f01face1853064ba8` (CI #42622578083; Pages #42622578025). PR #40 media-validation and static-accessibility tests pass CI #42624578839. Production D1 remains 13 content items, 39 published variants (13 per locale), 39 revisions, 0 submissions and no FK violations. Current remaining gates: repository-scoped GitHub App installation/secrets and reviewed publish/unpublish acceptance, authenticated production CRUD, direct revision-history assertion, interactive accessibility/browser tests, main branch protection, native SQL dump restore and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -30,7 +30,7 @@ Production D1 is provisioned, migrated and populated. Bootstrap run #42531011592
 
 ### Agent 0 — GitHub App integration approval
 - [ ] P1.8 Install and verify the GitHub App only on JohnZhang-DataForge/chinese-culture with minimum Contents, Pull Requests and Checks permissions.
-- [ ] P1.9 Confirm the App cannot merge PRs, change branch protection or write directly to main.
+- [ ] P1.9 Verify the main-branch PR/check gate and no-bypass policy. The App has no Administration permission and the CMS code has no merge endpoint, but GitHub's `Pull requests: write` permission technically includes the merge API; branch rules must enforce the human-review workflow (see `docs/runbooks/github-app-publication.md`).
 
 **Exit:** D1 binding and local migrations work; unauthenticated CMS access is denied; GitHub App can write only to CMS branches and create/update PRs.
 
@@ -93,7 +93,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P5.7 Implement Save Draft to D1 and reload-after-save behavior.
 - [x] P5.8 Implement media upload and accessible metadata entry.
 - [x] P5.9 Implement submit-review/publish/unpublish actions and show D1 revision, PR, checks and live state.
-- [ ] P5.10 Add keyboard, responsive and accessibility tests.
+- [ ] P5.10 Add keyboard, responsive and accessibility tests (PR #40 adds static checks for document language, skip link, main/navigation landmarks, image alt text, focus-visible styles and responsive navigation; interactive browser/keyboard testing remains).
 - [x] P5.11 Hide or disable homepage settings, navigation settings and global media-library screens until their APIs are specified and implemented.
 
 **Exit:** End-to-end browser workflow works against the D1-backed Agent 5 API in a non-production environment.
@@ -103,10 +103,10 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [ ] P6.1 Add content schema and translation-pair CI validation.
 - [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0.
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
-- [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts.
+- [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (CRUD and stale `If-Match` rejection now run in Pages Functions integration CI; direct `content_revisions` row assertion remains).
 - [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
-- [ ] P6.7 Add media validation tests.
+- [x] P6.7 Add media validation tests (PR #40 covers JPEG/PNG/WebP/AVIF signatures, malformed/truncated payloads, required alt/credit/license and HTTPS source URLs; CI #42624578839 passed).
 - [ ] P6.8 Add preview deployment/browser smoke tests.
 - [ ] P6.9 Add required PR status checks and protect main.
 - [x] P6.10 Verify Wrangler Direct Upload bundles Pages Functions and applies CMS_DB without exposing secrets.
@@ -133,7 +133,7 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [x] P8.2 Review file ownership, contracts, tests, security and deployment compatibility for the merged CMS implementation.
 - [x] P8.3 Merge in dependency order documented in integration-protocol.md (PR #33, importer fix PR #34, then contentId/locale routing PR #35).
 - [x] P8.4 Verify Pages production deployment includes the Pages Functions API and CMS_DB binding (deployment run #42538125290 succeeded; project retains custom domains and production branch main).
-- [x] P8.5 Verify production locale routes and domain redirects: six public routes returned HTTP 200 with expected language; `www.chinese-culture.site` returned HTTP 301 to apex in smoke run #42539468756.
+- [x] P8.5 Verify production locale routes and domain redirects: six public routes returned HTTP 200 with expected language; `www.chinese-culture.site` returned HTTP 301 to apex; follow-up smoke #42622578025 also verified public sitemap and localized 404 pages.
 - [ ] P8.6 Run authenticated production Admin content create/edit/save/reload/translation/preview smoke tests (database import and read-only SQL validation passed; browser/API mutation acceptance remains pending).
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.

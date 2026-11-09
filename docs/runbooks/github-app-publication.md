@@ -35,6 +35,21 @@ Do not paste the private key into Git, an issue, a PR, a chat message or `.dev.v
 
 The admin session endpoint detects these three values at runtime. Once they are configured, the Admin UI enables publication and media upload without requiring a new website build.
 
+## Protect the main branch
+
+The CMS GitHub App requires **Pull requests: read and write** to open publication and media PRs. GitHub does not provide a separate permission that allows creating PRs while categorically denying the PR merge API. Therefore, do not describe the installation token as technically incapable of merging a PR.
+
+The application code intentionally exposes no merge/approve/close operation and never calls GitHub's merge endpoint. A person must review and merge the PR in GitHub. Enforce that operating boundary on the repository:
+
+1. Require changes to reach `main` through a pull request.
+2. Require the `static-build` status check before merge.
+3. Require conversation resolution.
+4. Do not add the CMS App or its installation identity to any branch-rule bypass list.
+5. Disallow force pushes and branch deletion on `main`.
+6. Do not grant the App Administration, Actions, Workflows, Secrets or Deployments permissions.
+
+The App has no Administration permission, so it cannot change repository branch protection. The repository owner must configure and verify these rules. If policy requires a credential that is cryptographically unable to call the merge API, the current GitHub App permission model cannot meet that requirement while the same App creates PRs; a separate PR-creation broker/architecture would be needed.
+
 ## Expected workflow
 
 - **Save draft:** writes to D1 only.
