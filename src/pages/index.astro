@@ -14,7 +14,7 @@ const stories = [
   ...culture.map((entry) => ({ entry, href: "/culture/" + entry.id + "/", section: "CULTURE" })),
   ...festivals.map((entry) => ({ entry, href: "/festivals/" + entry.id + "/", section: "FESTIVALS" })),
   ...books.map((entry) => ({ entry, href: "/books/" + entry.id + "/", section: "BOOKS" }))
-].filter((story) => story.entry.data.image)
+].filter((story) => (story.entry.data.status ?? "published") === "published" && story.entry.data.image)
  .sort((a, b) => Number(b.entry.data.featured) - Number(a.entry.data.featured));
 
 const featuredStories = stories.filter((story) => story.entry.data.featured).slice(0, 5);
