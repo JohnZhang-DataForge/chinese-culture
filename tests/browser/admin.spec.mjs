@@ -67,10 +67,12 @@ test.describe("Admin editorial studio in local development preview", () => {
     const title = page.locator('[name="title.en"]');
     await title.focus();
     await expect(title).toBeFocused();
-    await expect(page.getByLabel("URL slug", { exact: true })).toBeVisible();
+    await page.keyboard.press("Tab");
+    const slug = page.locator('[name="slug.en"]');
+    await expect(slug).toBeFocused();
     await expect(page.getByLabel("Article body", { exact: true })).toBeVisible();
-    await expect(page.locator('[data-page="editor"] main, [data-page="editor"]')).toBeVisible();
-    const focusStyle = await title.evaluate((element) => {
+    await expect(page.locator('[data-page="editor"]')).toBeVisible();
+    const focusStyle = await slug.evaluate((element) => {
       const style = getComputedStyle(element);
       return style.outlineStyle !== "none" && style.outlineWidth !== "0px";
     });
