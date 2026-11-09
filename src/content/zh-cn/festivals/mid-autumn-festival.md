@@ -1,4 +1,6 @@
 ---
+contentId: "0710c953-d178-5939-b8ec-f22b8f2288a3"
+locale: "zh-CN"
 title: "中秋节：一轮明月，连接远方"
 description: "认识月亮、月饼，以及团聚与思念的节日故事。"
 category: "节日指南"

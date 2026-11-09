@@ -1,4 +1,6 @@
 ---
+contentId: "e72ec0af-7676-5740-9786-64d18c0541f6"
+locale: "es"
 title: "El pincel como forma de mirar"
 description: "Explore cómo la escritura, la pintura y la poesía se conectan en las tradiciones artísticas chinas."
 category: "Lección 04 · Artes"

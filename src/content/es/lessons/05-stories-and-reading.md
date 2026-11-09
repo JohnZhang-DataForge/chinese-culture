@@ -1,4 +1,6 @@
 ---
+contentId: "21c4ab78-fcc8-5821-aaba-37a5dfcee356"
+locale: "es"
 title: "Relatos, libros y memoria cultural"
 description: "Descubra cómo la literatura transmite ideas entre generaciones e invita a nuevas interpretaciones."
 category: "Lección 05 · Literatura"

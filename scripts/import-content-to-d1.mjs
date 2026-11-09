@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { resolveContentIdentity } from "./content-identity.mjs";
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, basename, extname } from "node:path";
 
@@ -20,13 +20,6 @@ if (!SOURCE_COMMIT || !/^[0-9a-f]{40}$/i.test(SOURCE_COMMIT)) {
   throw new Error("CMS_SOURCE_COMMIT (or GITHUB_SHA) must be a full 40-character Git commit SHA.");
 }
 
-function deterministicUuid(value) {
-  const bytes = createHash("sha256").update(value).digest().subarray(0, 16);
-  bytes[6] = (bytes[6] & 0x0f) | 0x50;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  const hex = bytes.toString("hex");
-  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
-}
 
 function scalar(value) {
   const text = value.trim();
@@ -73,7 +66,7 @@ function buildVariant(filePath, localeRoot) {
   return readFile(filePath, "utf8").then((source) => {
     const { metadata, bodyMarkdown } = parseMarkdown(source);
     const slug = basename(filePath, ".md");
-    const contentId = deterministicUuid(collection + "/" + slug);
+    const contentId = resolveContentIdentity(metadata, localeRoot.locale, collection, slug, filePath);
     const status = metadata.status || "published";
     if (!["draft", "published", "unpublished"].includes(status)) throw new Error("Invalid status in " + filePath);
     const publishedAt = status === "published" ? asText(metadata.publishedAt || IMPORTED_AT) : "";

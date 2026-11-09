@@ -28,9 +28,17 @@ function publicContentPath(variant) {
   return "src/content/" + prefix + variant.collection + "/" + variant.slug + ".md";
 }
 
-function toPublicMarkdown(variant) {
+export function toPublicMarkdown(variant) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(variant.contentId || ""))) {
+    throw new CmsError(422, "invalid_content_id", "Validation Failed", "A valid immutable contentId is required for public snapshots.");
+  }
+  if (!["en", "zh-CN", "es"].includes(variant.locale)) {
+    throw new CmsError(422, "invalid_locale", "Validation Failed", "A supported locale is required for public snapshots.");
+  }
   const lines = [
     "---",
+    "contentId: " + yaml(variant.contentId),
+    "locale: " + yaml(variant.locale),
     "title: " + yaml(variant.title),
     "description: " + yaml(variant.description),
     "category: " + yaml(variant.category)

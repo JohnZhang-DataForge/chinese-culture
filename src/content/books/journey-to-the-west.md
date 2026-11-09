@@ -1,4 +1,6 @@
 ---
+contentId: "5e6ce811-787f-523b-81e2-761c7ee6017d"
+locale: "en"
 title: "Journey to the West: A Reader's Guide"
 description: "Meet the Monkey King and the many layers of a celebrated adventure."
 category: "Classic fiction"

@@ -1,4 +1,6 @@
 ---
+contentId: "32a7cfb3-26e2-5ee2-9751-5e91f3e5f95f"
+locale: "en"
 title: "Spring Festival: Welcoming a New Year"
 description: "Understand a season of preparation, reunion, greetings and local variation."
 category: "Festival guide"

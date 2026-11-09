@@ -1,4 +1,6 @@
 ---
+contentId: "0c92d33c-d6ab-55c3-b4cd-27cddf950caf"
+locale: "en"
 title: "Dragon Boat Festival: Water, Memory and Community"
 description: "Explore Duanwu through racing, traditional foods and different stories of its origins."
 category: "Festival guide"

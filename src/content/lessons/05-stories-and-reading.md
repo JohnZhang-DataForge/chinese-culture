@@ -1,4 +1,6 @@
 ---
+contentId: "21c4ab78-fcc8-5821-aaba-37a5dfcee356"
+locale: "en"
 title: "Stories, Books and Cultural Memory"
 description: "See how literature carries ideas across generations while inviting new interpretations."
 category: "Lesson 05 · Literature"

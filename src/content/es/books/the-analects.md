@@ -1,4 +1,6 @@
 ---
+contentId: "d08f19c2-f2fc-5ef3-9af2-30953e991cd9"
+locale: "es"
 title: "Las Analectas: guía para lectores"
 description: "Acérquese a esta colección clásica de conversaciones y enseñanzas con contexto histórico."
 category: "Filosofía y clásicos"

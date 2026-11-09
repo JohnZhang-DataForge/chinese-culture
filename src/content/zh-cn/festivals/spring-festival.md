@@ -1,4 +1,6 @@
 ---
+contentId: "32a7cfb3-26e2-5ee2-9751-5e91f3e5f95f"
+locale: "zh-CN"
 title: "春节：迎接新的一年"
 description: "了解春节期间的准备、团圆、祝福以及各地不同的庆祝方式。"
 category: "节日指南"

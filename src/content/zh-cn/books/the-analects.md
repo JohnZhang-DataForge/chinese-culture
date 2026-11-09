@@ -1,4 +1,6 @@
 ---
+contentId: "d08f19c2-f2fc-5ef3-9af2-30953e991cd9"
+locale: "zh-CN"
 title: "《论语》：读者指南"
 description: "在历史背景中理解这部汇集对话与思想的经典文献。"
 category: "哲学与经典"

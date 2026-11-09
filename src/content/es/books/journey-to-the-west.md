@@ -1,4 +1,6 @@
 ---
+contentId: "5e6ce811-787f-523b-81e2-761c7ee6017d"
+locale: "es"
 title: "Viaje al Oeste: guía para lectores"
 description: "Conozca al Rey Mono y las múltiples capas de una célebre aventura."
 category: "Ficción clásica"

@@ -1,4 +1,6 @@
 ---
+contentId: "c7f001f4-5fd2-579a-b639-860b7a8d53b7"
+locale: "en"
 title: "Calligraphy and the Brush"
 description: "Why the line of a brush is both language and art in a long Chinese tradition."
 category: "Arts & craft"

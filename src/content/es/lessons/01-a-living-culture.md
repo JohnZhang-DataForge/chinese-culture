@@ -1,4 +1,6 @@
 ---
+contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2"
+locale: "es"
 title: "Una cultura viva, no una sola historia"
 description: "Conozca a las personas, los lugares y las tradiciones cambiantes que dan sentido a la palabra cultura."
 category: "Lección 01 · Fundamentos"

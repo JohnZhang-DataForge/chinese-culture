@@ -1,4 +1,6 @@
 ---
+contentId: "f904ad26-55a6-5d58-9936-48caa9f97915"
+locale: "en"
 title: "Around the Family Table"
 description: "A gentle introduction to shared meals, hospitality and the diversity of local customs."
 category: "Everyday life"

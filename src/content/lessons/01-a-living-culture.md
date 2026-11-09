@@ -1,4 +1,6 @@
 ---
+contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2"
+locale: "en"
 title: "A Living Culture, Not a Single Story"
 description: "Begin with the people, places and changing traditions behind the word culture."
 category: "Lesson 01 · Foundations"

@@ -1,4 +1,6 @@
 ---
+contentId: "c81c9a06-f8a0-5382-944e-6e861052bd3f"
+locale: "en"
 title: "How to Read a Chinese Painting"
 description: "Discover brushwork, inscriptions and the space surrounding an image."
 category: "Visual arts"

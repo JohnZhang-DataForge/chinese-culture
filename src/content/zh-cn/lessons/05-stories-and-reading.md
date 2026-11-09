@@ -1,4 +1,6 @@
 ---
+contentId: "21c4ab78-fcc8-5821-aaba-37a5dfcee356"
+locale: "zh-CN"
 title: "故事、书籍与文化记忆"
 description: "了解文学如何跨越世代传递思想，同时不断激发新的诠释。"
 category: "第 05 课 · 文学"

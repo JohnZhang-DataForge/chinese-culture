@@ -1,4 +1,6 @@
 ---
+contentId: "f904ad26-55a6-5d58-9936-48caa9f97915"
+locale: "zh-CN"
 title: "围坐家宴：餐桌与待客之道"
 description: "温和地认识共享饮食、待客文化以及地方习俗的多样性。"
 category: "日常生活"

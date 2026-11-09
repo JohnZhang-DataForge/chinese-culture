@@ -1,4 +1,6 @@
 ---
+contentId: "c81c9a06-f8a0-5382-944e-6e861052bd3f"
+locale: "zh-CN"
 title: "如何欣赏一幅中国画"
 description: "从笔墨、题款以及画面周围的留白中发现中国绘画之美。"
 category: "视觉艺术"

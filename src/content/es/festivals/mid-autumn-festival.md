@@ -1,4 +1,6 @@
 ---
+contentId: "0710c953-d178-5939-b8ec-f22b8f2288a3"
+locale: "es"
 title: "Festival del Medio Otoño: una luna que une las distancias"
 description: "Conozca la luna, los pasteles de luna y las historias de reencuentro y añoranza."
 category: "Guía de festivales"
