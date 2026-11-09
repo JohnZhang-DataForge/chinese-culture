@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-09):** PRs #33–#36 are merged. Latest Main `46c50f3cc0e731179ebaa6fedf8dc57f7c3e83d9` is deployed to Cloudflare Pages. Main CI #42539468779 and Pages deployment plus production smoke #42539468756 passed. The production smoke verified six public locale/home/article routes, Access challenges on `/admin/` and `/api/admin/v1/session`, and `www` → apex HTTP 301. Production D1 baseline remains 13 content items, 39 variants, 39 revisions, 0 submissions, complete locale groups and no FK violations. Remaining gates: authenticated browser CRUD/preview, repository-scoped GitHub App setup and reviewed publication lifecycle, native SQL dump download/import, accessibility/preview browser tests and Pages rollback rehearsal.
+**Status (2026-11-09):** PRs #33–#38 are merged. Latest Main `1a71d306a6b08ea82ef893b3d67344f3b470c4fd` is deployed to Cloudflare Pages. Main CI #42540733033 and Pages deployment plus production smoke #42540733018 passed. Production D1 baseline remains 13 content items, 39 variants, 39 revisions, 0 submissions, complete locale groups and no FK violations. PR #39 implements published-only routes/sitemap and multilingual 404; remaining gates: authenticated browser CRUD/preview, repository-scoped GitHub App setup and reviewed publication lifecycle, native SQL dump download/import, accessibility/preview browser tests and Pages rollback rehearsal.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -42,10 +42,10 @@ The existing static frontend already serves English, Simplified Chinese and Span
 - [x] P2.2 Implement shared locale-aware layout and navigation.
 - [x] P2.3 Implement language switch by contentId (PR #35 merged and deployed; CI verifies canonical, hreflang and switch destinations for all 39 locale variants).
 - [x] P2.4 Add lang, canonical, hreflang and x-default metadata.
-- [ ] P2.5 Add redirects from existing unprefixed URLs.
+- [x] P2.5 Add redirects from existing unprefixed URLs (verified in `public/_redirects`; production smoke confirms `www` → apex).
 - [x] P2.6 Keep public rendering static and consume only generated src/content/ snapshots on main.
-- [ ] P2.7 Filter all public routes, sitemap and featured modules to status=published.
-- [ ] P2.8 Add missing-translation states and bilingual 404 behavior.
+- [x] P2.7 Filter all public routes, sitemap and featured modules to status=published (legacy Markdown defaults to published; CMS publication snapshots write explicit `status: published`).
+- [x] P2.8 Add missing-translation states and multilingual 404 behavior (404 selects English, Simplified Chinese or Spanish by route locale, then browser language).
 - [x] P2.9 Preserve existing visual design and accessibility.
 
 **Exit:** Localized routes and static build tests pass with schema-valid published snapshots; no public D1/API dependency exists.
@@ -104,7 +104,7 @@ The existing static frontend already serves English, Simplified Chinese and Span
 - [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0.
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
 - [ ] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts.
-- [ ] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests.
+- [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [ ] P6.7 Add media validation tests.
 - [ ] P6.8 Add preview deployment/browser smoke tests.
