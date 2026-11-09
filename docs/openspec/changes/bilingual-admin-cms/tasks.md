@@ -93,7 +93,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P5.7 Implement Save Draft to D1 and reload-after-save behavior.
 - [x] P5.8 Implement media upload and accessible metadata entry.
 - [x] P5.9 Implement submit-review/publish/unpublish actions and show D1 revision, PR, checks and live state.
-- [x] P5.10 Add keyboard, responsive and accessibility tests (PR #40 static checks plus Playwright Chromium coverage for content filtering, editor creation, preview, draft save, keyboard focus and mobile navigation).
+- [x] P5.10 Add keyboard, responsive and accessibility tests (PR #40 static checks plus Playwright Chromium coverage for content filtering, editor creation, draft save, keyboard focus and mobile navigation; PR #47 restores a passing accessible-name assertion; PR #48 verifies independent English, Simplified Chinese and Spanish preview switching).
 - [x] P5.11 Hide or disable homepage settings, navigation settings and global media-library screens until their APIs are specified and implemented.
 
 **Exit:** End-to-end browser workflow works against the D1-backed Agent 5 API in a non-production environment.
