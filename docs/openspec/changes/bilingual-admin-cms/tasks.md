@@ -101,7 +101,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 ## P6 — QA and CI (Agent 6)
 
 - [x] P6.1 Add content schema and translation-pair CI validation (`scripts/validate-content.mjs`, `tests/content-schema.test.mjs`, and the `validate:content` CI step). Legacy published Markdown keeps its established published-by-default behavior; locale folders, immutable IDs, route slugs, metadata types, media URLs/alt text and translation uniqueness/collection consistency are validated.
-- [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0.
+- [ ] P6.2 Add OpenAPI lint and contract drift checks for API v1.2.0 (`redocly lint`, unique operationId validation, and a Pages Functions route/method parity check).
 - [x] P6.3 Add clean-local-D1 migration and seed idempotency tests.
 - [x] P6.4 Add D1 repository tests for CRUD, revision history and stale-write conflicts (PR #41 queries local D1 `content_revisions` and asserts both immutable snapshots; CI #42625364644 passed).
 - [x] P6.5 Add Astro locale route, redirect, sitemap and draft-exclusion tests (unit coverage plus static build assertions).
