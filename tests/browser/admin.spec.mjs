@@ -50,6 +50,41 @@ test.describe("Admin editorial studio in local development preview", () => {
     expect(writes).toEqual([]);
   });
 
+  test("previews English, Simplified Chinese and Spanish independently", async ({ page }) => {
+    await page.goto("/admin/");
+    await page.locator('[data-action="new-content"]').first().click();
+    await expect(page.locator('[data-page="editor"]')).toBeVisible();
+
+    const variants = [
+      { locale: "en", title: "English preview", slug: "english-preview", description: "English description", category: "Culture", body: "English body text." },
+      { locale: "zh", title: "中文预览", slug: "zhong-wen-yu-lan", description: "中文简介", category: "文化", body: "这是中文正文。" },
+      { locale: "es", title: "Vista previa en español", slug: "vista-previa-espanol", description: "Descripción en español", category: "Cultura", body: "Este es el contenido en español." }
+    ];
+
+    for (const variant of variants) {
+      await page.locator('[name="title.' + variant.locale + '"]').fill(variant.title);
+      await page.locator('[name="slug.' + variant.locale + '"]').fill(variant.slug);
+      await page.locator('[name="description.' + variant.locale + '"]').fill(variant.description);
+      await page.locator('[name="category.' + variant.locale + '"]').fill(variant.category);
+      await page.locator('[name="body.' + variant.locale + '"]').fill(variant.body);
+      await expect(page.locator('[data-language-state="' + variant.locale + '"]')).toHaveText("Complete");
+    }
+
+    await page.locator('[data-page="editor"] [data-action="preview"]').first().click();
+    const dialog = page.locator("[data-preview-dialog]");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator("[data-preview-title]")).toHaveText("English preview");
+    await expect(dialog.locator("[data-preview-body]")).toContainText("English body text.");
+
+    await dialog.locator('[data-preview-language="zh"]').click();
+    await expect(dialog.locator("[data-preview-title]")).toHaveText("中文预览");
+    await expect(dialog.locator("[data-preview-body]")).toContainText("这是中文正文。");
+
+    await dialog.locator('[data-preview-language="es"]').click();
+    await expect(dialog.locator("[data-preview-title]")).toHaveText("Vista previa en español");
+    await expect(dialog.locator("[data-preview-body]")).toContainText("Este es el contenido en español.");
+  });
+
   test("supports narrow-screen navigation and Escape dismissal", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/admin/");
