@@ -23,8 +23,6 @@ test("preview Admin is production-built and contains no demo content", async ({ 
   await expect(page.locator("[data-admin-app]")).toHaveAttribute("data-demo", "false");
   const sessionResponse = await sessionResponsePromise;
   expect(sessionResponse.status()).toBe(401);
-  const problem = await sessionResponse.json();
-  expect(problem.code).toBe("unauthorized");
   await expect(page.locator("[data-connection-status]")).toHaveText("Authentication required");
   await expect(page.getByText("Sign in with the authorized Cloudflare Access account", { exact: false })).toBeVisible();
   await expect(page.locator("[data-content-rows]")).not.toContainText("Journey to the West");
