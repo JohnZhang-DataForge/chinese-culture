@@ -49,3 +49,6 @@ jobs:
           accountId: dff021f8489d2c316a14575c76de16d4
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: pages deploy dist --project-name=chinese-culture --branch=main
+
+      - name: Verify production routes and Cloudflare Access protection
+        run: node scripts/smoke-production.mjs
