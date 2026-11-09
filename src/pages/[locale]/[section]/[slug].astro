@@ -16,6 +16,7 @@ export async function getStaticPaths() {
         if (entry.data.locale !== expectedLocale) {
           throw new Error(`Content locale mismatch for ${entry.id}: expected ${expectedLocale}, got ${entry.data.locale}`);
         }
+        if ((entry.data.status ?? "published") !== "published") continue;
         localeEntries.push({ locale, config, entry });
       }
     }
