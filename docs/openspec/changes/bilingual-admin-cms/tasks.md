@@ -30,7 +30,7 @@ Production D1 is provisioned, migrated and populated. Bootstrap run #42531011592
 
 ### Agent 0 — GitHub App integration approval
 - [ ] P1.8 Install and verify the GitHub App only on JohnZhang-DataForge/chinese-culture with minimum Contents, Pull Requests and Checks permissions.
-- [ ] P1.9 Confirm the App cannot merge PRs, change branch protection or write directly to main.
+- [ ] P1.9 Verify the main-branch PR/check gate and no-bypass policy. The App has no Administration permission and the CMS code has no merge endpoint, but GitHub's `Pull requests: write` permission technically includes the merge API; branch rules must enforce the human-review workflow (see `docs/runbooks/github-app-publication.md`).
 
 **Exit:** D1 binding and local migrations work; unauthenticated CMS access is denied; GitHub App can write only to CMS branches and create/update PRs.
 
