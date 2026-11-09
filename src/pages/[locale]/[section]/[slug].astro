@@ -16,6 +16,7 @@ export async function getStaticPaths() {
         if (entry.data.locale !== expectedLocale) {
           throw new Error(`Content locale mismatch for ${entry.id}: expected ${expectedLocale}, got ${entry.data.locale}`);
         }
+        if ((entry.data.status ?? "published") !== "published") continue;
         localeEntries.push({ locale, config, entry });
       }
     }
@@ -50,7 +51,9 @@ export async function getStaticPaths() {
 const { locale, config, entry, alternateUrls } = Astro.props;
 const labels = ui[locale];
 const { Content } = await render(entry);
-const inSection = (await getCollection(config.collection as any)).sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
+const inSection = (await getCollection(config.collection as any))
+  .filter((item: any) => (item.data.status ?? "published") === "published")
+  .sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
 const related = inSection.filter((other: any) => other.id !== entry.id).slice(0,3);
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description} locale={locale} alternateUrls={alternateUrls}>

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
 const required = [
-  "index.html","learn/index.html","culture/index.html",
+  "index.html","sitemap.xml","learn/index.html","culture/index.html",
   "festivals/index.html","books/index.html","events/index.html",
   "about/index.html","contact/index.html","privacy/index.html",
   "accessibility/index.html","editorial-policy/index.html",
@@ -73,6 +73,17 @@ function walkContent(dir) {
 }
 walkContent(contentRoot);
 assert.equal(localePaths.size, 13, "Expected 13 conceptual articles for locale route verification");
+const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
+assert.ok(sitemap.includes("<urlset"), "Missing XML sitemap urlset");
+assert.ok((sitemap.match(/<url>/g) || []).length >= 72, "Sitemap is missing expected localized static and article URLs");
+for (const variants of localePaths.values()) {
+  for (const locale of ["en", "zh-CN", "es"]) {
+    assert.ok(sitemap.includes("https://chinese-culture.site" + variants[locale].route), "Published article missing from sitemap: " + variants[locale].route);
+  }
+}
+const notFound = readFileSync(join(dist, "404.html"), "utf8");
+assert.ok(notFound.includes("这里暂时没有这个故事") && notFound.includes("Esta historia aún no está aquí"), "404 page must include Chinese and Spanish fallback content");
+
 for (const [contentId, variants] of localePaths) {
   assert.deepEqual(new Set(Object.keys(variants)), new Set(["en", "zh-CN", "es"]), "Incomplete locale variants for " + contentId);
   for (const locale of ["en", "zh-CN", "es"]) {

@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { localeNames, ui } from "../i18n/site";
+import { missingTranslations } from "../lib/public-content.mjs";
 const { title = "Discover Chinese culture", description = "An approachable guide to Chinese traditions, art, literature, festivals and everyday life.", locale = "en", alternateUrls = {} } = Astro.props;
 const language = locale === "zh-cn" || locale === "es" ? locale : "en";
 const english = {
@@ -24,6 +25,7 @@ const unprefixedPath = routeWithoutLocale === "/404/" || routeWithoutLocale === 
 const pathSegments = unprefixedPath.split("/").filter(Boolean);
 const fallbackLocalePath = pathSegments.length > 1 ? "/" + pathSegments[0] + "/" : unprefixedPath;
 const languageHref = (target) => alternateUrls[target] ?? (Object.keys(alternateUrls).length ? "/" + target + fallbackLocalePath : "/" + target + (unprefixedPath === "/" ? "/" : unprefixedPath));
+const missingLocales = missingTranslations(alternateUrls);
 ---
 <!doctype html>
 <html lang={language === "zh-cn" ? "zh-CN" : language}>
@@ -59,6 +61,9 @@ const languageHref = (target) => alternateUrls[target] ?? (Object.keys(alternate
             <a href={languageHref("en")} lang="en" aria-current={language === "en" ? "page" : undefined}>{localeNames.en}</a>
             <a href={languageHref("zh-cn")} lang="zh-CN" aria-current={language === "zh-cn" ? "page" : undefined}>{localeNames["zh-cn"]}</a>
             <a href={languageHref("es")} lang="es" aria-current={language === "es" ? "page" : undefined}>{localeNames.es}</a>
+            {missingLocales.length > 0 && <p class="language-missing-note" role="note">
+              {language === "zh-cn" ? "这篇文章暂未提供其他语言版本；选择其他语言会转到对应栏目。" : language === "es" ? "Esta traducción aún no está disponible; al elegir otro idioma se abrirá la sección correspondiente." : "A translation is not available yet; choosing another language opens the relevant section."}
+            </p>}
           </nav>
         </details>
       </div>

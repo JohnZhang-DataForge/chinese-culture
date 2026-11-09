@@ -7,6 +7,8 @@ const schema = z.object({
   title: z.string(),
   description: z.string(),
   category: z.string(),
+  // Existing published Markdown predates this field; new CMS snapshots set it explicitly.
+  status: z.enum(["draft", "published", "unpublished"]).default("published"),
   chinese: z.string().optional(),
   pinyin: z.string().optional(),
   level: z.string().optional(),

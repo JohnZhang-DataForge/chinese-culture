@@ -12,7 +12,9 @@ export function getStaticPaths() {
 const { locale, config } = Astro.props;
 const labels = ui[locale];
 const entries = config.collection
-  ? (await getCollection(config.collection as any)).sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title))
+  ? (await getCollection(config.collection as any))
+      .filter((entry: any) => (entry.data.status ?? "published") === "published")
+      .sort((a: any,b: any)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title))
   : [];
 const sectionPhotos: Record<string,string> = {
   learn: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=1800&q=85",

@@ -6,13 +6,16 @@ import { sections } from "../../lib/sections";
 export async function getStaticPaths() {
   const grouped=await Promise.all(sections.map(async (config)=>{
     const entries=await getCollection(config.collection);
-    return entries.map((entry)=>({params:{section:config.route,slug:entry.id},props:{entry,config}}));
+    return entries.filter((entry)=>(entry.data.status ?? "published")==="published")
+      .map((entry)=>({params:{section:config.route,slug:entry.id},props:{entry,config}}));
   }));
   return grouped.flat();
 }
 const {entry,config}=Astro.props;
 const {Content}=await render(entry);
-const inSection=(await getCollection(config.collection)).sort((a,b)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
+const inSection=(await getCollection(config.collection))
+  .filter((item)=>(item.data.status ?? "published")==="published")
+  .sort((a,b)=>(a.data.order??99)-(b.data.order??99) || a.data.title.localeCompare(b.data.title));
 const related=inSection.filter((other)=>other.id!==entry.id).slice(0,3);
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
