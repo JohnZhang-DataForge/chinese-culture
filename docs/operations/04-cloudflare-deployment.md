@@ -79,3 +79,17 @@ See [D1 Backup and Recovery](05-d1-backup-and-restore.md) for Time Travel, SQL e
 - Public site: redeploy the previous known-good Pages deployment.
 - Content publication: revert the content PR through a new reviewed PR; do not edit D1 directly to hide a public-site regression.
 - D1 schema/data: use a verified export/restore procedure before destructive operations. Never drop or rewrite production tables manually.
+
+## Isolated PR preview environment
+
+Pull-request previews use `wrangler.preview.jsonc`, not the production `wrangler.jsonc`.
+
+- `.github/workflows/pages-preview.yml` deploys same-repository PRs to the Pages branch alias `https://pr-<number>.chinese-culture-79h.pages.dev`.
+- The preview Wrangler config intentionally contains only the Pages project name, compatibility date and static output directory. It has **no D1 binding, no production variables and no Access credentials**.
+- The production D1 database ID `8b6f6c98-06fe-49eb-adbc-690d4b57c058` must never be attached to a preview deployment.
+- With preview Access settings absent, the Admin API must fail closed with HTTP 503 and `admin_api_not_configured`; it must not serve demo content or connect to production data.
+- The preview browser smoke verifies English, Simplified Chinese and Spanish public routes, Admin noindex metadata, production build mode, and the fail-closed session API.
+- This is a static/public preview plus a fail-closed Admin API check. It does not replace authenticated production CRUD acceptance.
+- Fork-origin PRs do not receive a Pages preview deployment because the workflow skips them.
+
+The preview binding isolation is guarded by `tests/preview-config.test.mjs`. Do not add a D1 binding or copy production secrets into `wrangler.preview.jsonc`.
