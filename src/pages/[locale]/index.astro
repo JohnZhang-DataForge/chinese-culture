@@ -73,6 +73,7 @@ const tileLabels = {
 ---
 <BaseLayout title="Discover Chinese culture" description={copy.intro} locale={locale}>
   <div class="image-led-home">
+    <h1 class="visually-hidden">{locale === "zh-cn" ? "中国文化地图" : locale === "es" ? "Atlas de la Cultura China" : "Chinese Culture Atlas"}</h1>
     <section class="feature-carousel" aria-label={labels.featured} data-feature-carousel>
       <div class="feature-slides">
         {heroStories.map((story, index) => <a class:list={["feature-slide", index === 0 && "is-active"]} href={story.href} data-feature-slide={index} aria-hidden={index === 0 ? "false" : "true"} tabindex={index === 0 ? 0 : -1}>
