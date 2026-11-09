@@ -87,3 +87,23 @@ The production bootstrap workflow, main CI and Pages deployment all completed su
 ## Acceptance principle
 
 The database schema and existing content migration are now complete in production. Do not call the CMS fully production-ready until GitHub App setup, authenticated live Admin CRUD, media/publication end-to-end acceptance and durable backup/restore evidence are complete. The public static website remains available independently of these remaining CMS release gates.
+
+## Latest Admin regression and production deployment — 2026-11-09
+
+Main after PR #48: `eac1e81561afc0568897138a43590765b822c680`.
+
+- PR #45 corrected multi-element Admin DOM selectors.
+- PR #46 added the missing `data-admin-banner` target used by Admin initialization.
+- PR #47 corrected the browser test's accessible-name query without removing the accessibility assertion.
+- PR #48 added Chromium coverage for independent English, Simplified Chinese and Spanish draft previews, including locale switching and distinct title/body read-back.
+- Main CI [#42720346867](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42720346867) passed for the PR #47 merge.
+- The PR #48 CI [#42720916493](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42720916493) passed both static-build and Admin Chromium jobs.
+- Production Pages deployment [#42721208868](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42721208868) succeeded for Main `eac1e815`; Cloudflare deployment ID `b7c4fbd0-2755-4b20-9655-1aa55077b6f8`.
+
+These browser tests run against the local development preview and do not constitute authenticated production D1 mutation acceptance.
+
+## Current external release blockers
+
+- Production Pages has the CMS D1 binding and Cloudflare Access configuration, but the repository-scoped GitHub App variables `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` are not configured. Publish and media-upload capabilities therefore remain disabled.
+- The Pages preview environment currently has no environment variables or D1 binding. Do not attach the production D1 database to an untrusted preview deployment; P6.8 requires an isolated preview strategy.
+- Authenticated production CRUD, media PR, publish/unpublish PR and native SQL dump restore remain unaccepted. Do not infer these from local CI or the production Access challenge test.
