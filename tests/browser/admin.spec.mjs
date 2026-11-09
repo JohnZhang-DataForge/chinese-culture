@@ -24,7 +24,10 @@ test.describe("Admin editorial studio in local development preview", () => {
     });
 
     await page.goto("/admin/");
-    await page.locator('[data-action="new-content"]').click();
+    await expect(page.locator('[data-action="new-content"]').first()).toBeVisible();
+    await expect(page.locator('[data-action="new-content"]').first()).toBeEnabled();
+    page.on("pageerror", (error) => console.log("BROWSER_PAGE_ERROR", error.message));
+    await page.locator('[data-action="new-content"]').first().click();
     await expect(page.locator('[data-page="editor"]')).toBeVisible();
 
     await page.locator('[name="title.en"]').fill("Browser QA story");
@@ -65,7 +68,7 @@ test.describe("Admin editorial studio in local development preview", () => {
 
   test("keeps the editor operable by keyboard and exposes form labels", async ({ page }) => {
     await page.goto("/admin/");
-    await page.getByRole("button", { name: /Create content/ }).click();
+    await page.locator('[data-action="new-content"]').first().click();
     const title = page.locator('[name="title.en"]');
     await title.click();
     await expect(title).toBeFocused();
