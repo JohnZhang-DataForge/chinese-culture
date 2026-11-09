@@ -23,7 +23,7 @@ function expectedRevision(value) {
   return Number(match[1]);
 }
 
-function matchesImageSignature(bytes, mime) {
+export function matchesImageSignature(bytes, mime) {
   const ascii = (start, end) => String.fromCharCode(...bytes.subarray(start, end));
   if (mime === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
   if (mime === "image/png") return bytes.length >= 8 && [0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a].every((value,index)=>bytes[index]===value);
@@ -32,7 +32,7 @@ function matchesImageSignature(bytes, mime) {
   return false;
 }
 
-function parseMetadata(raw) {
+export function parseMetadata(raw) {
   let metadata;
   try {
     metadata = typeof raw === "string" ? JSON.parse(raw) : null;
