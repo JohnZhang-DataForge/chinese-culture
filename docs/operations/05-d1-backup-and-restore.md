@@ -85,7 +85,7 @@ These are baseline counts, not permanent constants. Update the expected counts a
 ## 3. Verified rehearsal — 2026-11-09
 
 - Production D1 was confirmed to use the `production` storage version.
-- The D1 export API completed an export job and generated a SQL dump download URL. The SQL file itself was not downloaded/imported during this session; native SQL-dump restore remains unverified.
+- The D1 export API completed an export job and generated a short-lived signed SQL dump URL. A download attempt from the connected execution environment returned HTTP 403, so the SQL bytes were not obtained and native SQL-dump import remains unverified. Do not treat export-job completion alone as a verified backup.
 - A separate disposable D1 database was created with US jurisdiction and read replication disabled.
 - The current main-branch migration was applied to the empty test database.
 - Production rows were copied into the isolated database in dependency order and compared row-for-row.
