@@ -1,4 +1,36 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="Page not found"><div class="wrap static-page"><span class="eyebrow">A little detour</span><h1>This path has no story yet.</h1><p class="lead">The page may have moved, or the link might have been mistyped.</p><p><a class="button" href="/">Return to the home page ↗</a></p></div></BaseLayout>
+<BaseLayout title="Page not found">
+  <div class="wrap static-page not-found-page">
+    <span class="eyebrow">404 · A little detour</span>
+    <section data-not-found-locale="en">
+      <h1>This path has no story yet.</h1>
+      <p class="lead">The page may have moved, or the link might have been mistyped.</p>
+      <p><a class="button" href="/en/">Return to the English home page ↗</a></p>
+    </section>
+    <section data-not-found-locale="zh-cn" lang="zh-CN">
+      <h1>这里暂时没有这个故事。</h1>
+      <p class="lead">页面可能已经移动，或者链接地址输入有误。</p>
+      <p><a class="button" href="/zh-cn/">返回中文首页 ↗</a></p>
+    </section>
+    <section data-not-found-locale="es" lang="es">
+      <h1>Esta historia aún no está aquí.</h1>
+      <p class="lead">La página puede haberse movido o el enlace puede contener un error.</p>
+      <p><a class="button" href="/es/">Volver a la página de inicio en español ↗</a></p>
+    </section>
+  </div>
+  <script is:inline>
+    (() => {
+      const pathLocale = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
+      const browserLocale = (navigator.language || "en").toLowerCase();
+      const locale = ["en", "zh-cn", "es"].includes(pathLocale)
+        ? pathLocale
+        : browserLocale.startsWith("zh") ? "zh-cn" : browserLocale.startsWith("es") ? "es" : "en";
+      document.documentElement.lang = locale === "zh-cn" ? "zh-CN" : locale;
+      document.querySelectorAll("[data-not-found-locale]").forEach((section) => {
+        section.hidden = section.getAttribute("data-not-found-locale") !== locale;
+      });
+    })();
+  </script>
+</BaseLayout>
