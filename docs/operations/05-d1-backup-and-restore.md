@@ -113,3 +113,23 @@ This rehearsal validates schema reconstruction and exact row-level recovery into
 - [D1 Time Travel and backups](https://developers.cloudflare.com/d1/reference/time-travel/)
 - [D1 import and export data](https://developers.cloudflare.com/d1/best-practices/import-export-data/)
 - [Export and save D1 database to R2 with Workflows](https://developers.cloudflare.com/workflows/examples/backup-d1/)
+
+
+## 6. Verified native SQL dump download/import — 2026-11-11
+
+The earlier connected execution environment could create a D1 export job but could not download the signed R2 URL. A dedicated GitHub Actions runner completed the full native SQL round-trip.
+
+- Workflow: [D1 native SQL backup and restore rehearsal #42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673) — PASS.
+- Export format: D1-compatible SQL.
+- Export bookmark: `00000012-00000000-0000511f-8358356091bd1f609e361b2a63bd9f8d`.
+- Downloaded SQL size: 212,583 bytes.
+- SQL SHA-256: `6b44d10270091667f6e42ca70921422b4358d287bf6986991388392355ab1b56`.
+- Temporary US-jurisdiction D1: `cms-restore-rehearsal-42726758673`, ID `25f7d9ab-73ec-4d88-a4b5-05082867c27b`.
+- Restored counts: content_items 13; content_variants 39; content_revisions 39; cms_submissions 0.
+- Locale counts: en 13; es 13; zh-CN 13.
+- `PRAGMA foreign_key_check`: zero violations.
+- Restored table counts, locale distribution and FK results exactly matched the production snapshot captured before export.
+- The temporary database was deleted after validation.
+- The SQL file existed only in the runner's temporary directory and was deleted; no GitHub artifact or durable archive was created.
+
+This closes the native SQL download/import rehearsal. It does not create an independently retained backup archive and does not complete the separate Pages rollback rehearsal.
