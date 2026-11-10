@@ -1,9 +1,6 @@
 name: D1 native SQL backup and restore rehearsal
 
 on:
-  push:
-    branches:
-      - ops/d1-backup-restore-rehearsal
   workflow_dispatch:
     inputs:
       confirm_production_export:
