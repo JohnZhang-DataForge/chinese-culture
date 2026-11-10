@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Main baseline `0e621be26009c4dabe69843dfb42d65ad474587c`; PR #54 merged. PR #54 CI #42920011297 passed `static-build` and `admin-browser`; post-merge Main CI #42920572091 and Pages deployment #42920572127 both passed. Production deployment `cddb8296-5d94-4bc9-9a87-c8ea31ade484` is live. A read-only Pages configuration check found the three GitHub App production settings absent. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
+**Status (2026-11-11):** Main baseline `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`; PRs #54, #55 and #56 merged. PR #56 CI #42921764286 passed `static-build` and `admin-browser`; post-merge Main CI #42922241144 and Pages deployment #42922241177 both passed. Production deployment `b19551bd-4c07-422b-9600-2f99c0bc1697` is live. Read-only production config confirms CMS_DB and Access/admin settings remain present; the three GitHub App production variable names are absent. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App setup/secrets, authenticated production CRUD, reviewed media/publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -108,7 +108,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [x] P6.7 Add media validation tests (PR #40 covers JPEG/PNG/WebP/AVIF signatures, malformed/truncated payloads, required alt/credit/license and HTTPS source URLs; CI #42624578839 passed).
 - [x] P6.8 Add isolated Pages preview deployment/browser smoke tests (PR #51; preview run #42724399464 passed on `https://pr-51.chinese-culture-79h.pages.dev`; preview has no D1 binding or production vars, all three public locales pass, Admin is production-built/no-demo, and unauthenticated Admin API returns 401).
-- [ ] P6.9 Add required PR status checks and protect main. Blocked: The repository is now public. A read-only API query currently returns no repository rulesets; the connected integration cannot create rulesets or read branch-protection settings. The repository owner must configure a `main` ruleset in GitHub Settings → Rules → Rulesets. Do not treat public visibility alone as branch protection.
+- [ ] P6.9 Add required PR status checks and protect main. Blocked: The repository is public. A read-only API query currently returns no repository rulesets; the connected integration cannot create rulesets or read branch-protection settings. The repository owner must configure a `main` ruleset in GitHub Settings → Rules → Rulesets. Do not treat public visibility alone as branch protection.
 - [x] P6.10 Verify Wrangler Direct Upload bundles Pages Functions and applies CMS_DB without exposing secrets.
 - [x] P6.11 Add a test that the production database is never used by automated test jobs.
 
@@ -142,3 +142,12 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [ ] P8.10b Pages production rollback rehearsal remains pending. Read-only preflight recorded current/previous successful deployments in `docs/operations/05-d1-backup-and-restore.md`; the actual rollback changes the live production deployment pointer and requires explicit owner approval.
 
 **Exit:** All proposal acceptance criteria are evidenced; only then mark this OpenSpec change complete.
+
+
+### Latest production acceptance refresh — 2026-11-11
+
+- PR #56 added the current Simplified Chinese editorial style guide aligned to CC-CONTENT-001 v1.2.0 and `zh-CN`; it is merged at Main `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`.
+- PR #56 CI #42921764286 passed `static-build` and `admin-browser`.
+- Post-merge Main CI #42922241144 and Pages deployment #42922241177 passed; current production deployment is `b19551bd-4c07-422b-9600-2f99c0bc1697`.
+- Current read-only Pages configuration still lists `CMS_DB` and the existing Access/admin variables, but no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` production entries.
+- GitHub repository rulesets API returns an empty list. P6.9 is not complete until an owner-configured ruleset is saved and verified.
