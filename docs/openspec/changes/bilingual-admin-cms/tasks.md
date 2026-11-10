@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Main baseline `0d45537ab85f6d14872a9898301765fa20ac2700`; PRs #45–#52 merged. Main CI #42725905093 and Pages deploy #42725904615 passed. P6.8 isolated Pages preview/browser smoke and P7.5 cost/limit monitoring are complete. Native D1 SQL export/download/import/restore rehearsal passed in workflow #42726758673: 212,583-byte D1-compatible dump, exact production/restored table and locale counts, zero FK violations, and temporary D1 deleted. P8.10a is complete; Pages rollback remains P8.10b. Remaining gates include GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, main branch protection (plan/access blocked) and Pages rollback.
+**Status (2026-11-11):** Main baseline `a938e4b2ffdc43b6d962263873d985f51ade354b`; PR #53 merged. After the repository was made public, rerun Main CI #42916306326 and Pages deployment #42916306335 both passed on attempt 4. Production deployment `5fe2af05-4119-4578-a125-f7f17eadd699` is live. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -108,7 +108,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [x] P6.7 Add media validation tests (PR #40 covers JPEG/PNG/WebP/AVIF signatures, malformed/truncated payloads, required alt/credit/license and HTTPS source URLs; CI #42624578839 passed).
 - [x] P6.8 Add isolated Pages preview deployment/browser smoke tests (PR #51; preview run #42724399464 passed on `https://pr-51.chinese-culture-79h.pages.dev`; preview has no D1 binding or production vars, all three public locales pass, Admin is production-built/no-demo, and unauthenticated Admin API returns 401).
-- [ ] P6.9 Add required PR status checks and protect main. Blocked: GitHub's repository-rulesets API explicitly reports that this private repository must upgrade to GitHub Pro or be made public to use rulesets; the current integration also cannot read branch-protection settings. Do not make the repository public for this purpose. Revisit after an eligible plan and owner-level access are available.
+- [ ] P6.9 Add required PR status checks and protect main. Blocked: The repository is now public. A read-only API query currently returns no repository rulesets; the connected integration cannot create rulesets or read branch-protection settings. The repository owner must configure a `main` ruleset in GitHub Settings → Rules → Rulesets. Do not treat public visibility alone as branch protection.
 - [x] P6.10 Verify Wrangler Direct Upload bundles Pages Functions and applies CMS_DB without exposing secrets.
 - [x] P6.11 Add a test that the production database is never used by automated test jobs.
 
