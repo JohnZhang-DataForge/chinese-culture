@@ -22,6 +22,12 @@ The multilingual static website and D1-backed Admin foundation are deployed. Git
 | [Cost and limits](operations/06-cost-and-limit-monitoring.md) | Free-tier limits and cost guardrails |
 | [CMS local runbook](runbooks/cms-d1-local-development.md) | Local D1 migrations and Pages Functions testing |
 | [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum App permissions and required production settings |
+| [Admin CMS architecture](architecture/admin-cms-architecture.md) | Current D1-backed Admin topology and GitHub App blocker |
+| [GitHub integration](architecture/github-integration.md) | CI, deployment and CMS App boundaries |
+| [Administrator User Guide](implementation/admin-user-guide.md) | Access, editing and publication boundaries |
+| [Content Management Guide](implementation/content-management-guide.md) | Locale, D1 source of truth and editorial workflow |
+| [Admin credential setup](operations/admin-credential-setup.md) | Access configuration and pending App secrets |
+| [Pages rollback procedure](operations/rollback-procedure.md) | Owner-approved production rollback steps |
 | [OpenSpec tasks](openspec/changes/bilingual-admin-cms/tasks.md) | Milestones, acceptance gates and outstanding work |
 
 ## Architecture baseline
