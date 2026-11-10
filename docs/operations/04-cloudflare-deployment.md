@@ -87,9 +87,19 @@ Pull-request previews use `wrangler.preview.jsonc`, not the production `wrangler
 - `.github/workflows/pages-preview.yml` deploys same-repository PRs to the Pages branch alias `https://pr-<number>.chinese-culture-79h.pages.dev`.
 - The preview Wrangler config intentionally contains only the Pages project name, compatibility date and static output directory. It has **no D1 binding, no production variables and no Access credentials**.
 - The production D1 database ID `8b6f6c98-06fe-49eb-adbc-690d4b57c058` must never be attached to a preview deployment.
-- With preview Access settings absent, the Admin API must fail closed with HTTP 503 and `admin_api_not_configured`; it must not serve demo content or connect to production data.
+- With preview Access settings absent, the Admin API must fail closed with HTTP 401 (`unauthorized`) when no Access JWT is present; if a token is present but Access configuration is incomplete, the API returns HTTP 503; it must not serve demo content or connect to production data.
 - The preview browser smoke verifies English, Simplified Chinese and Spanish public routes, Admin noindex metadata, production build mode, and the fail-closed session API.
 - This is a static/public preview plus a fail-closed Admin API check. It does not replace authenticated production CRUD acceptance.
 - Fork-origin PRs do not receive a Pages preview deployment because the workflow skips them.
 
 The preview binding isolation is guarded by `tests/preview-config.test.mjs`. Do not add a D1 binding or copy production secrets into `wrangler.preview.jsonc`.
+
+### Preview acceptance evidence (2026-11-10)
+
+- [PR preview workflow #42724399464](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724399464) succeeded after deploying the PR branch with the minimal preview Wrangler config.
+- Preview alias: https://pr-51.chinese-culture-79h.pages.dev
+- Chromium smoke passed for `/en/`, `/zh-cn/` and `/es/`, and verified `/admin/` is production-built (`data-demo=false`, `noindex`) with no demo article content.
+- Unauthenticated `GET /api/admin/v1/session` returned HTTP 401 (`unauthorized`); the API is fail-closed without a Cloudflare Access JWT.
+- Cloudflare Pages project configuration shows preview env vars empty and no preview D1 binding; production `CMS_DB` remains bound only to production.
+- Preview configuration uses `wrangler.preview.jsonc`, which deliberately omits D1 and production variables. The workflow copies it to the default `wrangler.jsonc` only in the ephemeral GitHub Actions workspace because Wrangler Pages does not support custom config paths.
+- This preview acceptance does not replace authenticated production CRUD acceptance.

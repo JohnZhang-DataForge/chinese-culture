@@ -25,7 +25,7 @@ concurrency:
 jobs:
   preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
@@ -54,6 +54,11 @@ jobs:
             exit 1
           fi
 
+      - name: Select isolated preview configuration
+        run: |
+          cp wrangler.preview.jsonc wrangler.jsonc
+          node -e 'const c = JSON.parse(require("node:fs").readFileSync("wrangler.jsonc", "utf8")); if (c.d1_databases || c.vars || c.env) process.exit(1); console.log("Preview config has no D1 binding, production variables or named environments.")'
+
       - name: Deploy isolated preview without production bindings
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -61,8 +66,7 @@ jobs:
         run: |
           npx wrangler pages deploy dist \
             --project-name=chinese-culture \
-            --branch="pr-${PR_NUMBER}" \
-            --config=wrangler.preview.jsonc
+            --branch="pr-${PR_NUMBER}"
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
