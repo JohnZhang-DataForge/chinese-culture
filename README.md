@@ -1,6 +1,6 @@
 # Chinese Culture Atlas
 
-<escape>**Status (2026-11-11):** Multilingual public site and D1-backed Admin foundation are deployed. GitHub App publication/media integration and final production Admin acceptance remain open.</escape>  
+**Status (2026-11-11):** Multilingual public site and D1-backed Admin foundation are deployed. GitHub App publication/media integration and final production Admin acceptance remain open.  
 **Production:** [https://chinese-culture.site](https://chinese-culture.site) · **Hosting:** Cloudflare Pages Free · **Framework:** Astro 5 static output + Pages Functions for private Admin APIs.
 
 A multilingual educational website for exploring Chinese culture through lessons, art, traditions, festivals and literary reading guides.
