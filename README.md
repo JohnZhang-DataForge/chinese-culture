@@ -1,69 +1,80 @@
 # Chinese Culture Atlas
 
-**Status: MVP implementation merged; Cloudflare Pages project provisioned; first deployment awaits a protected Pages Write API token.**  
-**Repository:** Private GitHub · **Hosting target:** Cloudflare Pages Free (Direct Upload) · **Framework:** Astro (static output) + Node.js build tooling.
+<escape>**Status (2026-11-11):** Multilingual public site and D1-backed Admin foundation are deployed. GitHub App publication/media integration and final production Admin acceptance remain open.</escape>  
+**Production:** [https://chinese-culture.site](https://chinese-culture.site) · **Hosting:** Cloudflare Pages Free · **Framework:** Astro 5 static output + Pages Functions for private Admin APIs.
 
-A welcoming educational website for exploring Chinese culture through beginner lessons, art, traditions, festivals and literary reading guides.
+A multilingual educational website for exploring Chinese culture through lessons, art, traditions, festivals and literary reading guides.
 
 ## Current implementation
 
-- Responsive home page and primary navigation.
-- Four content libraries: **Learn**, **Culture**, **Festivals**, **Books**.
-- A beginner curriculum, source-linked editorial articles and reading guides stored as Markdown.
-- **Events** page with an honest empty state: no unverified event listings.
-- About, Contact (public channel pending), editorial policy, privacy, accessibility and 404 pages.
-- Cloudflare Pages Direct Upload configuration; static assets only, no server adapter, SSR, database or visitor accounts.
-- GitHub Actions workflow for building and checking static output.
+- Public English, Simplified Chinese and Spanish routes: `/en/`, `/zh-cn/`, `/es/`.
+- 13 educational article concepts with 39 locale variants (13 per locale).
+- Static public article pages, localized navigation, canonical/hreflang metadata, sitemap and localized 404 behavior.
+- Events page with an honest empty state; no unverified event listings.
+- Five localized informational pages: About, Accessibility, Contact, Editorial Policy and Privacy.
+- Protected Admin workspace at `/admin/`, Cloudflare Access and Pages Functions under `/api/admin/v1/`.
+- Production D1 database bound as `CMS_DB`; D1 is the canonical editorial store for content, translations and revisions.
+- Public pages remain static and do not query D1 or Admin APIs.
+- GitHub Actions validates content, local D1 migrations, tests, Astro output and Admin browser behavior; Main pushes deploy to Cloudflare Pages.
+
+## Current release gates
+
+- The repository-scoped GitHub App is not yet installed/configured. Production variables `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` are absent. GitHub PR publication and media-upload acceptance remain blocked on owner-side setup.
+- Authenticated production Admin CRUD and reviewed publish/unpublish acceptance are not yet signed off.
+- The GitHub repository currently has no main-branch ruleset; owner configuration is still required.
+- Pages rollback rehearsal and final editorial sign-off remain open.
+- The Events collection and public contact channel are intentionally not fabricated.
 
 ## Start locally
 
-Requires a supported Node.js version (CI uses Node 22).
+Requires Node.js 20.19 or later (CI uses Node.js 22) and npm.
 
-1. Clone the repository.
-2. Run `npm install`.
-3. Run `npm run dev` to preview locally.
-4. Run `npm run build` to generate `dist/`.
-5. Run `npm run verify` to validate required routes and Cloudflare Free static limits.
+```bash
+npm install
+npm run dev
+```
 
-The Pages project `chinese-culture` has been created at [chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev), but it has no deployment yet. Add the protected Cloudflare Pages API token secret described in the runbook, then trigger the deployment workflow.
+Useful validation commands:
 
-## Cloudflare Pages deployment
+```bash
+npm run validate:content
+npm test
+npm run build
+npm run verify
+npm run test:browser
+```
 
-The site uses Cloudflare Pages Free Direct Upload. No Cloudflare GitHub App connection is required. Add one repository Actions secret, `CLOUDFLARE_API_TOKEN`, containing a Cloudflare account token with the **Pages Write** role restricted to this account. The account ID is already configured in the workflow and is not a secret.
+For isolated Pages preview/browser checks, use `npm run test:preview` where the required preview environment is available. Automated tests use local D1 only; never point tests at production D1.
 
-Then open **Actions → Deploy Chinese Culture Atlas to Cloudflare Pages → Run workflow** on `main`. To deploy automatically on every future push to `main`, also add repository variable `CLOUDFLARE_DEPLOY_ENABLED=true`. Wrangler publishes only `dist/`; no Worker Functions or permanent Node.js process are deployed.
+## Deployment and data boundaries
 
-See [Developer runbook](docs/implementation/05-developer-runbook.md) for the exact token setup and release checks. Never paste the token into chat or commit it to source control.
+A push to `main` runs CI and the Cloudflare Pages deployment workflow. The deployment credential is stored in GitHub Actions as `CLOUDFLARE_API_TOKEN`; never put its value in source control or chat. Public pages are built from the reviewed Markdown snapshots on `main`. D1 remains the canonical editable store. The CMS must not auto-merge PRs or write directly to `main`.
 
 ## Project map
 
-- `src/pages/` — Astro routes and public informational pages.
-- `src/layouts/` — shared website shell and navigation.
-- `src/components/` — reusable story card.
-- `src/styles/` — responsive, accessible design system.
-- `src/content/` — reviewed Markdown teaching content.
-- `src/content.config.ts` — content metadata definitions.
-- `src/lib/` — section metadata and route mappings.
-- `public/` — favicon, static headers and robots rules.
-- `scripts/` — static-output verification.
-- `.github/workflows/` — build/test CI and credential-gated Pages deployment.
-- `docs/` — product plans, architecture decisions, structure, implementation history and operations.
+- `src/pages/` — public locale routes and Admin shell.
+- `src/content/` — generated publication snapshots for en, zh-CN and es.
+- `src/i18n/` — localized UI copy and section metadata.
+- `functions/api/admin/v1/` — authenticated Admin API.
+- `database/migrations/` — ordered D1 migrations.
+- `scripts/` — content validation, import, static verification and local CMS tests.
+- `public/` — public assets, headers and redirects.
+- `.github/workflows/` — CI, Pages deployment and controlled D1 bootstrap.
+- `docs/` and `openspec/` — architecture, content policy, contracts, runbooks and acceptance gates.
 
 ## Documents
 
 - [Documentation index](docs/README.md)
-- [Implementation status and limitations](docs/implementation/04-implementation-status.md)
-- [Complete repository map](docs/architecture/07-implemented-repository-map.md)
-- [Markdown schema and routing](docs/architecture/08-content-schema-and-routing.md)
-- [Developer and deployment runbook](docs/implementation/05-developer-runbook.md)
-- [Cloudflare Free hosting architecture](docs/architecture/06-cloudflare-free-node-deployment.md)
-- [Test strategy](docs/implementation/06-test-strategy.md)
-- [Change log](docs/operations/03-change-log.md)
+- [Implementation status](docs/implementation/04-implementation-status.md)
+- [Repository map](docs/architecture/07-implemented-repository-map.md)
+- [Content schema and routing](docs/architecture/08-content-schema-and-routing.md)
+- [Content inventory](docs/content/06-content-inventory.md)
+- [Simplified Chinese style guide](docs/content/07-simplified-chinese-editorial-style-guide.md)
+- [Chinese editorial review](docs/content/08-zh-cn-editorial-review-2026-11-11.md)
+- [Developer runbook](docs/implementation/05-developer-runbook.md)
+- [Cloudflare deployment runbook](docs/operations/04-cloudflare-deployment.md)
+- [GitHub App publication setup](docs/runbooks/github-app-publication.md)
 
 ## Editorial principles
 
-Culture is diverse and continually changing. Articles should use original prose, distinguish folklore from documented history, acknowledge regional variation and cite reputable educational references. No copyrighted books or photographs are reproduced without permission.
-
-## Not included yet
-
-Public Cloudflare deployment, domain setup, formal accessibility evaluation, public contact details, translated content, ticket registration, accounts, newsletters, dynamic APIs or a database. These must not be presented as complete.
+Use original prose, distinguish documented history from folklore and modern interpretation, acknowledge regional variation, cite reputable educational references and respect image/text rights. A passing build is not a substitute for cultural or language review.
