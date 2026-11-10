@@ -24,6 +24,7 @@ The multilingual static website and D1-backed Admin foundation are deployed. Git
 | [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum App permissions and required production settings |
 | [Admin CMS architecture](architecture/admin-cms-architecture.md) | Current D1-backed Admin topology and GitHub App blocker |
 | [GitHub integration](architecture/github-integration.md) | CI, deployment and CMS App boundaries |
+| [Media management](architecture/media-management.md) | Asset validation, rights metadata and GitHub App release gate |
 | [Administrator User Guide](implementation/admin-user-guide.md) | Access, editing and publication boundaries |
 | [Content Management Guide](implementation/content-management-guide.md) | Locale, D1 source of truth and editorial workflow |
 | [Admin credential setup](operations/admin-credential-setup.md) | Access configuration and pending App secrets |
