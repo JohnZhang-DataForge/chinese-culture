@@ -113,3 +113,57 @@ This rehearsal validates schema reconstruction and exact row-level recovery into
 - [D1 Time Travel and backups](https://developers.cloudflare.com/d1/reference/time-travel/)
 - [D1 import and export data](https://developers.cloudflare.com/d1/best-practices/import-export-data/)
 - [Export and save D1 database to R2 with Workflows](https://developers.cloudflare.com/workflows/examples/backup-d1/)
+
+
+## 6. Verified native SQL dump download/import — 2026-11-11
+
+The earlier connected execution environment could create a D1 export job but could not download the signed R2 URL. A dedicated GitHub Actions runner completed the full native SQL round-trip.
+
+- Workflow: [D1 native SQL backup and restore rehearsal #42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673) — PASS.
+- Export format: D1-compatible SQL.
+- Export bookmark: `00000012-00000000-0000511f-8358356091bd1f609e361b2a63bd9f8d`.
+- Downloaded SQL size: 212,583 bytes.
+- SQL SHA-256: `6b44d10270091667f6e42ca70921422b4358d287bf6986991388392355ab1b56`.
+- Temporary US-jurisdiction D1: `cms-restore-rehearsal-42726758673`, ID `25f7d9ab-73ec-4d88-a4b5-05082867c27b`.
+- Restored counts: content_items 13; content_variants 39; content_revisions 39; cms_submissions 0.
+- Locale counts: en 13; es 13; zh-CN 13.
+- `PRAGMA foreign_key_check`: zero violations.
+- Restored table counts, locale distribution and FK results exactly matched the production snapshot captured before export.
+- The temporary database was deleted after validation.
+- The SQL file existed only in the runner's temporary directory and was deleted; no GitHub artifact or durable archive was created.
+
+This closes the native SQL download/import rehearsal. It does not create an independently retained backup archive and does not complete the separate Pages rollback rehearsal.
+
+
+## 7. Pages production rollback preflight — 2026-11-11
+
+Cloudflare Pages rollback is a production deployment mutation. This section records read-only preflight evidence only; no rollback request was issued.
+
+Current Cloudflare API read-back:
+
+| Role | Deployment ID | Commit | Status | Created (UTC) |
+|---|---|---|---|---|
+| Current production | `ac9f2411-f9c6-49f8-ac98-d7e81e494f1b` | `0d45537ab85f6d14872a9898301765fa20ac2700` | Success | 2026-11-10 00:08:38 |
+| Previous production | `c4df8db2-ec98-4d72-8c9b-de589b4bee14` | `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1` | Success | 2026-11-10 00:01:18 |
+
+Both deployments are production deployments on the `main` branch. The current production aliases remain attached to the latest deployment. The older deployment is the immediate previous successful production candidate observed at preflight time.
+
+### Critical data boundary
+
+A Pages rollback changes the deployed application version; it does **not** restore or roll back the connected D1 database. The production D1 database remains `8b6f6c98-06fe-49eb-adbc-690d4b57c058`. Before any rollback, verify that the target build is compatible with the current D1 schema and data. Never assume that rolling back Pages also reverses a D1 migration or content edit.
+
+### Controlled rollback procedure
+
+1. Re-read the Pages project and deployment list immediately before acting; deployment IDs above are historical evidence, not permanent targets.
+2. Confirm the current latest deployment ID and the intended previous deployment ID, and confirm both are successful production deployments.
+3. Review intervening source changes and D1 migrations. Confirm the target application is compatible with the current production D1 schema and data.
+4. Obtain explicit owner approval for the production switch.
+5. Invoke Cloudflare's Pages deployment rollback endpoint for the verified previous production deployment:
+   `POST /accounts/{account_id}/pages/projects/{project_name}/deployments/{deployment_id}/rollback`.
+6. Wait for Cloudflare to report the rollback deployment complete; re-read project latest deployment and aliases.
+7. Run read-only smoke checks for the apex and www routes, all three locale routes, static assets, and the Cloudflare Access challenge on `/admin/` and `/api/admin/v1/session`. Do not create or modify editorial records during rollback verification.
+8. Record the resulting deployment ID, commit, status, smoke evidence and D1 compatibility decision.
+
+### Current disposition
+
+P8.10b remains open. No production rollback was performed because it changes the live deployment pointer and requires explicit owner approval. The read-only preflight confirms a previous successful production deployment is available, but does not itself prove rollback execution or post-rollback behavior.

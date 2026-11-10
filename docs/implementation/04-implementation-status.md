@@ -1,6 +1,6 @@
 # Implementation Status
 
-**Updated:** 2026-11-10
+**Updated:** 2026-11-11
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
@@ -106,7 +106,7 @@ These browser tests run against the local development preview and do not constit
 
 - Production Pages has the CMS D1 binding and Cloudflare Access configuration, but the repository-scoped GitHub App variables `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` are not configured. Publish and media-upload capabilities therefore remain disabled.
 - P6.8 isolated Pages preview is complete: PR #51 preview run #42724699134 passed; the preview has no D1 binding or production variables, and the Admin API fails closed without an Access JWT.
-- Authenticated production CRUD, media PR, publish/unpublish PR and native SQL dump restore remain unaccepted. Do not infer these from local CI or the production Access challenge test.
+- Authenticated production CRUD, media PR and publish/unpublish PR remain unaccepted. Native D1 SQL dump download/import/restore passed in workflow #42726758673; Pages rollback remains pending. Do not infer authenticated CRUD acceptance from local CI or the production Access challenge test.
 
 
 ## Latest platform hardening — 2026-11-10
@@ -125,5 +125,14 @@ Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
 - Install the repository-scoped GitHub App and configure `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` in Cloudflare Pages production secrets.
 - Complete authenticated production Admin CRUD with the authorized Cloudflare Access browser session.
 - Complete human-reviewed media, publish and unpublish PR acceptance.
-- Complete native SQL dump download/import restore and Pages rollback.
+- Native D1 SQL dump download/import/restore passed in workflow #42726758673; complete the separate Pages rollback rehearsal.
 - P6.9 branch protection remains blocked by the current private-repository GitHub plan/API access; do not make the repository public. See the Cloudflare deployment runbook.
+
+
+## Native D1 SQL backup/restore verified — 2026-11-11
+
+- [Workflow #42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673) completed successfully.
+- Exported 212,583-byte D1-compatible SQL dump; SHA-256: `6b44d10270091667f6e42ca70921422b4358d287bf6986991388392355ab1b56`.
+- Imported into a disposable US D1 database; counts matched the production snapshot (13 content items, 39 variants, 39 revisions, 0 submissions; 13 variants per locale); foreign-key check returned zero violations.
+- Temporary D1 was deleted. The SQL dump was not retained as an artifact.
+- Native SQL restore rehearsal is complete; Pages rollback remains pending.
