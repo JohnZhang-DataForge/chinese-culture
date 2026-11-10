@@ -122,3 +122,8 @@ The workflow runs required quality jobs on pull requests, but do not assume thos
 ## Cost and usage monitoring
 
 See [Cloudflare Cost and Limit Monitoring](06-cost-and-limit-monitoring.md) for the current published Workers Free/D1 limits, Pages Functions request accounting, monitoring locations and thresholds. The guide records plan limits, not live account consumption.
+
+
+## Native D1 SQL backup/restore acceptance — 2026-11-11
+
+The dedicated workflow [#42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673) successfully downloaded the D1-compatible production SQL dump, imported it into a disposable US-jurisdiction D1 database, compared table and locale counts with the production snapshot, verified zero foreign-key violations, and deleted the temporary database. The dump was 212,583 bytes (SHA-256 recorded in [the D1 backup runbook](05-d1-backup-and-restore.md)). No backup artifact was retained. Native SQL round-trip testing is complete; Pages rollback remains pending.
