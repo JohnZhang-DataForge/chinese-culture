@@ -1,10 +1,13 @@
 # Implementation Status
 
-**Updated:** 2026-11-11
+**Updated:** 2026-11-11 (after PR #53 deployment recovery)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
+
+- Latest production release: Main commit `a938e4b2ffdc43b6d962263873d985f51ade354b`; Cloudflare deployment `5fe2af05-4119-4578-a125-f7f17eadd699` succeeded on 2026-11-10 22:57 UTC.
+- Main CI run [#42916306326](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306326) passed both `static-build` and `admin-browser`; Pages deployment run [#42916306335](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306335) passed build, deploy and production route/Access smoke checks after the repository was made public and the failed jobs were rerun.
 
 - Astro static website is deployed to Cloudflare Pages.
 - English, Simplified Chinese and Spanish route trees are live.
@@ -73,7 +76,7 @@ The production bootstrap workflow, main CI and Pages deployment all completed su
 
 - D1 Time Travel is enabled by Cloudflare; retention depends on the D1 plan (Cloudflare documents 7 days for Workers Free and 30 days for Workers Paid).
 - An isolated row-level restore rehearsal passed: the current migration was applied to a disposable D1 database, all 13 content items, 39 variants and 39 revisions were restored exactly, and foreign-key validation was clean. The disposable database was deleted.
-- The D1 SQL export API completed an export job, but the generated SQL file has not yet been downloaded and imported. Native SQL dump restore remains unverified; see [D1 Backup and Recovery](../operations/05-d1-backup-and-restore.md).
+- Native D1 SQL export/download/import/restore passed in workflow [#42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673): 212,583-byte SQL dump, exact production/restored table and locale counts, zero foreign-key violations, and disposable D1 deleted. The SQL file was not retained as a durable backup artifact; see [D1 Backup and Recovery](../operations/05-d1-backup-and-restore.md).
 - No independently retained R2 backup archive or scheduled export workflow is currently configured.
 
 ## Known scope boundaries
@@ -126,7 +129,7 @@ Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
 - Complete authenticated production Admin CRUD with the authorized Cloudflare Access browser session.
 - Complete human-reviewed media, publish and unpublish PR acceptance.
 - Native D1 SQL dump download/import/restore passed in workflow #42726758673; complete the separate Pages rollback rehearsal.
-- P6.9 branch protection remains blocked by the current private-repository GitHub plan/API access; do not make the repository public. See the Cloudflare deployment runbook.
+- The repository is now public. A read-only GitHub API query returned no repository rulesets; the connected integration cannot create rulesets or read the branch-protection endpoint. The owner must configure a `main` branch ruleset in GitHub Settings → Rules → Rulesets; see the Cloudflare deployment runbook. Public visibility is not a substitute for branch protection.
 
 
 ## Native D1 SQL backup/restore verified — 2026-11-11
@@ -136,3 +139,13 @@ Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
 - Imported into a disposable US D1 database; counts matched the production snapshot (13 content items, 39 variants, 39 revisions, 0 submissions; 13 variants per locale); foreign-key check returned zero violations.
 - Temporary D1 was deleted. The SQL dump was not retained as an artifact.
 - Native SQL restore rehearsal is complete; Pages rollback remains pending.
+
+
+## Repository visibility and Actions recovery — 2026-11-11
+
+- The repository was made public by the owner to restore GitHub-hosted runner availability after GitHub reported failed recent account payments / an insufficient spending limit.
+- Failed Main CI run #42916306326 was rerun (attempt 4): `static-build` and `admin-browser` both passed.
+- Failed Pages deployment run #42916306335 was rerun (attempt 4): dependency install, build/verify, deployment credential check, Cloudflare Pages deployment and production route/Cloudflare Access smoke all passed.
+- Cloudflare confirms production deployment `5fe2af05-4119-4578-a125-f7f17eadd699` for commit `a938e4b2ffdc43b6d962263873d985f51ade354b` succeeded.
+- The GitHub API currently returns an empty repository ruleset list. The connected GitHub integration has no ruleset-write operation and cannot read branch protection. The repository owner must configure the `main` ruleset in GitHub UI.
+- Early implementation PRs #22, #23, #4 and #6 were closed as superseded by the newer implementation already on Main. PR #12 (documentation draft) and PR #2 (content inventory/style guide draft) remain open for separate review; neither was merged or discarded.
