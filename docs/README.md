@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Project stage (2026-11-10):** The static multilingual Astro website and D1-backed Admin foundation are deployed. PRs #45–#51 completed Admin regression coverage and isolated Pages preview/browser smoke. GitHub App credentials/installation, authenticated production CRUD and publish/unpublish acceptance remain outstanding. Cloudflare cost and free-tier limits are documented in the operations runbook.
+**Project stage (2026-11-10):** The static multilingual Astro website and D1-backed Admin foundation are deployed. PRs #45–#52 completed Admin regression coverage, isolated Pages preview/browser smoke and Cloudflare cost/limit documentation. Native D1 SQL export/import/restore rehearsal passed; Pages rollback remains pending. GitHub App credentials/installation, authenticated production CRUD and publish/unpublish acceptance remain outstanding. Cloudflare cost and free-tier limits are documented in the operations runbook.
 
 ## Start here
 
@@ -13,6 +13,7 @@
 | [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
 | [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
 | [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified Pages, Functions, D1 and Access state |
+| [D1 backup and restore](operations/05-d1-backup-and-restore.md) | Native SQL export/import rehearsal, recovery and rollback procedure |
 | [Cloudflare cost and limits](operations/06-cost-and-limit-monitoring.md) | Free-tier limits, usage monitoring and cost guardrails |
 | [CMS local runbook](runbooks/cms-d1-local-development.md) | Isolated local D1 migrations and Pages Functions development |
 | [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum repository permissions and Cloudflare Pages secret configuration |
