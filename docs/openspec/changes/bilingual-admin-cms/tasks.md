@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-10):** Main baseline `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`; PRs #45–#51 merged. Main CI #42724937729 and Pages deployment #42724937781 passed. Isolated Pages preview/browser smoke #42724699134 passed with no preview D1 binding or production variables. P6.8 and P7.5 are complete. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, main branch protection (blocked by the current private-repository GitHub plan/API access), native SQL dump restore and Pages rollback. Historical production D1 counts remain documented in the operations runbook and have not been re-queried in this update.
+**Status (2026-11-11):** Main baseline `0d45537ab85f6d14872a9898301765fa20ac2700`; PRs #45–#52 merged. Main CI #42725905093 and Pages deploy #42725904615 passed. P6.8 isolated Pages preview/browser smoke and P7.5 cost/limit monitoring are complete. Native D1 SQL export/download/import/restore rehearsal passed in workflow #42726758673: 212,583-byte D1-compatible dump, exact production/restored table and locale counts, zero FK violations, and temporary D1 deleted. P8.10a is complete; Pages rollback remains P8.10b. Remaining gates include GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, main branch protection (plan/access blocked) and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -138,6 +138,7 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [ ] P8.7 Submit a test publish PR, merge it through normal review, and verify the static page is live.
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
 - [ ] P8.9 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.
-- [ ] P8.10 Native SQL dump download/import test and Pages rollback remain pending; the isolated row-level D1 restore rehearsal passed. The export API produced a signed URL, but the execution environment could not download the SQL bytes (HTTP 403), so native dump restore is not claimed.
+- [x] P8.10a Native SQL dump download/import/restore rehearsal passed in workflow #42726758673; 212,583-byte SQL dump downloaded on the GitHub runner, imported into a disposable US D1 database, exact table/locale counts and foreign keys verified, and the temporary database deleted. No dump artifact was retained.
+- [ ] P8.10b Pages rollback rehearsal remains pending.
 
 **Exit:** All proposal acceptance criteria are evidenced; only then mark this OpenSpec change complete.
