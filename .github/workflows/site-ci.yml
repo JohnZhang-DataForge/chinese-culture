@@ -27,6 +27,7 @@ jobs:
         run: npm run validate:openapi
       - run: node --check scripts/import-content-to-d1.mjs
       - run: node --check scripts/smoke-production.mjs
+      - run: node --check scripts/rehearse-d1-backup-restore.mjs
       - run: node --check playwright.preview.config.mjs
       - run: npm run build
       - run: node scripts/test-cms-local.mjs
