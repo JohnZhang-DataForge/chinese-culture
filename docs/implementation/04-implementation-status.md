@@ -1,6 +1,6 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #54 merge and production acceptance)
+**Updated:** 2026-11-11 (after PR #56 merge and production acceptance)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
@@ -155,3 +155,13 @@ Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
 ## GitHub App production configuration check — 2026-11-11
 
 A read-only Cloudflare Pages project configuration check found no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` production entries. `CMS_DB` remains bound to the existing production D1 database. The CMS publisher cannot be accepted until the repository-scoped GitHub App is installed and its three production settings are configured. No credential values were read or exposed.
+
+
+## Latest post-PR #56 acceptance snapshot — 2026-11-11
+
+- Main: `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`.
+- Main CI #42922241144: `static-build` and `admin-browser` passed.
+- Pages deployment #42922241177: build, deploy and production route/Cloudflare Access smoke passed.
+- Cloudflare Pages read-back: production deployment `b19551bd-4c07-422b-9600-2f99c0bc1697` serves the current Main commit.
+- Production configuration read-back still shows `CMS_DB` and existing Access/admin settings. The production variable-name list contains no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID`, or `GITHUB_APP_PRIVATE_KEY`; GitHub App publish/media acceptance remains blocked. No secret values were read.
+- GitHub repository rulesets API currently returns an empty list; P6.9 remains owner-blocked.

@@ -164,3 +164,16 @@ Do not assume public repository visibility automatically protects `main`. Verify
 - Post-merge Main CI #42920572091 passed; Pages deployment #42920572127 passed build, deployment credential check, production deploy and production route/Cloudflare Access smoke.
 - Cloudflare Pages read-back confirms latest production deployment `cddb8296-5d94-4bc9-9a87-c8ea31ade484` serves commit `0e621be26009c4dabe69843dfb42d65ad474587c`.
 - Read-only production configuration inspection found `CMS_DB` still bound and the existing Access/admin settings present. `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` were not present in the production configuration; App publication/media acceptance remains blocked on owner-side setup. No secret values were retrieved.
+
+
+## Superseding repository visibility and latest release status — 2026-11-11
+
+The earlier note under “Main branch protection status” saying “Keep the repository private” is superseded: the owner subsequently made this repository public so previously blocked GitHub Actions could run. Do not change repository visibility as part of this CMS work. Public visibility does not itself protect `main`; the latest read-only `GET /repos/JohnZhang-DataForge/chinese-culture/rulesets` response is an empty list, so P6.9 remains incomplete.
+
+Latest Main after PR #56: `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`.
+- Main CI #42922241144: `static-build` and `admin-browser` passed.
+- Pages deployment #42922241177: build, deploy, production route and Cloudflare Access smoke passed.
+- Current production deployment ID: `b19551bd-4c07-422b-9600-2f99c0bc1697`.
+- Read-only Pages production config shows existing `CMS_DB` and Access/admin settings. `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID`, and `GITHUB_APP_PRIVATE_KEY` are absent; no secret values were read.
+
+PR #56 merged the refreshed Simplified Chinese editorial guide aligned to CC-CONTENT-001 v1.2.0 and `zh-CN`. PR #2 remains open as a historical inventory/style draft; its useful editorial guidance has been carried forward in PR #56. PR #12 remains open because its early architecture/operations snapshot is materially stale and must not be merged unchanged.
