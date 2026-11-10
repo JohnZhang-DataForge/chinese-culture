@@ -1,6 +1,6 @@
 # Implementation Status
 
-**Updated:** 2026-11-09
+**Updated:** 2026-11-10
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
@@ -105,5 +105,25 @@ These browser tests run against the local development preview and do not constit
 ## Current external release blockers
 
 - Production Pages has the CMS D1 binding and Cloudflare Access configuration, but the repository-scoped GitHub App variables `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` are not configured. Publish and media-upload capabilities therefore remain disabled.
-- The Pages preview environment currently has no environment variables or D1 binding. Do not attach the production D1 database to an untrusted preview deployment; P6.8 requires an isolated preview strategy.
+- P6.8 isolated Pages preview is complete: PR #51 preview run #42724699134 passed; the preview has no D1 binding or production variables, and the Admin API fails closed without an Access JWT.
 - Authenticated production CRUD, media PR, publish/unpublish PR and native SQL dump restore remain unaccepted. Do not infer these from local CI or the production Access challenge test.
+
+
+## Latest platform hardening — 2026-11-10
+
+Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
+
+- PR #49 refreshed Admin release evidence.
+- PR #50 added isolated preview config, config guard and deployed browser smoke.
+- PR #51 corrected Wrangler's unsupported custom Pages config path, pinned the preview runner to Ubuntu 24.04, and completed remote Chromium preview smoke.
+- [Preview smoke #42724699134](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724699134) passed: English, Chinese and Spanish routes; production Admin build/no demo content; unauthenticated Admin session denied with HTTP 401.
+- [Main CI #42724937729](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724937729) and [production Pages deploy #42724937781](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724937781) passed.
+- Preview configuration deliberately has no D1 binding or production secrets. Production D1 remains bound only to production.
+
+## Remaining owner-level release gates
+
+- Install the repository-scoped GitHub App and configure `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` in Cloudflare Pages production secrets.
+- Complete authenticated production Admin CRUD with the authorized Cloudflare Access browser session.
+- Complete human-reviewed media, publish and unpublish PR acceptance.
+- Complete native SQL dump download/import restore and Pages rollback.
+- P6.9 branch protection remains blocked by the current private-repository GitHub plan/API access; do not make the repository public. See the Cloudflare deployment runbook.
