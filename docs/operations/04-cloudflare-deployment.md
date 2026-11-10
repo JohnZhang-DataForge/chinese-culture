@@ -1,6 +1,6 @@
 # Cloudflare Pages Deployment — Current State and Release Steps
 
-**Updated:** 2026-11-09
+**Updated:** 2026-11-10
 **Target:** Cloudflare Pages Free, Direct Upload
 **Repository:** JohnZhang-DataForge/chinese-culture
 **Project:** chinese-culture
@@ -103,3 +103,22 @@ The preview binding isolation is guarded by `tests/preview-config.test.mjs`. Do 
 - Cloudflare Pages project configuration shows preview env vars empty and no preview D1 binding; production `CMS_DB` remains bound only to production.
 - Preview configuration uses `wrangler.preview.jsonc`, which deliberately omits D1 and production variables. The workflow copies it to the default `wrangler.jsonc` only in the ephemeral GitHub Actions workspace because Wrangler Pages does not support custom config paths.
 - This preview acceptance does not replace authenticated production CRUD acceptance.
+
+
+## Latest production release — 2026-11-10
+
+Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
+
+- [Main CI #42724937729](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724937729) — static-build and Admin Chromium passed.
+- [Production Pages deployment #42724937781](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724937781) — succeeded.
+- Production deployment ID: `c4df8db2-ec98-4d72-8c9b-de589b4bee14`.
+- PR #51 merged the isolated preview workflow and browser smoke; [preview run #42724699134](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42724699134) passed.
+- Cloudflare API read-back confirms production `CMS_DB` remains bound to the production database; the preview environment has no D1 binding and no environment variables.
+
+## Main branch protection status
+
+The workflow runs required quality jobs on pull requests, but do not assume those checks are enforced by GitHub branch protection. The repository-rulesets API returned: “Upgrade to GitHub Pro or make this repository public to enable this feature.” The current GitHub integration also cannot read the branch-protection endpoint. Keep the repository private; do not change visibility just to enable rulesets. Revisit P6.9 after an eligible GitHub plan and owner-level settings access are available. Until then, maintain the human PR review/merge process and verify CI before merging.
+
+## Cost and usage monitoring
+
+See [Cloudflare Cost and Limit Monitoring](06-cost-and-limit-monitoring.md) for the current published Workers Free/D1 limits, Pages Functions request accounting, monitoring locations and thresholds. The guide records plan limits, not live account consumption.
