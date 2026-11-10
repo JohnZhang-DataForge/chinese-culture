@@ -155,3 +155,12 @@ A read-only GitHub API request to `GET /repos/JohnZhang-DataForge/chinese-cultur
 7. Keep the bypass list empty (or limited to an explicitly documented emergency owner process); do not add the CMS Publisher App.
 
 Do not assume public repository visibility automatically protects `main`. Verify the saved ruleset after creation.
+
+
+## Post-PR #54 production acceptance — 2026-11-11
+
+- PR #54 merged as `0e621be26009c4dabe69843dfb42d65ad474587c`.
+- PR CI #42920011297 passed both `static-build` and `admin-browser` (Chromium installation and browser/responsive accessibility tests included).
+- Post-merge Main CI #42920572091 passed; Pages deployment #42920572127 passed build, deployment credential check, production deploy and production route/Cloudflare Access smoke.
+- Cloudflare Pages read-back confirms latest production deployment `cddb8296-5d94-4bc9-9a87-c8ea31ade484` serves commit `0e621be26009c4dabe69843dfb42d65ad474587c`.
+- Read-only production configuration inspection found `CMS_DB` still bound and the existing Access/admin settings present. `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` were not present in the production configuration; App publication/media acceptance remains blocked on owner-side setup. No secret values were retrieved.
