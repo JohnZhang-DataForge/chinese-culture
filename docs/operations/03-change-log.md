@@ -1,3 +1,12 @@
+## 2026-11-11 — Admin and publishing runbooks refreshed
+
+- PR #61 reconciled the root README, documentation index, core architecture, security/privacy, maintenance, deployment and developer runbook with the deployed multilingual site and D1-backed Admin foundation.
+- PR #62 added current Admin CMS architecture, GitHub integration, Administrator User Guide, Content Management Guide, Admin credential setup and Pages rollback procedure.
+- PR #62 CI #42926756827 passed static-build and admin-browser.
+- Main CI #42926926793 and Pages deployment #42926926680 passed for Main `d96052a301c3178114d2e935eaf5b1a5ccdda1ac`.
+- Production deployment `6ffecf5d-2df2-45cd-9810-4047bc4c7220` serves that Main commit.
+- GitHub App publication setup, authenticated production CRUD/publish acceptance, main ruleset configuration and rollback rehearsal remain open.
+
 # Development Change Log
 
 Record verified changes and operational outcomes. A source commit, passing CI, successful Pages upload and full production acceptance are distinct milestones.
