@@ -41,4 +41,4 @@ Once the App is configured, the CMS should create a branch and PR; a human revie
 
 A content PR merge is not itself proof of a live page. Verify the PR checks, merge commit, Main CI, Pages deployment and Cloudflare production commit. Then open the exact public locale route and check the content.
 
-See [Content Management Guide](content-management-guide.md), [GitHub App publication setup](../runbooks/github-app-publication.md) and [OpenSpec tasks](../openspec/changes/bilingual-admin-cms/tasks.md).
+See [Media Management](../architecture/media-management.md), [Content Management Guide](content-management-guide.md), [GitHub App publication setup](../runbooks/github-app-publication.md) and [OpenSpec tasks](../openspec/changes/bilingual-admin-cms/tasks.md).
