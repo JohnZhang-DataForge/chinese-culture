@@ -31,3 +31,8 @@ All 13 Chinese variants were located and paired with the corresponding English a
 - Run the full repository content validator, unit tests, static build and Admin browser checks on the proposed changes.
 - Continue a separate review of static-page UI copy, SEO metadata, image alt text, and external source-link reachability.
 - Keep P3.5 open until the complete editorial review is recorded. Technical CI passing alone is not evidence of cultural or language quality.
+
+
+## Production privacy-copy accuracy follow-up
+
+The public site and protected Admin area have different behavior. The privacy notice now distinguishes public browsing (no visitor accounts, contact form, integrated analytics or advertising trackers; no application cookies intentionally set for public browsing) from the administrator-only area protected by Cloudflare Access, which may set authentication cookies for access control. The same clarification is applied to English, Simplified Chinese and Spanish copy and the legacy unprefixed privacy page.
