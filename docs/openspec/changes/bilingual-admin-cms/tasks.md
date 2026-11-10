@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Main baseline `a938e4b2ffdc43b6d962263873d985f51ade354b`; PR #53 merged. After the repository was made public, rerun Main CI #42916306326 and Pages deployment #42916306335 both passed on attempt 4. Production deployment `5fe2af05-4119-4578-a125-f7f17eadd699` is live. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
+**Status (2026-11-11):** Main baseline `0e621be26009c4dabe69843dfb42d65ad474587c`; PR #54 merged. PR #54 CI #42920011297 passed `static-build` and `admin-browser`; post-merge Main CI #42920572091 and Pages deployment #42920572127 both passed. Production deployment `cddb8296-5d94-4bc9-9a87-c8ea31ade484` is live. A read-only Pages configuration check found the three GitHub App production settings absent. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App installation/secrets, authenticated production CRUD, reviewed publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
