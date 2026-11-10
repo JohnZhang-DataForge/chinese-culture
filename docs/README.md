@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Project stage:** The static multilingual Astro website is deployed to Cloudflare Pages. PR #32 integrated the first D1-backed CMS foundation: protected Admin shell, Pages Functions CRUD/preview APIs, Cloudflare D1 binding, Access protection and an idempotent importer for the existing 39 English/Chinese/Spanish article variants. The next production-readiness PR completes migration/import automation and publication PR integration. Media upload and GitHub App credentials remain outstanding.
+**Project stage (2026-11-10):** The static multilingual Astro website and D1-backed Admin foundation are deployed. PRs #45–#51 completed Admin regression coverage and isolated Pages preview/browser smoke. GitHub App credentials/installation, authenticated production CRUD and publish/unpublish acceptance remain outstanding. Cloudflare cost and free-tier limits are documented in the operations runbook.
 
 ## Start here
 
@@ -13,6 +13,7 @@
 | [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
 | [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
 | [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified Pages, Functions, D1 and Access state |
+| [Cloudflare cost and limits](operations/06-cost-and-limit-monitoring.md) | Free-tier limits, usage monitoring and cost guardrails |
 | [CMS local runbook](runbooks/cms-d1-local-development.md) | Isolated local D1 migrations and Pages Functions development |
 | [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum repository permissions and Cloudflare Pages secret configuration |
 

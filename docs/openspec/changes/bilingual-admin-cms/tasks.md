@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-10):** Main baseline `a9cee924d3a0254beb539c3fe4e74a25439a162b`; PRs #45–#50 merged. Main CI and Pages deploy for #50 passed. PR #51 adds the Wrangler Pages preview config-path fix and pins preview browser testing to Ubuntu 24.04. Isolated Pages preview deployment and remote Chromium smoke passed in run #42724399464; the three public locales render, Admin is built in production mode with no demo content, and the preview API denies unauthenticated requests. The preview has no D1 binding or production variables. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, main branch protection, native SQL dump restore and Pages rollback. Historical production D1 counts remain documented in the operations runbook and have not been re-queried in this update.
+**Status (2026-11-10):** Main baseline `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`; PRs #45–#51 merged. Main CI #42724937729 and Pages deployment #42724937781 passed. Isolated Pages preview/browser smoke #42724699134 passed with no preview D1 binding or production variables. P6.8 and P7.5 are complete. Remaining release gates include GitHub App installation/secrets, human-reviewed publish/unpublish acceptance, authenticated production CRUD, main branch protection (blocked by the current private-repository GitHub plan/API access), native SQL dump restore and Pages rollback. Historical production D1 counts remain documented in the operations runbook and have not been re-queried in this update.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -108,7 +108,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P6.6 Add Pages Functions security and GitHub API mock/integration tests.
 - [x] P6.7 Add media validation tests (PR #40 covers JPEG/PNG/WebP/AVIF signatures, malformed/truncated payloads, required alt/credit/license and HTTPS source URLs; CI #42624578839 passed).
 - [x] P6.8 Add isolated Pages preview deployment/browser smoke tests (PR #51; preview run #42724399464 passed on `https://pr-51.chinese-culture-79h.pages.dev`; preview has no D1 binding or production vars, all three public locales pass, Admin is production-built/no-demo, and unauthenticated Admin API returns 401).
-- [ ] P6.9 Add required PR status checks and protect main.
+- [ ] P6.9 Add required PR status checks and protect main. Blocked: GitHub's repository-rulesets API explicitly reports that this private repository must upgrade to GitHub Pro or be made public to use rulesets; the current integration also cannot read branch-protection settings. Do not make the repository public for this purpose. Revisit after an eligible plan and owner-level access are available.
 - [x] P6.10 Verify Wrangler Direct Upload bundles Pages Functions and applies CMS_DB without exposing secrets.
 - [x] P6.11 Add a test that the production database is never used by automated test jobs.
 
@@ -120,7 +120,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P7.2 Update architecture map, static hosting ADR references, repository map and authoring guide.
 - [x] P7.3 Document D1 database ID/binding name, migration commands and local-only workflow; D1 Time Travel/export/restore runbook added. Native SQL dump download/import rehearsal remains pending.
 - [x] P7.4 Document that src/content/ is generated publication output and D1 is canonical.
-- [ ] P7.5 Update operations runbooks and cost/limit monitoring guidance.
+- [x] P7.5 Update operations runbooks and cost/limit monitoring guidance (`docs/operations/06-cost-and-limit-monitoring.md`; published Cloudflare limits documented; live account usage deliberately not inferred).
 - [x] P7.6 Record actual CI, Cloudflare binding, Access and Pages deployment evidence.
 
 **Exit:** No documentation says that the CMS is GitHub-only or that the deployed project has no Functions/D1 after those capabilities are verified.
