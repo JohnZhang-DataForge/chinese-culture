@@ -1,13 +1,13 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #60 merge and production acceptance)
+**Updated:** 2026-11-11 (after PR #62 merge and production deployment)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
 
-- Latest production release: Main commit `a30d0872380d4da97054646138dbab703999bde6`; Cloudflare deployment `a087d8b6-ecbe-4a36-93dc-275f4b62515d` succeeded on 2026-11-10 23:40 UTC.
-- Main CI run [#42925233625](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42925233625) passed `static-build` and `admin-browser`; Pages deployment run [#42925233585](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42925233585) passed.
+- Latest production release: Main commit `d96052a301c3178114d2e935eaf5b1a5ccdda1ac`; Cloudflare deployment `6ffecf5d-2df2-45cd-9810-4047bc4c7220` succeeded on 2026-11-10 23:53 UTC.
+- Main CI run [#42926926793](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42926926793) passed `static-build` and `admin-browser`; Pages deployment run [#42926926680](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42926926680) passed.
 - PR #58 and #59 content/privacy corrections are deployed; PR #60 refreshed the content inventory and P3.5 review evidence.
 
 - Astro static website is deployed to Cloudflare Pages.
