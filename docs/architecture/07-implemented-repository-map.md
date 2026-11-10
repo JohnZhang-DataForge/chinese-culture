@@ -1,8 +1,10 @@
 # Implemented Repository Map
 
-**Status:** Static multilingual site deployed; D1-backed CMS integration in progress · **Last updated:** 2026-11-09
+**Status:** Multilingual static site and D1-backed Admin foundation deployed; GitHub App publication setup pending · **Last verified:** 2026-11-11
 
 ## Runtime and content data flow
+
+Main baseline at last verification: `a30d0872380d4da97054646138dbab703999bde6`; production deployment `a087d8b6-ecbe-4a36-93dc-275f4b62515d`.
 
     Admin browser
       → Cloudflare Access (exact administrator allowlist)

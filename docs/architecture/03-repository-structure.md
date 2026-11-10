@@ -1,44 +1,37 @@
 # Repository and Documentation Structure
 
-**Status:** Implemented baseline · **Updated:** 2026-11-04
+**Status:** Implemented multilingual Astro + Pages Functions + D1 CMS · **Updated:** 2026-11-11
 
-The architecture has moved from planning-only to a static Astro application. The exact inventory is maintained in [the repository map](07-implemented-repository-map.md).
+## Main source areas
 
-## Current areas
+- `src/pages/`: public locale routes, static information pages and Admin shell.
+- `src/content/`: generated Markdown publication snapshots for English, Simplified Chinese and Spanish.
+- `src/i18n/`: localized UI copy and section/page metadata.
+- `src/layouts/`, `src/components/`, `src/styles/`: public presentation.
+- `functions/api/admin/v1/`: protected CMS endpoints.
+- `functions/_lib/`: Access/JWT, CSRF, repository, preview and publication helpers.
+- `database/migrations/`: ordered D1 schema migrations.
+- `scripts/`: content validation, idempotent import, static verification and local CMS tests.
+- `public/`: public assets, headers and redirect configuration.
+- `.github/workflows/`: CI, Pages deployment and explicit D1 bootstrap.
+- `docs/architecture/`: architecture and implementation decisions.
+- `docs/content/`: editorial strategy, content inventory and locale style guides.
+- `docs/openspec/`: normative contracts, proposals and implementation tasks.
+- `docs/runbooks/`: local D1 and GitHub App publication operations.
 
-- `README.md`: project entry point, commands and status
-- `package.json`: Node/Astro/Wrangler dependencies and scripts
-- `astro.config.mjs`: `output: static`, with trailing-slash URLs
-- `wrangler.jsonc`: Cloudflare Workers Free static asset directory, no script `main`
-- `public/`: favicon, robots and HTTP security headers
-- `src/pages/`: homepage, dynamic collection pages and static information pages
-- `src/content/`: original Markdown lessons, articles, festivals and book guides
-- `src/content.config.ts`: shared frontmatter validation
-- `src/layouts/`: common public HTML shell
-- `src/components/`: reusable content card
-- `src/styles/`: color, typography, layout and responsive styles
-- `src/lib/`: section-to-collection route mapping
-- `scripts/`: Node-based static build checks
-- `.github/workflows/`: PR and main branch build CI (no deployment)
-- `docs/`: living requirements, ADRs, status, operations and templates
+## Content paths and public routes
 
-## Content routing
+| Content directory | Public section |
+|---|---|
+| `src/content/lessons/` and locale variants | `/{locale}/learn/{slug}/` |
+| `src/content/culture/` and locale variants | `/{locale}/culture/{slug}/` |
+| `src/content/festivals/` and locale variants | `/{locale}/festivals/{slug}/` |
+| `src/content/books/` and locale variants | `/{locale}/books/{slug}/` |
 
-- `src/content/lessons/*.md` → `/learn/<file-id>/`
-- `src/content/culture/*.md` → `/culture/<file-id>/`
-- `src/content/festivals/*.md` → `/festivals/<file-id>/`
-- `src/content/books/*.md` → `/books/<file-id>/`
+Locale identifiers are `en`, `zh-CN`, `es`; URL segments are `en`, `zh-cn`, `es`. The `learn` route maps to the `lessons` collection.
 
-Routes are generated at build time using Astro content collections. No runtime database query is needed. See [metadata and routes](08-content-schema-and-routing.md).
+## Source-of-truth boundaries
 
-## Design constraints
+D1 (`CMS_DB`) is the canonical editable content store. Files under `src/content/` on Main are generated publication snapshots. Public Astro routes are static. Pages Functions are used for protected Admin operations only.
 
-No API/SSR/Node runtime server. Cloudflare serves HTML, CSS, JS and static files from build output. All visitor-facing text lives in source or Markdown; no third-party embedded analytics or image requests.
-
-## Documentation responsibilities
-
-Plan changes belong under `docs/plan/`. Architecture changes update an ADR and `docs/architecture/`. Code/content changes update [implementation status](../implementation/04-implementation-status.md) and [change log](../operations/03-change-log.md). Do not label unreleased code as publicly deployed.
-
-## Future additions
-
-Approved publishing media, client-side search if justified, translation support and verified events. Accounts, forms and dynamic APIs remain deferred pending new design and privacy review.
+See [implemented repository map](07-implemented-repository-map.md), [content schema](08-content-schema-and-routing.md) and [content inventory](../content/06-content-inventory.md).

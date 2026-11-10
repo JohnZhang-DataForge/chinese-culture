@@ -1,45 +1,43 @@
-# Documentation Index
+# Chinese Culture Atlas — Documentation Index
 
-**Project stage (2026-11-10):** The static multilingual Astro website and D1-backed Admin foundation are deployed. PRs #45–#52 completed Admin regression coverage, isolated Pages preview/browser smoke and Cloudflare cost/limit documentation. Native D1 SQL export/import/restore rehearsal passed; Pages rollback remains pending. GitHub App credentials/installation, authenticated production CRUD and publish/unpublish acceptance remain outstanding. Cloudflare cost and free-tier limits are documented in the operations runbook.
+**Updated:** 2026-11-11  
+**Main baseline:** `a30d0872380d4da97054646138dbab703999bde6`  
+**Production deployment:** `a087d8b6-ecbe-4a36-93dc-275f4b62515d` (same Main commit)
+
+The multilingual static website and D1-backed Admin foundation are deployed. GitHub App setup, authenticated production CRUD/publishing acceptance, owner-configured main ruleset and Pages rollback rehearsal remain open. Do not treat implementation, CI success, deployment success and full production acceptance as interchangeable.
 
 ## Start here
 
 | Area | Contents |
 |---|---|
-| [Implementation status](implementation/04-implementation-status.md) | What exists today, gaps, verification evidence |
-| [Repository map](architecture/07-implemented-repository-map.md) | Files, ownership and how source becomes static HTML |
-| [Content schema and routes](architecture/08-content-schema-and-routing.md) | Metadata requirements and author workflow |
-| [Developer runbook](implementation/05-developer-runbook.md) | Local preview, build, checks and Cloudflare deploy |
-| [Test strategy](implementation/06-test-strategy.md) | Automated assertions and pending manual tests |
-| [Change log](operations/03-change-log.md) | Chronological changes, rationale and known debt |
-| [Cloudflare deployment status](operations/04-cloudflare-deployment.md) | Verified Pages, Functions, D1 and Access state |
-| [D1 backup and restore](operations/05-d1-backup-and-restore.md) | Native SQL export/import rehearsal, recovery and rollback procedure |
-| [Cloudflare cost and limits](operations/06-cost-and-limit-monitoring.md) | Free-tier limits, usage monitoring and cost guardrails |
-| [CMS local runbook](runbooks/cms-d1-local-development.md) | Isolated local D1 migrations and Pages Functions development |
-| [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum repository permissions and Cloudflare Pages secret configuration |
-
-## Long-term planning areas
-
-| Folder | Focus |
-|---|---|
-| [plan/](plan/01-vision-and-goals.md) | Mission, audience, scope, budget, outreach |
-| [structure/](structure/01-information-architecture.md) | Sitemap, page types and taxonomy |
-| [architecture/](architecture/01-technology-selection.md) | Technical decisions and deployment |
-| [content/](content/01-editorial-strategy.md) | Editorial policy, learning, books and events |
-| [design/](design/01-experience-and-visual-direction.md) | Visual direction, accessibility and localization |
-| [implementation/](implementation/01-phase-by-phase-plan.md) | Milestones, backlog, quality gates |
-| [operations/](operations/01-security-privacy-and-legal.md) | Copyright, privacy and maintenance |
-| [decisions/](decisions/ADR-0001-static-first-hosting.md) | Architecture decision records |
-| [templates/](templates/article-brief.md) | Content and ADR briefs |
+| [Implementation status](implementation/04-implementation-status.md) | Current production state, verified evidence and release gates |
+| [Repository map](architecture/07-implemented-repository-map.md) | Source layout and data flow |
+| [Content schema and routes](architecture/08-content-schema-and-routing.md) | Normative content contract and locale routing |
+| [Content inventory](content/06-content-inventory.md) | 13 concepts, 39 locale variants and route conventions |
+| [Chinese style guide](content/07-simplified-chinese-editorial-style-guide.md) | Preferred terminology and translation standards |
+| [Chinese editorial review](content/08-zh-cn-editorial-review-2026-11-11.md) | Translation-fidelity corrections and source-link review |
+| [Developer runbook](implementation/05-developer-runbook.md) | Local development, tests and environment isolation |
+| [Cloudflare deployment](operations/04-cloudflare-deployment.md) | Pages, Functions, D1 and Access release evidence |
+| [D1 backup and restore](operations/05-d1-backup-and-restore.md) | Native SQL restore rehearsal and recovery procedure |
+| [Cost and limits](operations/06-cost-and-limit-monitoring.md) | Free-tier limits and cost guardrails |
+| [CMS local runbook](runbooks/cms-d1-local-development.md) | Local D1 migrations and Pages Functions testing |
+| [GitHub App publication setup](runbooks/github-app-publication.md) | Minimum App permissions and required production settings |
+| [OpenSpec tasks](openspec/changes/bilingual-admin-cms/tasks.md) | Milestones, acceptance gates and outstanding work |
 
 ## Architecture baseline
 
-**Node.js builds Astro**, which prerenders public pages to `dist/`; Cloudflare Pages serves them as static assets. The public article experience has no D1/API dependency. The private editorial workspace at `/admin/` uses Cloudflare Access and Pages Functions under `/api/admin/v1/`, with the `CMS_DB` binding to Cloudflare D1. D1 is the canonical editorial store; reviewed GitHub PRs generate the static Markdown snapshots consumed by Astro. GitHub App publication credentials and media upload are still pending. See [CMS local runbook](runbooks/cms-d1-local-development.md), [deployment model](architecture/04-deployment-and-environments.md), [Cloudflare plan](architecture/06-cloudflare-free-node-deployment.md) and [ADR-0004](decisions/ADR-0004-no-always-on-node-server.md).
+- Astro generates public locale routes as static HTML.
+- Public article pages consume reviewed Markdown snapshots on `main`; they do not query D1 at request time.
+- Cloudflare Pages Functions provide the private Admin API under `/api/admin/v1/`.
+- Cloudflare Access protects `/admin/*` and `/api/admin/*`.
+- D1 (`CMS_DB`) is the canonical editorial store for content, translations and revisions.
+- The CMS creates reviewed GitHub branches/PRs; it does not merge PRs or write directly to `main`.
+- The repository-scoped GitHub App is not yet configured, so PR publication and media upload remain blocked.
 
-## Document conventions
+## Documentation conventions
 
-- Keep accepted architecture decisions as ADRs, with reasons and superseding changes.
-- Update this index, implementation status, repository map and change log in PRs that add or restructure major functionality.
-- Clearly distinguish **written**, **built**, **tested**, **deployed** and **publicly launched**.
-- Keep educational citations and image rights in source Markdown, and never invent event schedules.
-- The private GitHub repository may be the source for a public static site, but private design notes must not be packaged into public assets.
+- CC-CONTENT-001 v1.2.0 and the Admin API OpenAPI contract are normative; do not create parallel schemas.
+- Clearly distinguish written, implemented, tested, deployed and accepted.
+- Update the implementation status, change log and this index when major architecture or production state changes.
+- Never document secret values or invent contact details, events, author credentials or review sign-offs.
+- Keep old proposals visibly marked as superseded when their architecture no longer matches production.

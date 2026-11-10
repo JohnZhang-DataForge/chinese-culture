@@ -1,95 +1,66 @@
-# Developer Runbook — Astro and Cloudflare Pages Free
+# Developer Runbook — Astro, Cloudflare Pages and D1 CMS
 
-**Status:** Astro static site is implemented and CI-tested. The Cloudflare Pages Direct Upload project exists; its first production deployment is awaiting one protected Pages Write API token.
+**Status:** Implemented multilingual public site and protected Admin foundation · **Updated:** 2026-11-11
 
 ## Prerequisites
 
-- GitHub repository read/write access as appropriate.
-- Node.js 22 (used in CI), npm and Git.
-- Cloudflare account with the Pages Free plan.
+- Node.js 20.19 or later (CI uses Node.js 22), npm and Git.
+- GitHub access to `JohnZhang-DataForge/chinese-culture`.
+- Cloudflare access only when working on Pages/D1 operations.
+- Never copy Cloudflare tokens, Access secrets or GitHub App keys into source files or chat.
 
 ## Local development
 
-1. Clone `JohnZhang-DataForge/chinese-culture`.
-2. Run `npm install` in the repository root.
-3. Run `npm run dev`, then open the local URL printed by Astro.
-4. Edit Astro pages in `src/pages/` or Markdown in `src/content/`.
-5. Run `npm run build`; prerendered output goes to `dist/`.
-6. Run `npm run verify`; this checks core routes, static output, file count and asset sizes.
+```bash
+git clone https://github.com/JohnZhang-DataForge/chinese-culture.git
+cd chinese-culture
+npm install
+npm run dev
+```
 
-Do not commit `node_modules/`, `dist/`, `.env` files or Cloudflare credentials.
+## Validation commands
 
-## CI behavior
+```bash
+npm run validate:content
+npm test
+npm run build
+npm run verify
+npm run test:browser
+```
 
-`.github/workflows/site-ci.yml` runs on pull requests and pushes to `main`. It installs dependencies, builds Astro, runs the static verifier and publishes a short-lived `chinese-culture-dist` artifact for main pushes. The separate Pages deployment workflow uses Wrangler Direct Upload and is credential-gated. A committed lockfile and `npm ci` conversion remain a reproducibility improvement.
+The optional isolated Pages preview/browser workflow uses `npm run test:preview` with its configured preview environment.
 
-Latest verified build: [GitHub Actions run #41830613564](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/41830613564). It completed install, Astro build, static verification and artifact packaging successfully.
+## D1 and Pages Functions development
 
-## Cloudflare Pages project
+- Apply schema migrations to local D1 only: `npx wrangler d1 migrations apply chinese-culture-cms --local`.
+- Run the local Pages Functions environment with the CMS local runbook.
+- Automated tests must never use `--remote` or the production D1 database.
+- Production migration/import is handled only by the dedicated, reviewed bootstrap workflow.
+- See [CMS D1 local development](../runbooks/cms-d1-local-development.md).
 
-- Project: `chinese-culture`
-- Production branch: `main`
-- Public hostname: [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev)
-- Upload mode: Direct Upload (Wrangler or dashboard ZIP upload)
-- Current state: project provisioned, no production deployment yet
+## Production architecture
 
-The Cloudflare Git integration attempt returned an account-side installation error. This does not block Direct Upload. GitHub Actions builds the site and Wrangler publishes the prebuilt files, so no Cloudflare GitHub App authorization is required.
+- Public Astro pages are static and use generated Markdown snapshots from `main`.
+- D1 (`CMS_DB`) is the canonical editable content store.
+- Pages Functions serve the protected Admin API under `/api/admin/v1/`.
+- Cloudflare Access protects `/admin/*` and `/api/admin/*`.
+- The CMS must create review branches/PRs and must never auto-merge or write directly to `main`.
 
-## One-time API token setup
+## Deployment
 
-To enable the automated deployment workflow:
+A push to `main` triggers CI and the Cloudflare Pages deployment workflow. The deployment workflow uses the repository Actions secret `CLOUDFLARE_API_TOKEN`. Do not reveal or rotate it without an explicit operational reason. After a merge, verify:
+1. Main CI completed successfully.
+2. Pages deployment completed successfully.
+3. Cloudflare's latest production deployment references the expected Main SHA.
+4. Public locale routes and Access-protected Admin routes pass smoke tests.
 
-1. In Cloudflare Dashboard, open **Manage Account → Account API Tokens**.
-2. Choose **Create Token** and select the account-owned token flow.
-3. Grant the **Pages Write** role only. Scope it to the account that owns the `chinese-culture` Pages project. Do not grant Zone, Workers, DNS or unrelated permissions.
-4. Create the token and copy it directly to a secure location. Cloudflare shows the token only once.
-5. In GitHub, open **JohnZhang-DataForge/chinese-culture → Settings → Secrets and variables → Actions**.
-6. Add one repository secret:
-   - `CLOUDFLARE_API_TOKEN` — the Pages Write token just created.
+## Outstanding owner-level gates
 
-The Cloudflare account ID is already configured in `.github/workflows/pages-deploy.yml`; it is an identifier, not a secret. Do not add it as another GitHub secret and do not paste the API token into ChatGPT or source control.
+- Install the repository-scoped GitHub App and configure the three production settings described in [GitHub App publication setup](../runbooks/github-app-publication.md).
+- Complete authenticated production CRUD and reviewed publish/unpublish/media acceptance.
+- Configure required main-branch checks and no-bypass ruleset in GitHub Settings.
+- Complete the Pages rollback rehearsal after explicit approval.
 
-If the account-owned token option is unavailable, an account administrator with API Token Provisioning or Super Administrator access must create the token.
+## Safety
 
-## First production deployment
-
-1. Open the repository's **Actions** tab.
-2. Select **Deploy Chinese Culture Atlas to Cloudflare Pages**.
-3. Choose **Run workflow**, select branch `main`, and start the run.
-4. Confirm the build, static verification and Wrangler Direct Upload steps all succeed.
-5. Open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
-
-Every push to `main` triggers this deployment workflow. Pull requests do not deploy. The credential check fails early if the repository secret is missing.
-
-For a local deployment, set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the shell, then run `npm run deploy`. Never commit either value.
-
-## Verify a release
-
-1. Open [https://chinese-culture-79h.pages.dev](https://chinese-culture-79h.pages.dev).
-2. Check the home page, Learn, Culture, Festivals, Books, Events, About, Privacy, Accessibility and a missing route.
-3. Check CSS, favicon, HTTPS, mobile navigation and the `_headers` security policy.
-4. Confirm the deployment appears as the production deployment for branch `main`.
-5. Record deployment ID, source SHA, timestamp and rollback target in the change log.
-
-## Free-plan boundaries
-
-- Static asset requests are free and unlimited when no Pages Functions are invoked.
-- Free plan: 500 builds/month, one concurrent build, 20,000 files per site and 25 MiB maximum per file.
-- The current build contains 29 files and is comfortably below those limits.
-- Do not add a `functions/` directory or Pages Function without a separate cost/privacy review.
-
-Official references: [Pages Direct Upload](https://developers.cloudflare.com/pages/get-started/direct-upload/), [Direct Upload CI](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/), [Pages limits](https://developers.cloudflare.com/pages/platform/limits/), [Pages Functions pricing](https://developers.cloudflare.com/pages/functions/pricing/).
-
-## Failure and rollback
-
-If the build fails, fix the code and repeat CI before deployment. If a public release fails, redeploy the last-known-good build from a verified commit. Do not turn on paid Cloudflare products as an automatic workaround.
-
-## Editorial publishing
-
-Add one Markdown file under a content collection, keep metadata valid, cite reliable sources, run build/verify, and request review. See [schema and routes](../architecture/08-content-schema-and-routing.md).
-
-## Cost controls
-
-All reader pages prerender; no SSR adapter, Pages Functions, D1/KV/R2, forms, queues or third-party tracking are enabled. Native Pages static asset requests are free and unlimited. See [Pages limits](https://developers.cloudflare.com/pages/platform/limits/).
-
-See [Cloudflare deployment status](../operations/04-cloudflare-deployment.md) for the verified account state and release evidence.
+Do not use production D1 for local tests. Do not paste secrets into issues, PRs, documentation or chat. Do not merge content publication PRs without human review. Do not assume that a successful build proves that production Admin CRUD or GitHub publication works.
