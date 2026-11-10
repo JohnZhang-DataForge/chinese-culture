@@ -127,3 +127,8 @@ See [Cloudflare Cost and Limit Monitoring](06-cost-and-limit-monitoring.md) for 
 ## Native D1 SQL backup/restore acceptance — 2026-11-11
 
 The dedicated workflow [#42726758673](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42726758673) successfully downloaded the D1-compatible production SQL dump, imported it into a disposable US-jurisdiction D1 database, compared table and locale counts with the production snapshot, verified zero foreign-key violations, and deleted the temporary database. The dump was 212,583 bytes (SHA-256 recorded in [the D1 backup runbook](05-d1-backup-and-restore.md)). No backup artifact was retained. Native SQL round-trip testing is complete; Pages rollback remains pending.
+
+
+## Pages rollback preflight — 2026-11-11
+
+Read-only Cloudflare API preflight observed current production deployment `ac9f2411-f9c6-49f8-ac98-d7e81e494f1b` (commit `0d45537ab85f6d14872a9898301765fa20ac2700`) and previous successful production deployment `c4df8db2-ec98-4d72-8c9b-de589b4bee14` (commit `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`). No rollback was issued. Pages rollback does not roll back D1; check schema/data compatibility first. P8.10b remains pending explicit owner approval. See [D1 backup and restore runbook](05-d1-backup-and-restore.md).
