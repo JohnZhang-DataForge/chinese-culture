@@ -132,3 +132,26 @@ The dedicated workflow [#42726758673](https://github.com/JohnZhang-DataForge/chi
 ## Pages rollback preflight — 2026-11-11
 
 Read-only Cloudflare API preflight observed current production deployment `ac9f2411-f9c6-49f8-ac98-d7e81e494f1b` (commit `0d45537ab85f6d14872a9898301765fa20ac2700`) and previous successful production deployment `c4df8db2-ec98-4d72-8c9b-de589b4bee14` (commit `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`). No rollback was issued. Pages rollback does not roll back D1; check schema/data compatibility first. P8.10b remains pending explicit owner approval. See [D1 backup and restore runbook](05-d1-backup-and-restore.md).
+
+## GitHub Actions recovery and main branch ruleset — 2026-11-11
+
+The repository owner made `JohnZhang-DataForge/chinese-culture` public after GitHub Actions reported: "The job was not started because recent account payments have failed or your spending limit needs to be increased."
+
+The previously blocked runs were rerun successfully:
+- Main CI [#42916306326](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306326), attempt 4: `static-build` and `admin-browser` passed.
+- Pages deployment [#42916306335](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306335), attempt 4: build, deployment credential check, Pages deploy and production route/Access smoke passed.
+- Current production deployment: `5fe2af05-4119-4578-a125-f7f17eadd699`, commit `a938e4b2ffdc43b6d962263873d985f51ade354b`.
+
+### Main ruleset still needs owner configuration
+
+A read-only GitHub API request to `GET /repos/JohnZhang-DataForge/chinese-culture/rulesets` returned an empty list. The connected GitHub integration cannot create rulesets or read the branch-protection endpoint. Configure this in GitHub UI:
+
+1. Repository **Settings → Rules → Rulesets → New branch ruleset**.
+2. Target branch `main`.
+3. Require a pull request before merging.
+4. Require the `static-build` status check.
+5. Require conversation resolution.
+6. Block force pushes and branch deletion.
+7. Keep the bypass list empty (or limited to an explicitly documented emergency owner process); do not add the CMS Publisher App.
+
+Do not assume public repository visibility automatically protects `main`. Verify the saved ruleset after creation.
