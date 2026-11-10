@@ -139,6 +139,6 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - [ ] P8.8 Submit a test unpublish PR and verify route removal while D1 history remains.
 - [ ] P8.9 Verify draft/unpublished exclusion, translation switching, SEO and accessibility.
 - [x] P8.10a Native SQL dump download/import/restore rehearsal passed in workflow #42726758673; 212,583-byte SQL dump downloaded on the GitHub runner, imported into a disposable US D1 database, exact table/locale counts and foreign keys verified, and the temporary database deleted. No dump artifact was retained.
-- [ ] P8.10b Pages rollback rehearsal remains pending.
+- [ ] P8.10b Pages production rollback rehearsal remains pending. Read-only preflight recorded current/previous successful deployments in `docs/operations/05-d1-backup-and-restore.md`; the actual rollback changes the live production deployment pointer and requires explicit owner approval.
 
 **Exit:** All proposal acceptance criteria are evidenced; only then mark this OpenSpec change complete.
