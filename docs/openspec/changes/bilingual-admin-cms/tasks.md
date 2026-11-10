@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Main baseline `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`; PRs #54, #55 and #56 merged. PR #56 CI #42921764286 passed `static-build` and `admin-browser`; post-merge Main CI #42922241144 and Pages deployment #42922241177 both passed. Production deployment `b19551bd-4c07-422b-9600-2f99c0bc1697` is live. Read-only production config confirms CMS_DB and Access/admin settings remain present; the three GitHub App production variable names are absent. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App setup/secrets, authenticated production CRUD, reviewed media/publish/unpublish acceptance, owner-configured main ruleset, content quality review and Pages rollback.
+**Status (2026-11-11):** Main baseline `420520645642c0f1f87f3036cb4e158601f5779b`; PRs #54–#59 merged. PR #58 CI #42923990182 and isolated preview #42923990207 passed; PR #59 CI #42924521557 and isolated preview #42924521585 passed. Post-merge Main CI #42924702981 and Pages deployment #42924702097 both passed. Production deployment `c6c9de8d-5b80-477a-9b59-4d2a0fddc985` serves the current Main commit. P3.5 has a first source-to-translation review of all 13 zh-CN articles and two corrections merged in PR #58; it remains open for final editorial sign-off and follow-up checks. The privacy notice now distinguishes public browsing from Cloudflare Access authentication cookies (PR #59). Read-only production config still lacks the three GitHub App production variable names. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App setup/secrets, authenticated production CRUD, reviewed media/publish/unpublish acceptance, owner-configured main ruleset, final content sign-off and Pages rollback.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -56,7 +56,7 @@ The static frontend serves English, Simplified Chinese and Spanish route trees. 
 - [x] P3.2 Preserve existing English slugs and all source text during migration.
 - [x] P3.3 Populate required schema fields and editorial/source metadata.
 - [x] P3.4 Prepare Simplified Chinese translations linked by the same contentIds.
-- [ ] P3.5 Review Chinese terminology, cultural accuracy, links and language quality.
+- [ ] P3.5 Review Chinese terminology, cultural accuracy, links and language quality. First source-to-translation pass covered all 13 zh-CN articles; PR #58 corrected two fidelity/terminology issues. Internal links passed static verification; external sources were checked on 2026-11-11. Keep open for final editorial sign-off and any follow-up from a native-language review.
 - [x] P3.6 Produce an idempotent source-driven importer at scripts/import-content-to-d1.mjs; it preserves the existing 39 Markdown variants and derives stable contentIds.
 - [x] P3.7 Produce a translation coverage report; mark missing translations explicitly.
 - [x] P3.8 Verify every seed record against the shared schema and duplicate constraints.
@@ -151,3 +151,12 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - Post-merge Main CI #42922241144 and Pages deployment #42922241177 passed; current production deployment is `b19551bd-4c07-422b-9600-2f99c0bc1697`.
 - Current read-only Pages configuration still lists `CMS_DB` and the existing Access/admin variables, but no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` production entries.
 - GitHub repository rulesets API returns an empty list. P6.9 is not complete until an owner-configured ruleset is saved and verified.
+
+
+### Post-PR #58/#59 content and privacy review — 2026-11-11
+
+- Main: `420520645642c0f1f87f3036cb4e158601f5779b`.
+- PR #58: first zh-CN article review corrections merged; CI #42923990182 and preview #42923990207 passed.
+- PR #59: privacy notice clarified the distinction between public browsing and Cloudflare Access authentication cookies; CI #42924521557 and preview #42924521585 passed.
+- Main CI #42924702981 and Pages deploy #42924702097 passed. Production deployment `c6c9de8d-5b80-477a-9b59-4d2a0fddc985` serves this Main SHA.
+- Current content inventory is documented in `docs/content/06-content-inventory.md`; it records 13 concepts, 39 locale variants and the D1 canonical-source boundary.

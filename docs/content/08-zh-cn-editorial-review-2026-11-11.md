@@ -36,3 +36,10 @@ All 13 Chinese variants were located and paired with the corresponding English a
 ## Production privacy-copy accuracy follow-up
 
 The public site and protected Admin area have different behavior. The privacy notice now distinguishes public browsing (no visitor accounts, contact form, integrated analytics or advertising trackers; no application cookies intentionally set for public browsing) from the administrator-only area protected by Cloudflare Access, which may set authentication cookies for access control. The same clarification is applied to English, Simplified Chinese and Spanish copy and the legacy unprefixed privacy page.
+
+
+## External further-reading link check — 2026-11-11
+
+The nine unique external URLs used by the reviewed zh-CN article set were checked. Seven opened directly: Columbia University Asia for Educators, University of Newcastle Confucius Institute, the two Metropolitan Museum of Art calligraphy pages, the Met Chinese Painting essay, the Government of China Spring Festival explainer, and the University of Warwick Analects PDF. The SCIO Mid-Autumn Festival page appeared in search indexing but timed out on direct retrieval. The Association for Asian Studies Journey to the West page appeared in search indexing but its direct automated fetch returned HTTP 403. These are automated-fetch limitations, not confirmed broken links; recheck from a normal browser if a reader reports a problem.
+
+The static verifier also checks root-relative internal links across generated HTML. Main CI #42924702981 passed after PR #59; Pages deployment #42924702097 passed for the same Main commit.
