@@ -1,13 +1,14 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #53 deployment recovery)
+**Updated:** 2026-11-11 (after PR #54 merge and production acceptance)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
 
-- Latest production release: Main commit `a938e4b2ffdc43b6d962263873d985f51ade354b`; Cloudflare deployment `5fe2af05-4119-4578-a125-f7f17eadd699` succeeded on 2026-11-10 22:57 UTC.
-- Main CI run [#42916306326](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306326) passed both `static-build` and `admin-browser`; Pages deployment run [#42916306335](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42916306335) passed build, deploy and production route/Access smoke checks after the repository was made public and the failed jobs were rerun.
+- Latest production release: Main commit `0e621be26009c4dabe69843dfb42d65ad474587c`; Cloudflare deployment `cddb8296-5d94-4bc9-9a87-c8ea31ade484` succeeded on 2026-11-10 23:07 UTC.
+- Main CI run [#42920572091](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42920572091) passed `static-build` and `admin-browser`; Pages deployment run [#42920572127](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42920572127) passed build, deploy and production route/Access smoke checks.
+- PR #54 documentation CI [#42920011297](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42920011297) passed `static-build` and Chromium `admin-browser` before merge.
 
 - Astro static website is deployed to Cloudflare Pages.
 - English, Simplified Chinese and Spanish route trees are live.
@@ -149,3 +150,8 @@ Main: `16155cc3bbfa20a45c9f6b806e8d2b1e8a133af1`.
 - Cloudflare confirms production deployment `5fe2af05-4119-4578-a125-f7f17eadd699` for commit `a938e4b2ffdc43b6d962263873d985f51ade354b` succeeded.
 - The GitHub API currently returns an empty repository ruleset list. The connected GitHub integration has no ruleset-write operation and cannot read branch protection. The repository owner must configure the `main` ruleset in GitHub UI.
 - Early implementation PRs #22, #23, #4 and #6 were closed as superseded by the newer implementation already on Main. PR #12 (documentation draft) and PR #2 (content inventory/style guide draft) remain open for separate review; neither was merged or discarded.
+
+
+## GitHub App production configuration check — 2026-11-11
+
+A read-only Cloudflare Pages project configuration check found no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` production entries. `CMS_DB` remains bound to the existing production D1 database. The CMS publisher cannot be accepted until the repository-scoped GitHub App is installed and its three production settings are configured. No credential values were read or exposed.
