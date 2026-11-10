@@ -42,3 +42,8 @@ See [Cloudflare cost and limit monitoring](../operations/06-cost-and-limit-monit
 - Never place Cloudflare tokens, Access secrets or GitHub App private keys in source control.
 - Automated tests must use local D1, never production D1.
 - GitHub App publication settings remain absent. Do not claim media or publish PR flows are production-accepted until App setup and human-reviewed acceptance complete.
+
+
+## Current resource guardrails
+
+The Pages Free and Workers/D1 limits are product-plan dependent and may change. Use the live Cloudflare dashboard and the [cost and limit monitoring runbook](../operations/06-cost-and-limit-monitoring.md) as the operational reference. The current static build verifier enforces the Pages output file-count and individual asset-size guardrails. Pages Functions should remain limited to protected Admin operations; normal public page requests must not invoke Functions or D1.
