@@ -1,3 +1,12 @@
+## 2026-11-11 — PR #68 GitHub App token scope hardening and release verification
+
+- PR #68 restricts installation tokens to the immutable repository ID `1444529252`, in addition to the minimum Contents, Pull Requests and Checks permissions.
+- GitHub App unit tests assert the exact repository ID and permission set.
+- PR #68 CI #43020302625 and isolated Pages preview #43020302505 passed.
+- Main `e55a21ed00bc25cc94560ee87c3fd310dda139cc` passed Main CI #43020501355 and Pages deployment #43020502181.
+- Cloudflare production deployment `9e850635-6a49-41a8-9629-fcfc6fdd8a3f` serves the same Main SHA.
+- GitHub App production settings remain absent; repository rulesets remain empty. P1.8/P1.9 and production acceptance gates remain open.
+
 ## 2026-11-11 — PR #66 OpenSpec and production evidence reconciliation
 
 - PR #66 corrected the OpenSpec status header and synchronized the implementation status, docs index and Cloudflare deployment runbook after PR #65.

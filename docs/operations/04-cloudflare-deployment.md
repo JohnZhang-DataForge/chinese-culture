@@ -8,14 +8,14 @@
 
 ## Latest verified production release — 2026-11-11
 
-- Main: `dccef68aea59177a5be66b01d1fe33baa484c91d`.
-- Main CI #43017852693 passed `static-build` and `admin-browser`.
-- Pages deployment #43017852743 passed.
-- Cloudflare production deployment: `99b0a665-2653-4983-875a-b5cc36fa7589`.
+- Main: `e55a21ed00bc25cc94560ee87c3fd310dda139cc`.
+- Main CI #43020501355 passed `static-build` and `admin-browser`.
+- Pages deployment #43020502181 passed.
+- Cloudflare production deployment: `9e850635-6a49-41a8-9629-fcfc6fdd8a3f`.
 - Cloudflare read-back confirms the deployment commit matches Main.
 - The production Pages configuration does not contain `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY`; no private key value was read.
 - GitHub repository rulesets API returns an empty list. Owner configuration of the `main` ruleset remains pending.
-- PR #66 reconciled the OpenSpec status and release evidence after PR #65.
+- PR #68 added repository-ID scoping to all GitHub App installation tokens; its CI and isolated Pages preview passed.
 
 ## Verified production state
 
