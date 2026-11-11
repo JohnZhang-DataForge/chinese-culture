@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Latest verified Main is `e55a21ed00bc25cc94560ee87c3fd310dda139cc`; PRs #61–#68 are merged. PR #68 CI #43020302625 passed both `static-build` and `admin-browser`; isolated Pages preview #43020302505 passed. Post-merge Main CI #43020501355 passed both required jobs; Pages deployment #43020502181 passed. Cloudflare production deployment `9e850635-6a49-41a8-9629-fcfc6fdd8a3f` serves the same Main SHA. The production Pages configuration still has no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` entries; no secret values were accessed. GitHub repository rulesets API returns an empty list. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready; unique useful documentation is being reviewed and selectively refreshed rather than merged wholesale.
+**Status (2026-11-12):** Latest verified Main is `f069e902ef559ceab49beedab519ff08ef87e4e6`; PRs #61–#69 are merged. PR #68 token-scope hardening is deployed. Owner has now confirmed the GitHub App installation at installation URL ending `180887271`, and supplied the App ID `5712195`. Owner screenshot confirms `GITHUB_APP_PRIVATE_KEY` is saved as a Production Secret in Cloudflare Pages; App ID and Installation ID are also configured. Cloudflare API does not return secret values in project environment reads, so secret presence is confirmed by the owner-provided dashboard screenshot, not by API value inspection. The latest successful production deployment `e43b051c-0986-4523-b232-1a1aff817682` predates this secret addition; it is a Direct Upload deployment and Cloudflare rejects retrying it. A subsequent Pages deployment is required for the updated runtime secret to be active. GitHub rulesets API still returns an empty list. Authenticated Admin session, token issuance, CRUD, media and publication acceptance remain pending. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -195,3 +195,12 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - PR #68 merged as Main `e55a21ed00bc25cc94560ee87c3fd310dda139cc`; Main CI #43020501355 and Pages deployment #43020502181 both passed.
 - Cloudflare production deployment `9e850635-6a49-41a8-9629-fcfc6fdd8a3f` was read back and matches Main.
 - The three production GitHub App settings remain absent; P1.8/P1.9 and production publication acceptance remain blocked on owner configuration.
+
+
+### GitHub App credentials supplied — 2026-11-12
+
+- Owner confirmed the GitHub App installation URL `https://github.com/organizations/JohnZhang-DataForge/settings/installations/180887271` and App ID `5712195`.
+- Cloudflare Pages dashboard screenshot confirms `GITHUB_APP_PRIVATE_KEY` is saved as a Production Secret. The App ID and Installation ID were already configured in the production project. Secret contents were not accessed or exposed.
+- Cloudflare's Pages project API omits encrypted secret values from environment-variable reads; the previous API-only check therefore did not establish that the secret was absent.
+- Current successful Direct Upload deployment `e43b051c-0986-4523-b232-1a1aff817682` predates the secret addition. Cloudflare rejects the deployment retry endpoint for Direct Upload deployments. The next normal Pages deployment must load the new runtime secret.
+- GitHub App installation token issuance and authenticated Admin session acceptance have not yet been verified. P1.8 remains open until repository scope/permissions and token issuance are verified.
