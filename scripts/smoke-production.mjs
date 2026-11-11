@@ -20,8 +20,8 @@ async function resolveDeploymentUrl() {
 }
 
 const baseUrl = (process.env.PUBLIC_SITE_URL || await resolveDeploymentUrl()).replace(/\/$/, "");
-async function request(path, headers = {}) {
-  return fetch(baseUrl + path, {
+async function request(path, headers = {}, origin = baseUrl) {
+  return fetch(origin + path, {
     method: "GET",
     redirect: "manual",
     headers: { "user-agent": browserUserAgent, ...headers },
