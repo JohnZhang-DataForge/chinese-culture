@@ -29,7 +29,7 @@ Production setup is incomplete. These Pages settings are absent:
 - GITHUB_INSTALLATION_ID
 - GITHUB_APP_PRIVATE_KEY
 
-The App must be installed only on this repository and receive the minimum permissions documented in [GitHub App publication setup](../runbooks/github-app-publication.md). The CMS must not merge PRs or write directly to Main.
+The App must be installed only on this repository and receive the minimum permissions documented in [GitHub App publication setup](../runbooks/github-app-publication.md). In addition, every installation-token request is explicitly scoped to this repository ID (`1444529252`) as defense in depth. The CMS must not merge PRs or write directly to Main.
 
 ## Publication boundary
 
