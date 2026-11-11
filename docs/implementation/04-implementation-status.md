@@ -1,14 +1,14 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #65 merge and production deployment)
+**Updated:** 2026-11-11 (after PR #66 merge and production deployment)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
 
-- Latest production release: Main commit `7730ac7712b2605bd6b20f6548d34d5116a9afd4`; Cloudflare deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` succeeded on 2026-11-11 12:05 UTC.
-- Main CI run [#43017321316](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017321316) passed `static-build` and `admin-browser`; Pages deployment run [#43017321253](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017321253) passed.
-- PRs #61–#65 reconciled core documentation, Admin/publishing runbooks, release evidence and media-management guidance. PR #65 release-evidence CI #42927877862 passed.
+- Latest production release: Main commit `dccef68aea59177a5be66b01d1fe33baa484c91d`; Cloudflare deployment `99b0a665-2653-4983-875a-b5cc36fa7589` succeeded on 2026-11-11 12:09 UTC.
+- Main CI run [#43017852693](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017852693) passed `static-build` and `admin-browser`; Pages deployment run [#43017852743](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017852743) passed.
+- PRs #61–#66 reconciled core documentation, Admin/publishing runbooks, media guidance, OpenSpec status and production release evidence. PR #66 CI #43017652074 passed.
 
 - Astro static website is deployed to Cloudflare Pages.
 - English, Simplified Chinese and Spanish route trees are live.
