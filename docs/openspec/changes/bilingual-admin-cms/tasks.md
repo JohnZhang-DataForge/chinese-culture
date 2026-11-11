@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Latest verified Main is `7730ac7712b2605bd6b20f6548d34d5116a9afd4`; PRs #61–#65 are merged. PR #65 release-evidence CI #42927877862 passed. Post-merge Main CI #43017321316 passed both `static-build` and `admin-browser`; Pages deployment #43017321253 passed. Cloudflare production deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` serves the same Main SHA. The production Pages deployment configuration still has no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` entries; no secret values were accessed. GitHub repository rulesets API returns an empty list. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready; useful unique documentation is being reviewed and selectively refreshed rather than merged wholesale.
+**Status (2026-11-11):** Latest verified Main is `dccef68aea59177a5be66b01d1fe33baa484c91d`; PRs #61–#66 are merged. PR #66 CI #43017652074 passed both `static-build` and `admin-browser`. Post-merge Main CI #43017852693 passed both required jobs; Pages deployment #43017852743 passed. Cloudflare production deployment `99b0a665-2653-4983-875a-b5cc36fa7589` serves the same Main SHA. The production Pages configuration still has no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` entries; no secret values were accessed. GitHub repository rulesets API returns an empty list. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready; unique useful documentation is being reviewed and selectively refreshed rather than merged wholesale.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -174,3 +174,14 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - The GitHub App's three Pages production settings remain absent. Owner-side GitHub App installation and Cloudflare secret configuration are required before authenticated production publishing tests.
 - No repository rulesets are currently returned by GitHub's rulesets API. The owner must create the `main` ruleset and then have it re-read for verification.
 - No production D1 mutation, media upload, content publication, rollback or credential change was performed during this documentation reconciliation.
+
+
+### Post-PR #66 production and OpenSpec reconciliation — 2026-11-11
+
+- PR #66 corrected the OpenSpec status, implementation status, documentation index, deployment evidence and change log after PR #65.
+- PR #66 CI #43017652074 passed; PR #66 merged as Main `dccef68aea59177a5be66b01d1fe33baa484c91d`.
+- Post-merge Main CI #43017852693 passed `static-build` and `admin-browser`; Pages deployment #43017852743 passed.
+- Cloudflare production deployment `99b0a665-2653-4983-875a-b5cc36fa7589` was read back and its commit SHA matches Main.
+- The production Pages deployment configuration still lacks the three GitHub App settings. Publication and media-upload production acceptance therefore remain blocked.
+- GitHub repository rulesets API returned an empty list. The owner must create and verify the `main` ruleset.
+- No production D1 mutation, media upload, publication, unpublication, rollback or secret change was performed.
