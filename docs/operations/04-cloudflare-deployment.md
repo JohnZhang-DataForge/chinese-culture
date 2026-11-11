@@ -1,6 +1,6 @@
 # Cloudflare Pages Deployment — Current State and Release Steps
 
-**Updated:** 2026-11-11
+**Updated:** 2026-11-12
 **Target:** Cloudflare Pages Free, Direct Upload
 **Repository:** JohnZhang-DataForge/chinese-culture
 **Project:** chinese-culture
@@ -13,7 +13,7 @@
 - Pages deployment #43020502181 passed.
 - Cloudflare production deployment: `9e850635-6a49-41a8-9629-fcfc6fdd8a3f`.
 - Cloudflare read-back confirms the deployment commit matches Main.
-- The production Pages configuration does not contain `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY`; no private key value was read.
+- Owner confirmed App ID `5712195`, Installation ID `180887271`, and provided a Cloudflare dashboard screenshot showing `GITHUB_APP_PRIVATE_KEY` saved as a Production Secret. Cloudflare API omits encrypted secret values from environment reads. The current Direct Upload deployment predates the secret addition; its retry endpoint rejects retries for Direct Upload deployments, so a subsequent normal Pages deployment is required before runtime verification.
 - GitHub repository rulesets API returns an empty list. Owner configuration of the `main` ruleset remains pending.
 - PR #68 added repository-ID scoping to all GitHub App installation tokens; its CI and isolated Pages preview passed.
 
@@ -70,7 +70,7 @@ Latest production release for merged Main `46c50f3cc0e731179ebaa6fedf8dc57f7c3e8
 - Mutating requests require exact Origin and identity-bound CSRF.
 - The browser never receives a GitHub token.
 - GitHub App publication permissions are documented in docs/runbooks/github-app-publication.md. The App must be installed on this repository only and must not have merge or branch-protection bypass permissions.
-- Production Pages currently has no GITHUB_APP_ID, GITHUB_INSTALLATION_ID or GITHUB_APP_PRIVATE_KEY; publish and media actions remain disabled until the owner completes App installation and secret configuration.
+- App ID, Installation ID and the production private-key Secret have been supplied/configured by the owner. Token issuance, authenticated Admin session capabilities and production PR workflows remain unverified until a new Pages deployment loads the secret.
 
 ## Remaining acceptance gates
 
