@@ -114,7 +114,9 @@ assert.ok([301, 308].includes(www.status), "www hostname should permanently redi
 assert.equal(new URL(www.headers.get("location") || "https://invalid.example").hostname, "chinese-culture.site");
 
 console.log(JSON.stringify({
-  publicOrigin: baseUrl,\n  protectedOrigin: protectedSiteUrl,\n  publicPages: publicPages.length,
+  publicOrigin: baseUrl,
+  protectedOrigin: protectedSiteUrl,
+  publicPages: publicPages.length,
   sitemap: "PASS",
   localized404Pages: 3,
   accessProtectedPaths: ["/admin/", "/api/admin/v1/session"],
