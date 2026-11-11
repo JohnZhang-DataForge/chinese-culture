@@ -1,5 +1,7 @@
 const API_ROOT = "https://api.github.com";
 const API_VERSION = "2022-11-28";
+// Stable GitHub repository ID for JohnZhang-DataForge/chinese-culture.
+const CMS_REPOSITORY_ID = 1444529252;
 const encoder = new TextEncoder();
 
 export function isGithubAppConfigured(env) {
@@ -113,7 +115,10 @@ export async function getInstallationToken(env) {
     jwt,
     {
       method: "POST",
-      body: { permissions: { contents: "write", pull_requests: "write", checks: "read" } }
+      body: {
+        repository_ids: [CMS_REPOSITORY_ID],
+        permissions: { contents: "write", pull_requests: "write", checks: "read" }
+      }
     }
   );
   if (!token?.token) throw new Error("GitHub did not issue an installation token.");
