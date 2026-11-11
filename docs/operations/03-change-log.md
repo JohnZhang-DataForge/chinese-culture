@@ -1,3 +1,12 @@
+## 2026-11-11 — PR #65 release evidence and production verification
+
+- PR #65 refreshed the docs index, implementation status and Cloudflare deployment runbook after PR #64.
+- PR #65 CI #42927877862 passed.
+- Main `7730ac7712b2605bd6b20f6548d34d5116a9afd4` passed Main CI #43017321316 (`static-build`, `admin-browser`) and Pages deployment #43017321253.
+- Cloudflare production deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` serves the same Main SHA.
+- Production Pages settings for the GitHub App remain absent; GitHub rulesets remain empty. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain open.
+- PR #12 remains a draft and is not merged; stale documentation is being reviewed selectively.
+
 ## 2026-11-11 — Admin and publishing runbooks refreshed
 
 - PR #61 reconciled the root README, documentation index, core architecture, security/privacy, maintenance, deployment and developer runbook with the deployed multilingual site and D1-backed Admin foundation.
