@@ -1,3 +1,12 @@
+## 2026-11-11 — PR #66 OpenSpec and production evidence reconciliation
+
+- PR #66 corrected the OpenSpec status header and synchronized the implementation status, docs index and Cloudflare deployment runbook after PR #65.
+- PR #66 CI #43017652074 passed both `static-build` and `admin-browser`.
+- Main `dccef68aea59177a5be66b01d1fe33baa484c91d` passed Main CI #43017852693 and Pages deployment #43017852743.
+- Cloudflare production deployment `99b0a665-2653-4983-875a-b5cc36fa7589` serves the same Main SHA.
+- GitHub App production settings remain absent; GitHub repository rulesets remain empty. P1.8/P1.9, P6.9 and P8.6–P8.10b remain open as recorded in the OpenSpec.
+- No production D1 writes, publishing actions, media uploads, rollback or secret changes were performed.
+
 ## 2026-11-11 — PR #65 release evidence and production verification
 
 - PR #65 refreshed the docs index, implementation status and Cloudflare deployment runbook after PR #64.
