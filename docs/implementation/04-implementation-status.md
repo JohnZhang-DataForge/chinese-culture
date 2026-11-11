@@ -1,14 +1,14 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #64 merge and production deployment)
+**Updated:** 2026-11-11 (after PR #65 merge and production deployment)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
 
-- Latest production release: Main commit `316a4cd2ea260b6ea67bb7b21fab87da7837f83b`; Cloudflare deployment `f7e39bb4-0931-4b30-83ee-50c0074c9076` succeeded on 2026-11-10 23:59 UTC.
-- Main CI run [#42927649955](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42927649955) passed `static-build` and `admin-browser`; Pages deployment run [#42927650359](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/42927650359) passed.
-- PR #58 and #59 content/privacy corrections are deployed; PR #60 refreshed the content inventory and P3.5 review evidence.
+- Latest production release: Main commit `7730ac7712b2605bd6b20f6548d34d5116a9afd4`; Cloudflare deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` succeeded on 2026-11-11 12:05 UTC.
+- Main CI run [#43017321316](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017321316) passed `static-build` and `admin-browser`; Pages deployment run [#43017321253](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43017321253) passed.
+- PRs #61–#65 reconciled core documentation, Admin/publishing runbooks, release evidence and media-management guidance. PR #65 release-evidence CI #42927877862 passed.
 
 - Astro static website is deployed to Cloudflare Pages.
 - English, Simplified Chinese and Spanish route trees are live.
@@ -66,12 +66,12 @@ The production bootstrap workflow, main CI and Pages deployment all completed su
 
 ## Remaining release gates
 
-1. Install a GitHub App on this repository only with Contents read/write, Pull Requests read/write and Checks read-only. Do not grant merge or branch-protection bypass permissions.
+1. Install the repository-scoped GitHub App only on this repository with Contents read/write, Pull Requests read/write and Checks read-only. Do not grant Administration, Actions, Workflows, Secrets, Deployments or branch-protection bypass permissions.
 2. Configure GITHUB_APP_ID, GITHUB_INSTALLATION_ID and GITHUB_APP_PRIVATE_KEY as Pages production variables/secrets.
 3. Sign in to Admin through Cloudflare Access and perform live create/edit/save/reload/translation/preview tests.
 4. Perform a reviewed media PR, merge it, and verify the media record attaches to D1 only after merge.
 5. Perform publish and unpublish PR acceptance, including Pages deployment and D1 status synchronization.
-6. Complete native SQL dump download/import acceptance; configure an independently retained backup archive only if the desired retention justifies its cost.
+6. Configure and verify the main ruleset, obtain final zh-CN editorial sign-off, and perform the Pages rollback rehearsal only after explicit owner approval.
 
 ## Backup and recovery
 

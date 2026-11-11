@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-11):** Main baseline `420520645642c0f1f87f3036cb4e158601f5779b`; PRs #54–#59 merged. PR #58 CI #42923990182 and isolated preview #42923990207 passed; PR #59 CI #42924521557 and isolated preview #42924521585 passed. Post-merge Main CI #42924702981 and Pages deployment #42924702097 both passed. Production deployment `c6c9de8d-5b80-477a-9b59-4d2a0fddc985` serves the current Main commit. P3.5 has a first source-to-translation review of all 13 zh-CN articles and two corrections merged in PR #58; it remains open for final editorial sign-off and follow-up checks. The privacy notice now distinguishes public browsing from Cloudflare Access authentication cookies (PR #59). Read-only production config still lacks the three GitHub App production variable names. P6.8 preview/browser smoke, P7.5 cost/limit monitoring and P8.10a native D1 SQL restore rehearsal are complete. Remaining gates: GitHub App setup/secrets, authenticated production CRUD, reviewed media/publish/unpublish acceptance, owner-configured main ruleset, final content sign-off and Pages rollback.
+**Status (2026-11-11):** Latest verified Main is `7730ac7712b2605bd6b20f6548d34d5116a9afd4`; PRs #61–#65 are merged. PR #65 release-evidence CI #42927877862 passed. Post-merge Main CI #43017321316 passed both `static-build` and `admin-browser`; Pages deployment #43017321253 passed. Cloudflare production deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` serves the same Main SHA. The production Pages deployment configuration still has no `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY` entries; no secret values were accessed. GitHub repository rulesets API returns an empty list. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready; useful unique documentation is being reviewed and selectively refreshed rather than merged wholesale.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -160,3 +160,17 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - PR #59: privacy notice clarified the distinction between public browsing and Cloudflare Access authentication cookies; CI #42924521557 and preview #42924521585 passed.
 - Main CI #42924702981 and Pages deploy #42924702097 passed. Production deployment `c6c9de8d-5b80-477a-9b59-4d2a0fddc985` serves this Main SHA.
 - Current content inventory is documented in `docs/content/06-content-inventory.md`; it records 13 concepts, 39 locale variants and the D1 canonical-source boundary.
+
+
+### Latest production and documentation reconciliation — 2026-11-11
+
+- PR #61 reconciled the README and core architecture/operations documents with the deployed multilingual static site and D1-backed Admin foundation.
+- PR #62 added current Admin CMS architecture, GitHub integration, Admin user/content guides, credential setup and rollback procedure.
+- PR #63 refreshed the production release evidence after PR #62.
+- PR #64 documented the media workflow, rights metadata and the distinction between implemented code and pending production acceptance.
+- PR #65 refreshed release evidence after PR #64 and is merged.
+- Main `7730ac7712b2605bd6b20f6548d34d5116a9afd4`: Main CI #43017321316 passed both required jobs; Pages deployment #43017321253 passed.
+- Production deployment `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` was read back from Cloudflare and its commit SHA matches Main.
+- The GitHub App's three Pages production settings remain absent. Owner-side GitHub App installation and Cloudflare secret configuration are required before authenticated production publishing tests.
+- No repository rulesets are currently returned by GitHub's rulesets API. The owner must create the `main` ruleset and then have it re-read for verification.
+- No production D1 mutation, media upload, content publication, rollback or credential change was performed during this documentation reconciliation.

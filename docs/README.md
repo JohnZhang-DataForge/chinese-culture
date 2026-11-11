@@ -1,8 +1,8 @@
 # Chinese Culture Atlas — Documentation Index
 
 **Updated:** 2026-11-11  
-**Main baseline:** `316a4cd2ea260b6ea67bb7b21fab87da7837f83b`  
-**Production deployment:** `f7e39bb4-0931-4b30-83ee-50c0074c9076` (same Main commit)
+**Main baseline:** `7730ac7712b2605bd6b20f6548d34d5116a9afd4`  
+**Production deployment:** `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9` (same Main commit)
 
 The multilingual static website and D1-backed Admin foundation are deployed. GitHub App setup, authenticated production CRUD/publishing acceptance, owner-configured main ruleset and Pages rollback rehearsal remain open. Do not treat implementation, CI success, deployment success and full production acceptance as interchangeable.
 
