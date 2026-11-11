@@ -1,7 +1,7 @@
 # Implementation Tasks and Exit Gates
 
 **Change ID:** bilingual-admin-cms  
-**Status (2026-11-12):** Latest verified Main is `f069e902ef559ceab49beedab519ff08ef87e4e6`; PRs #61–#69 are merged. PR #68 token-scope hardening is deployed. Owner has now confirmed the GitHub App installation at installation URL ending `180887271`, and supplied the App ID `5712195`. Owner screenshot confirms `GITHUB_APP_PRIVATE_KEY` is saved as a Production Secret in Cloudflare Pages; App ID and Installation ID are also configured. Cloudflare API does not return secret values in project environment reads, so secret presence is confirmed by the owner-provided dashboard screenshot, not by API value inspection. The latest successful production deployment `e43b051c-0986-4523-b232-1a1aff817682` predates this secret addition; it is a Direct Upload deployment and Cloudflare rejects retrying it. A subsequent Pages deployment is required for the updated runtime secret to be active. GitHub rulesets API still returns an empty list. Authenticated Admin session, token issuance, CRUD, media and publication acceptance remain pending. P3.5 remains open for final editorial sign-off. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain release gates; P8.10b requires explicit owner approval. PR #12 remains an old draft with 42 changed files and is not merge-ready.
+**Status (2026-11-12):** Main `26958755b749993bc30a8f3f578aec61efe7e09c`; PRs #61–#72 merged. Owner confirmed GitHub App ID `5712195`, Installation ID `180887271`, and Cloudflare dashboard evidence confirms `GITHUB_APP_PRIVATE_KEY` is saved as a Production Secret. Post-secret Pages deployment `2693bd16-214f-4337-8bcb-af5c0202c6db` matches Main. Main CI #43115514920 and Pages deployment/production smoke #43115515036 passed. Cloudflare Access read-back confirms `/admin`, `/admin/*`, `/api/admin` and `/api/admin/*` are covered by the designated administrator email policy. GitHub App installation scope/permissions and actual token issuance still require runtime verification. GitHub rulesets API remains empty. P1.8/P1.9, P6.9, P8.6–P8.9 and P8.10b remain open; P8.10b requires explicit owner approval. P3.5 remains open for final editorial sign-off. PR #12 remains an old draft and is not merge-ready.
 
 ## P0 — Architecture and contract freeze (Agent 0)
 
@@ -204,3 +204,13 @@ The production Pages project deploys Functions and CMS_DB. PR #35 is merged and 
 - Cloudflare's Pages project API omits encrypted secret values from environment-variable reads; the previous API-only check therefore did not establish that the secret was absent.
 - Current successful Direct Upload deployment `e43b051c-0986-4523-b232-1a1aff817682` predates the secret addition. Cloudflare rejects the deployment retry endpoint for Direct Upload deployments. The next normal Pages deployment must load the new runtime secret.
 - GitHub App installation token issuance and authenticated Admin session acceptance have not yet been verified. P1.8 remains open until repository scope/permissions and token issuance are verified.
+
+
+### Production App secret and smoke acceptance refresh — 2026-11-12
+
+- Owner supplied App ID `5712195` and Installation ID `180887271`; screenshot confirms `GITHUB_APP_PRIVATE_KEY` is saved as a Production Secret. The private key value was not read or exposed.
+- Cloudflare Access application `Chinese Culture Admin` was read back; protected domains include `chinese-culture.site/admin`, `/admin/*`, `/api/admin` and `/api/admin/*`, with an Allow policy restricted to the designated administrator email.
+- PR #70 documented the App configuration; PR #71 updated public smoke checks to use the immutable Pages deployment URL; PR #72 adjusted unauthenticated checks for Cloudflare edge 401/403 denials. All three merged.
+- Main `26958755b749993bc30a8f3f578aec61efe7e09c`; Main CI #43115514920 passed `static-build` and `admin-browser`; Pages deployment and production smoke #43115515036 passed.
+- Production deployment `2693bd16-214f-4337-8bcb-af5c0202c6db` matches Main and is aliased to the apex and www domains.
+- P1.8 remains open until the App installation repository scope/permissions and installation-token issuance are verified. Authenticated Admin CRUD, media, publish and unpublish acceptance remain pending.
