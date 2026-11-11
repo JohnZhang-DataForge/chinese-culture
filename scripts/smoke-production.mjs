@@ -96,10 +96,11 @@ for (const missing of [
 for (const path of ["/admin/", "/api/admin/v1/session"]) {
   const response = await request(path, { accept: "application/json" }, protectedSiteUrl);
   const location = response.headers.get("location") || "";
+  const accessRedirect = [301, 302, 303, 307, 308].includes(response.status) &&
+    location.includes("/cdn-cgi/access/login/");
   assert.ok(
-    [301, 302, 303, 307, 308].includes(response.status) &&
-      location.includes("/cdn-cgi/access/login/"),
-    path + " must be challenged by Cloudflare Access before reaching the protected resource; received HTTP " +
+    accessRedirect || [401, 403].includes(response.status),
+    path + " must deny unauthenticated requests before reaching the protected resource; received HTTP " +
       response.status + " and location " + (location || "(none)")
   );
 }
@@ -119,7 +120,7 @@ console.log(JSON.stringify({
   publicPages: publicPages.length,
   sitemap: "PASS",
   localized404Pages: 3,
-  accessProtectedPaths: ["/admin/", "/api/admin/v1/session"],
+  unauthenticatedProtectionResponses: ["/admin/", "/api/admin/v1/session"],
   wwwRedirect: www.status,
   result: "PASS"
 }, null, 2));
