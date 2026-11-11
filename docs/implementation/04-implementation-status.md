@@ -1,13 +1,13 @@
 # Implementation Status
 
-**Updated:** 2026-11-12 (GitHub App production secret supplied; runtime verification pending)
+**Updated:** 2026-11-12 (GitHub App secret deployed; authenticated runtime acceptance pending)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
 ## Production website
 
-- Latest production release: Main commit `e55a21ed00bc25cc94560ee87c3fd310dda139cc`; Cloudflare deployment `9e850635-6a49-41a8-9629-fcfc6fdd8a3f` succeeded on 2026-11-11 12:28 UTC.
-- Main CI run [#43020501355](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43020501355) passed `static-build` and `admin-browser`; Pages deployment run [#43020502181](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43020502181) passed.
+- Latest production release: Main commit `26958755b749993bc30a8f3f578aec61efe7e09c`; Cloudflare deployment `2693bd16-214f-4337-8bcb-af5c0202c6db` succeeded on 2026-11-11 22:54 UTC.
+- Main CI run [#43115514920](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43115514920) passed `static-build` and `admin-browser`; Pages deployment and production smoke run [#43115515036](https://github.com/JohnZhang-DataForge/chinese-culture/actions/runs/43115515036) passed.
 - PRs #61–#68 reconciled core documentation, Admin/publishing runbooks, media guidance, OpenSpec status, release evidence and GitHub App token repository scoping. PR #68 isolated preview #43020302505 passed.
 
 - Astro static website is deployed to Cloudflare Pages.
@@ -27,7 +27,7 @@
 | Initial revision snapshots | 39 |
 | Pending submissions | 0 |
 | Existing content importer | Idempotent; production bootstrap succeeded after PR #34 |
-| GitHub publication | App ID, installation ID and production private-key Secret supplied; runtime token issuance and acceptance pending |
+| GitHub publication | App ID, installation ID and production private-key Secret supplied; post-secret deployment successful; token issuance and authenticated Admin acceptance pending |
 | Media upload | File-signature and rights metadata validation; media-only PR; D1 attaches after merge |
 | Preview | Server-rendered safe Markdown preview |
 | Publication state sync | Read-only GET PR status + explicit CSRF-protected POST sync after merge |
