@@ -8,10 +8,10 @@
 
 ## Latest verified production release — 2026-11-11
 
-- Main: `e55a21ed00bc25cc94560ee87c3fd310dda139cc`.
-- Main CI #43020501355 passed `static-build` and `admin-browser`.
-- Pages deployment #43020502181 passed.
-- Cloudflare production deployment: `9e850635-6a49-41a8-9629-fcfc6fdd8a3f`.
+- Main: `26958755b749993bc30a8f3f578aec61efe7e09c`.
+- Main CI #43115514920 passed `static-build` and `admin-browser`.
+- Pages deployment and production smoke #43115515036 passed.
+- Cloudflare production deployment: `2693bd16-214f-4337-8bcb-af5c0202c6db`.
 - Cloudflare read-back confirms the deployment commit matches Main.
 - Owner confirmed App ID `5712195`, Installation ID `180887271`, and provided a Cloudflare dashboard screenshot showing `GITHUB_APP_PRIVATE_KEY` saved as a Production Secret. Cloudflare API omits encrypted secret values from environment reads. The current Direct Upload deployment predates the secret addition; its retry endpoint rejects retries for Direct Upload deployments, so a subsequent normal Pages deployment is required before runtime verification.
 - GitHub repository rulesets API returns an empty list. Owner configuration of the `main` ruleset remains pending.
@@ -188,3 +188,12 @@ Latest Main after PR #56: `6763fa6faceff0ef5da6b62e3520d4f51e093c7c`.
 - Read-only Pages production config shows existing `CMS_DB` and Access/admin settings. `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID`, and `GITHUB_APP_PRIVATE_KEY` are absent; no secret values were read.
 
 PR #56 merged the refreshed Simplified Chinese editorial guide aligned to CC-CONTENT-001 v1.2.0 and `zh-CN`. PR #2 remains open as a historical inventory/style draft; its useful editorial guidance has been carried forward in PR #56. PR #12 remains open because its early architecture/operations snapshot is materially stale and must not be merged unchanged.
+
+
+## GitHub App and post-secret deployment — 2026-11-12
+
+- Production deployment `2693bd16-214f-4337-8bcb-af5c0202c6db` matches Main `26958755b749993bc30a8f3f578aec61efe7e09c` and is aliased to `chinese-culture.site` and `www.chinese-culture.site`.
+- Main CI #43115514920 and Pages deployment/production smoke #43115515036 passed.
+- Cloudflare Access read-back confirms the `Chinese Culture Admin` application protects `/admin`, `/admin/*`, `/api/admin` and `/api/admin/*` with the designated administrator email Allow policy.
+- The GitHub App credentials are supplied and the secret has been loaded by a successful post-secret deployment. Token issuance and authenticated Admin acceptance are not yet verified.
+- GitHub repository rulesets remain empty; the owner must configure the `main` ruleset.
