@@ -11,6 +11,13 @@
       "migrations_dir": "database/migrations"
     }
   ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": true,
+      "head_sampling_rate": 1
+    }
+  },
   "vars": {
     "ADMIN_ORIGIN": "https://chinese-culture.site",
     "ADMIN_EMAIL": "yanbo.zhang2035@gmail.com",
