@@ -1,11 +1,30 @@
 import assert from "node:assert/strict";
 
-const baseUrl = (process.env.PUBLIC_SITE_URL || "https://chinese-culture.site").replace(/\/$/, "");
-async function request(path, headers = {}) {
-  return fetch(baseUrl + path, {
+const protectedSiteUrl = (process.env.PROTECTED_SITE_URL || "https://chinese-culture.site").replace(/\/$/, "");
+const browserUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+
+async function resolveDeploymentUrl() {
+  const token = process.env.CLOUDFLARE_API_TOKEN;
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const project = process.env.CLOUDFLARE_PAGES_PROJECT || "chinese-culture";
+  if (!token || !accountId) throw new Error("Cloudflare deployment lookup credentials are required for production smoke.");
+  const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects/${project}/deployments?env=production&per_page=5`, {
+    headers: { Authorization: "Bearer " + token, Accept: "application/json" },
+    signal: AbortSignal.timeout(20_000)
+  });
+  if (!response.ok) throw new Error("Could not look up the latest Pages production deployment (HTTP " + response.status + ").");
+  const payload = await response.json();
+  const deployment = (payload.result || []).find((item) => item.environment === "production" && item.latest_stage?.status === "success");
+  if (!deployment?.url) throw new Error("No successful Pages production deployment URL was returned.");
+  return deployment.url.replace(/\/$/, "");
+}
+
+const baseUrl = (process.env.PUBLIC_SITE_URL || await resolveDeploymentUrl()).replace(/\/$/, "");
+async function request(path, headers = {}, origin = baseUrl) {
+  return fetch(origin + path, {
     method: "GET",
     redirect: "manual",
-    headers: { "user-agent": "Chinese-Culture-Production-Smoke/1.0", ...headers },
+    headers: { "user-agent": browserUserAgent, ...headers },
     signal: AbortSignal.timeout(20_000)
   });
 }
@@ -75,7 +94,7 @@ for (const missing of [
 }
 
 for (const path of ["/admin/", "/api/admin/v1/session"]) {
-  const response = await request(path, { accept: "application/json" });
+  const response = await request(path, { accept: "application/json" }, protectedSiteUrl);
   const location = response.headers.get("location") || "";
   assert.ok(
     [301, 302, 303, 307, 308].includes(response.status) &&
@@ -88,13 +107,15 @@ for (const path of ["/admin/", "/api/admin/v1/session"]) {
 const www = await fetch("https://www.chinese-culture.site/", {
   method: "GET",
   redirect: "manual",
-  headers: { "user-agent": "Chinese-Culture-Production-Smoke/1.0" },
+  headers: { "user-agent": browserUserAgent },
   signal: AbortSignal.timeout(20_000)
 });
 assert.ok([301, 308].includes(www.status), "www hostname should permanently redirect to the apex domain");
 assert.equal(new URL(www.headers.get("location") || "https://invalid.example").hostname, "chinese-culture.site");
 
 console.log(JSON.stringify({
+  publicOrigin: baseUrl,
+  protectedOrigin: protectedSiteUrl,
   publicPages: publicPages.length,
   sitemap: "PASS",
   localized404Pages: 3,

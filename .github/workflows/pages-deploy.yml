@@ -51,4 +51,9 @@ jobs:
           command: pages deploy dist --project-name=chinese-culture --branch=main
 
       - name: Verify production routes and Cloudflare Access protection
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: dff021f8489d2c316a14575c76de16d4
+          CLOUDFLARE_PAGES_PROJECT: chinese-culture
+          PROTECTED_SITE_URL: https://chinese-culture.site
         run: node scripts/smoke-production.mjs
