@@ -117,3 +117,11 @@ The user confirmed that repository secret `CLOUDFLARE_API_TOKEN` has been added.
 - Data integrity checks: all content IDs have exactly three locales; no missing required title/description/body; no collection mismatch; every current revision has a matching immutable snapshot; all 39 variants remain published.
 - Existing Unsplash cover URLs and localized alt text were retained.
 - Remaining gates: repository-scoped GitHub App installation and secrets, authenticated live Admin mutation tests, reviewed media/publish/unpublish end-to-end acceptance, and durable backup/restore validation.
+
+
+## 2026-11-11 — Media management documentation
+
+- PR #64 added the current media-management guide, separating implemented code/local tests from the blocked production GitHub App upload flow.
+- PR #64 CI #42927509095 passed static-build and admin-browser.
+- Main CI #42927649955 and Pages deployment #42927650359 passed for Main `316a4cd2ea260b6ea67bb7b21fab87da7837f83b`.
+- Production deployment `f7e39bb4-0931-4b30-83ee-50c0074c9076` serves that Main commit.
