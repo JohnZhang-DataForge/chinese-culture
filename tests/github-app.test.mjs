@@ -37,7 +37,10 @@ test("GitHub App PKCS#1 key is converted and signs a short-lived RS256 installat
     assert.equal(payload.iss, "12345");
     assert.ok(payload.exp - payload.iat <= 600);
     assert.equal(verifySignature("RSA-SHA256", Buffer.from(headerPart + "." + payloadPart), publicKey, signature), true);
-    assert.deepEqual(requestBody, { permissions: { contents: "write", pull_requests: "write", checks: "read" } });
+    assert.deepEqual(requestBody, {
+      repository_ids: [1444529252],
+      permissions: { contents: "write", pull_requests: "write", checks: "read" }
+    });
   } finally {
     globalThis.fetch = originalFetch;
   }
