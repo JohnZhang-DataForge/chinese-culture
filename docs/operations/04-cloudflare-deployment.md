@@ -8,13 +8,14 @@
 
 ## Latest verified production release — 2026-11-11
 
-- Main: `316a4cd2ea260b6ea67bb7b21fab87da7837f83b`.
-- Main CI #42927649955 passed `static-build` and `admin-browser`.
-- Pages deployment #42927650359 passed.
-- Cloudflare production deployment: `f7e39bb4-0931-4b30-83ee-50c0074c9076`.
+- Main: `7730ac7712b2605bd6b20f6548d34d5116a9afd4`.
+- Main CI #43017321316 passed `static-build` and `admin-browser`.
+- Pages deployment #43017321253 passed.
+- Cloudflare production deployment: `25642b9d-6ef5-4eb2-87c9-bf4dbc69aee9`.
 - Cloudflare read-back confirms the deployment commit matches Main.
-- The GitHub App production variables `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` and `GITHUB_APP_PRIVATE_KEY` remain absent; no secret values were read.
-- GitHub repository rulesets API returned an empty list at the last check. Owner configuration of the `main` ruleset remains pending.
+- The production Pages configuration does not contain `GITHUB_APP_ID`, `GITHUB_INSTALLATION_ID` or `GITHUB_APP_PRIVATE_KEY`; no private key value was read.
+- GitHub repository rulesets API returns an empty list. Owner configuration of the `main` ruleset remains pending.
+- PR #65 refreshed the release evidence and was merged after its CI passed.
 
 ## Verified production state
 
