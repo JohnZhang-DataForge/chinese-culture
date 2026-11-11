@@ -197,3 +197,9 @@ PR #56 merged the refreshed Simplified Chinese editorial guide aligned to CC-CON
 - Cloudflare Access read-back confirms the `Chinese Culture Admin` application protects `/admin`, `/admin/*`, `/api/admin` and `/api/admin/*` with the designated administrator email Allow policy.
 - The GitHub App credentials are supplied and the secret has been loaded by a successful post-secret deployment. Token issuance and authenticated Admin acceptance are not yet verified.
 - GitHub repository rulesets remain empty; the owner must configure the `main` ruleset.
+
+
+## GitHub App runtime configuration refresh — 2026-11-12
+
+- After the post-secret deployment, the Cloudflare Pages Production plain-text settings `GITHUB_APP_ID=5712195` and `GITHUB_INSTALLATION_ID=180887271` were re-applied and read back from the project configuration. The private-key value remains a Secret and is never read through the API.
+- A subsequent Pages deployment is required to ensure the re-applied variables are loaded by the runtime. The next normal Main deployment is the activation step; no production D1 data or editorial content is changed by this configuration refresh.
