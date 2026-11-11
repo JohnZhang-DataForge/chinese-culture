@@ -33,7 +33,7 @@ Add:
 
 Do not paste the private key into Git, an issue, a PR, a chat message or `.dev.vars`. Keep the downloaded PEM file in a secure password manager or secrets vault.
 
-The admin session endpoint detects these three values at runtime. Once they are configured, the Admin UI enables publication and media upload without requiring a new website build.
+The admin session endpoint detects these three values at runtime. Once they are configured, the Admin UI enables publication and media upload without requiring a new website build. Every installation token request is additionally restricted in code to the immutable GitHub repository ID for `JohnZhang-DataForge/chinese-culture`, even if the App installation is later granted access to another repository.
 
 ## Protect the main branch
 
