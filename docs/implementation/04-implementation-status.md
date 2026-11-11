@@ -1,6 +1,6 @@
 # Implementation Status
 
-**Updated:** 2026-11-11 (after PR #68 merge and production deployment)
+**Updated:** 2026-11-12 (GitHub App production secret supplied; runtime verification pending)
 **Production website:** https://chinese-culture.site
 **CMS implementation:** PR #33 and importer fix PR #34 are merged.
 
@@ -27,7 +27,7 @@
 | Initial revision snapshots | 39 |
 | Pending submissions | 0 |
 | Existing content importer | Idempotent; production bootstrap succeeded after PR #34 |
-| GitHub publication | Implementation complete; GitHub App credentials/installation remain pending |
+| GitHub publication | App ID, installation ID and production private-key Secret supplied; runtime token issuance and acceptance pending |
 | Media upload | File-signature and rights metadata validation; media-only PR; D1 attaches after merge |
 | Preview | Server-rendered safe Markdown preview |
 | Publication state sync | Read-only GET PR status + explicit CSRF-protected POST sync after merge |
@@ -66,8 +66,8 @@ The production bootstrap workflow, main CI and Pages deployment all completed su
 
 ## Remaining release gates
 
-1. Install the repository-scoped GitHub App only on this repository with Contents read/write, Pull Requests read/write and Checks read-only. Do not grant Administration, Actions, Workflows, Secrets, Deployments or branch-protection bypass permissions.
-2. Configure GITHUB_APP_ID, GITHUB_INSTALLATION_ID and GITHUB_APP_PRIVATE_KEY as Pages production variables/secrets.
+1. Verify the App installation is restricted to this repository and has only Contents read/write, Pull Requests read/write and Checks read-only; then verify installation-token issuance. Do not grant Administration, Actions, Workflows, Secrets, Deployments or branch-protection bypass permissions.
+2. Ensure a new Pages deployment loads the newly saved `GITHUB_APP_PRIVATE_KEY` Production Secret; verify Admin session reports `publish: true` and `mediaUpload: true`.
 3. Sign in to Admin through Cloudflare Access and perform live create/edit/save/reload/translation/preview tests.
 4. Perform a reviewed media PR, merge it, and verify the media record attaches to D1 only after merge.
 5. Perform publish and unpublish PR acceptance, including Pages deployment and D1 status synchronization.
