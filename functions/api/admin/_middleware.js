@@ -18,15 +18,23 @@ const SAFE_AUTH_DIAGNOSTICS = Object.freeze({
   "Web Crypto is unavailable": "web_crypto_unavailable"
 });
 
+function isSafeDiagnosticCode(value) {
+  return value === "access_signing_keys_fetch_failed" ||
+    value === "access_signing_keys_http_error" ||
+    /^access_signing_keys_http_[1-5][0-9]{2}$/.test(value);
+}
+
 function denied(code = "forbidden", status = 403, diagnostic = null) {
   const title = status === 401 ? "Unauthorized" : status === 503 ? "Service Unavailable" : status === 405 ? "Method Not Allowed" : "Forbidden";
-  const diagnosticCode = diagnostic && typeof diagnostic.reason === "string"
-    ? SAFE_AUTH_DIAGNOSTICS[diagnostic.reason] || (
-      ["TypeError", "RangeError", "ReferenceError"].includes(diagnostic.reason)
-        ? "authentication_runtime_" + diagnostic.reason.toLowerCase()
-        : "authentication_runtime_error"
-    )
-    : null;
+  const diagnosticCode = diagnostic && typeof diagnostic.code === "string" && isSafeDiagnosticCode(diagnostic.code)
+    ? diagnostic.code
+    : diagnostic && typeof diagnostic.reason === "string"
+      ? SAFE_AUTH_DIAGNOSTICS[diagnostic.reason] || (
+        ["TypeError", "RangeError", "ReferenceError"].includes(diagnostic.reason)
+          ? "authentication_runtime_" + diagnostic.reason.toLowerCase()
+          : "authentication_runtime_error"
+      )
+      : null;
   const detail = status === 503
     ? "The CMS security configuration is unavailable." + (diagnosticCode ? " Diagnostic: " + diagnosticCode + "." : "")
     : status === 401
@@ -42,6 +50,7 @@ function denied(code = "forbidden", status = 403, diagnostic = null) {
       requestId,
       code,
       reason: diagnostic.reason,
+      diagnosticCode,
       path: diagnostic.path
     });
   }
@@ -79,7 +88,11 @@ export async function onRequest(context) {
       ? { email: context.env.ADMIN_EMAIL, role: "admin", issuer: "local-development" }
       : await verifyAccessJwt(request, context.env);
   } catch (error) {
-    if (error instanceof AccessConfigError) return denied("admin_api_not_configured", 503, { reason: error.message, path: requestUrl.pathname });
+    if (error instanceof AccessConfigError) return denied("admin_api_not_configured", 503, {
+      reason: error.message,
+      code: error.diagnosticCode,
+      path: requestUrl.pathname
+    });
     if (error instanceof AccessAuthError) {
       return denied(error.status === 403 ? "forbidden" : "unauthorized", error.status === 403 ? 403 : 401);
     }
