@@ -45,7 +45,7 @@ function canonicalRevisionEtag(data, responseEtag = null) {
   if (revision) return '"' + revision + '"';
 
   const header = typeof responseEtag === "string" ? responseEtag.trim() : "";
-  return /^"[^"\\r\\n]*"$/.test(header) ? header : null;
+  return /^"[^"\r\n]*"$/.test(header) ? header : null;
 }
 
 function requireRevisionEtag(value) {
