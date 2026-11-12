@@ -82,8 +82,8 @@ test("submitContent sends a canonical quoted If-Match header", async () => {
 
 test("write operations reject missing or malformed revision tokens before making a request", async () => {
   let called = false;
-  await assert.rejects(
-    saveDraft(contentId, "en", payload, 'W/"9"', async () => { called = true; }),
+  assert.throws(
+    () => saveDraft(contentId, "en", payload, 'W/"9"', async () => { called = true; }),
     (error) => error.code === "REVISION_ETAG_MISSING" && error.status === 409
   );
   assert.equal(called, false);
