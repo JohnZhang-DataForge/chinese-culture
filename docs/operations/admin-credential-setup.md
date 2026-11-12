@@ -28,9 +28,16 @@ The following production Pages settings are currently absent:
 
 No secret values were read or recorded. The owner must create/install the App and configure these settings securely before publish/unpublish and media PR workflows can be accepted.
 
+## CSRF secret requirements
+
+- `ADMIN_CSRF_SECRET` is read by the Pages Function at runtime and must contain at least 32 characters. Use a cryptographically random value; 32 random bytes encoded as 64 hexadecimal characters is a suitable format.
+- Configure it as a **Production Secret** in the Cloudflare Pages project `chinese-culture`. Do not set it as a plaintext variable, commit it, or expose it to browser code.
+- The Admin session endpoint returns `csrf_secret_missing_or_too_short` when the production runtime cannot read a string of at least 32 characters. This is a server-side configuration failure, not an Access login or JWKS failure.
+- After changing a Pages environment secret, create a fresh production deployment so Pages Functions load the new value. This project uses Direct Upload; Cloudflare's deployment retry endpoint does not support retrying Direct Upload deployments. Use the normal `pages-deploy.yml` workflow to build and deploy from `main`.
+
 ## Rotation and recovery
 
-- Rotate Cloudflare Access or CSRF secrets only through the Cloudflare dashboard and coordinated deployment process.
+- Rotate Cloudflare Access or CSRF secrets only through the Cloudflare dashboard or authenticated Cloudflare API and a coordinated fresh deployment.
 - Rotate GitHub App private keys using the GitHub App settings and update the Pages secret securely.
 - After any rotation, run authenticated Admin smoke tests and verify unauthorized requests still fail closed.
 - Never paste tokens, private keys, session cookies, JWTs or CSRF values into issues, PRs, logs or ChatGPT.
