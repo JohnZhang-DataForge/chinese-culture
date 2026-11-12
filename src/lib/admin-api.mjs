@@ -45,8 +45,7 @@ function canonicalRevisionEtag(data, responseEtag = null) {
   if (revision) return '"' + revision + '"';
 
   const header = typeof responseEtag === "string" ? responseEtag.trim() : "";
-  const match = /^"([1-9][0-9]*)"$/.exec(header);
-  return match && Number.isSafeInteger(Number(match[1])) ? header : null;
+  return /^"[^"\\r\\n]*"$/.test(header) ? header : null;
 }
 
 function requireRevisionEtag(value) {
