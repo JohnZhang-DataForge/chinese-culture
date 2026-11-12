@@ -10,10 +10,25 @@ import { withApiSecurityHeaders } from "../../_lib/http.js";
 const ALLOWED_METHODS = new Set(["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"]);
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
+const SAFE_AUTH_DIAGNOSTICS = Object.freeze({
+  "Authentication is not configured": "access_configuration_missing_or_invalid",
+  "Unable to retrieve Access signing keys": "access_signing_keys_unavailable",
+  "Invalid Access signing-key response": "access_signing_keys_invalid",
+  "No usable Access signing keys": "access_signing_keys_empty",
+  "Web Crypto is unavailable": "web_crypto_unavailable"
+});
+
 function denied(code = "forbidden", status = 403, diagnostic = null) {
   const title = status === 401 ? "Unauthorized" : status === 503 ? "Service Unavailable" : status === 405 ? "Method Not Allowed" : "Forbidden";
+  const diagnosticCode = diagnostic && typeof diagnostic.reason === "string"
+    ? SAFE_AUTH_DIAGNOSTICS[diagnostic.reason] || (
+      ["TypeError", "RangeError", "ReferenceError"].includes(diagnostic.reason)
+        ? "authentication_runtime_" + diagnostic.reason.toLowerCase()
+        : "authentication_runtime_error"
+    )
+    : null;
   const detail = status === 503
-    ? "The CMS security configuration is unavailable."
+    ? "The CMS security configuration is unavailable." + (diagnosticCode ? " Diagnostic: " + diagnosticCode + "." : "")
     : status === 401
       ? "A valid Cloudflare Access identity is required."
       : status === 405
