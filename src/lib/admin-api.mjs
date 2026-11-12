@@ -34,6 +34,34 @@ function parseProblem(raw, status) {
   return new AdminApiError(message, status, payload.code || "API_ERROR", payload);
 }
 
+function canonicalRevisionEtag(data, responseEtag = null) {
+  const rawRevision = data?.revision;
+  let revision = null;
+  if (typeof rawRevision === "number" && Number.isSafeInteger(rawRevision) && rawRevision > 0) {
+    revision = String(rawRevision);
+  } else if (typeof rawRevision === "string" && /^[1-9][0-9]*$/.test(rawRevision) && Number.isSafeInteger(Number(rawRevision))) {
+    revision = rawRevision;
+  }
+  if (revision) return '"' + revision + '"';
+
+  const header = typeof responseEtag === "string" ? responseEtag.trim() : "";
+  return /^"[^"\r\n]*"$/.test(header) ? header : null;
+}
+
+function requireRevisionEtag(value) {
+  const raw = typeof value === "string" ? value.trim() : "";
+  const match = /^(?:"([1-9][0-9]*)"|([1-9][0-9]*))$/.exec(raw);
+  const revision = match?.[1] || match?.[2];
+  if (!revision || !Number.isSafeInteger(Number(revision))) {
+    throw new AdminApiError(
+      "The server did not provide a valid D1 revision ETag. Reload this content before retrying.",
+      409,
+      "REVISION_ETAG_MISSING"
+    );
+  }
+  return '"' + revision + '"';
+}
+
 /**
  * Same-origin transport for the approved Agent 0 OpenAPI 3.1 contract.
  * Cloudflare Access injects its identity header at the edge. The browser
@@ -101,7 +129,11 @@ export async function requestAdminApiWithMeta(path, options = {}, fetcher = fetc
     try { data = JSON.parse(raw); }
     catch { throw new AdminApiError("The admin service returned an invalid response.", response.status, "INVALID_RESPONSE"); }
   }
-  return { data, status: response.status, etag: response.headers?.get?.("ETag") || null, headers: response.headers };
+  // The D1 revision in the JSON payload is authoritative. Cloudflare's edge
+  // may normalize or replace the HTTP ETag, so construct the strict quoted
+  // application revision ETag from the response body whenever available.
+  const etag = canonicalRevisionEtag(data, response.headers?.get?.("ETag") || null);
+  return { data, status: response.status, etag, headers: response.headers };
 }
 
 export async function requestAdminApi(path, options = {}, fetcher = fetch) {
@@ -147,7 +179,7 @@ export function createTranslation(contentId, payload, fetcher = fetch) {
 
 export function saveDraft(contentId, locale, payload, etag, fetcher = fetch) {
   const path = queryPath(ADMIN_API_BASE + "/content/" + encodeURIComponent(contentId), { locale });
-  return requestAdminApiWithMeta(path, { method: "PUT", body: payload, ifMatch: etag }, fetcher);
+  return requestAdminApiWithMeta(path, { method: "PUT", body: payload, ifMatch: requireRevisionEtag(etag) }, fetcher);
 }
 
 export function previewContent(contentId, payload, fetcher = fetch) {
@@ -163,12 +195,12 @@ export function uploadMedia(contentId, locale, etag, file, metadata, fetcher = f
   form.append("file", file);
   form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }), "metadata.json");
   const path = queryPath(ADMIN_API_BASE + "/content/" + encodeURIComponent(contentId) + "/media", { locale });
-  return requestAdminApi(path, { method: "POST", body: form, ifMatch: etag }, fetcher);
+  return requestAdminApi(path, { method: "POST", body: form, ifMatch: requireRevisionEtag(etag) }, fetcher);
 }
 
 export function submitContent(contentId, locale, etag, intent, summary = "", fetcher = fetch) {
   const path = queryPath(ADMIN_API_BASE + "/content/" + encodeURIComponent(contentId) + "/submit", { locale });
-  return requestAdminApi(path, { method: "POST", body: { intent, summary }, ifMatch: etag }, fetcher);
+  return requestAdminApi(path, { method: "POST", body: { intent, summary }, ifMatch: requireRevisionEtag(etag) }, fetcher);
 }
 
 export function discardDraft(contentId, locale, fetcher = fetch) {

@@ -125,11 +125,11 @@ test("media upload uses multipart metadata, CSRF and the variant ETag", async ()
   let observed;
   const file = new Blob(["fake-image"],{type:"image/png"});
   const response = {status:201,ok:true,headers:new Headers(),text:async()=>JSON.stringify({src:"/media/test.webp"})};
-  const result = await uploadMedia("content-1","zh-CN",'"variant-4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
+  const result = await uploadMedia("content-1","zh-CN",'"4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
   assert.equal(result.src,"/media/test.webp");
   assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-CN$/);
   assert.equal(observed.options.headers.get("X-CSRF-Token"),"media-csrf");
-  assert.equal(observed.options.headers.get("If-Match"),'"variant-4"');
+  assert.equal(observed.options.headers.get("If-Match"),'"4"');
   assert.equal(observed.options.headers.has("Content-Type"),false);
   const metadataPart=observed.options.body.get("metadata");
   assert.equal(metadataPart.type,"application/json");
