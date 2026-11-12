@@ -13,9 +13,10 @@ export class AccessAuthError extends Error {
 }
 
 export class AccessConfigError extends Error {
-  constructor(message = "Authentication is not configured") {
+  constructor(message = "Authentication is not configured", diagnosticCode = null) {
     super(message);
     this.name = "AccessConfigError";
+    this.diagnosticCode = diagnosticCode;
   }
 }
 
@@ -100,14 +101,26 @@ async function loadJwks(issuer, fetcher, forceRefresh = false) {
       response = await fetcher(issuer + "/cdn-cgi/access/certs", {
         method: "GET",
         headers: { accept: "application/json" },
-        redirect: "error"
+        // Do not follow redirects. Record the status safely so a redirect can
+        // be distinguished from a network/runtime fetch failure.
+        redirect: "manual"
       });
     } catch {
-      throw new AccessConfigError("Unable to retrieve Access signing keys");
+      throw new AccessConfigError(
+        "Unable to retrieve Access signing keys",
+        "access_signing_keys_fetch_failed"
+      );
     }
 
     if (!response || !response.ok) {
-      throw new AccessConfigError("Unable to retrieve Access signing keys");
+      const status = Number(response?.status);
+      const diagnosticCode = Number.isInteger(status) && status >= 100 && status <= 599
+        ? "access_signing_keys_http_" + status
+        : "access_signing_keys_http_error";
+      throw new AccessConfigError(
+        "Unable to retrieve Access signing keys",
+        diagnosticCode
+      );
     }
 
     let document;
