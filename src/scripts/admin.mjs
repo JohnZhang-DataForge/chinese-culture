@@ -513,20 +513,40 @@ if (root) {
       showToast("Draft saved to the CMS branch. It is not public yet.","success");
     } catch (error) { handleApiError(error); }
   };
+  let publicationInProgress = false;
+  const setPublicationProgress = (message, kind = "warning") => {
+    showAdminBanner(message, kind);
+    const status = $("[data-save-state]");
+    if (status) status.textContent = message;
+  };
   const submitWorkflow = async (intent) => {
-    if (!demoMode && !state.capabilities.publish) { showToast("Publication is not configured yet. A GitHub App with repository write access is required.", "error"); return; }
+    if (publicationInProgress) return;
+    if (!demoMode && !state.capabilities.publish) {
+      setPublicationProgress("Publication unavailable: the GitHub App is not configured for this session.", "error");
+      return;
+    }
     if (demoMode) {
       await saveContent();
       showToast(intent === "publish" ? "Publish request previewed in development mode." : "Unpublish request previewed in development mode.","info");
       return;
     }
+    const buttons = $("[data-action='publish'],[data-action='unpublish']");
+    publicationInProgress = true;
+    buttons.forEach((button) => { button.disabled = true; button.setAttribute("aria-busy", "true"); });
+    let stage = "Preparing publication";
     try {
       const previouslyPublished = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "published");
-      await saveLiveDrafts();
+      if (state.dirty || !state.selectedId) {
+        stage = "Saving edited language variants";
+        setPublicationProgress(stage + "…");
+        await saveLiveDrafts();
+      }
       const locales = ["en","zh-CN","es"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
       if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
       const results = [];
       for (const locale of locales) {
+        stage = "Creating GitHub review PR for " + locale;
+        setPublicationProgress(stage + " (" + (results.length + 1) + "/" + locales.length + ")…");
         if (!state.etags[locale]) await refreshVariant(locale);
         const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"Submitted from the bilingual editorial CMS.");
         results.push(result);
@@ -536,7 +556,7 @@ if (root) {
       const prNumbers = results.map((result)=>"#" + result.pullRequest.number).join(", ");
       const firstPr = results[0]?.pullRequest;
       const prLink = $("[data-pr-link]");
-      if (firstPr?.url) {
+      if (firstPr?.url && prLink) {
         try {
           const url = new URL(firstPr.url);
           if (url.hostname === "github.com" && url.pathname.startsWith("/JohnZhang-DataForge/chinese-culture/pull/")) {
@@ -546,20 +566,20 @@ if (root) {
           }
         } catch {}
       }
-      const checkNotes = [];
-      for (const result of results) {
-        try {
-          const prState = await getPullRequestStatus(result.pullRequest.number);
-          const checks = prState.checks || [];
-          const failed = checks.filter((check)=>check.status === "completed" && check.conclusion && check.conclusion !== "success").length;
-          const pending = checks.filter((check)=>check.status !== "completed").length;
-          checkNotes.push("PR #" + result.pullRequest.number + ": " + (failed ? failed + " failed check(s)" : pending ? pending + " check(s) pending" : checks.length ? "checks passed" : "checks pending"));
-        } catch { checkNotes.push("PR #" + result.pullRequest.number + ": checks not yet available"); }
-      }
-      showToast((intent === "publish" ? "Publish" : "Unpublish") + " request submitted for review: " + prNumbers + ". " + checkNotes.join("; ") + ". A reviewer must merge the PR.","success");
+      setPublicationProgress("Publication request created: " + prNumbers + ". A reviewer must merge the PR.", "success");
       await loadAllContent();
       updateStatusControls();
-    } catch (error) { handleApiError(error); }
+    } catch (error) {
+      const detail = error instanceof AdminApiError && error.requestId
+        ? error.message + " (Request " + error.requestId + ")"
+        : (error?.message || "Unknown error");
+      setPublicationProgress("Publication failed during " + stage + ": " + detail, "error");
+    } finally {
+      publicationInProgress = false;
+      buttons.forEach((button) => { button.removeAttribute("aria-busy"); });
+      const locked = Object.values(state.variants).some((variant)=>variant && ["pending","open"].includes(variant.pullRequestState));
+      buttons.forEach((button) => { button.disabled = locked || !state.capabilities.publish; });
+    }
   };
   const toggleFeatured = async (id) => {
     if (!demoMode && !state.capabilities.publish) { showToast("Featured changes require the GitHub App publication integration.", "error"); return; }
