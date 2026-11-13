@@ -20,3 +20,8 @@ test("publish retains the API revision and waits for a human reviewer", () => {
   assert.match(source, /submitContent\(state\.selectedId,locale,state\.etags\[locale\],intent/);
   assert.match(source, /A reviewer must merge the PR/);
 });
+
+test("publication workflow queries a collection before iterating over publish buttons", () => {
+  assert.match(source, /const buttons = \$\$\("\[data-action='publish'\],\[data-action='unpublish'\]"\)/);
+  assert.doesNotMatch(source, /const buttons = \$\("\[data-action='publish'\],\[data-action='unpublish'\]"\)/);
+});
