@@ -530,7 +530,7 @@ if (root) {
       showToast(intent === "publish" ? "Publish request previewed in development mode." : "Unpublish request previewed in development mode.","info");
       return;
     }
-    const buttons = $("[data-action='publish'],[data-action='unpublish']");
+    const buttons = $$("[data-action='publish'],[data-action='unpublish']");
     publicationInProgress = true;
     buttons.forEach((button) => { button.disabled = true; button.setAttribute("aria-busy", "true"); });
     let stage = "Preparing publication";
