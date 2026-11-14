@@ -136,6 +136,8 @@ async function preflight(){
   $("variant-count").textContent=String(state.concepts.reduce((n,c)=>n+c.variants.length,0));
   renderRows(plans);
   const newCount=plans.reduce((n,p)=>n+p.matches.filter(x=>!x.item).length,0);
+  state.mapping=plans.filter(p=>p.contentId).map(p=>({batchId:p.concept.batchId,contentId:p.contentId,collection:p.concept.collection,variants:p.concept.variants.map(v=>({locale:v.locale,slug:v.slug}))}));
+  $("copy-button").disabled=!state.mapping.length;
   setStatus("session-status","Authorized Admin session ready. Mutation token remains in this page and is not displayed.","good");
   setStatus("preflight-status",newCount+" locale variants need creation; "+(30-newCount)+" exact variants already exist or can be resumed. No writes have been made.","good");
   $("confirm-drafts").disabled=false;
@@ -191,6 +193,7 @@ async function runImport(){
     log("STOPPED: "+error.message);
     $("confirm-drafts").disabled=false;
     $("import-button").disabled=false;
+    $("copy-button").disabled=!state.mapping.length;
   }finally{
     state.running=false;
   }
