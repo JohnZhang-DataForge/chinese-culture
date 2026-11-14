@@ -1,5 +1,5 @@
 import { createCsrfToken } from "../../../_lib/csrf.js";
-import { isGithubAppConfigured } from "../../../_lib/github-app.js";
+import { getGithubAppDiagnostics, isGithubAppConfigured } from "../../../_lib/github-app.js";
 import { CmsError, problemResponse } from "../../../_lib/cms.js";
 import { jsonResponse, withApiSecurityHeaders } from "../../../_lib/http.js";
 
@@ -33,13 +33,21 @@ export async function onRequestGet(context) {
       return sessionUnavailable("csrf_token_generation_failed");
     }
 
-    return withApiSecurityHeaders(jsonResponse({
+    const githubAppConfigured = await isGithubAppConfigured(context.env);
+    const response = {
       email: admin.email,
       role: "admin",
       csrfToken,
       repository: "JohnZhang-DataForge/chinese-culture",
-      capabilities: { preview: true, publish: isGithubAppConfigured(context.env), mediaUpload: isGithubAppConfigured(context.env) }
-    }));
+      capabilities: { preview: true, publish: githubAppConfigured, mediaUpload: githubAppConfigured }
+    };
+    // Run network-backed GitHub App verification only when an authenticated
+    // administrator explicitly requests diagnostics. Normal session bootstrap
+    // remains fast and does not mint an installation token.
+    if (context.request?.url && new URL(context.request.url).searchParams.get("diagnostics") === "github-app") {
+      response.diagnostics = { githubApp: await getGithubAppDiagnostics(context.env) };
+    }
+    return withApiSecurityHeaders(jsonResponse(response));
   } catch (error) {
     return withApiSecurityHeaders(problemResponse(error));
   }

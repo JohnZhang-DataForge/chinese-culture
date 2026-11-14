@@ -189,6 +189,9 @@ export async function onRequestPost(context) {
     if (error?.code === "github_app_not_configured") {
       return withApiSecurityHeaders(problemResponse(new CmsError(503, "github_app_not_configured", "Service Unavailable", "Configure the GitHub App ID, installation ID and private key before enabling publication.")));
     }
+    if (error?.code === "github_app_private_key_invalid") {
+      return withApiSecurityHeaders(problemResponse(new CmsError(503, "github_app_private_key_invalid", "Service Unavailable", "The configured GitHub App private key could not be used. No publication PR was created.")));
+    }
     return withApiSecurityHeaders(problemResponse(new CmsError(502, "github_publication_failed", "Bad Gateway", "The publication PR could not be created. No public content was changed.")));
   }
 }
