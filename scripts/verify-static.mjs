@@ -79,12 +79,19 @@ function walkContent(dir) {
 }
 walkContent(contentRoot);
 assert.ok(localePaths.size > 0, "Expected at least one conceptual article for locale route verification");
+const expectedRouteLocales = ["en", "es", "zh-CN"];
+for (const [contentId, variants] of localePaths) {
+  const actualLocales = Object.keys(variants).sort();
+  assert.deepEqual(actualLocales, expectedRouteLocales, "Incomplete locale route map for " + contentId + "; found: " + actualLocales.join(", "));
+}
 const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
 assert.ok(sitemap.includes("<urlset"), "Missing XML sitemap urlset");
 assert.ok((sitemap.match(/<url>/g) || []).length >= 72, "Sitemap is missing expected localized static and article URLs");
-for (const variants of localePaths.values()) {
-  for (const locale of ["en", "zh-CN", "es"]) {
-    assert.ok(sitemap.includes("https://chinese-culture.site" + variants[locale].route), "Published article missing from sitemap: " + variants[locale].route);
+for (const [contentId, variants] of localePaths) {
+  for (const locale of expectedRouteLocales) {
+    const route = variants[locale]?.route;
+    assert.ok(route, "Missing route metadata for " + contentId + " / " + locale);
+    assert.ok(sitemap.includes("https://chinese-culture.site" + route), "Published article missing from sitemap: " + route);
   }
 }
 const notFound = readFileSync(join(dist, "404.html"), "utf8");
