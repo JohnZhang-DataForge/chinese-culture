@@ -585,7 +585,7 @@ components:
                   type: boolean
                 stage:
                   type: string
-                  enum: [configuration, jwt, installation_auth, permissions, repository_access, complete]
+                  enum: [configuration, jwt, installation_lookup, installation_auth, permissions, repository_access, complete]
                 code:
                   type: string
                 httpStatus:
