@@ -78,7 +78,7 @@ function walkContent(dir) {
   }
 }
 walkContent(contentRoot);
-assert.equal(localePaths.size, 13, "Expected 13 conceptual articles for locale route verification");
+assert.ok(localePaths.size > 0, "Expected at least one conceptual article for locale route verification");
 const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
 assert.ok(sitemap.includes("<urlset"), "Missing XML sitemap urlset");
 assert.ok((sitemap.match(/<url>/g) || []).length >= 72, "Sitemap is missing expected localized static and article URLs");

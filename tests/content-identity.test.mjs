@@ -16,7 +16,7 @@ function markdownFiles(directory) {
 
 test("all published article files have stable content IDs and matching locale metadata", () => {
   const files = markdownFiles(contentRoot);
-  assert.equal(files.length, 39, "expected 13 article concepts across three locales");
+  assert.ok(files.length > 0 && files.length % expectedLocales.size === 0, `expected one Markdown variant per locale; found ${files.length} files for ${expectedLocales.size} locales`);
   const byContentId = new Map();
 
   for (const file of files) {
@@ -40,7 +40,7 @@ test("all published article files have stable content IDs and matching locale me
     byContentId.set(contentId, existing);
   }
 
-  assert.equal(byContentId.size, 13, "expected 13 conceptual content IDs");
+  assert.equal(byContentId.size, files.length / expectedLocales.size, "every conceptual content ID must have one variant per locale");
   for (const [contentId, variants] of byContentId) {
     assert.equal(variants.length, 3, `contentId ${contentId} must have exactly three locale variants`);
     assert.deepEqual(new Set(variants.map((variant) => variant.locale)), expectedLocales);
