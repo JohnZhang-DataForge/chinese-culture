@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "联合国教科文组织：中国传统制茶技艺及其相关习俗"
+    url: "https://ich.unesco.org/en/RL/traditional-tea-processing-techniques-and-associated-social-practices-in-china-01884"
+    publisher: "UNESCO"
 ---
 
 ## 不只是一杯饮料

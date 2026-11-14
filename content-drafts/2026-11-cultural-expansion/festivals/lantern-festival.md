@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "Shanghai Municipal Government — Lantern Festival: Key Dates & Customs"
+    url: "https://english.shanghai.gov.cn/en-KeyDatesAndCustoms/20260122/e6bf3e0801514c808f6b3d1545a88a3c.html"
+    publisher: "Shanghai Municipal Government"
 ---
 
 ## A night of light

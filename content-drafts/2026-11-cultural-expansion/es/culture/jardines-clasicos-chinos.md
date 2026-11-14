@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "Centro del Patrimonio Mundial de la UNESCO — Jardines clásicos de Suzhou"
+    url: "https://whc.unesco.org/en/list/813/"
+    publisher: "UNESCO World Heritage Centre"
 ---
 
 ## Un mundo dentro de un muro

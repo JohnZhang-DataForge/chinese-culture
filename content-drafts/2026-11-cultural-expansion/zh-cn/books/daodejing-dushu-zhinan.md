@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "斯坦福哲学百科全书：老子"
+    url: "https://plato.stanford.edu/entries/laozi/"
+    publisher: "Stanford Encyclopedia of Philosophy"
 ---
 
 ## 一部篇幅不长、历史深远的经典

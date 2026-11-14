@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "Gobierno Municipal de Shanghái — Festival de los Faroles: fechas y costumbres"
+    url: "https://english.shanghai.gov.cn/en-KeyDatesAndCustoms/20260122/e6bf3e0801514c808f6b3d1545a88a3c.html"
+    publisher: "Shanghai Municipal Government"
 ---
 
 ## Una noche de luz

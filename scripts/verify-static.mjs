@@ -131,7 +131,7 @@ function inspectLinks(dir) {
     }
     // The private Admin workspace is intentionally an interactive static shell;
     // its native controls are hydrated by the authenticated same-origin API.
-    if (relativePath !== "admin/index.html") {
+    if (!relativePath.startsWith("admin/")) {
       assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
     }
     for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {

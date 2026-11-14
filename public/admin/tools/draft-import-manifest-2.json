@@ -1,0 +1,382 @@
+{
+  "manifestVersion": "1.0",
+  "batch": "2026-11-cultural-expansion-2",
+  "importMode": "create-draft-only",
+  "concepts": [
+    {
+      "batchId": "2f4d8b1a-9c63-4e70-8a21-5d7f3c9b6e40",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "2f4d8b1a-9c63-4e70-8a21-5d7f3c9b6e40",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "chinese-paper-cutting",
+          "title": "Chinese Paper-Cutting: Art in the Space Between",
+          "description": "Discover how cutting and shaping paper creates decorative designs connected with celebrations, everyday spaces and regional craft traditions.",
+          "category": "Folk art & craft",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese paper-cut",
+              "url": "https://ich.unesco.org/en/RL/chinese-paper-cut-00219",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## A picture made by removing paper\n\nChinese paper-cutting (剪纸, jiǎnzhǐ) turns a sheet of paper into an image through cutting, piercing and shaping. The design is formed not only by the paper that remains, but also by the openings and spaces created around it. Patterns may be simple or highly detailed, and the finished work can be displayed on windows, walls, doors and other everyday surfaces.\n\nUNESCO inscribed Chinese paper-cut on its Representative List of the Intangible Cultural Heritage of Humanity in 2009. The practice is found across China and among different ethnic groups; techniques and motifs vary by place and purpose.\n\n## Tools, techniques and patterns\n\nSome makers fold paper before cutting so that a repeated design appears when it is opened. Others work on a flat sheet, cut directly with scissors or use a knife or chisel-like tool for finer details. Paper may remain its original colour or be dyed and layered.\n\nMotifs can include flowers, animals, plants, people, symbols and scenes from daily life. A design made for a wedding may communicate wishes for happiness; a seasonal decoration may welcome a festival or mark a change in the year. These meanings are not fixed in every region or household.\n\n## A living craft\n\nKnowledge has often been passed through families and local communities, including from older makers to younger learners. Today, artists also experiment with new materials, digital design and contemporary subjects. New tools do not erase the tradition; they show how a familiar craft can keep changing.\n\n## Look closely\n\nHold a paper-cut against the light. Notice how the solid shapes and open spaces depend on one another. Which parts connect the image, and which details would disappear if one small bridge of paper were cut away?\n\n### Further reading\n\n- [UNESCO — Chinese paper-cut](https://ich.unesco.org/en/RL/chinese-paper-cut-00219).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/culture/chinese-paper-cutting.md"
+        },
+        {
+          "batchId": "2f4d8b1a-9c63-4e70-8a21-5d7f3c9b6e40",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "zhongguo-jianzhi",
+          "title": "中国剪纸：纸上留白之间的艺术",
+          "description": "从剪、刻、染色与镂空等技法，认识剪纸如何装点生活、参与节庆并体现不同地域的审美。",
+          "category": "民间艺术与手工艺",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese paper-cut",
+              "url": "https://ich.unesco.org/en/RL/chinese-paper-cut-00219",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## 通过剪去纸张形成画面\n\n中国剪纸（jiǎnzhǐ）是一种通过剪、刻、镂空和塑形，让一张纸变成图案的艺术。作品不仅由留下来的纸面构成，也依靠被剪去的部分和空白来形成画面。剪纸可以简洁，也可以十分精细，常被用于装饰窗户、墙面、门和其他日常空间。\n\n2009年，中国剪纸被列入联合国教科文组织人类非物质文化遗产代表作名录。剪纸在中国不同地区和不同民族群体中都有发展，技法与图案会随着地域和用途而变化。\n\n## 工具、技法与图案\n\n有些创作者会先把纸折叠，再进行剪刻，展开后便能看到重复或对称的图案。也有人直接在平整的纸张上操作，使用剪刀、刻刀或其他工具制作细节。纸张可以保留原色，也可以染色或多层叠加。\n\n常见图案包括花卉、动物、植物、人物、象征性符号和生活场景。婚礼装饰可能表达对幸福生活的祝愿；季节性装饰则可能迎接节日或标记一年中的变化。但这些寓意并不是在所有地区和家庭中都完全相同。\n\n## 一种不断发展的手艺\n\n剪纸技艺长期通过家庭和地方社群传承，年长创作者也会把经验教给年轻一代。今天，艺术家还会尝试新材料、数字设计和当代题材。新工具并不意味着传统消失，而是说明熟悉的手艺仍然可以继续变化。\n\n## 仔细观察\n\n把一幅剪纸举到光线前，观察实心图案与镂空部分如何相互依存。哪些纸面连接着整个图案？如果剪断其中一处细小的连接，哪些细节就会脱落？\n\n### 延伸阅读\n\n- [联合国教科文组织：中国剪纸](https://ich.unesco.org/en/RL/chinese-paper-cut-00219)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/zh-cn/culture/zhongguo-jianzhi.md"
+        },
+        {
+          "batchId": "2f4d8b1a-9c63-4e70-8a21-5d7f3c9b6e40",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "recorte-de-papel-chino",
+          "title": "El recorte de papel chino: arte entre líneas y vacíos",
+          "description": "Descubre cómo cortar y dar forma al papel crea diseños vinculados con las celebraciones, los espacios cotidianos y las tradiciones artesanales regionales.",
+          "category": "Arte popular y artesanía",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese paper-cut",
+              "url": "https://ich.unesco.org/en/RL/chinese-paper-cut-00219",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## Una imagen creada al retirar papel\n\nEl recorte de papel chino (剪纸, jiǎnzhǐ) transforma una hoja en una imagen mediante cortes, perforaciones y formas. El diseño no depende solo del papel que permanece, sino también de los huecos y espacios que aparecen alrededor. Las obras pueden ser sencillas o muy detalladas y se colocan en ventanas, paredes, puertas y otros espacios cotidianos.\n\nLa UNESCO inscribió el recorte de papel chino en su Lista Representativa del Patrimonio Cultural Inmaterial en 2009. La práctica existe en distintas regiones de China y entre diversos grupos étnicos; las técnicas y los motivos cambian según el lugar y el uso.\n\n## Herramientas, técnicas y motivos\n\nAlgunos artesanos doblan el papel antes de cortarlo para obtener diseños repetidos al abrirlo. Otros trabajan sobre una hoja plana y utilizan tijeras, cuchillas o herramientas similares a un pequeño cincel para los detalles. El papel puede conservar su color original, teñirse o combinarse en varias capas.\n\nLos motivos incluyen flores, animales, plantas, personas, símbolos y escenas de la vida diaria. Una decoración de boda puede expresar deseos de felicidad; un adorno estacional puede dar la bienvenida a una festividad. Estos significados no son idénticos en todas las regiones ni en todas las familias.\n\n## Un oficio vivo\n\nEl conocimiento se ha transmitido a menudo dentro de las familias y las comunidades locales, de artesanos mayores a aprendices jóvenes. Hoy también se experimenta con materiales nuevos, diseño digital y temas contemporáneos. Las herramientas nuevas no borran la tradición: muestran cómo un oficio conocido puede seguir cambiando.\n\n## Observa de cerca\n\nSostén un recorte frente a la luz. Fíjate en cómo las formas sólidas y los espacios vacíos dependen unos de otros. ¿Qué partes mantienen unido el diseño? ¿Qué detalle desaparecería si se cortara uno de sus pequeños puentes de papel?\n\n### Para seguir leyendo\n\n- [UNESCO — Recorte de papel chino](https://ich.unesco.org/en/RL/chinese-paper-cut-00219).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/es/culture/recorte-de-papel-chino.md"
+        }
+      ]
+    },
+    {
+      "batchId": "3a5e9c2b-1d74-4f81-9b32-6e8a4d0c7f51",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "3a5e9c2b-1d74-4f81-9b32-6e8a4d0c7f51",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "chinese-shadow-puppetry",
+          "title": "Chinese Shadow Puppetry: Stories Behind a Screen",
+          "description": "Explore how carved figures, light, music and skilled puppeteers bring stories to life in Chinese shadow theatre.",
+          "category": "Performing arts",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese shadow puppetry",
+              "url": "https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## A theatre made of light and movement\n\nChinese shadow puppetry uses figures made from materials such as leather or paper. Puppeteers move them with rods behind a translucent screen, while a light source projects their silhouettes for an audience. Music and singing accompany the action, turning a small screen into a stage for stories, characters and imagined places.\n\nUNESCO inscribed Chinese shadow puppetry on its Representative List of the Intangible Cultural Heritage of Humanity in 2011. The tradition includes many local styles, repertoires and ways of making and manipulating figures.\n\n## Making the figures move\n\nA puppet may be cut, carved, coloured and assembled from several pieces. Articulated joints allow its head, arms or legs to move. The puppeteer must coordinate rods, timing and position so that the audience can follow the action. Some performers manipulate more than one figure at once.\n\nThe screen is not merely a background. Its size, texture and lighting shape what the audience sees. A figure can appear to enter, leave, travel or transform through a few carefully timed movements.\n\n## Music, voice and shared knowledge\n\nPerformances combine movement with singing, speech and instrumental music. In some traditions, performers learn a large repertoire of stories and develop distinctive vocal or musical skills. Knowledge is passed through families, troupes and teacher-student relationships. The people who carve the puppets may also perform with them.\n\nShadow plays have appeared in entertainment and in community or ceremonial settings. Their subjects and functions differ across regions; no single story or performance style represents the whole tradition.\n\n## Watch for the craft\n\nWhen watching a short performance, notice how a small change in the puppet's angle alters its expression. Listen for the way music marks a change of mood or action. The illusion is simple in appearance, but it depends on precise coordination among light, screen, voice and hands.\n\n### Further reading\n\n- [UNESCO — Chinese shadow puppetry](https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/culture/chinese-shadow-puppetry.md"
+        },
+        {
+          "batchId": "3a5e9c2b-1d74-4f81-9b32-6e8a4d0c7f51",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "zhongguo-piyingxi",
+          "title": "中国皮影戏：一方幕布后的故事",
+          "description": "从皮影造型、灯光、唱腔与操纵技艺，认识中国皮影戏如何在幕布后呈现故事。",
+          "category": "表演艺术",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese shadow puppetry",
+              "url": "https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## 由光线与动作构成的戏剧\n\n中国皮影戏使用皮革或纸等材料制作人物造型。表演者在半透明幕布后用操纵杆控制影人，光源把影子的轮廓投射到幕布上。音乐和唱腔伴随表演，让一方幕布成为讲述故事、塑造人物和呈现想象空间的舞台。\n\n2011年，中国皮影戏被列入联合国教科文组织人类非物质文化遗产代表作名录。这一传统包含多种地方风格、剧目和制作、操纵影人的方式。\n\n## 让影人动起来\n\n皮影可以经过剪裁、雕刻、着色，再由多个部件组合而成。活动关节让影人的头部、手臂或腿部能够运动。表演者需要协调操纵杆、节奏和位置，让观众看清故事的发展。有些表演者还可以同时操纵多个影人。\n\n幕布并不只是背景。它的大小、材质和光线会影响观众看到的画面。通过几个经过设计的动作，影人便能表现进入、离开、行走或变化。\n\n## 音乐、唱腔与知识传承\n\n皮影表演将动作与唱腔、念白和器乐结合起来。在一些地方传统中，表演者需要掌握大量剧目，以及独特的发声和音乐技巧。相关知识通过家庭、戏班和师徒关系传承。制作影人的艺人也可能亲自登台表演。\n\n皮影戏既用于娱乐，也可能出现在社区活动或仪式场合。不同地区的题材和功能有所不同，没有一种故事或表演方式能够代表全部皮影传统。\n\n## 留意其中的手艺\n\n观看一段短片时，可以观察影人角度发生细微变化后，人物表情如何随之改变。也可以留意音乐怎样提示情绪和动作的变化。看起来简单的影像，其实依赖灯光、幕布、声音和双手之间的精准配合。\n\n### 延伸阅读\n\n- [联合国教科文组织：中国皮影戏](https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/zh-cn/culture/zhongguo-piyingxi.md"
+        },
+        {
+          "batchId": "3a5e9c2b-1d74-4f81-9b32-6e8a4d0c7f51",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "teatro-de-sombras-chino",
+          "title": "El teatro chino de sombras: historias detrás de una pantalla",
+          "description": "Descubre cómo las figuras articuladas, la luz, la música y la destreza de los titiriteros dan vida al teatro chino de sombras.",
+          "category": "Artes escénicas",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Chinese shadow puppetry",
+              "url": "https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421",
+              "publisher": "UNESCO"
+            }
+          ],
+          "bodyMarkdown": "## Un teatro hecho de luz y movimiento\n\nEl teatro chino de sombras utiliza figuras elaboradas con materiales como cuero o papel. Los titiriteros las mueven con varillas detrás de una pantalla translúcida, mientras una fuente de luz proyecta sus siluetas ante el público. La música y el canto acompañan la acción y convierten una pantalla pequeña en un escenario de historias, personajes y lugares imaginados.\n\nLa UNESCO inscribió el teatro chino de sombras en su Lista Representativa del Patrimonio Cultural Inmaterial en 2011. La tradición comprende estilos regionales, repertorios y técnicas diversas para fabricar y manipular las figuras.\n\n## Dar movimiento a las figuras\n\nUna figura puede cortarse, tallarse, colorearse y ensamblarse a partir de varias piezas. Las articulaciones permiten mover la cabeza, los brazos o las piernas. El titiritero coordina las varillas, el ritmo y la posición para que el público siga la acción. Algunos artistas manipulan más de una figura al mismo tiempo.\n\nLa pantalla no es un simple fondo. Su tamaño, textura e iluminación determinan lo que ve el público. Con unos pocos movimientos precisos, una figura puede entrar, salir, viajar o transformarse.\n\n## Música, voz y transmisión del saber\n\nLas representaciones combinan movimiento, canto, habla y música instrumental. En algunas tradiciones, los artistas aprenden un repertorio amplio y desarrollan técnicas vocales y musicales particulares. El conocimiento se transmite en familias, compañías y relaciones entre maestros y alumnos. Quienes tallan las figuras también pueden actuar con ellas.\n\nLas obras se presentan para entretener y, en algunos lugares, en contextos comunitarios o ceremoniales. Los temas y las funciones varían según la región; ningún relato o estilo representa toda la tradición.\n\n## Observa el oficio\n\nAl ver una representación breve, fíjate en cómo un pequeño cambio de ángulo modifica la expresión de la figura. Escucha cómo la música señala cambios de emoción o acción. La ilusión parece sencilla, pero depende de la coordinación precisa entre luz, pantalla, voz y manos.\n\n### Para seguir leyendo\n\n- [UNESCO — Teatro chino de sombras](https://ich.unesco.org/en/RL/chinese-shadow-puppetry-00421).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/es/culture/teatro-de-sombras-chino.md"
+        }
+      ]
+    },
+    {
+      "batchId": "4b6f0d3c-2e85-4a92-8c43-7f9b5e1d8062",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "4b6f0d3c-2e85-4a92-8c43-7f9b5e1d8062",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "chinese-porcelain-jingdezhen",
+          "title": "Chinese Porcelain: Clay, Fire and the Craft of Jingdezhen",
+          "description": "Learn how forming, glazing, decorating and firing shape porcelain, and why Jingdezhen became a major center of Chinese ceramic production.",
+          "category": "Arts & craft",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Porcelain",
+              "url": "https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            },
+            {
+              "title": "Porcelain Production at Jingdezhen",
+              "url": "https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            }
+          ],
+          "bodyMarkdown": "## From earth to a finished vessel\n\nPorcelain is a type of ceramic valued for its strength, fine texture and, in some forms, light-transmitting quality. Its appearance depends on the materials, the shape of the object, the glaze, the decoration and the firing process. It is not simply “white pottery”: porcelain can be plain, painted, coloured or highly elaborate.\n\nThe Smithsonian's National Museum of Asian Art describes porcelain production through four broad stages: forming, glazing, decorating and firing. The exact materials and sequence vary by workshop, product and period.\n\n## The work of making porcelain\n\nA maker first prepares and shapes the ceramic body. The piece is dried and may be trimmed or refined before glaze is applied. Decoration can be painted onto the surface or added through other techniques. Firing in a kiln transforms the prepared object into a hard ceramic vessel. The temperature and atmosphere of the kiln affect the final colour, texture and strength.\n\nKaolin is an important ingredient in many porcelain bodies, but recipes and materials are not identical across all periods and production centers. The craft depends on practical knowledge of clay, glaze, tools and kiln conditions.\n\n## Jingdezhen and a wider world\n\nJingdezhen, in Jiangxi province, became a major center of China's ceramics industry. The Smithsonian notes its importance in global ceramic production from the fourteenth century and the expansion of trade in the sixteenth century. Porcelain made in China travelled through trade networks and influenced ceramic makers elsewhere.\n\nJingdezhen's history is not the whole story of Chinese ceramics. Many regions developed their own kilns, materials, shapes and decorative traditions.\n\n## Look beyond the surface\n\nWhen you see a porcelain bowl or vase, notice its weight, translucency, glaze and painted details. Ask how the shape was formed and what the firing process might have changed. A finished object holds traces of material choices and skilled work that are easy to overlook.\n\n### Further reading\n\n- [Smithsonian National Museum of Asian Art — Porcelain](https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/).\n- [Smithsonian National Museum of Asian Art — Porcelain Production at Jingdezhen](https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/culture/chinese-porcelain-jingdezhen.md"
+        },
+        {
+          "batchId": "4b6f0d3c-2e85-4a92-8c43-7f9b5e1d8062",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "zhongguo-ciqi-jingdezhen",
+          "title": "中国瓷器：泥土、窑火与景德镇的制瓷技艺",
+          "description": "从成形、施釉、装饰到烧制，认识瓷器制作的基本环节，以及景德镇在中国陶瓷史上的重要地位。",
+          "category": "艺术与工艺",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Porcelain",
+              "url": "https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            },
+            {
+              "title": "Porcelain Production at Jingdezhen",
+              "url": "https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            }
+          ],
+          "bodyMarkdown": "## 从泥土到成品器物\n\n瓷器是一种陶瓷制品，以坚硬、质地细密，以及部分品种具有透光性等特点受到重视。瓷器的外观取决于原料、器物造型、釉料、装饰和烧制过程。它并不只是“白色的陶器”：瓷器可以素面、彩绘、施色，也可以具有复杂精美的装饰。\n\n史密森尼国家亚洲艺术博物馆将瓷器制作概括为四个主要环节：成形、施釉、装饰和烧制。不同工坊、产品和历史时期采用的材料与工序可能有所差异。\n\n## 制作瓷器的过程\n\n制作者首先准备瓷胎并塑造器物。器物经过干燥后，可能还要修坯和进一步整理，再施加釉料。装饰可以绘制在表面，也可以通过其他工艺完成。最后，器物进入窑炉烧制，形成坚硬的陶瓷成品。窑炉的温度和气氛会影响最终的颜色、质地与强度。\n\n高岭土是许多瓷胎配方中的重要原料，但不同历史时期和产地的配方并不完全相同。制瓷技艺离不开对泥料、釉料、工具和窑炉条件的实践经验。\n\n## 景德镇与更广阔的世界\n\n江西景德镇是中国陶瓷生产的重要中心。史密森尼资料指出，景德镇从14世纪起就在中国与全球陶瓷生产中占有重要地位，16世纪贸易进一步扩大。中国瓷器通过贸易网络传播，也影响了其他地区的制瓷工艺。\n\n景德镇的历史并不能概括中国陶瓷的全部。中国不同地区还发展出各自的窑口、原料、器形和装饰传统。\n\n## 不妨观察器物表面之外的细节\n\n看到一只瓷碗或花瓶时，可以留意它的重量、透光程度、釉面和绘画细节。试着思考它是如何成形的，以及烧制过程可能带来了哪些变化。一件完成的器物，保存着容易被忽略的材料选择和手工技艺。\n\n### 延伸阅读\n\n- [史密森尼国家亚洲艺术博物馆：瓷器](https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/)。\n- [史密森尼国家亚洲艺术博物馆：景德镇的瓷器生产](https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/zh-cn/culture/zhongguo-ciqi-jingdezhen.md"
+        },
+        {
+          "batchId": "4b6f0d3c-2e85-4a92-8c43-7f9b5e1d8062",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "porcelana-china-jingdezhen",
+          "title": "La porcelana china: arcilla, fuego y el oficio de Jingdezhen",
+          "description": "Conoce cómo el modelado, el vidriado, la decoración y la cocción dan forma a la porcelana, y por qué Jingdezhen se convirtió en un gran centro cerámico.",
+          "category": "Arte y artesanía",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Porcelain",
+              "url": "https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            },
+            {
+              "title": "Porcelain Production at Jingdezhen",
+              "url": "https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/",
+              "publisher": "Smithsonian's National Museum of Asian Art"
+            }
+          ],
+          "bodyMarkdown": "## De la tierra a una pieza terminada\n\nLa porcelana es un tipo de cerámica apreciada por su resistencia, su textura fina y, en algunas variedades, su capacidad de dejar pasar la luz. Su aspecto depende de los materiales, la forma, el esmalte, la decoración y la cocción. No es simplemente “cerámica blanca”: puede ser lisa, pintada, coloreada o muy elaborada.\n\nEl Museo Nacional de Arte Asiático del Smithsonian describe cuatro etapas generales de producción: modelado, vidriado, decoración y cocción. Los materiales y el orden exacto pueden variar según el taller, el objeto y la época.\n\n## El trabajo de fabricar porcelana\n\nPrimero se prepara y modela la pasta cerámica. La pieza se seca y puede retocarse antes de aplicar el esmalte. La decoración se pinta sobre la superficie o se añade mediante otras técnicas. Después, la pieza se cuece en un horno, donde se transforma en un objeto cerámico duro. La temperatura y la atmósfera del horno influyen en el color, la textura y la resistencia final.\n\nEl caolín es un ingrediente importante en muchas pastas de porcelana, pero las recetas no son idénticas en todas las épocas y centros de producción. El oficio requiere conocimientos prácticos sobre arcillas, esmaltes, herramientas y hornos.\n\n## Jingdezhen y un mundo conectado\n\nJingdezhen, en la provincia de Jiangxi, se convirtió en un centro importante de la industria cerámica china. El Smithsonian destaca su papel en la producción cerámica mundial desde el siglo XIV y la expansión del comercio durante el siglo XVI. La porcelana china circuló por redes comerciales e influyó en los productores de otras regiones.\n\nLa historia de Jingdezhen no resume toda la cerámica china. Muchas regiones desarrollaron sus propios hornos, materiales, formas y estilos decorativos.\n\n## Mira más allá de la superficie\n\nAl observar un cuenco o un jarrón de porcelana, fíjate en su peso, transparencia, esmalte y detalles pintados. Pregúntate cómo se formó y qué pudo cambiar durante la cocción. Un objeto terminado conserva las huellas de decisiones materiales y de un trabajo especializado que a menudo pasan inadvertidos.\n\n### Para seguir leyendo\n\n- [Museo Nacional de Arte Asiático del Smithsonian — Porcelana](https://asia-archive.si.edu/learn/for-educators/teaching-china-with-the-smithsonian/videos/porcelain/).\n- [Smithsonian — Producción de porcelana en Jingdezhen](https://asia-archive.si.edu/exhibition/porcelain-production-jingdezhen/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/es/culture/porcelana-china-jingdezhen.md"
+        }
+      ]
+    },
+    {
+      "batchId": "5c7a1e4d-3f96-4ba3-9d54-8a0c6f2e9173",
+      "collection": "festivals",
+      "variants": [
+        {
+          "batchId": "5c7a1e4d-3f96-4ba3-9d54-8a0c6f2e9173",
+          "locale": "en",
+          "collection": "festivals",
+          "slug": "qingming-festival",
+          "title": "Qingming Festival: Remembering Ancestors, Welcoming Spring",
+          "description": "Understand Qingming as both a seasonal marker and a time for remembrance, family visits and spring outings, with customs that vary by place.",
+          "category": "Festival guide",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Spring outing for Qingming: Embrace the season in Shanghai",
+              "url": "https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html",
+              "publisher": "Shanghai Municipal Government"
+            },
+            {
+              "title": "Qingming: Chinese national intangible cultural heritage",
+              "url": "https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm",
+              "publisher": "China Culture"
+            }
+          ],
+          "bodyMarkdown": "## A seasonal day of remembrance\n\nQingming (清明, Qīngmíng) is both one of the traditional twenty-four solar terms and a day associated with remembering ancestors. It usually falls in early April, but its Gregorian date changes from year to year. The name is often translated as “Clear and Bright,” evoking the season's fresh light and renewed landscape.\n\nFor many families, Qingming is a time to visit ancestral graves, tidy burial places and make offerings or spend a quiet moment in remembrance. It is also associated with spring outings, when people enjoy the warmer weather and the changing landscape.\n\n## Remembering and caring for family history\n\nPractices vary among regions, communities and families. Some people clean graves, place flowers or offer food; others observe the day in different ways or remember relatives from a distance. The form of remembrance may be shaped by family history, local custom, religious practice and personal choice.\n\nThe important point is not that every family performs the same ritual. Qingming provides a seasonal occasion for many people to reflect on family relationships, memory and continuity between generations.\n\n## Spring outdoors\n\nQingming is also linked with enjoying the outdoors. Families may walk in parks, visit the countryside or fly kites. Some local customs include using willow branches, but these practices are not universal. The festival's seasonal character connects remembrance with the renewal of plants and the arrival of spring.\n\n## A thoughtful way to learn\n\nIf you are learning about Qingming, distinguish the solar term from the many customs associated with the day. Ask how a practice varies across regions and generations, and avoid assuming that one family's observance represents everyone.\n\n### Further reading\n\n- [Shanghai Municipal Government — Spring outing for Qingming](https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html).\n- [China Culture — Qingming: Chinese national intangible cultural heritage](https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/festivals/qingming-festival.md"
+        },
+        {
+          "batchId": "5c7a1e4d-3f96-4ba3-9d54-8a0c6f2e9173",
+          "locale": "zh-CN",
+          "collection": "festivals",
+          "slug": "qingming-jie",
+          "title": "清明节：缅怀先人，也感受春天",
+          "description": "认识清明节兼具节气与纪念意义的特点，了解祭扫、追思和踏青等因地区而异的习俗。",
+          "category": "节日指南",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Spring outing for Qingming: Embrace the season in Shanghai",
+              "url": "https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html",
+              "publisher": "Shanghai Municipal Government"
+            },
+            {
+              "title": "Qingming: Chinese national intangible cultural heritage",
+              "url": "https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm",
+              "publisher": "China Culture"
+            }
+          ],
+          "bodyMarkdown": "## 一个兼具节气与纪念意义的日子\n\n清明（Qīngmíng）既是中国传统二十四节气之一，也是人们缅怀先人的重要日子。清明通常在公历4月上旬，但每年的具体日期会有所变化。“清明”一词常被解释为天气清朗、景物明净，也让人联想到春季自然景色的更新。\n\n对许多家庭来说，清明是前往祖先墓地祭扫、整理墓地环境、献花或静静追思的时节。它也与春日出游有关，人们会趁着天气转暖，欣赏自然景色的变化。\n\n## 追思与家族记忆\n\n不同地区、社群和家庭的做法并不相同。有些人会清扫墓地、献花或供奉食物；也有人采用其他方式，或在远方追思亲人。具体做法可能受到家族历史、地方习俗、宗教实践和个人选择的影响。\n\n重要的不是所有家庭都进行同一种仪式，而是清明为许多人提供了一个与季节相连的时刻，让人思考家庭关系、记忆以及代际之间的联系。\n\n## 走进春天\n\n清明也与户外活动有关。人们可能到公园散步、去郊外踏青或放风筝。一些地方还保留着使用柳枝的习俗，但并非所有地区都如此。清明将追思与草木更新、春天到来联系在一起。\n\n## 怎样理解这个节日\n\n了解清明时，可以先区分节气本身与围绕这一天形成的各种习俗。可以进一步了解不同地区和不同世代的做法，不要把某一个家庭的习惯当成所有人的共同经历。\n\n### 延伸阅读\n\n- [上海市人民政府：清明踏青，拥抱春天](https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html)。\n- [中国文化网：清明——中国国家级非物质文化遗产](https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/zh-cn/festivals/qingming-jie.md"
+        },
+        {
+          "batchId": "5c7a1e4d-3f96-4ba3-9d54-8a0c6f2e9173",
+          "locale": "es",
+          "collection": "festivals",
+          "slug": "festival-qingming",
+          "title": "El Festival Qingming: recordar a los antepasados y dar la bienvenida a la primavera",
+          "description": "Comprende Qingming como una referencia estacional y un momento de recuerdo, reuniones familiares y paseos primaverales, con costumbres que varían según el lugar.",
+          "category": "Guía de festividades",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [
+            {
+              "title": "Spring outing for Qingming: Embrace the season in Shanghai",
+              "url": "https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html",
+              "publisher": "Shanghai Municipal Government"
+            },
+            {
+              "title": "Qingming: Chinese national intangible cultural heritage",
+              "url": "https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm",
+              "publisher": "China Culture"
+            }
+          ],
+          "bodyMarkdown": "## Un día estacional para recordar\n\nQingming (清明, Qīngmíng) es uno de los veinticuatro términos solares tradicionales y también una fecha asociada con el recuerdo de los antepasados. Suele caer a comienzos de abril, aunque la fecha del calendario gregoriano cambia cada año. El nombre se traduce a menudo como “Claro y luminoso” y evoca la luz fresca y el paisaje renovado de la estación.\n\nPara muchas familias, Qingming es un momento para visitar las tumbas de sus antepasados, cuidar los lugares de enterramiento y hacer ofrendas o dedicar un instante al recuerdo. También se relaciona con las salidas primaverales, cuando la gente disfruta del clima más templado y del cambio del paisaje.\n\n## Recordar y cuidar la memoria familiar\n\nLas prácticas varían entre regiones, comunidades y familias. Algunas personas limpian las tumbas, colocan flores u ofrecen alimentos; otras siguen distintas costumbres o recuerdan a sus familiares desde lejos. Las formas de conmemoración pueden depender de la historia familiar, las tradiciones locales, las prácticas religiosas y las decisiones personales.\n\nLo importante no es que todas las familias realicen el mismo ritual. Qingming ofrece a muchas personas una ocasión estacional para reflexionar sobre los vínculos familiares, la memoria y la continuidad entre generaciones.\n\n## Disfrutar de la primavera al aire libre\n\nQingming también está relacionado con salir al exterior. Las familias pueden pasear por parques, visitar el campo o volar cometas. Algunas costumbres locales incluyen ramas de sauce, pero no son universales. El carácter estacional de la fecha conecta el recuerdo con el crecimiento de las plantas y la llegada de la primavera.\n\n## Una forma atenta de aprender\n\nAl estudiar Qingming, distingue el término solar de las distintas costumbres asociadas con el día. Pregunta cómo cambian las prácticas según la región y la generación, y evita suponer que la observancia de una familia representa a todas las demás.\n\n### Para seguir leyendo\n\n- [Gobierno Municipal de Shanghái — Salida primaveral para Qingming](https://english.shanghai.gov.cn/en-FestivalsCelebrations/20260403/39ae207f71e64c479638651f9c03a8a3.html).\n- [China Culture — Qingming: patrimonio cultural inmaterial nacional de China](https://en.chinaculture.org/focus/focus/2013cdgjfyj/2011-05/25/content_463862.htm).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/es/festivals/festival-qingming.md"
+        }
+      ]
+    },
+    {
+      "batchId": "6d8b2f5e-4a07-4cb4-8e65-9b1d7a3f0284",
+      "collection": "books",
+      "variants": [
+        {
+          "batchId": "6d8b2f5e-4a07-4cb4-8e65-9b1d7a3f0284",
+          "locale": "en",
+          "collection": "books",
+          "slug": "romance-of-the-three-kingdoms-guide",
+          "title": "Romance of the Three Kingdoms: A Reader's Guide",
+          "description": "Explore the historical setting, major themes and literary imagination of one of China's best-known classical novels.",
+          "category": "Philosophy & classics",
+          "featured": false,
+          "readingMinutes": 6,
+          "sources": [
+            {
+              "title": "Three Kingdoms: A Historical Novel",
+              "url": "https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel",
+              "publisher": "University of California Press"
+            },
+            {
+              "title": "The Romance of the Three Kingdoms",
+              "url": "https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf",
+              "publisher": "University of North Georgia"
+            }
+          ],
+          "bodyMarkdown": "## A novel built around a turbulent era\n\n*Romance of the Three Kingdoms* (三国演义, *Sānguó Yǎnyì*) is one of the best-known works of classical Chinese fiction. It tells a sweeping story of political rivalry, military conflict, alliances and personal loyalty during the end of the Han dynasty and the period of the Three Kingdoms.\n\nThe novel draws on historical people and events, but it is a literary work, not a modern history textbook. It combines historical material with dramatic scenes, memorable speeches, moral judgments and imaginative storytelling.\n\n## History and literary imagination\n\nThe story's broad setting spans the late second and third centuries, when the Han empire fractured and rival states emerged. The novel focuses on the competing powers commonly known as Wei, Shu and Wu. Many of its central figures are based on historical people, but their actions and personalities are shaped by centuries of storytelling and literary interpretation.\n\nThe work is traditionally attributed to Luo Guanzhong and is associated with the Ming period. The history of its composition and later editions is complex, so it is better to say “traditionally attributed” than to treat every detail of authorship as settled.\n\n## Themes to notice\n\nReaders often encounter questions about loyalty, legitimacy, strategy, leadership, ambition and the costs of war. Characters may be admired for courage or devotion while also being judged for their choices. The novel's narrative perspective and moral contrasts shape how readers understand the competing states.\n\nBecause the cast is large, it helps to keep a short list of the main figures and the relationships among them. A map and a timeline can also make the shifting alliances easier to follow.\n\n## Choosing a translation\n\nTranslations differ in names, notes, chapter divisions and literary style. Before choosing an edition, check whether it is abridged or complete, whether it includes maps and character lists, and how it handles Chinese names. A translation's introduction can explain its editorial approach.\n\n### Further reading\n\n- [University of California Press — Three Kingdoms: A Historical Novel](https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel).\n- [University of North Georgia — World Literature I: The Romance of the Three Kingdoms](https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/books/romance-of-the-three-kingdoms-guide.md"
+        },
+        {
+          "batchId": "6d8b2f5e-4a07-4cb4-8e65-9b1d7a3f0284",
+          "locale": "zh-CN",
+          "collection": "books",
+          "slug": "sanguo-yanyi-dushu-zhinan",
+          "title": "《三国演义》：读者指南",
+          "description": "从历史背景、人物关系与文学想象入手，认识中国古典小说《三国演义》。",
+          "category": "哲学与经典",
+          "featured": false,
+          "readingMinutes": 6,
+          "sources": [
+            {
+              "title": "Three Kingdoms: A Historical Novel",
+              "url": "https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel",
+              "publisher": "University of California Press"
+            },
+            {
+              "title": "The Romance of the Three Kingdoms",
+              "url": "https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf",
+              "publisher": "University of North Georgia"
+            }
+          ],
+          "bodyMarkdown": "## 一部以动荡时代为背景的小说\n\n《三国演义》（Sānguó Yǎnyì）是中国最著名的古典小说之一。作品以东汉末年和三国时期为背景，讲述政治竞争、军事冲突、联盟关系和人物忠义等故事。\n\n小说取材于历史人物和事件，但它是一部文学作品，并不是现代意义上的历史教科书。书中将历史材料与戏剧化情节、人物言行、道德评价和文学想象结合起来。\n\n## 历史背景与文学想象\n\n故事的大致背景横跨2世纪末至3世纪。当时汉朝政权逐渐瓦解，多个政治力量相互竞争。小说重点描写通常所说的魏、蜀、吴三方。许多主要人物都有历史原型，但他们的性格与经历也经过了长期民间讲述和文学创作的塑造。\n\n《三国演义》传统上被认为与罗贯中有关，并与明代小说发展联系在一起。不过，作品的成书过程和后世版本较为复杂，因此使用“传统上归于罗贯中”这样的说法，比把所有作者问题都视为定论更严谨。\n\n## 阅读时可以留意的主题\n\n读者常会遇到忠义、正统、谋略、领导力、野心以及战争代价等问题。人物可能因勇气或忠诚受到赞赏，也可能因自己的选择受到批评。叙事视角和道德对照，会影响读者如何理解不同政治力量。\n\n由于人物众多，可以先整理一份主要人物及其关系的简表。配合地图和时间线，也更容易理解不断变化的联盟关系。\n\n## 怎样选择译本\n\n不同译本在人物姓名、注释、章节划分和语言风格上可能存在差异。选择版本时，可以留意它是节选本还是完整译本，是否附有地图和人物表，以及如何处理中文人名。译本的导言通常能帮助读者了解编辑和翻译方法。\n\n### 延伸阅读\n\n- [加州大学出版社：《三国演义》英文译本介绍](https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel)。\n- [北乔治亚大学：世界文学导读——《三国演义》](https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/zh-cn/books/sanguo-yanyi-dushu-zhinan.md"
+        },
+        {
+          "batchId": "6d8b2f5e-4a07-4cb4-8e65-9b1d7a3f0284",
+          "locale": "es",
+          "collection": "books",
+          "slug": "guia-romance-de-los-tres-reinos",
+          "title": "Romance de los Tres Reinos: guía para lectores",
+          "description": "Explora el contexto histórico, los temas principales y la imaginación literaria de una de las novelas clásicas chinas más conocidas.",
+          "category": "Filosofía y clásicos",
+          "featured": false,
+          "readingMinutes": 6,
+          "sources": [
+            {
+              "title": "Three Kingdoms: A Historical Novel",
+              "url": "https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel",
+              "publisher": "University of California Press"
+            },
+            {
+              "title": "The Romance of the Three Kingdoms",
+              "url": "https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf",
+              "publisher": "University of North Georgia"
+            }
+          ],
+          "bodyMarkdown": "## Una novela ambientada en una época turbulenta\n\n*Romance de los Tres Reinos* (三国演义, *Sānguó Yǎnyì*) es una de las obras más conocidas de la ficción clásica china. Narra rivalidades políticas, conflictos militares, alianzas y lealtades personales durante el final de la dinastía Han y el periodo de los Tres Reinos.\n\nLa novela se inspira en personajes y acontecimientos históricos, pero es una obra literaria, no un libro moderno de historia. Combina materiales históricos con escenas dramáticas, discursos memorables, juicios morales e imaginación narrativa.\n\n## Historia e imaginación literaria\n\nEl marco general abarca finales del siglo II y el siglo III, cuando el imperio Han se fragmentó y surgieron estados rivales. La novela se centra en las potencias conocidas habitualmente como Wei, Shu y Wu. Muchos personajes principales se basan en personas históricas, pero sus acciones y personalidades también están moldeadas por siglos de relatos e interpretaciones literarias.\n\nLa obra se atribuye tradicionalmente a Luo Guanzhong y se relaciona con el periodo Ming. La historia de su composición y de sus ediciones posteriores es compleja; por eso resulta más preciso decir “atribuida tradicionalmente” que presentar todos los detalles de autoría como definitivos.\n\n## Temas que conviene observar\n\nLos lectores encuentran cuestiones de lealtad, legitimidad, estrategia, liderazgo, ambición y costes de la guerra. Algunos personajes son admirados por su valor o fidelidad, pero también se juzgan sus decisiones. La perspectiva narrativa y los contrastes morales influyen en cómo se interpretan los estados rivales.\n\nComo aparecen muchos personajes, puede ser útil preparar una lista breve de figuras principales y sus relaciones. Un mapa y una cronología también ayudan a seguir las alianzas cambiantes.\n\n## Cómo elegir una traducción\n\nLas traducciones pueden diferir en los nombres, las notas, la división de capítulos y el estilo literario. Antes de elegir una edición, comprueba si es abreviada o completa, si incluye mapas y listas de personajes y cómo presenta los nombres chinos. La introducción del traductor puede explicar el enfoque editorial.\n\n### Para seguir leyendo\n\n- [University of California Press — Three Kingdoms: A Historical Novel](https://www.ucpress.edu/book/9780520225039/three-kingdoms-a-historical-novel).\n- [University of North Georgia — World Literature I: The Romance of the Three Kingdoms](https://ung.edu/university-press/_uploads/files/World-Lit-Part-2.pdf).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion-2/es/books/guia-romance-de-los-tres-reinos.md"
+        }
+      ]
+    }
+  ]
+}
