@@ -26,6 +26,14 @@ paths:
       tags: [Session]
       operationId: getAdminSession
       summary: Return the verified editor identity, role and CSRF token
+      parameters:
+        - name: diagnostics
+          in: query
+          required: false
+          description: Set to github-app to run an authenticated, read-only GitHub App configuration and installation check.
+          schema:
+            type: string
+            enum: [github-app]
       responses:
         '200':
           description: Authenticated CMS session
@@ -542,7 +550,7 @@ components:
       enum: [admin, editor]
     Session:
       type: object
-      required: [email, role, csrfToken, repository]
+      required: [email, role, csrfToken, repository, capabilities]
       properties:
         email:
           type: string
@@ -555,6 +563,49 @@ components:
         repository:
           type: string
           const: JohnZhang-DataForge/chinese-culture
+        capabilities:
+          type: object
+          required: [preview, publish, mediaUpload]
+          properties:
+            preview:
+              type: boolean
+            publish:
+              type: boolean
+            mediaUpload:
+              type: boolean
+        diagnostics:
+          type: object
+          description: Present only when the authenticated administrator requests diagnostics=github-app.
+          properties:
+            githubApp:
+              type: object
+              required: [ready, stage, code, checks]
+              properties:
+                ready:
+                  type: boolean
+                stage:
+                  type: string
+                  enum: [configuration, jwt, installation_auth, permissions, repository_access, complete]
+                code:
+                  type: string
+                httpStatus:
+                  type: integer
+                checks:
+                  type: object
+                  additionalProperties:
+                    type: boolean
+                missing:
+                  type: array
+                  items:
+                    type: string
+                permissionChecks:
+                  type: object
+                  additionalProperties:
+                    type: boolean
+                permissionLevels:
+                  type: object
+                  additionalProperties:
+                    type: string
     ContentList:
       type: object
       required: [items, page, pageSize, total]
