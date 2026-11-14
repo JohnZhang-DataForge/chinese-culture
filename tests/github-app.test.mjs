@@ -242,3 +242,11 @@ test("installation diagnostics reject a different account and an all-repositorie
     assert.equal(diagnostic.code, expectedCode);
   }
 });
+
+
+test("installation token acquisition fails closed when configuration is incomplete", async () => {
+  await assert.rejects(
+    getInstallationToken({ GITHUB_APP_ID: "5712195", GITHUB_INSTALLATION_ID: "180887271" }),
+    (error) => error.code === "github_app_not_configured" && error.status === 503
+  );
+});
