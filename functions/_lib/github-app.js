@@ -4,8 +4,28 @@ const API_VERSION = "2022-11-28";
 const CMS_REPOSITORY_ID = 1444529252;
 const encoder = new TextEncoder();
 
-export function isGithubAppConfigured(env) {
-  return Boolean(env?.GITHUB_APP_ID && env?.GITHUB_INSTALLATION_ID && env?.GITHUB_APP_PRIVATE_KEY);
+function hasNonBlankString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function hasNumericId(value) {
+  return typeof value === "string" && /^[1-9][0-9]*$/.test(value.trim());
+}
+
+function hasRequiredConfiguration(env) {
+  return hasNumericId(env?.GITHUB_APP_ID)
+    && hasNumericId(env?.GITHUB_INSTALLATION_ID)
+    && hasNonBlankString(env?.GITHUB_APP_PRIVATE_KEY);
+}
+
+export async function isGithubAppConfigured(env) {
+  if (!hasRequiredConfiguration(env)) return false;
+  try {
+    await appJwt(env);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function concatBytes(...parts) {
@@ -38,12 +58,35 @@ function pkcs1ToPkcs8(pkcs1) {
 }
 
 function pemBytes(pem) {
-  const normalized = String(pem).replace(/\\n/g, "\n").trim();
-  const body = normalized.replace(/-----BEGIN [^-]+-----|-----END [^-]+-----|\s/g, "");
+  let normalized = String(pem)
+    .replace(/^\uFEFF/, "")
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\n")
+    .replace(/\r\n?/g, "\n")
+    .trim();
+
+  // Accept a base64-wrapped PEM as well as the documented full PEM secret.
+  if (!normalized.startsWith("-----BEGIN ")) {
+    const wrapped = normalized.replace(/\s/g, "");
+    if (/^[A-Za-z0-9+/]+={0,2}$/.test(wrapped)) {
+      try {
+        const decoded = atob(wrapped);
+        if (decoded.startsWith("-----BEGIN ")) normalized = decoded.replace(/\r\n?/g, "\n").trim();
+      } catch {
+        // The normal PEM validation below returns a stable failure for invalid input.
+      }
+    }
+  }
+
+  const match = /^-----BEGIN (RSA PRIVATE KEY|PRIVATE KEY)-----\s*([A-Za-z0-9+/=\s]+?)\s*-----END \1-----$/.exec(normalized);
+  if (!match) throw new Error("Unsupported GitHub App private key PEM format.");
+  const body = match[2].replace(/\s/g, "");
+  if (!body) throw new Error("GitHub App private key PEM body is empty.");
   const binary = atob(body);
   const bytes = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
-  return { bytes, pkcs1: normalized.includes("BEGIN RSA PRIVATE KEY") };
+  return { bytes, pkcs1: match[1] === "RSA PRIVATE KEY" };
 }
 
 function base64(bytes) {
@@ -71,7 +114,7 @@ async function appJwt(env) {
   const now = Math.floor(Date.now() / 1000);
   const header = base64Url(encoder.encode(JSON.stringify({ alg: "RS256", typ: "JWT" })));
   const payload = base64Url(encoder.encode(JSON.stringify({
-    iat: now - 60, exp: now + 540, iss: String(env.GITHUB_APP_ID)
+    iat: now - 60, exp: now + 540, iss: String(env.GITHUB_APP_ID).trim()
   })));
   const signingInput = header + "." + payload;
   const signature = await crypto.subtle.sign("RSASSA-PKCS1-v1_5", key, encoder.encode(signingInput));
@@ -102,16 +145,9 @@ async function githubRequest(path, token, options = {}) {
   return data;
 }
 
-export async function getInstallationToken(env) {
-  if (!isGithubAppConfigured(env)) {
-    const error = new Error("GitHub App credentials are not configured for publication.");
-    error.code = "github_app_not_configured";
-    error.status = 503;
-    throw error;
-  }
-  const jwt = await appJwt(env);
-  const token = await githubRequest(
-    "/app/installations/" + encodeURIComponent(String(env.GITHUB_INSTALLATION_ID)) + "/access_tokens",
+async function requestInstallationToken(env, jwt) {
+  const result = await githubRequest(
+    "/app/installations/" + encodeURIComponent(String(env.GITHUB_INSTALLATION_ID).trim()) + "/access_tokens",
     jwt,
     {
       method: "POST",
@@ -121,8 +157,126 @@ export async function getInstallationToken(env) {
       }
     }
   );
-  if (!token?.token) throw new Error("GitHub did not issue an installation token.");
-  return token.token;
+  if (!result?.token) throw new Error("GitHub did not issue an installation token.");
+  return result;
+}
+
+export async function getInstallationToken(env) {
+  if (!hasRequiredConfiguration(env)) {
+    const error = new Error("GitHub App credentials are not configured for publication.");
+    error.code = "github_app_not_configured";
+    error.status = 503;
+    throw error;
+  }
+  let jwt;
+  try {
+    jwt = await appJwt(env);
+  } catch {
+    const error = new Error("The configured GitHub App private key could not be used.");
+    error.code = "github_app_private_key_invalid";
+    error.status = 503;
+    throw error;
+  }
+  const result = await requestInstallationToken(env, jwt);
+  return result.token;
+}
+
+function installationDiagnosticCode(error) {
+  if (error?.status === 401) return "github_app_jwt_rejected";
+  if (error?.status === 403) return "github_app_installation_forbidden";
+  if (error?.status === 404) return "github_app_installation_not_found";
+  if (error?.status === 422) return "github_app_installation_request_rejected";
+  return "github_app_installation_auth_failed";
+}
+
+export async function getGithubAppDiagnostics(env) {
+  const checks = {
+    appIdPresent: hasNumericId(env?.GITHUB_APP_ID),
+    installationIdPresent: hasNumericId(env?.GITHUB_INSTALLATION_ID),
+    privateKeyPresent: hasNonBlankString(env?.GITHUB_APP_PRIVATE_KEY)
+  };
+  const missing = Object.entries(checks)
+    .filter(([, passed]) => !passed)
+    .map(([name]) => name);
+
+  if (missing.length) {
+    return {
+      ready: false,
+      stage: "configuration",
+      code: "github_app_configuration_incomplete",
+      checks,
+      missing
+    };
+  }
+
+  let jwt;
+  try {
+    jwt = await appJwt(env);
+  } catch {
+    return {
+      ready: false,
+      stage: "jwt",
+      code: "github_app_jwt_generation_failed",
+      checks: { ...checks, privateKeyParsed: false, jwtGenerated: false }
+    };
+  }
+
+  let installation;
+  try {
+    installation = await requestInstallationToken(env, jwt);
+  } catch (error) {
+    return {
+      ready: false,
+      stage: "installation_auth",
+      code: installationDiagnosticCode(error),
+      httpStatus: Number.isInteger(error?.status) ? error.status : undefined,
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: false }
+    };
+  }
+
+  const permissions = installation.permissions || {};
+  const permissionChecks = {
+    contentsWrite: permissions.contents === "write",
+    pullRequestsWrite: permissions.pull_requests === "write",
+    checksRead: permissions.checks === "read" || permissions.checks === "write"
+  };
+  if (Object.values(permissionChecks).some((passed) => !passed)) {
+    return {
+      ready: false,
+      stage: "permissions",
+      code: "github_app_permissions_insufficient",
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true },
+      permissionChecks,
+      permissionLevels: permissions
+    };
+  }
+
+  try {
+    const ref = await githubRequest(
+      "/repos/JohnZhang-DataForge/chinese-culture/git/ref/heads/main",
+      installation.token
+    );
+    if (!ref?.object?.sha) throw new Error("Repository main ref was not returned.");
+  } catch (error) {
+    return {
+      ready: false,
+      stage: "repository_access",
+      code: "github_app_repository_access_failed",
+      httpStatus: Number.isInteger(error?.status) ? error.status : undefined,
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true, repositoryAccess: false },
+      permissionChecks,
+      permissionLevels: permissions
+    };
+  }
+
+  return {
+    ready: true,
+    stage: "complete",
+    code: "github_app_ready",
+    checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true, repositoryAccess: true },
+    permissionChecks,
+    permissionLevels: permissions
+  };
 }
 
 export async function getMainCommit(token, repository) {
