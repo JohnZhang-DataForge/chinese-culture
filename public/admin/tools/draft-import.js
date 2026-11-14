@@ -9,7 +9,16 @@ const state={session:null,concepts:[],items:[],mapping:[],ready:false,running:fa
 const log=(message)=>{const node=$("log");node.textContent+=(node.textContent?"\n":"")+message;node.scrollTop=node.scrollHeight;};
 const setStatus=(id,message,kind="")=>{const node=$(id);node.textContent=message;node.className="status"+(kind?" "+kind:"");};
 const canonical=(value)=>JSON.stringify(value??null,Object.keys(value??{}).sort());
-const same=(a,b)=>JSON.stringify(a??null)===JSON.stringify(b??null);
+function normalizeComparable(value){
+  if(Array.isArray(value))return value.map(normalizeComparable);
+  if(value&&typeof value==="object"){
+    return Object.fromEntries(Object.keys(value).sort().map(key=>[key,normalizeComparable(value[key])]));
+  }
+  return value;
+}
+// CMS validation normalizes source objects into its canonical field order.
+// Compare their data, not JavaScript object insertion order.
+const same=(a,b)=>JSON.stringify(normalizeComparable(a??null))===JSON.stringify(normalizeComparable(b??null));
 function payloadFor(concept,variant){
   return {
     locale:variant.locale,
