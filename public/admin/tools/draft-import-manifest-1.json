@@ -1,0 +1,247 @@
+{
+  "manifestVersion": "1.0",
+  "batch": "2026-11-cultural-expansion",
+  "importMode": "create-draft-only",
+  "concepts": [
+    {
+      "batchId": "a7b6c5d4-3e2f-4a10-9b8c-7d6e5f4a3b21",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "a7b6c5d4-3e2f-4a10-9b8c-7d6e5f4a3b21",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "chinese-tea-culture",
+          "title": "Chinese Tea Culture: Leaves, Craft and Connection",
+          "description": "Explore how tea growing, processing, tasting and hospitality became part of everyday life and social traditions in China.",
+          "category": "Everyday culture",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## More than a drink\n\nTea is both an agricultural product and a way people spend time together. A cup may accompany a quiet pause, a conversation with a guest, a family visit or a formal occasion. China's tea traditions include tending tea gardens, picking leaves, processing them, preparing a drink and sharing it. In 2022, UNESCO inscribed traditional Chinese tea processing techniques and associated social practices on its Representative List of the Intangible Cultural Heritage of Humanity.\n\n## Six broad categories\n\nChinese tea is commonly grouped by processing into green, yellow, dark, white, oolong and black tea. The English term *black tea* can be confusing: this category is called *hongcha* (红茶, “red tea”) in Chinese. It is different from *heicha* (黑茶), usually translated as dark or post-fermented tea. Growing conditions, plant varieties, harvest seasons and processing influence aroma, colour and taste.\n\n## Craft and connection\n\nTea makers learn through practice, family traditions and apprenticeships. Tea is served at home, at work, in teahouses, restaurants and temples. Offering tea can welcome a visitor or create time to talk, although no single ritual is followed by every household.\n\nTry comparing two teas: notice the dry leaves, aroma, colour and aftertaste. Ask where each was grown and how it was processed.\n\n### Further reading\n- [UNESCO — Traditional tea processing techniques and associated social practices in China](https://ich.unesco.org/en/RL/traditional-tea-processing-techniques-and-associated-social-practices-in-china-01884).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/culture/chinese-tea-culture.md"
+        },
+        {
+          "batchId": "a7b6c5d4-3e2f-4a10-9b8c-7d6e5f4a3b21",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "zhongguo-cha-wenhua",
+          "title": "中国茶文化：茶叶、技艺与人与人的连接",
+          "description": "从茶叶种植、制作与品饮，到待客和日常交往，认识中国茶文化的丰富面貌。",
+          "category": "日常文化",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## 不只是一杯饮料\n\n茶既是一种农产品，也是一种人与人共度时光的方式。一杯茶可以陪伴休息、交谈、家庭探访或正式场合。中国茶文化不只是泡茶，还包括茶园管理、采摘、加工、冲泡和分享。2022年，中国传统制茶技艺及其相关习俗被列入联合国教科文组织人类非物质文化遗产代表作名录。\n\n## 六大茶类\n\n按照加工工艺，中国茶通常分为绿茶、黄茶、黑茶、白茶、乌龙茶和红茶。这里有一个翻译问题：英文中的 *black tea* 通常对应中文“红茶”；中文“黑茶”则是另一类茶，英文常译为 *dark tea* 或 *post-fermented tea*。茶树品种、种植环境、采摘季节和加工方式，都会影响茶的香气、颜色与口感。\n\n## 技艺与连接\n\n制茶师依靠实践、家庭传承和师徒学习积累经验。人们会在家中、工作场所、茶馆、餐馆或寺院饮茶。为客人奉茶可以表达欢迎，也能开启交谈，但并不存在适用于所有家庭的唯一茶礼。\n\n不妨选择两种茶，比较干茶外形、香气、茶汤颜色和回味，也可以了解它们的产地与加工方式。\n\n### 延伸阅读\n- [联合国教科文组织：中国传统制茶技艺及其相关习俗](https://ich.unesco.org/en/RL/traditional-tea-processing-techniques-and-associated-social-practices-in-china)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/zh-cn/culture/zhongguo-cha-wenhua.md"
+        },
+        {
+          "batchId": "a7b6c5d4-3e2f-4a10-9b8c-7d6e5f4a3b21",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "cultura-del-te-chino",
+          "title": "La cultura del té chino: hojas, saber hacer y conexión",
+          "description": "Descubre cómo el cultivo, la elaboración, la degustación y la hospitalidad forman parte de la vida y las relaciones sociales en China.",
+          "category": "Cultura cotidiana",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## Mucho más que una bebida\n\nEl té es un producto agrícola y también una manera de compartir el tiempo. Una taza puede acompañar una pausa, una conversación o una reunión familiar. Las tradiciones chinas incluyen cuidar los jardines, recoger y procesar las hojas, preparar la bebida y compartirla. En 2022, la UNESCO inscribió las técnicas tradicionales chinas de procesamiento del té y sus prácticas sociales asociadas en su Lista Representativa del Patrimonio Cultural Inmaterial.\n\n## Seis grandes categorías\n\nEl té chino suele agruparse en seis categorías: verde, amarillo, oscuro, blanco, oolong y negro. La traducción puede confundir: el té llamado *black tea* en inglés se denomina *hongcha* (红茶, “té rojo”) en chino. No es lo mismo que *heicha* (黑茶), traducido como té oscuro o posfermentado. El cultivo, la variedad, la cosecha y la elaboración influyen en el aroma y el sabor.\n\n## Oficio y conexión\n\nLos productores aprenden mediante la práctica, la transmisión familiar y el aprendizaje con maestros. El té se sirve en hogares, lugares de trabajo, casas de té, restaurantes y templos. Ofrecer una taza puede dar la bienvenida o abrir una conversación, aunque no existe un único ritual para todas las familias.\n\nCompara dos tés: observa las hojas, el aroma, el color y el sabor final. Pregunta dónde se cultivaron y cómo se procesaron.\n\n### Para seguir leyendo\n- [UNESCO — Técnicas tradicionales de procesamiento del té y prácticas sociales asociadas en China](https://ich.unesco.org/en/RL/traditional-tea-processing-techniques-and-associated-social-practices-in-china-01884).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/es/culture/cultura-del-te-chino.md"
+        }
+      ]
+    },
+    {
+      "batchId": "b8c7d6e5-4f3a-4b21-8c9d-6e5f4a3b2c10",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "b8c7d6e5-4f3a-4b21-8c9d-6e5f4a3b2c10",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "classical-chinese-gardens",
+          "title": "Classical Chinese Gardens: A Landscape in Miniature",
+          "description": "Discover how rocks, water, plants, architecture and framed views create layered experiences of nature in classical Chinese gardens.",
+          "category": "Art & architecture",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## A world within a wall\n\nA classical Chinese garden is a carefully composed environment. Architecture, rocks, water, trees, paths and views work together so that a small space can suggest a much larger landscape. The Classical Gardens of Suzhou are among the best-known examples. UNESCO recognizes nine gardens in the historic city as a World Heritage property; celebrated examples date from the eleventh to nineteenth centuries.\n\n## Composing nature\n\nGarden makers did not reproduce wilderness exactly. They arranged natural elements to create an artistic interpretation of mountains, rivers and changing seasons. Rocks might suggest mountains; a pond could become a lake; a covered walkway might guide the eye toward a framed view. A visitor turns a corner, passes through a doorway or crosses a bridge and discovers another composition.\n\nSome gardens incorporate a view beyond the wall, a practice often called “borrowed scenery.” Pavilions, halls, bridges and corridors provide places to rest, read or meet. Inscriptions and calligraphy connect the setting with poetry and literature.\n\nSuzhou's gardens reflect a particular regional and historical tradition; they do not represent every Chinese garden.\n\n## How to look\n\nPause at a doorway. Notice what is hidden and revealed, how water reflects a building and how a path guides your movement. If the view were a painting, where would your eye travel first?\n\n### Further reading\n- [UNESCO World Heritage Centre — Classical Gardens of Suzhou](https://whc.unesco.org/en/list/813/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/culture/classical-chinese-gardens.md"
+        },
+        {
+          "batchId": "b8c7d6e5-4f3a-4b21-8c9d-6e5f4a3b2c10",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "zhongguo-gudian-yuanlin",
+          "title": "中国古典园林：方寸之间的山水世界",
+          "description": "从山石、水池、植物、建筑与借景手法，认识中国古典园林如何在有限空间中呈现山水意境。",
+          "category": "艺术与建筑",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## 围墙之内，自有天地\n\n中国古典园林是一种经过精心组织的环境。建筑、山石、水面、树木、路径和视线彼此配合，让有限空间呈现更广阔的山水想象。苏州古典园林是其中最著名的代表之一。联合国教科文组织将苏州古城中的九座园林列入世界遗产名录，其中一些代表性作品形成于11世纪至19世纪。\n\n## 组织自然的艺术\n\n造园者并不是原样复制荒野，而是安排自然元素，以艺术方式表现山川与四季。山石可以让人联想到群山，水池可以形成湖泊般的空间，廊道则可能把视线引向一处景色。转过一个弯、穿过一道门或走过一座桥，眼前便出现新的画面。\n\n有些园林把围墙之外的远景纳入视线，这种手法常被称为“借景”。亭、堂、桥和曲廊为休息、读书和会友提供空间；匾额、题刻和书法又把园林与诗歌、文学联系起来。\n\n苏州园林体现的是特定地区和时代的传统，并不能代表所有中国园林。\n\n## 怎样欣赏\n\n不妨在门洞旁停下来，观察哪些景色被遮挡、哪些逐渐显现。留意水面如何映照建筑，路径又如何引导脚步。如果眼前景色是一张画，你的目光会先落在哪里？\n\n### 延伸阅读\n- [联合国教科文组织世界遗产中心：苏州古典园林](https://whc.unesco.org/en/list/813/)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/zh-cn/culture/zhongguo-gudian-yuanlin.md"
+        },
+        {
+          "batchId": "b8c7d6e5-4f3a-4b21-8c9d-6e5f4a3b2c10",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "jardines-clasicos-chinos",
+          "title": "Los jardines clásicos chinos: un paisaje en miniatura",
+          "description": "Descubre cómo las rocas, el agua, las plantas, la arquitectura y las vistas enmarcadas crean experiencias de naturaleza.",
+          "category": "Arte y arquitectura",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## Un mundo dentro de un muro\n\nUn jardín clásico chino es un entorno cuidadosamente compuesto. La arquitectura, las rocas, el agua, los árboles, los senderos y las vistas se relacionan para que un espacio reducido sugiera un paisaje mayor. Los jardines clásicos de Suzhou son ejemplos destacados. La UNESCO reconoce nueve jardines de esta ciudad histórica como Patrimonio Mundial; algunos ejemplos célebres datan de los siglos XI al XIX.\n\n## Componer la naturaleza\n\nLos diseñadores no copiaban exactamente la naturaleza silvestre. Organizaban elementos naturales para crear una interpretación artística de montañas, ríos y estaciones. Una roca podía sugerir una montaña; un estanque, un lago; y un corredor podía dirigir la mirada hacia una vista enmarcada. Al doblar una esquina o cruzar un puente aparece una nueva composición.\n\nAlgunos jardines incorporan una vista más allá del muro, una técnica conocida como “paisaje prestado”. Pabellones, salones y corredores ofrecen lugares para descansar, leer y conversar. Las inscripciones y la caligrafía conectan el espacio con la poesía y la literatura.\n\nLos jardines de Suzhou reflejan una tradición regional e histórica concreta, no todos los jardines chinos.\n\n## Cómo observar\n\nDetente junto a una puerta. Observa qué queda oculto y qué se revela, cómo el agua refleja un edificio y cómo el sendero orienta tus pasos. Si la vista fuera una pintura, ¿hacia dónde viajaría tu mirada?\n\n### Para seguir leyendo\n- [Centro del Patrimonio Mundial de la UNESCO — Jardines clásicos de Suzhou](https://whc.unesco.org/en/list/813/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/es/culture/jardines-clasicos-chinos.md"
+        }
+      ]
+    },
+    {
+      "batchId": "c9d8e7f6-5a4b-4c32-9d0e-7f6a5b4c3d21",
+      "collection": "culture",
+      "variants": [
+        {
+          "batchId": "c9d8e7f6-5a4b-4c32-9d0e-7f6a5b4c3d21",
+          "locale": "en",
+          "collection": "culture",
+          "slug": "peking-opera",
+          "title": "Peking Opera: Stories Told Through Voice and Movement",
+          "description": "An introduction to the singing, speech, movement, music, role types and visual symbols of Peking opera.",
+          "category": "Performing arts",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## A stage built from signs\n\nPeking opera (京剧, Jīngjù) combines singing, recitation, acting and martial movement. It became widely known in the nineteenth century. UNESCO inscribed it on the Representative List of the Intangible Cultural Heritage of Humanity in 2010. Stories may draw on history, literature, politics, society and everyday life.\n\n## Four kinds of stage skill\n\nA traditional description emphasizes *chang, nian, zuo* and *da*: singing, spoken or chanted delivery, acting and movement or martial skills. These are not separate boxes in every scene. A performer may move from speech into song, then use a stylized gesture to suggest an action the audience imagines. A turn of the body, hand position or glance can communicate intention and emotion.\n\n## Role types and visual language\n\nTraditional role categories include *sheng* (male roles), *dan* (female roles), *jing* (painted-face roles) and *chou* (comic roles). Each contains subtypes. These are theatrical conventions, not simple descriptions of performers themselves. Costumes and facial make-up help audiences recognize a character's dramatic role, but their meanings depend on context; a single colour is not a universal code.\n\n## Music and the audience\n\nThe *jinghu*, a high-pitched bowed string instrument, is closely associated with Peking opera. Flutes and other strings may accompany lyrical scenes, while drums, gongs and cymbals energize action. You do not need to understand every word to begin watching: notice how music signals a change and how a gesture carries meaning.\n\n### Further reading\n- [UNESCO — Peking opera](https://ich.unesco.org/en/RL/peking-opera-00418).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/culture/peking-opera.md"
+        },
+        {
+          "batchId": "c9d8e7f6-5a4b-4c32-9d0e-7f6a5b4c3d21",
+          "locale": "zh-CN",
+          "collection": "culture",
+          "slug": "jingju",
+          "title": "京剧：以唱腔与身段讲述故事",
+          "description": "从唱、念、做、打到行当、音乐与脸谱，认识京剧独特的舞台表达方式。",
+          "category": "表演艺术",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## 一座由符号构成的舞台\n\n京剧融合唱腔、念白、表演和武打身段，在19世纪逐渐形成广泛影响。2010年，京剧被列入联合国教科文组织人类非物质文化遗产代表作名录。剧目可能取材于历史、文学、政治、社会生活和日常故事。\n\n## 唱、念、做、打\n\n介绍京剧表演时，人们常用“唱、念、做、打”概括其主要技艺：唱腔、念白、表演和身段武功。这些并不是彼此孤立的部分。演员可能先用念白表达一句话，随后转入唱腔，再通过程式化动作让观众想象人物正在完成某种行动。身体转向、手势和眼神都可能传递意图与情绪。\n\n## 行当与视觉语言\n\n传统行当通常包括生、旦、净、丑，每个行当内部又有不同类型。这些是戏剧表演中的角色体系，并不是对演员本人身份的简单描述。服装和脸谱帮助观众辨认人物及其戏剧情境，但具体意义依赖程式和上下文，不能把某一种颜色当作万能密码。\n\n## 音乐与观众\n\n京胡是一种音色高亮的拉弦乐器，与京剧音乐密切相关。抒情场面可能使用笛子和其他弦乐器；鼓、锣、钹等打击乐器则为动作场面增添力量。即使暂时听不懂全部唱词，也可以观察音乐如何提示变化、动作如何表达含义。\n\n### 延伸阅读\n- [联合国教科文组织：京剧](https://ich.unesco.org/en/RL/peking-opera-00418)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/zh-cn/culture/jingju.md"
+        },
+        {
+          "batchId": "c9d8e7f6-5a4b-4c32-9d0e-7f6a5b4c3d21",
+          "locale": "es",
+          "collection": "culture",
+          "slug": "opera-de-pekin",
+          "title": "La ópera de Pekín: historias contadas con voz y movimiento",
+          "description": "Una introducción al canto, la declamación, el movimiento, la música, los tipos de papel y los símbolos visuales de la ópera de Pekín.",
+          "category": "Artes escénicas",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## Un escenario construido con signos\n\nLa ópera de Pekín (京剧, *Jīngjù*) combina canto, recitación, actuación y movimiento marcial. Alcanzó reconocimiento durante el siglo XIX. En 2010, la UNESCO la inscribió en la Lista Representativa del Patrimonio Cultural Inmaterial. Las obras pueden inspirarse en la historia, la literatura, la política, la sociedad y la vida cotidiana.\n\n## Cuatro habilidades escénicas\n\nUna descripción tradicional destaca *chang, nian, zuo* y *da*: canto, declamación, actuación y movimiento o destreza marcial. No son compartimentos separados. Un intérprete puede pasar de una frase hablada a una melodía y después utilizar un gesto estilizado para sugerir una acción. Un giro, una mano o una mirada pueden comunicar intención y emoción.\n\n## Tipos de papel y lenguaje visual\n\nLas categorías tradicionales incluyen *sheng* (papeles masculinos), *dan* (papeles femeninos), *jing* (papeles de rostro pintado) y *chou* (papeles cómicos). Son convenciones teatrales, no descripciones de la identidad de los artistas. Los trajes y el maquillaje ayudan a reconocer los papeles, pero su significado depende del contexto; un color aislado no es una clave universal.\n\n## Música y público\n\nEl *jinghu*, un instrumento de cuerda frotada de sonido agudo, está asociado con esta ópera. Flautas y otras cuerdas acompañan escenas líricas; tambores, gongs y platillos dan energía a la acción. No hace falta entender cada palabra: observa cómo la música anuncia cambios y cómo los gestos transmiten significado.\n\n### Para seguir leyendo\n- [UNESCO — Ópera de Pekín](https://ich.unesco.org/en/RL/peking-opera-00418).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/es/culture/opera-de-pekin.md"
+        }
+      ]
+    },
+    {
+      "batchId": "d0e9f8a7-6b5c-4d43-ae1f-8a7b6c5d4e32",
+      "collection": "festivals",
+      "variants": [
+        {
+          "batchId": "d0e9f8a7-6b5c-4d43-ae1f-8a7b6c5d4e32",
+          "locale": "en",
+          "collection": "festivals",
+          "slug": "lantern-festival",
+          "title": "Lantern Festival: The First Full Moon of the New Year",
+          "description": "Explore lantern displays, riddles, sweet rice balls and the many local ways people mark the fifteenth day of the first lunar month.",
+          "category": "Festival guide",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## A night of light\n\nThe Lantern Festival (元宵节, Yuánxiāo Jié) falls on the fifteenth day of the first month in the traditional Chinese calendar, the night of the year's first full moon. It is often described as the final major celebration in the Spring Festival period. Customs include lantern displays, riddles and foods made from glutinous rice, but celebrations vary by region and family.\n\n## Lanterns and riddles\n\nLanterns turn streets and public spaces into places for evening walks and gatherings. Displays range from simple hand-held lanterns to elaborate installations. In some communities, riddles are attached to lanterns for visitors to solve. Traditional motifs may appear alongside contemporary characters, animals and imaginative scenes.\n\n## A taste of the festival\n\nGlutinous rice balls are widely associated with the occasion. In many regions they are called *tangyuan* (汤圆); in some northern traditions, *yuanxiao* (元宵) is also used for a related festival food. Fillings and preparation methods differ. The round shape is often associated with reunion, though not every family follows the same food custom.\n\nHistorical accounts of the festival's development are varied. The fifteenth day of the first lunar month was an important occasion in early imperial China, while lantern-viewing practices developed over time. It is more accurate to understand the festival as a tradition shaped across periods than to present one popular legend as a proven origin.\n\n### Further reading\n- [Shanghai Municipal Government — Lantern Festival: Key Dates & Customs](https://english.shanghai.gov.cn/en-KeyDatesAndCustoms/20260122/e6bf3e0801514c808f6b3d1545a88a3c.html).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/festivals/lantern-festival.md"
+        },
+        {
+          "batchId": "d0e9f8a7-6b5c-4d43-ae1f-8a7b6c5d4e32",
+          "locale": "zh-CN",
+          "collection": "festivals",
+          "slug": "yuanxiao-jie",
+          "title": "元宵节：新年里的第一轮满月",
+          "description": "认识正月十五的灯会、灯谜、汤圆与地方习俗，了解元宵节如何为春节年俗增添温暖的尾声。",
+          "category": "节日指南",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## 灯火点亮的夜晚\n\n元宵节通常在农历正月十五，是新年里的第一轮满月之夜，也常被视为春节年俗中最后一个重要节日。灯会、猜灯谜和糯米食品，是许多人熟悉的元宵节习俗。不过，各地和不同家庭的庆祝方式并不完全相同。\n\n## 赏灯与猜谜\n\n灯笼让街道和公共空间成为夜间散步、聚会的场所。灯会既可能展示简单的手提灯，也可能布置大型灯组。有些地方会把谜语写在灯笼旁，供人们猜答。传统图案也可能与当代人物、动物或想象场景同时出现。\n\n## 节日里的味道\n\n糯米制成的圆子与元宵节关系密切。许多地方称之为“汤圆”；在一些北方传统中，也会使用“元宵”这一名称指称相关节令食品。馅料和制作方法因地区而异。圆形常被赋予团圆、相聚的寓意，但并不是每个家庭都会采用相同的节日食品。\n\n关于元宵节如何形成，历史记载和民间说法并不只有一种。农历正月十五在早期帝制时期已经是重要日子，而赏灯等习俗则在不同历史阶段逐渐发展。与其把某个流行传说当作已证实的起源，不如把元宵节理解为历经不同时代逐渐形成的传统。\n\n### 延伸阅读\n- [上海市人民政府：元宵节——日期与习俗](https://english.shanghai.gov.cn/en-KeyDatesAndCustoms/20260122/e6bf3e0801514c808f6b3d1545a88a3c.html)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/zh-cn/festivals/yuanxiao-jie.md"
+        },
+        {
+          "batchId": "d0e9f8a7-6b5c-4d43-ae1f-8a7b6c5d4e32",
+          "locale": "es",
+          "collection": "festivals",
+          "slug": "festival-de-los-faroles",
+          "title": "El Festival de los Faroles: la primera luna llena del año",
+          "description": "Conoce los faroles, los acertijos, las bolas dulces de arroz glutinoso y las distintas costumbres del día quince del primer mes lunar.",
+          "category": "Guía de festividades",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## Una noche de luz\n\nEl Festival de los Faroles (元宵节, *Yuánxiāo Jié*) se celebra el día quince del primer mes del calendario chino tradicional, la noche de la primera luna llena del año. A menudo se considera la última gran celebración del periodo del Festival de la Primavera. Las costumbres incluyen faroles, acertijos y alimentos de arroz glutinoso, aunque las celebraciones varían según la región y la familia.\n\n## Faroles y acertijos\n\nLos faroles convierten calles y espacios públicos en lugares para pasear y reunirse al anochecer. Las exhibiciones van desde faroles sencillos hasta instalaciones elaboradas. En algunas comunidades se colocan acertijos junto a los faroles para que los visitantes los resuelvan. Los motivos tradicionales conviven con diseños contemporáneos.\n\n## Un sabor de la festividad\n\nLas bolas de arroz glutinoso se asocian con esta fecha. En muchas regiones se llaman *tangyuan* (汤圆); en algunas tradiciones del norte también se utiliza *yuanxiao* (元宵) para un alimento relacionado. Los rellenos y la preparación varían. La forma redonda suele relacionarse con la reunión familiar, aunque no todas las familias siguen la misma costumbre.\n\nLos relatos históricos sobre el desarrollo de la festividad son variados. El día quince del primer mes lunar ya era importante en la China imperial temprana, mientras que las prácticas de contemplar faroles evolucionaron con el tiempo. Es más preciso entender el festival como una tradición formada en distintos periodos que presentar una leyenda como origen demostrado.\n\n### Para seguir leyendo\n- [Gobierno Municipal de Shanghái — Festival de los Faroles: fechas y costumbres](https://english.shanghai.gov.cn/en-KeyDatesAndCustoms/20260122/e6bf3e0801514c808f6b3d1545a88a3c.html).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/es/festivals/festival-de-los-faroles.md"
+        }
+      ]
+    },
+    {
+      "batchId": "e1f0a9b8-7c6d-4e54-bf20-9b8c7d6e5f43",
+      "collection": "books",
+      "variants": [
+        {
+          "batchId": "e1f0a9b8-7c6d-4e54-bf20-9b8c7d6e5f43",
+          "locale": "en",
+          "collection": "books",
+          "slug": "dao-de-jing-readers-guide",
+          "title": "The Dao De Jing: A Reader's Guide",
+          "description": "Approach the Dao De Jing through its key ideas, poetic language, textual history and the questions that make translation challenging.",
+          "category": "Philosophy & classics",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## A short text with a long history\n\nThe *Dao De Jing* (道德经), also known as the *Tao Te Ching* or the *Laozi*, is a major classical text associated with Daoist thought. Its compact passages explore the *dao*, or “Way,” and *de*, a term translated in different contexts as virtue, potency or integrity.\n\nThe work is traditionally associated with a sage called Laozi, but its authorship and date remain subjects of scholarly debate. The text appears to have taken shape through transmission and compilation rather than being securely attributable to one author at one precise moment. Ancient manuscript discoveries show that different versions circulated.\n\n## Reading key ideas\n\n*Dao* can mean a way, path, method or guiding course. In the text it also points toward a reality that cannot be captured by one definition. *Wu wei* (无为) is often translated as “non-action,” but it does not simply mean doing nothing. It is commonly understood as action that avoids unnecessary forcing or excess control. *De* (德) may suggest virtue, character, efficacy or the power through which a being expresses the Dao.\n\n## Why translations differ\n\nThe text is poetic, compressed and sometimes paradoxical. A short line can carry several meanings. Comparing two reputable translations is often more useful than searching for one definitive version. Read the translator's notes and consider the historical assumptions behind the edition.\n\nRead slowly rather than collecting slogans. Ask what each passage discusses, how it relates to nearby chapters and what question it raises for you.\n\n### Further reading\n- [Stanford Encyclopedia of Philosophy — Laozi](https://plato.stanford.edu/entries/laozi/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/books/dao-de-jing-readers-guide.md"
+        },
+        {
+          "batchId": "e1f0a9b8-7c6d-4e54-bf20-9b8c7d6e5f43",
+          "locale": "zh-CN",
+          "collection": "books",
+          "slug": "daodejing-dushu-zhinan",
+          "title": "《道德经》：读者入门指南",
+          "description": "从“道”“德”“无为”等核心概念、诗性语言与文本形成史入手，认识《道德经》的阅读方法。",
+          "category": "哲学与经典",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## 一部篇幅不长、历史深远的经典\n\n《道德经》又称《老子》，是与道家思想关系密切的中国古代典籍。书中以简练篇章讨论“道”与“德”等概念。“道”常被译为 Way、道路或方式；“德”则会根据语境被译为德性、力量或内在品格。\n\n传统上，《道德经》与一位名为老子的圣哲联系在一起。不过，关于作者身份和成书年代，学术界仍有讨论。现有研究通常认为，这部文本经历了较长时间的传承、整理与编纂，不宜简单认定为某一位作者在某个确切年份一次写成。出土早期文献也显示，古代曾流传过不同版本。\n\n## 理解几个重要概念\n\n“道”可以指道路、方法、途径或引导事物发展的方向，在书中也指向一种无法用单一概念完全说明的存在。“无为”常被译为“不行动”，但并不简单等于什么都不做，通常可理解为避免不必要的强求和过度控制。“德”则可能涉及德性、品格、效能，或事物体现“道”的力量。\n\n## 为什么不同译本会有差异\n\n《道德经》的语言具有诗性，文字高度凝练，有时还会使用看似矛盾的表达。一句短文可能包含多种解释。因此，比较两个可靠译本，通常比寻找唯一正确的版本更有帮助。阅读时也应留意译者的导言和注释。\n\n慢慢读，不要只摘取格言。可以问：这一段在讨论什么？它与前后章节有什么关系？它又引出了什么问题？\n\n### 延伸阅读\n- [斯坦福哲学百科全书：老子](https://plato.stanford.edu/entries/laozi/)。",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/zh-cn/books/daodejing-dushu-zhinan.md"
+        },
+        {
+          "batchId": "e1f0a9b8-7c6d-4e54-bf20-9b8c7d6e5f43",
+          "locale": "es",
+          "collection": "books",
+          "slug": "guia-de-lectura-dao-de-jing",
+          "title": "El Dao De Jing: una guía para lectores",
+          "description": "Acércate al Dao De Jing a través de sus ideas principales, su lenguaje poético, su historia textual y los desafíos de la traducción.",
+          "category": "Filosofía y clásicos",
+          "featured": false,
+          "readingMinutes": 5,
+          "sources": [],
+          "bodyMarkdown": "## Un texto breve con una larga historia\n\nEl *Dao De Jing* (道德经), también conocido como *Tao Te Ching* o *Laozi*, es un texto clásico importante asociado con el pensamiento daoísta. Sus pasajes exploran el *dao*, o “Camino”, y el *de*, término que puede traducirse como virtud, potencia o integridad según el contexto.\n\nLa tradición atribuye la obra a un sabio llamado Laozi, pero su autoría y fecha siguen siendo objeto de debate académico. El texto parece haberse formado mediante transmisión y recopilación, por lo que no es prudente atribuirlo sin matices a una sola persona y a un momento exacto. Los manuscritos antiguos muestran que circularon distintas versiones.\n\n## Leer algunas ideas\n\n*Dao* puede significar camino, vía, método o curso que guía algo. *Wu wei* (无为) suele traducirse como “no acción”, pero no significa simplemente quedarse sin hacer nada; suele interpretarse como actuar sin forzar innecesariamente ni ejercer un control excesivo. *De* (德) puede sugerir virtud, carácter, eficacia o la fuerza mediante la cual un ser expresa el Dao.\n\n## Por qué cambian las traducciones\n\nEl texto utiliza un lenguaje poético, condensado y a veces paradójico. Una frase breve puede admitir varias interpretaciones. Comparar dos traducciones cuidadas suele ser más útil que buscar una versión definitiva. Lee las notas del traductor y considera los supuestos históricos de cada edición.\n\nLee despacio, no como una lista de lemas. Pregúntate qué examina cada pasaje, cómo se relaciona con los capítulos cercanos y qué cuestión despierta en ti.\n\n### Para seguir leyendo\n- [Stanford Encyclopedia of Philosophy — Laozi](https://plato.stanford.edu/entries/laozi/).",
+          "sourcePath": "content-drafts/2026-11-cultural-expansion/es/books/guia-de-lectura-dao-de-jing.md"
+        }
+      ]
+    }
+  ]
+}
