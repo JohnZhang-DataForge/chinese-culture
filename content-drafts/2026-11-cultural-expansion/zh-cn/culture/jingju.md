@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "联合国教科文组织：京剧"
+    url: "https://ich.unesco.org/en/RL/peking-opera-00418"
+    publisher: "UNESCO"
 ---
 
 ## 一座由符号构成的舞台

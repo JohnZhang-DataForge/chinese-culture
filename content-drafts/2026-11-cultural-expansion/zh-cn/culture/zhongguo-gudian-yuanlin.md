@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "联合国教科文组织世界遗产中心：苏州古典园林"
+    url: "https://whc.unesco.org/en/list/813/"
+    publisher: "UNESCO World Heritage Centre"
 ---
 
 ## 围墙之内，自有天地

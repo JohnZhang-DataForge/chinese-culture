@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "UNESCO — Peking opera"
+    url: "https://ich.unesco.org/en/RL/peking-opera-00418"
+    publisher: "UNESCO"
 ---
 
 ## A stage built from signs

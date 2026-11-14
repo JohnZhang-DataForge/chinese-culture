@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "UNESCO World Heritage Centre — Classical Gardens of Suzhou"
+    url: "https://whc.unesco.org/en/list/813/"
+    publisher: "UNESCO World Heritage Centre"
 ---
 
 ## A world within a wall
