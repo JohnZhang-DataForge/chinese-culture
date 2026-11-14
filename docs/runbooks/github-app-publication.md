@@ -39,15 +39,15 @@ The admin session endpoint detects these three values at runtime. Once they are 
 
 After deploying a change that loads the Production secret, sign in to the Admin workspace through Cloudflare Access and open:
 
-\`https://chinese-culture.site/api/admin/v1/session?diagnostics=github-app\`
+`https://chinese-culture.site/api/admin/v1/session?diagnostics=github-app`
 
-This opt-in GET performs read-only checks for configuration presence, private-key parsing/JWT signing, installation-token issuance, the token's Contents/Pull requests/Checks permissions, and access to the repository's \`main\` ref. The response includes only boolean checks, stable diagnostic codes and permission levels. It never returns the private key, JWT or installation token.
+This opt-in GET performs read-only checks for configuration presence, private-key parsing/JWT signing, installation-token issuance, the token's Contents/Pull requests/Checks permissions, and access to the repository's `main` ref. The response includes only boolean checks, stable diagnostic codes and permission levels. It never returns the private key, JWT or installation token.
 
 Expected success:
 
-- \`diagnostics.githubApp.ready\` is \`true\`
-- \`diagnostics.githubApp.code\` is \`github_app_ready\`
-- \`diagnostics.githubApp.checks.repositoryAccess\` is \`true\`
+- `diagnostics.githubApp.ready` is `true`
+- `diagnostics.githubApp.code` is `github_app_ready`
+- `diagnostics.githubApp.checks.repositoryAccess` is `true`
 
 Failure codes distinguish incomplete configuration, JWT generation/rejection, installation lookup/permission failures, insufficient token permissions and repository access failures. Do not paste credentials or browser session cookies into a report.
 
