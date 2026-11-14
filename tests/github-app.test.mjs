@@ -138,8 +138,15 @@ test("a structurally wrapped but invalid DER key fails JWT generation without ex
 
 test("failed GitHub App installation authentication returns a stable safe diagnostic", async () => {
   const { privateKey } = makeKey();
-  const diagnostic = await withFetch(async (url) => {
+  const diagnostic = await withFetch(async (url, options) => {
+    if (String(url).endsWith("/app/installations/42")) {
+      return new Response(JSON.stringify({ account: { login: "JohnZhang-DataForge" }, repository_selection: "selected" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
     assert.match(String(url), /\/app\/installations\/42\/access_tokens$/);
+    assert.equal(options.method, "POST");
     return new Response(JSON.stringify({ message: "Bad credentials" }), {
       status: 401,
       headers: { "Content-Type": "application/json" }
@@ -153,14 +160,23 @@ test("failed GitHub App installation authentication returns a stable safe diagno
   assert.equal(diagnostic.checks.privateKeyParsed, true);
   assert.equal(diagnostic.checks.jwtGenerated, true);
   assert.equal(diagnostic.checks.installationTokenIssued, false);
+  assert.equal(diagnostic.installationAccount, "JohnZhang-DataForge");
+  assert.equal(diagnostic.repositorySelection, "selected");
   assert.doesNotMatch(JSON.stringify(diagnostic), /Bad credentials|test-installation-token/);
 });
 
-test("installation token permissions and repository main access are verified without returning the token", async () => {
+test("installation ownership, repository scope, token permissions and main access are verified without returning the token", async () => {
   const { privateKey } = makeKey();
   const requested = [];
   const diagnostic = await withFetch(async (url, options) => {
     requested.push(String(url));
+    if (String(url).endsWith("/app/installations/42")) {
+      assert.equal(options.headers.Authorization.startsWith("Bearer "), true);
+      return new Response(JSON.stringify({
+        account: { login: "JohnZhang-DataForge" },
+        repository_selection: "selected"
+      }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
     if (String(url).endsWith("/access_tokens")) {
       return new Response(JSON.stringify(tokenResponse()), {
         status: 201,
@@ -176,27 +192,53 @@ test("installation token permissions and repository main access are verified wit
 
   assert.equal(diagnostic.ready, true);
   assert.equal(diagnostic.code, "github_app_ready");
+  assert.equal(diagnostic.installationAccount, "JohnZhang-DataForge");
+  assert.equal(diagnostic.repositorySelection, "selected");
   assert.deepEqual(diagnostic.permissionChecks, {
     contentsWrite: true,
     pullRequestsWrite: true,
     checksRead: true
   });
   assert.equal(diagnostic.checks.repositoryAccess, true);
-  assert.equal(requested.length, 2);
-  assert.match(requested[1], /\/repos\/JohnZhang-DataForge\/chinese-culture\/git\/ref\/heads\/main$/);
+  assert.equal(requested.length, 3);
+  assert.match(requested[2], /\/repos\/JohnZhang-DataForge\/chinese-culture\/git\/ref\/heads\/main$/);
   assert.doesNotMatch(JSON.stringify(diagnostic), /test-installation-token|BEGIN PRIVATE KEY/);
 });
 
-test("missing repository permission is reported without attempting a write", async () => {
+test("missing repository permission is reported without attempting a repository write", async () => {
   const { privateKey } = makeKey();
-  const diagnostic = await withFetch(async () => new Response(JSON.stringify({
-    token: "test-installation-token",
-    permissions: { contents: "read", pull_requests: "write", checks: "read" }
-  }), { status: 201, headers: { "Content-Type": "application/json" } }), () =>
-    getGithubAppDiagnostics(appEnv(privateKey)));
+  const diagnostic = await withFetch(async (url) => {
+    if (String(url).endsWith("/app/installations/42")) {
+      return new Response(JSON.stringify({
+        account: { login: "JohnZhang-DataForge" },
+        repository_selection: "selected"
+      }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    return new Response(JSON.stringify({
+      token: "test-installation-token",
+      permissions: { contents: "read", pull_requests: "write", checks: "read" }
+    }), { status: 201, headers: { "Content-Type": "application/json" } });
+  }, () => getGithubAppDiagnostics(appEnv(privateKey)));
 
   assert.equal(diagnostic.ready, false);
   assert.equal(diagnostic.stage, "permissions");
   assert.equal(diagnostic.code, "github_app_permissions_insufficient");
   assert.equal(diagnostic.permissionChecks.contentsWrite, false);
+});
+
+
+test("installation diagnostics reject a different account and an all-repositories installation", async () => {
+  const { privateKey } = makeKey();
+  for (const [metadata, expectedCode] of [
+    [{ account: { login: "another-org" }, repository_selection: "selected" }, "github_app_installation_account_mismatch"],
+    [{ account: { login: "JohnZhang-DataForge" }, repository_selection: "all" }, "github_app_installation_not_repository_scoped"]
+  ]) {
+    const diagnostic = await withFetch(async () => new Response(JSON.stringify(metadata), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    }), () => getGithubAppDiagnostics(appEnv(privateKey)));
+    assert.equal(diagnostic.ready, false);
+    assert.equal(diagnostic.stage, "installation_lookup");
+    assert.equal(diagnostic.code, expectedCode);
+  }
 });
