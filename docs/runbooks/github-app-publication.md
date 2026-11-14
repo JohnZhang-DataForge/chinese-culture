@@ -35,6 +35,22 @@ Do not paste the private key into Git, an issue, a PR, a chat message or `.dev.v
 
 The admin session endpoint detects these three values at runtime. Once they are configured, the Admin UI enables publication and media upload without requiring a new website build. Every installation token request is additionally restricted in code to the immutable GitHub repository ID for `JohnZhang-DataForge/chinese-culture`, even if the App installation is later granted access to another repository.
 
+### Authenticated runtime diagnostics
+
+After deploying a change that loads the Production secret, sign in to the Admin workspace through Cloudflare Access and open:
+
+\`https://chinese-culture.site/api/admin/v1/session?diagnostics=github-app\`
+
+This opt-in GET performs read-only checks for configuration presence, private-key parsing/JWT signing, installation-token issuance, the token's Contents/Pull requests/Checks permissions, and access to the repository's \`main\` ref. The response includes only boolean checks, stable diagnostic codes and permission levels. It never returns the private key, JWT or installation token.
+
+Expected success:
+
+- \`diagnostics.githubApp.ready\` is \`true\`
+- \`diagnostics.githubApp.code\` is \`github_app_ready\`
+- \`diagnostics.githubApp.checks.repositoryAccess\` is \`true\`
+
+Failure codes distinguish incomplete configuration, JWT generation/rejection, installation lookup/permission failures, insufficient token permissions and repository access failures. Do not paste credentials or browser session cookies into a report.
+
 ## Protect the main branch
 
 The CMS GitHub App requires **Pull requests: read and write** to open publication and media PRs. GitHub does not provide a separate permission that allows creating PRs while categorically denying the PR merge API. Therefore, do not describe the installation token as technically incapable of merging a PR.
