@@ -8,7 +8,7 @@
   <title>CMS Draft Import — Chinese Culture Atlas</title>
   <style>
     :root{color-scheme:light;--ink:#1d2733;--muted:#637083;--line:#dce2e9;--surface:#f5f7fa;--accent:#315d88;--good:#236746;--warn:#8a5a12;--bad:#a32e2e}
-    *{box-sizing:border-box}body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+    *{box-sizing:border-box}.skip-link{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}.skip-link:focus{left:12px;top:12px;width:auto;height:auto;z-index:10;padding:10px 14px;background:white;border:2px solid var(--accent);border-radius:8px}body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
     main{max-width:1040px;margin:40px auto;padding:0 22px 48px}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0;box-shadow:0 3px 14px #172b4208}
     h1{font-size:27px;line-height:1.2;margin:0 0 8px}h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted)}.small{font-size:13px}
     .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{padding:14px;background:var(--surface);border-radius:10px}.stat strong{display:block;font-size:24px}
@@ -21,7 +21,8 @@
   </style>
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content">
   <header>
     <p class="small muted">CHINESE CULTURE ATLAS / ADMIN TOOL</p>
     <h1>Import editorial drafts into CMS</h1>
