@@ -44,7 +44,7 @@ export async function onRequestGet(context) {
     // Run network-backed GitHub App verification only when an authenticated
     // administrator explicitly requests diagnostics. Normal session bootstrap
     // remains fast and does not mint an installation token.
-    if (new URL(context.request.url).searchParams.get("diagnostics") === "github-app") {
+    if (context.request?.url && new URL(context.request.url).searchParams.get("diagnostics") === "github-app") {
       response.diagnostics = { githubApp: await getGithubAppDiagnostics(context.env) };
     }
     return withApiSecurityHeaders(jsonResponse(response));
