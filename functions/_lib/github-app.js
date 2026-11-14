@@ -221,6 +221,45 @@ export async function getGithubAppDiagnostics(env) {
     };
   }
 
+  let installationMetadata;
+  try {
+    installationMetadata = await githubRequest(
+      "/app/installations/" + encodeURIComponent(String(env.GITHUB_INSTALLATION_ID).trim()),
+      jwt
+    );
+  } catch (error) {
+    return {
+      ready: false,
+      stage: "installation_lookup",
+      code: installationDiagnosticCode(error),
+      httpStatus: Number.isInteger(error?.status) ? error.status : undefined,
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: false }
+    };
+  }
+
+  const installationAccount = installationMetadata?.account?.login || null;
+  const repositorySelection = installationMetadata?.repository_selection || null;
+  if (installationAccount !== "JohnZhang-DataForge") {
+    return {
+      ready: false,
+      stage: "installation_lookup",
+      code: "github_app_installation_account_mismatch",
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationAccountVerified: false },
+      installationAccount,
+      repositorySelection
+    };
+  }
+  if (repositorySelection !== "selected") {
+    return {
+      ready: false,
+      stage: "installation_lookup",
+      code: "github_app_installation_not_repository_scoped",
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationAccountVerified: true, repositorySelectionVerified: false },
+      installationAccount,
+      repositorySelection
+    };
+  }
+
   let installation;
   try {
     installation = await requestInstallationToken(env, jwt);
@@ -230,7 +269,9 @@ export async function getGithubAppDiagnostics(env) {
       stage: "installation_auth",
       code: installationDiagnosticCode(error),
       httpStatus: Number.isInteger(error?.status) ? error.status : undefined,
-      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: false }
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationTokenIssued: false },
+      installationAccount,
+      repositorySelection
     };
   }
 
@@ -245,7 +286,9 @@ export async function getGithubAppDiagnostics(env) {
       ready: false,
       stage: "permissions",
       code: "github_app_permissions_insufficient",
-      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true },
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationTokenIssued: true },
+      installationAccount,
+      repositorySelection,
       permissionChecks,
       permissionLevels: permissions
     };
@@ -263,7 +306,9 @@ export async function getGithubAppDiagnostics(env) {
       stage: "repository_access",
       code: "github_app_repository_access_failed",
       httpStatus: Number.isInteger(error?.status) ? error.status : undefined,
-      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true, repositoryAccess: false },
+      checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationTokenIssued: true, repositoryAccess: false },
+      installationAccount,
+      repositorySelection,
       permissionChecks,
       permissionLevels: permissions
     };
@@ -273,7 +318,9 @@ export async function getGithubAppDiagnostics(env) {
     ready: true,
     stage: "complete",
     code: "github_app_ready",
-    checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationTokenIssued: true, repositoryAccess: true },
+    checks: { ...checks, privateKeyParsed: true, jwtGenerated: true, installationFound: true, installationAccountVerified: true, repositorySelectionVerified: true, installationTokenIssued: true, repositoryAccess: true },
+    installationAccount,
+    repositorySelection,
     permissionChecks,
     permissionLevels: permissions
   };
