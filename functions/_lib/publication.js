@@ -102,3 +102,42 @@ export async function syncMergedSubmission(db, submission, pull) {
     .bind(new Date().toISOString(), submission.submission_id).run();
   return { state: "closed", databaseSync: null };
 }
+
+
+// Synchronize every locale/content submission attached to one atomic batch PR.
+// Already-merged rows are skipped so a retry after a partial D1 sync is idempotent.
+export async function syncMergedSubmissions(db, submissions, pull) {
+  const outcomes = [];
+  let newlySynced = 0;
+  let alreadySynced = 0;
+
+  for (const submission of submissions) {
+    if (submission.pr_state === "merged") {
+      alreadySynced += 1;
+      outcomes.push({ state: "merged", databaseSync: { synced: true, alreadySynced: true } });
+      continue;
+    }
+
+    const result = await syncMergedSubmission(db, submission, pull);
+    outcomes.push(result);
+    if (result.state === "merged" && result.databaseSync?.synced) newlySynced += 1;
+    if (result.state === "merged" && result.databaseSync && !result.databaseSync.synced) {
+      return {
+        state: "merged",
+        databaseSync: {
+          synced: false,
+          reason: result.databaseSync.reason || "variant_sync_failed",
+          submissionId: submission.submission_id
+        }
+      };
+    }
+  }
+
+  const state = pull.merged ? "merged" : pull.state === "closed" ? "closed" : "open";
+  return {
+    state,
+    databaseSync: pull.merged
+      ? { synced: true, variantCount: submissions.length, newlySynced, alreadySynced }
+      : null
+  };
+}
