@@ -148,6 +148,7 @@ async function runImport(){
   if(!state.ready||state.running||!$("confirm-drafts").checked)return;
   if(!window.confirm("Create only missing D1 drafts for these 10 articles? This will not submit, publish, unpublish, upload media or merge anything."))return;
   state.running=true;$("import-button").disabled=true;$("confirm-drafts").disabled=true;
+  state.mapping=[];$("copy-button").disabled=true;
   $("log").textContent="";
   setStatus("import-status","Import running. Each variant will be saved and read back before continuing.","warn");
   try{
