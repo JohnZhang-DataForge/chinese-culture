@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "Stanford Encyclopedia of Philosophy — Laozi"
+    url: "https://plato.stanford.edu/entries/laozi/"
+    publisher: "Stanford Encyclopedia of Philosophy"
 ---
 
 ## Un texto breve con una larga historia

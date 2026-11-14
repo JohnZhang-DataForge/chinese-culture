@@ -9,6 +9,10 @@ status: "draft"
 featured: false
 readingMinutes: 5
 updatedAt: "2026-11-15T00:00:00Z"
+sources:
+  - title: "UNESCO — Técnicas tradicionales de procesamiento del té y prácticas sociales asociadas en China"
+    url: "https://ich.unesco.org/en/RL/traditional-tea-processing-techniques-and-associated-social-practices-in-china-01884"
+    publisher: "UNESCO"
 ---
 
 ## Mucho más que una bebida
