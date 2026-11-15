@@ -35,7 +35,7 @@ export const ui = {
     home: "首页", events: "活动", upcoming: "即将举行的活动",
     eventHeading: "文化因分享而生。", eventIntro: "展览、讲座、工作坊和庆典能让书页上的故事走进日常生活。",
     noEvents: "目前还没有经过核实的活动。", eventNote: "我们正在建立编辑审核流程，在发布活动前核实日期、主办方、地点和报名链接。我们不会发布虚构或过期的活动。",
-    noArticles: "No articles have been published yet. New stories are on the way.",
+    noArticles: "目前还没有文章。新的故事正在准备中。",
     exploreFestivals: "探索节日传统", aboutTitle: "了解项目", accessibilityTitle: "无障碍访问",
     contactTitle: "联系我们", editorialTitle: "编辑政策", privacyTitle: "隐私政策"
   },
@@ -65,7 +65,7 @@ export const ui = {
     home: "Inicio", events: "Eventos", upcoming: "Próximos eventos",
     eventHeading: "La cultura se comparte.", eventIntro: "Las exposiciones, charlas, talleres y celebraciones llevan las historias de la página a la vida cotidiana.",
     noEvents: "Todavía no hay eventos verificados.", eventNote: "Estamos estableciendo un proceso editorial para comprobar fechas, organizadores, ubicaciones y enlaces oficiales de inscripción antes de publicar anuncios. No publicaremos eventos inventados ni desactualizados.",
-    noArticles: "No articles have been published yet. New stories are on the way.",
+    noArticles: "Todavía no hay artículos publicados. Pronto llegarán nuevas historias.",
     exploreFestivals: "Explorar las tradiciones festivas", aboutTitle: "Acerca del proyecto", accessibilityTitle: "Accesibilidad",
     contactTitle: "Contacto", editorialTitle: "Política editorial", privacyTitle: "Privacidad"
   }
