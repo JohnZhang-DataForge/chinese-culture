@@ -14,38 +14,9 @@ function markdownFiles(directory) {
   });
 }
 
-test("all published article files have stable content IDs and matching locale metadata", () => {
+test("editorial source tree is intentionally empty after the approved reset", () => {
   const files = markdownFiles(contentRoot);
-  assert.ok(files.length > 0 && files.length % expectedLocales.size === 0, `expected one Markdown variant per locale; found ${files.length} files for ${expectedLocales.size} locales`);
-  const byContentId = new Map();
-
-  for (const file of files) {
-    const source = readFileSync(file, "utf8");
-    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    assert.ok(frontmatter, `missing frontmatter: ${relative(contentRoot, file)}`);
-
-    const contentId = frontmatter[1].match(/^contentId:\s*["']?([0-9a-f-]+)["']?\s*$/m)?.[1];
-    const locale = frontmatter[1].match(/^locale:\s*["']?([A-Za-z-]+)["']?\s*$/m)?.[1];
-    assert.match(contentId ?? "", /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i, `invalid contentId: ${relative(contentRoot, file)}`);
-
-    const relativePath = relative(contentRoot, file).split(/[\\/]/);
-    const expectedLocale = relativePath[0] === "zh-cn" ? "zh-CN" : relativePath[0] === "es" ? "es" : "en";
-    assert.equal(locale, expectedLocale, `locale metadata must match folder: ${relative(contentRoot, file)}`);
-    assert.ok(expectedLocales.has(locale), `unsupported locale: ${locale}`);
-
-    const collection = expectedLocale === "en" ? relativePath[0] : relativePath[1];
-    const slug = relativePath.at(-1).replace(/\.md$/, "");
-    const existing = byContentId.get(contentId) ?? [];
-    existing.push({ locale, collection, slug, file });
-    byContentId.set(contentId, existing);
-  }
-
-  assert.equal(byContentId.size, files.length / expectedLocales.size, "every conceptual content ID must have one variant per locale");
-  for (const [contentId, variants] of byContentId) {
-    assert.equal(variants.length, 3, `contentId ${contentId} must have exactly three locale variants`);
-    assert.deepEqual(new Set(variants.map((variant) => variant.locale)), expectedLocales);
-    assert.equal(new Set(variants.map((variant) => variant.collection)).size, 1, `collection mismatch for ${contentId}`);
-  }
+  assert.equal(files.length, 0, "Old Markdown article snapshots must not remain in the public source tree.");
 });
 
 import { deterministicContentId, resolveContentIdentity } from "../scripts/content-identity.mjs";

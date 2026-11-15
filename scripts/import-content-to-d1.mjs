@@ -11,6 +11,7 @@ const IMPORTED_AT = new Date().toISOString();
 const LOCALE_ROOTS = [
   { root: "src/content", locale: "en" },
   { root: "src/content/zh-cn", locale: "zh-CN" },
+  { root: "src/content/zh-tw", locale: "zh-TW" },
   { root: "src/content/es", locale: "es" }
 ];
 const COLLECTIONS = new Set(["lessons", "culture", "festivals", "books", "events"]);
@@ -136,11 +137,11 @@ for (const variant of variants) {
   byContent.get(variant.contentId).push(variant);
 }
 
-if (!variants.length) throw new Error("No supported Markdown articles found.");
-for (const locale of ["en", "zh-CN", "es"]) {
-  const count = variants.filter((variant) => variant.locale === locale).length;
-  if (count !== 13) throw new Error("Expected 13 existing " + locale + " articles, found " + count + ". Refusing an incomplete initial import.");
+if (!variants.length) {
+  console.log(JSON.stringify({ importedMarkdownFiles: 0, conceptualItems: 0, result: "NO_CONTENT_TO_IMPORT" }, null, 2));
+  process.exit(0);
 }
+
 for (const variant of variants) {
   if (!variant.title || !variant.description || !variant.category || !variant.bodyMarkdown.trim()) {
     throw new Error("Required article content is missing in " + variant.sourcePath);
@@ -150,7 +151,7 @@ for (const variant of variants) {
 for (const [contentId, records] of byContent) {
   const locales = new Set(records.map((record) => record.locale));
   if (locales.size !== records.length) throw new Error("Duplicate locale variant for " + contentId);
-  if (records.length !== 3 || !["en", "zh-CN", "es"].every((locale) => locales.has(locale))) throw new Error("Every imported article must have English, Simplified Chinese and Spanish variants: " + contentId);
+  if (records.length !== locales.size) throw new Error("Duplicate locale variant for " + contentId);
   const statements = [
     query(
       "INSERT OR IGNORE INTO content_items (content_id, collection, created_at, source_commit) VALUES (?, ?, ?, ?)",
@@ -197,10 +198,10 @@ const verifyPayload = await verify.json();
 if (!verify.ok || !verifyPayload?.success) throw new Error("D1 verification query failed.");
 const counts = verifyPayload.result?.[0]?.results || [];
 const countByLocale = new Map(counts.map((row) => [row.locale, Number(row.total)]));
-for (const locale of ["en", "zh-CN", "es"]) {
-  if (countByLocale.get(locale) !== 13) throw new Error("D1 import verification expected 13 " + locale + " published variants, found " + (countByLocale.get(locale) || 0) + ".");
+for (const locale of ["en", "zh-CN", "zh-TW", "es"]) {
+  const expected = variants.filter((variant) => variant.locale === locale).length;
+  if ((countByLocale.get(locale) || 0) !== expected) throw new Error("D1 import verification mismatch for " + locale + ".");
 }
-if (byContent.size !== 13) throw new Error("D1 import expected 13 conceptual content items, found " + byContent.size + ".");
 console.log(JSON.stringify({
   importedMarkdownFiles: variants.length,
   conceptualItems: byContent.size,

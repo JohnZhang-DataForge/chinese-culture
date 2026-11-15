@@ -7,8 +7,8 @@ A multilingual educational website for exploring Chinese culture through lessons
 
 ## Current implementation
 
-- Public English, Simplified Chinese and Spanish routes: `/en/`, `/zh-cn/`, `/es/`.
-- 13 educational article concepts with 39 locale variants (13 per locale).
+- Public Traditional Chinese, English, Simplified Chinese and Spanish routes: `/zh-tw/`, `/en/`, `/zh-cn/`, `/es/`. The root route defaults to Traditional Chinese.
+- The editorial library has been reset; no old articles, drafts or article photos are published.
 - Static public article pages, localized navigation, canonical/hreflang metadata, sitemap and localized 404 behavior.
 - Events page with an honest empty state; no unverified event listings.
 - Five localized informational pages: About, Accessibility, Contact, Editorial Policy and Privacy.
@@ -53,7 +53,7 @@ A push to `main` runs CI and the Cloudflare Pages deployment workflow. The deplo
 ## Project map
 
 - `src/pages/` — public locale routes and Admin shell.
-- `src/content/` — generated publication snapshots for en, zh-CN and es.
+- `src/content/` — generated publication snapshots for en, zh-CN, zh-TW and es.
 - `src/i18n/` — localized UI copy and section metadata.
 - `functions/api/admin/v1/` — authenticated Admin API.
 - `database/migrations/` — ordered D1 migrations.
