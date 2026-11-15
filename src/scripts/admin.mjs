@@ -43,7 +43,7 @@ if (root) {
     state.page = page;
     $$("[data-page]").forEach((node) => { node.hidden = node.dataset.page !== page; });
     $$("[data-nav]").forEach((node) => node.classList.toggle("is-active", node.dataset.nav === (page === "content" || page === "editor" ? state.collection : page)));
-    const title = page === "content" ? collectionNames[state.collection].title : page === "editor" ? "繁體中文文章編輯" : ({dashboard:"Overview",homepage:"Homepage",settings:"Navigation & settings",media:"Media library",languages:"內容語言"}[page] || "Overview");
+    const title = page === "content" ? collectionNames[state.collection].title : page === "editor" ? "Content editor" : ({dashboard:"Overview",homepage:"Homepage",settings:"Navigation & settings",media:"Media library",languages:"Languages"}[page] || "Overview");
     const crumb = $("[data-breadcrumb]", document);
     if (crumb) crumb.textContent = title;
     if (page === "content") renderList();
@@ -116,7 +116,7 @@ if (root) {
   };
   const renderLanguages = () => {
     const tbody = $("[data-language-rows]");
-    if (!state.items.length) { tbody.innerHTML = '<tr><td colspan="2" class="table-empty">No content has been added yet.</td></tr>'; return; }
+    if (!state.items.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No content has been added yet.</td></tr>'; return; }
     tbody.innerHTML = Object.keys(collectionNames).map((name) => {
       const items = state.items.filter((item) => item.type === name);
       return '<tr><td>' + collectionNames[name].title + '</td><td>' + items.length + '</td></tr>';
@@ -831,7 +831,7 @@ if (root) {
       if(choose.dataset.license) setField("mediaLicense."+suffix,choose.dataset.license);
       if(choose.dataset.source) setField("mediaSource."+suffix,choose.dataset.source);
       markDirty();
-      showToast("Cover image selected for the " + (suffix==="zh"?"Chinese":"English") + " variant.","info");
+      showToast("已為繁體中文文章選取封面圖片。","info");
     }
     const previewLocale = event.target.closest("[data-preview-language]");
     if (previewLocale) {
