@@ -4,7 +4,7 @@ import { toPublicMarkdown } from "../functions/api/admin/v1/content/[contentId]/
 
 const base = {
   contentId: "5e6ce811-787f-523b-81e2-761c7ee6017d",
-  locale: "zh-CN",
+  locale: "zh-TW",
   title: "《西游记》：读者指南",
   description: "认识孙悟空，以及这部经典冒险故事的丰富层次。",
   category: "古典小说",
@@ -21,7 +21,7 @@ const base = {
 
 test("public Markdown export preserves immutable contentId and canonical locale metadata", () => {
   const markdown = toPublicMarkdown(base);
-  assert.match(markdown, /^---\ncontentId: "5e6ce811-787f-523b-81e2-761c7ee6017d"\nlocale: "zh-CN"\ntitle:/);
+  assert.match(markdown, /^---\ncontentId: "5e6ce811-787f-523b-81e2-761c7ee6017d"\nlocale: "zh-TW"\ntitle:/);
   assert.ok(markdown.includes("## 阅读之前"));
   assert.ok(markdown.includes('imageAlt: "一本古籍"'));
 });

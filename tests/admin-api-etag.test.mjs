@@ -10,7 +10,7 @@ import {
 
 const contentId = "123e4567-e89b-42d3-a456-426614174000";
 const payload = {
-  locale: "en",
+  locale: "zh-TW",
   collection: "culture",
   slug: "calligraphy",
   title: "Calligraphy",
@@ -25,8 +25,8 @@ const payload = {
 };
 
 test("GET content derives the quoted D1 ETag from the authoritative JSON revision", async () => {
-  const result = await getContent(contentId, "en", async () => new Response(
-    JSON.stringify({ contentId, locale: "en", revision: 12, title: "Calligraphy" }),
+  const result = await getContent(contentId, "zh-TW", async () => new Response(
+    JSON.stringify({ contentId, locale: "zh-TW", revision: 12, title: "Calligraphy" }),
     { status: 200, headers: { "content-type": "application/json", etag: 'W/"edge-generated-tag"' } }
   ));
 
@@ -35,8 +35,8 @@ test("GET content derives the quoted D1 ETag from the authoritative JSON revisio
 });
 
 test("GET content derives the quoted D1 ETag when the edge omits ETag", async () => {
-  const result = await getContent(contentId, "zh-CN", async () => new Response(
-    JSON.stringify({ contentId, locale: "zh-CN", revision: "7", title: "书法" }),
+  const result = await getContent(contentId, "zh-TW", async () => new Response(
+    JSON.stringify({ contentId, locale: "zh-TW", revision: "7", title: "书法" }),
     { status: 200, headers: { "content-type": "application/json" } }
   ));
 
@@ -47,9 +47,9 @@ test("saveDraft sends a canonical quoted If-Match header", async () => {
   setAdminCsrfToken("test-csrf-token");
   let request;
   try {
-    const result = await saveDraft(contentId, "en", payload, "8", async (_url, options) => {
+    const result = await saveDraft(contentId, "zh-TW", payload, "8", async (_url, options) => {
       request = options;
-      return new Response(JSON.stringify({ contentId, locale: "en", revision: 9 }), {
+      return new Response(JSON.stringify({ contentId, locale: "zh-TW", revision: 9 }), {
         status: 200,
         headers: { "content-type": "application/json", etag: 'W/"9"' }
       });
@@ -66,7 +66,7 @@ test("submitContent sends a canonical quoted If-Match header", async () => {
   setAdminCsrfToken("test-csrf-token");
   let request;
   try {
-    await submitContent(contentId, "en", '"9"', "review", "test", async (_url, options) => {
+    await submitContent(contentId, "zh-TW", '"9"', "review", "test", async (_url, options) => {
       request = options;
       return new Response(JSON.stringify({ revision: "9", pullRequest: { number: 1 } }), {
         status: 201,
@@ -83,7 +83,7 @@ test("submitContent sends a canonical quoted If-Match header", async () => {
 test("write operations reject missing or malformed revision tokens before making a request", async () => {
   let called = false;
   assert.throws(
-    () => saveDraft(contentId, "en", payload, 'W/"9"', async () => { called = true; }),
+    () => saveDraft(contentId, "zh-TW", payload, 'W/"9"', async () => { called = true; }),
     (error) => error.code === "REVISION_ETAG_MISSING" && error.status === 409
   );
   assert.equal(called, false);
