@@ -10,7 +10,7 @@ export function buildPublicArticleUrls(groups) {
   );
 }
 
-export function missingTranslations(alternateUrls, locales = ["en", "zh-cn", "es"]) {
+export function missingTranslations(alternateUrls, locales = ["en", "zh-cn", "zh-tw", "es"]) {
   if (!alternateUrls || Object.keys(alternateUrls).length === 0) return [];
   return locales.filter((locale) => !alternateUrls[locale]);
 }

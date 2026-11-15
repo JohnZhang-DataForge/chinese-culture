@@ -27,7 +27,7 @@ test("public article URL generation excludes drafts and unpublished records", ()
 });
 
 test("missing translations are reported only for article pages with locale alternatives", () => {
-  assert.deepEqual(missingTranslations({ en: "/en/culture/story/" }), ["zh-cn", "es"]);
-  assert.deepEqual(missingTranslations({ en: "/en/culture/story/", "zh-cn": "/zh-cn/culture/story/", es: "/es/culture/story/" }), []);
+  assert.deepEqual(missingTranslations({ en: "/en/culture/story/" }), ["zh-cn", "zh-tw", "es"]);
+  assert.deepEqual(missingTranslations({ en: "/en/culture/story/", "zh-cn": "/zh-cn/culture/story/", "zh-tw": "/zh-tw/culture/story/", es: "/es/culture/story/" }), []);
   assert.deepEqual(missingTranslations({}), []);
 });

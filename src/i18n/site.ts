@@ -1,9 +1,10 @@
-export const supportedLocales = ["en", "zh-cn", "es"] as const;
-export type Locale = "en" | "zh-cn" | "es";
+export const supportedLocales = ["zh-tw", "en", "zh-cn", "es"] as const;
+export type Locale = "zh-tw" | "en" | "zh-cn" | "es";
 
 export const localeNames: Record<Locale, string> = {
   en: "English",
   "zh-cn": "简体中文",
+  "zh-tw": "繁體中文",
   es: "Español"
 };
 
@@ -19,6 +20,7 @@ export const ui = {
     home: "Home", events: "Events", upcoming: "Upcoming events",
     eventHeading: "Culture is something we share.", eventIntro: "Exhibitions, talks, workshops and celebrations can bring a story off the page and into everyday life.",
     noEvents: "No verified events listed yet.", eventNote: "We are establishing an editorial process to check dates, organizers, location details and registration links before posting announcements. We will not publish invented or outdated events.",
+    noArticles: "No articles have been published yet. New stories are on the way.",
     exploreFestivals: "Explore festival traditions", aboutTitle: "About the project", accessibilityTitle: "Accessibility",
     contactTitle: "Contact", editorialTitle: "Editorial policy", privacyTitle: "Privacy"
   },
@@ -33,8 +35,24 @@ export const ui = {
     home: "首页", events: "活动", upcoming: "即将举行的活动",
     eventHeading: "文化因分享而生。", eventIntro: "展览、讲座、工作坊和庆典能让书页上的故事走进日常生活。",
     noEvents: "目前还没有经过核实的活动。", eventNote: "我们正在建立编辑审核流程，在发布活动前核实日期、主办方、地点和报名链接。我们不会发布虚构或过期的活动。",
+    noArticles: "目前还没有文章。新的故事正在准备中。",
     exploreFestivals: "探索节日传统", aboutTitle: "了解项目", accessibilityTitle: "无障碍访问",
     contactTitle: "联系我们", editorialTitle: "编辑政策", privacyTitle: "隐私政策"
+  },
+  "zh-tw": {
+    skip: "跳至主要內容", nav: ["學習", "文化", "節慶", "書籍", "活動"], about: "關於我們",
+    explore: "探索", language: "語言", footerTitle: "一個充滿故事的世界，正等待您來發現。",
+    footerNote: "一個獨立、親切易懂的文化學習計畫。", exploreLabel: "探索",
+    projectLabel: "關於本計畫", approach: "我們的理念", editorial: "編輯政策",
+    privacy: "隱私權", accessibility: "無障礙", footerBottom: "持續探索，持續發現。",
+    read: "閱讀文章", minRead: "分鐘閱讀", keepExploring: "繼續探索",
+    back: "返回", guides: "篇指南", guide: "篇指南", originalGuide: "原創學習指南",
+    home: "首頁", events: "活動", upcoming: "近期活動",
+    eventHeading: "文化因分享而生。", eventIntro: "展覽、講座、工作坊與慶典，能讓書頁上的故事走進日常生活。",
+    noEvents: "目前尚無經過查證的活動。", eventNote: "我們會先確認日期、主辦單位、地點與官方報名連結，再刊登活動資訊；不會發布虛構或過期的活動。",
+    noArticles: "這個分類目前還沒有文章。全新的內容正在準備中。",
+    exploreFestivals: "探索節慶傳統", aboutTitle: "關於本計畫", accessibilityTitle: "無障礙",
+    contactTitle: "聯絡我們", editorialTitle: "編輯政策", privacyTitle: "隱私權政策"
   },
   es: {
     skip: "Ir al contenido", nav: ["Aprender", "Cultura", "Festivales", "Libros", "Eventos"], about: "Acerca de",
@@ -47,6 +65,7 @@ export const ui = {
     home: "Inicio", events: "Eventos", upcoming: "Próximos eventos",
     eventHeading: "La cultura se comparte.", eventIntro: "Las exposiciones, charlas, talleres y celebraciones llevan las historias de la página a la vida cotidiana.",
     noEvents: "Todavía no hay eventos verificados.", eventNote: "Estamos estableciendo un proceso editorial para comprobar fechas, organizadores, ubicaciones y enlaces oficiales de inscripción antes de publicar anuncios. No publicaremos eventos inventados ni desactualizados.",
+    noArticles: "Todavía no hay artículos publicados. Pronto llegarán nuevas historias.",
     exploreFestivals: "Explorar las tradiciones festivas", aboutTitle: "Acerca del proyecto", accessibilityTitle: "Accesibilidad",
     contactTitle: "Contacto", editorialTitle: "Política editorial", privacyTitle: "Privacidad"
   }
@@ -66,6 +85,13 @@ export const localizedSections = {
     { route: "festivals", collection: "festivalsZh", nav: "节日", eyebrow: "文化的岁时日历", title: "值得分享的时刻。", description: "了解一年之中各种庆典背后的故事与社群习俗。", note: "许多节日遵循传统阴阳合历，因此公历日期每年不同。" },
     { route: "books", collection: "booksZh", nav: "书籍", eyebrow: "阅读空间", title: "好故事会打开一扇门。", description: "通过阅读指南走近中国文学经典、思想与多彩世界。", note: "这里提供原创阅读指南，不提供未经授权的书籍下载。" },
     { route: "events", collection: null, nav: "活动", eyebrow: "相聚与学习", title: "文化因分享而生。", description: "展览、讲座、工作坊和庆典能让书页上的故事走进日常生活。", note: "目前还没有经过核实的活动。" }
+  ],
+  "zh-tw": [
+    { route: "learn", collection: "lessonsTw", nav: "學習", eyebrow: "循序學習", title: "從基礎開始。", description: "以清楚易懂的方式認識語言、習俗、節慶與藝術傳統，一次探索一個主題。", note: "可以依序閱讀，也可以從感興趣的主題開始。" },
+    { route: "culture", collection: "cultureTw", nav: "文化", eyebrow: "跟隨好奇心探索", title: "多元傳統，多元觀點。", description: "探索連結過去與現在的器物、思想與創作實踐。", note: "每個主題都是深入探索的起點。" },
+    { route: "festivals", collection: "festivalsTw", nav: "節慶", eyebrow: "文化的歲時日曆", title: "值得分享的時刻。", description: "認識一年之中各種慶典背後的故事與社群習俗。", note: "許多節慶依循傳統陰陽合曆，因此公曆日期每年不同。" },
+    { route: "books", collection: "booksTw", nav: "書籍", eyebrow: "閱讀空間", title: "好故事，開啟新視野。", description: "透過閱讀指南，走近中國文學經典、思想與多彩世界。", note: "本站提供原創閱讀指南，不提供未經授權的書籍下載。" },
+    { route: "events", collection: null, nav: "活動", eyebrow: "相聚與學習", title: "文化因分享而生。", description: "展覽、講座、工作坊與慶典，能讓書頁上的故事走進日常生活。", note: "目前尚無經過查證的活動。" }
   ],
   es: [
     { route: "learn", collection: "lessonsEs", nav: "Aprender", eyebrow: "Aprendizaje guiado", title: "Empieza por los fundamentos.", description: "Una introducción accesible al idioma, las costumbres, las celebraciones y las tradiciones creativas, paso a paso.", note: "Lee en orden o elige cualquier punto de partida." },
@@ -91,6 +117,13 @@ export const homeCopy = {
     learn: "开始探索", books: "故事与思想", more: "更多精彩故事", moreIntro: "前方总有另一个故事等待发现。",
     callout: "一个充满故事的世界正等待你来发现。", calloutText: "带着好奇去探索，结合背景去理解，分享你的所学。", about: "关于项目"
   },
+  "zh-tw": {
+    eyebrow: "文化地圖・最新消息", heading: "探索新的文化故事", intro: "值得認識的故事、傳統與思想。",
+    all: "探索所有主題", topics: "尋找下一段探索旅程", exploreTitle: "探索中國文化的豐富世界",
+    exploreIntro: "選擇一個主題，跟隨好奇心繼續前進。", culture: "藝術與傳統", festivals: "一起感受節慶",
+    learn: "開始學習", books: "故事與思想", more: "更多值得探索的主題", moreIntro: "前方總有新的故事，等待您來發現。",
+    callout: "一個充滿故事的世界，正等待您來發現。", calloutText: "帶著好奇心探索，結合脈絡理解，分享您的所學。", about: "關於本計畫"
+  },
   es: {
     eyebrow: "Novedades del Atlas Cultural", heading: "Descubre algo nuevo", intro: "Historias, tradiciones e ideas que merecen ser exploradas.",
     all: "Ver todas las historias", topics: "Encuentra tu próxima aventura", exploreTitle: "Explora el mundo de la cultura china",
@@ -114,6 +147,13 @@ export const localizedPages = {
     contact: { title: "联系我们", eyebrow: "保持联系", heading: "期待与你交流。", paragraphs: ["我们尚未公布经过核实的项目联系邮箱。请勿通过声称代表本网站、但未经确认的其他账户发送个人信息。", "正式公开发布前，我们计划建立明确的渠道，用于内容更正、教育反馈和活动咨询。"] },
     "editorial-policy": { title: "编辑政策", eyebrow: "信任与学习", heading: "我们如何讲述这些故事。", headings: ["清晰，而非武断", "资料来源与署名", "内容更正", "活动信息"], paragraphs: ["我们希望让复杂主题更容易理解，但不会假装一种传统只有单一历史，也不会认为所有社群都以相同方式庆祝。我们会区分历史研究、民间传说和现代诠释。", "在条件允许时，教育文章会链接到延伸资料。我们撰写原创摘要，并尊重作者、艺术家和译者的权利。本网站不会托管未经授权的书籍副本。", "修订文章前，我们会审查实质性问题。本项目仍在建立公开联系渠道和编辑审阅流程，因此请将这些页面视为持续完善中的教育内容，而非百科全书。", "我们只计划发布主办方信息、日期和官方报名链接均经过核实的活动。活动信息不代表本项目对主办方的背书。"] },
     privacy: { title: "隐私政策", eyebrow: "尊重每一位读者", heading: "从设计之初保护隐私。", paragraphs: ["面向公众的内容网站采用静态页面，不提供访客账户、新闻订阅或联系表单；公众浏览部分不集成网站分析工具或广告跟踪器，应用也不会为了公众浏览主动设置 Cookie。", "受保护的 Admin 管理区使用 Cloudflare Access 验证管理员身份。Cloudflare Access 可能为此设置身份验证 Cookie。这类 Cookie 用于访问控制，不用于广告或分析。托管服务提供商还可能为安全和内容交付处理 IP 地址等常规请求信息。", "如果未来增加面向访客的表单、分析工具或账户功能，我们会在启用前更新本隐私说明。本说明反映当前公开网站和受保护管理区的设置；部署配置发生变化时，我们也会重新审核。"] }
+  },
+  "zh-tw": {
+    about: { title: "關於本計畫", eyebrow: "我們的故事", heading: "一扇認識鮮活文化的窗口。", intro: "Chinese Culture Atlas 是一個面向世界各地好奇讀者的獨立學習計畫。我們以平實而深入的方式介紹節慶、藝術、語言、文學與日常生活。", paragraphs: ["文化不是固定不變的單一敘事。不同地區、社群、家庭與世代的生活實踐各有特色。好的介紹應幫助讀者看見多樣性，而不是將文化簡化為刻板印象。", "我們會區分歷史證據、傳統故事與現代習俗，並提供延伸閱讀連結。本網站以教育學習為目的，並非官方文化機構。"], headings: ["我們相信的事", "如何開始"], note: "編輯說明：本網站仍在持續發展。正式推出前，我們計畫進行更多獨立主題審閱，並建立公開的意見回饋管道。" },
+    accessibility: { title: "無障礙", eyebrow: "適合每一個人", heading: "學習應該人人都能參與。", paragraphs: ["我們致力於提供易讀文字、鍵盤友善的導覽、清楚可見的焦點提示、明確的標題層級，以及適合行動裝置的閱讀體驗。我們避免媒體自動播放，並在適當處提供中文文字說明。", "網站仍在開發中，尚未完成正式的無障礙稽核。正式推出前，必須使用輔助科技進行測試，並修正所發現的問題。"] },
+    contact: { title: "聯絡我們", eyebrow: "保持聯繫", heading: "期待與您交流。", paragraphs: ["我們尚未公布經過查證的計畫聯絡信箱。請勿透過未經確認、聲稱代表本網站的其他帳號傳送個人資料。", "正式公開推出前，我們計畫建立明確管道，供讀者回報更正、提供教育回饋與詢問活動資訊。"] },
+    "editorial-policy": { title: "編輯政策", eyebrow: "信任與學習", heading: "我們如何講述這些故事。", headings: ["清楚，而非武斷", "資料來源與署名", "內容更正", "活動資訊"], paragraphs: ["我們希望讓複雜主題更容易理解，但不會假裝一種傳統只有單一歷史，也不會認為所有社群都以相同方式慶祝。我們會區分歷史研究、民間傳說與現代詮釋。", "在條件允許時，教育文章會連結延伸資料。我們撰寫原創摘要，並尊重作者、藝術家與譯者的權利。本網站不會託管未經授權的書籍副本。", "修訂文章前，我們會審查實質問題。本計畫仍在建立公開聯絡管道與編輯審閱流程，因此請將這些頁面視為持續完善中的教育內容，而非百科全書。", "我們只會刊登主辦單位、日期與官方報名連結均經過查證的活動。活動資訊不代表本計畫為主辦單位背書。"] },
+    privacy: { title: "隱私權政策", eyebrow: "尊重每一位讀者", heading: "從設計之初保護隱私。", paragraphs: ["面向公眾的網站採用靜態頁面，不提供訪客帳戶、電子報訂閱或聯絡表單；一般瀏覽體驗不會整合網站分析工具或廣告追蹤器，應用程式也不會為一般瀏覽主動設定 Cookie。", "受保護的 Admin 管理區使用 Cloudflare Access 驗證管理員身分。Cloudflare Access 可能因此設定身分驗證 Cookie。這類 Cookie 用於存取控制，不用於廣告或分析。託管服務提供者也可能為安全與內容傳遞處理 IP 位址等一般請求資訊。", "如果未來版本新增訪客表單、分析工具或帳戶功能，我們會在啟用前更新本政策。本政策說明目前公開網站與受保護管理區的設定；部署配置變更時，也會重新審查。"] }
   },
   es: {
     about: { title: "Acerca del proyecto", eyebrow: "Nuestra historia", heading: "Una ventana a una cultura viva.", intro: "Chinese Culture Atlas es un proyecto educativo independiente para personas curiosas de todo el mundo. Ofrecemos introducciones cuidadosas a las fiestas, las artes, el idioma, la literatura y las prácticas cotidianas.", paragraphs: ["La cultura no es un relato único e inmutable. Las prácticas varían entre regiones, comunidades, familias y generaciones. Una buena introducción debe ayudar a ver esa diversidad, no reducirla a estereotipos.", "Distinguimos entre evidencias históricas, relatos tradicionales y costumbres modernas; también incluimos enlaces de lectura para profundizar. Este sitio es educativo y no representa a una institución cultural oficial."], headings: ["Lo que creemos", "Nuestro enfoque"], note: "Nota editorial: el sitio se encuentra en su primera fase de desarrollo. Antes del lanzamiento completo están previstas una revisión independiente adicional y un canal público para recibir comentarios." },

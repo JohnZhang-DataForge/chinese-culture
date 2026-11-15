@@ -18,7 +18,7 @@ const content = (localizedPages as any)[locale][page];
     {!content.headings && content.paragraphs.map((paragraph: string) => <p>{paragraph}</p>)}
     {content.headings && content.paragraphs.slice(content.headings.length).map((paragraph: string) => <p>{paragraph}</p>)}
     {content.note && <div class="callout">{content.note}</div>}
-    {page === "about" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"浏览入门课程": "Explora las lecciones para principiantes"}</a></p>}
-    {page === "accessibility" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"探索入门课程":"Explora las lecciones para principiantes"}</a></p>}
+    {page === "about" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"浏览入门课程":locale==="zh-tw"?"瀏覽入門課程":"Explora las lecciones para principiantes"}</a></p>}
+    {page === "accessibility" && <p><a href={"/"+locale+"/learn/"}>{locale==="zh-cn"?"探索入門課程":locale==="zh-tw"?"探索入門課程":"Explora las lecciones para principiantes"}</a></p>}
   </div></div>
 </BaseLayout>

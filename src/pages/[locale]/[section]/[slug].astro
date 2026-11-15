@@ -12,7 +12,7 @@ export async function getStaticPaths() {
     for (const config of localizedSections[locale].filter((section) => section.collection)) {
       const entries = await getCollection(config.collection as any);
       for (const entry of entries) {
-        const expectedLocale = locale === "zh-cn" ? "zh-CN" : locale;
+        const expectedLocale = locale === "zh-cn" ? "zh-CN" : locale === "zh-tw" ? "zh-TW" : locale;
         if (entry.data.locale !== expectedLocale) {
           throw new Error(`Content locale mismatch for ${entry.id}: expected ${expectedLocale}, got ${entry.data.locale}`);
         }
@@ -60,13 +60,13 @@ const related = inSection.filter((other: any) => other.id !== entry.id).slice(0,
   <header class="entry-hero"><div class="wrap">
     <nav class="breadcrumbs" aria-label="Breadcrumb"><a href={"/"+locale+"/"}>{labels.home}</a><span aria-hidden="true">/</span><a href={"/"+locale+"/"+config.route+"/"}>{config.nav}</a><span aria-hidden="true">/</span><span>{entry.data.title}</span></nav>
     <span class="eyebrow">{entry.data.category}</span>
-    {entry.data.chinese && <div class="entry-chinese" lang="zh-Hans">{entry.data.chinese}</div>}
+    {entry.data.chinese && <div class="entry-chinese" lang={locale === "zh-tw" ? "zh-Hant" : "zh-Hans"}>{entry.data.chinese}</div>}
     <h1>{entry.data.title}</h1><p class="lead">{entry.data.description}</p>
     <div class="entry-meta"><span>{entry.data.readingMinutes} {labels.minRead}</span>{entry.data.level && <span>{entry.data.level}</span>}<span>{labels.originalGuide}</span></div>
   </div></header>
   {entry.data.image && <div class="article-cover wrap"><img src={entry.data.image} alt={entry.data.imageAlt ?? entry.data.title} fetchpriority="high" /></div>}
   <div class="wrap article-layout">
     <article class="prose"><Content /><hr /><p><a href={"/"+locale+"/"+config.route+"/"}>← {labels.back} {config.nav}</a></p></article>
-    <aside class="article-aside" aria-label={labels.keepExploring}><h2>{labels.keepExploring}</h2><p>{locale==="zh-cn"?"沿着另一条线索继续探索，看看它会带你去哪里。":"Sigue otro hilo y descubre adónde te lleva."}</p><ul>{related.map((item: any)=><li><a href={"/"+locale+"/"+config.route+"/"+item.id+"/"}>{item.data.title} ↗</a></li>)}</ul><p><a href={"/"+locale+"/editorial-policy/"}>{labels.editorial}</a></p></aside>
+    <aside class="article-aside" aria-label={labels.keepExploring}><h2>{labels.keepExploring}</h2><p>{locale==="zh-cn"?"沿着另一条线索继续探索，看看它会带你去哪里。":locale==="zh-tw"?"沿著另一條線索繼續探索，看看它會帶您前往何處。":"Sigue otro hilo y descubre adónde te lleva."}</p><ul>{related.map((item: any)=><li><a href={"/"+locale+"/"+config.route+"/"+item.id+"/"}>{item.data.title} ↗</a></li>)}</ul><p><a href={"/"+locale+"/editorial-policy/"}>{labels.editorial}</a></p></aside>
   </div>
 </BaseLayout>
