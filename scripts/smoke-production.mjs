@@ -55,19 +55,39 @@ async function requestPublicPage(page) {
 }
 
 const publicPages = [
-  { path: "/en/", language: "en" },
-  { path: "/zh-cn/", language: "zh-CN" },
-  { path: "/es/", language: "es" },
-  { path: "/en/books/journey-to-the-west/", language: "en" },
-  { path: "/zh-cn/books/journey-to-the-west/", language: "zh-CN" },
-  { path: "/es/books/journey-to-the-west/", language: "es" }
-];
+  "/zh-tw/",
+  "/zh-tw/learn/",
+  "/zh-tw/culture/",
+  "/zh-tw/festivals/",
+  "/zh-tw/books/",
+  "/zh-tw/events/",
+  "/zh-tw/about/"
+].map((path) => ({ path, language: "zh-TW" }));
 
 for (const page of publicPages) {
   const response = await requestPublicPage(page);
   const html = await response.text();
-  assert.ok(html.includes('<html lang="' + page.language + '"'), page.path + " should declare the expected language");
+  assert.ok(html.includes('<html lang="zh-TW"'), page.path + " should declare Traditional Chinese");
   assert.ok(html.includes("Chinese Culture Atlas"), page.path + " should render the site shell");
+  if (page.path === "/zh-tw/") {
+    assert.ok(html.includes('id="google_translate_element"'), "home page should include the Google Translate widget mount");
+    assert.ok(html.includes("translate.google.com/translate_a/element.js"), "home page should load the Google Translate widget script");
+  }
+}
+
+const legacyRedirects = [
+  ["/", "/zh-tw/"],
+  ["/en/", "/zh-tw/"],
+  ["/zh-cn/", "/zh-tw/"],
+  ["/es/", "/zh-tw/"],
+  ["/en/books/journey-to-the-west/", "/zh-tw/books/journey-to-the-west/"],
+  ["/zh-cn/culture/example/", "/zh-tw/culture/example/"],
+  ["/es/books/example/", "/zh-tw/books/example/"]
+];
+for (const [path, destination] of legacyRedirects) {
+  const response = await request(path);
+  assert.ok([301, 308].includes(response.status), path + " should permanently redirect to Traditional Chinese");
+  assert.equal(new URL(response.headers.get("location") || "https://invalid.example", baseUrl).pathname, destination, path + " should redirect to " + destination);
 }
 
 const sitemapResponse = await request("/sitemap.xml");
@@ -75,23 +95,16 @@ assert.equal(sitemapResponse.status, 200, "sitemap.xml should be publicly availa
 assert.match(sitemapResponse.headers.get("content-type") || "", /application\/xml|text\/xml/i, "sitemap should use an XML content type");
 const sitemap = await sitemapResponse.text();
 assert.ok(sitemap.includes("<urlset"), "sitemap should contain a urlset");
-assert.ok((sitemap.match(/<url>/g) || []).length >= 60, "sitemap should include localized static pages and published articles");
-for (const path of [
-  "/en/books/journey-to-the-west/",
-  "/zh-cn/books/journey-to-the-west/",
-  "/es/books/journey-to-the-west/"
-]) assert.ok(sitemap.includes("https://chinese-culture.site" + path), "sitemap should include " + path);
+assert.ok(sitemap.includes("https://chinese-culture.site/zh-tw/"), "sitemap should include the Traditional Chinese home page");
+assert.ok(sitemap.includes("https://chinese-culture.site/zh-tw/about/"), "sitemap should include the Traditional Chinese about page");
+assert.ok((sitemap.match(/<url>/g) || []).length >= 10, "sitemap should include Traditional Chinese static pages and sections");
+for (const legacy of ["/en/", "/zh-cn/", "/es/"]) assert.ok(!sitemap.includes("https://chinese-culture.site" + legacy), "sitemap must not list legacy locale routes");
 
-for (const missing of [
-  { path: "/zh-cn/__production-smoke-missing-route__/", text: "这里暂时没有这个故事" },
-  { path: "/es/__production-smoke-missing-route__/", text: "Esta historia aún no está aquí" },
-  { path: "/en/__production-smoke-missing-route__/", text: "This path has no story yet." }
-]) {
-  const response = await request(missing.path);
-  assert.equal(response.status, 404, missing.path + " should return HTTP 404");
-  const html = await response.text();
-  assert.ok(html.includes(missing.text), missing.path + " should show the localized 404 message");
-}
+const missing = "/zh-tw/__production-smoke-missing-route__/";
+const missingResponse = await request(missing);
+assert.equal(missingResponse.status, 404, missing + " should return HTTP 404");
+const missingHtml = await missingResponse.text();
+assert.ok(missingHtml.includes("這個頁面目前還沒有故事"), "404 should show the Traditional Chinese message");
 
 for (const path of ["/admin/", "/api/admin/v1/session"]) {
   const response = await request(path, { accept: "application/json" }, protectedSiteUrl);
