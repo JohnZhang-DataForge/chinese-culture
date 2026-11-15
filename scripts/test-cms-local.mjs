@@ -121,7 +121,7 @@ async function main() {
   const read = await request("/api/admin/v1/content/" + id + "?locale=zh-TW");
   if (!read.response.ok || read.data?.title !== payload.title) throw new Error("Read content failed: " + JSON.stringify(read.data));
 
-  const updatedPayload = { ...payload, title: "CMS integration smoke test updated", bodyMarkdown: payload.bodyMarkdown + "\n\nUpdated revision." };
+  const updatedPayload = { ...payload, title: "CMS 整合測試（更新版）", bodyMarkdown: payload.bodyMarkdown + "\n\nUpdated revision." };
   const updated = await request("/api/admin/v1/content/" + id + "?locale=zh-TW", { method: "PUT", headers: { ...headers, "If-Match": etag }, body: JSON.stringify(updatedPayload) });
   if (!updated.response.ok || updated.data?.title !== updatedPayload.title) throw new Error("Update content failed: " + JSON.stringify(updated.data));
   etag = updated.response.headers.get("etag");
@@ -156,7 +156,7 @@ async function main() {
   }
 
   const preview = await request("/api/admin/v1/content/" + id + "/preview", { method: "POST", headers, body: JSON.stringify({ content: updatedPayload }) });
-  if (!preview.response.ok || !String(preview.data?.html || "").includes("<h2>D1 round trip</h2>")) {
+  if (!preview.response.ok || !String(preview.data?.html || "").includes("<h2>D1 往返測試</h2>")) {
     throw new Error("Safe preview failed: " + JSON.stringify(preview.data));
   }
 
