@@ -4,15 +4,13 @@
 
 ## Source of truth
 
-Cloudflare D1 (`CMS_DB`) is the canonical editorial store. Each conceptual article has one immutable `contentId` and independent locale variants: `en`, `zh-CN`, and `es`. D1 stores content, media metadata, revision history and publication submissions.
+Cloudflare D1 (`CMS_DB`) is the canonical editorial store. Each article has one immutable `contentId` and one authored locale variant: Traditional Chinese (`zh-TW`). D1 stores content, media metadata, revision history and publication submissions.
 
 Markdown files on `main` are static publication snapshots generated from approved D1 revisions. Public Astro pages are built from these files and never query D1 at request time.
 
 ## Locale-specific snapshot paths
 
-- English: `src/content/{collection}/{slug}.md`
-- Simplified Chinese: `src/content/zh-cn/{collection}/{slug}.md`
-- Spanish: `src/content/es/{collection}/{slug}.md`
+- Traditional Chinese only: `src/content/zh-tw/{collection}/{slug}.md`
 
 Collections currently supported by the CMS publisher are `lessons`, `culture`, `festivals` and `books`. The `events` page is not yet a CMS-published collection.
 
@@ -51,4 +49,4 @@ Normal editorial changes should use the Admin workspace. Direct Markdown edits a
 
 ## Editorial quality
 
-Existing English, Simplified Chinese and Spanish articles are imported unchanged because they are already part of the public site. New translations require human terminology, cultural accuracy, link and language-quality review before publication.
+Traditional Chinese is the only authored source language. Visitors may use the in-page Google Translate widget for machine translation; machine output is not treated as an editorially reviewed language edition.

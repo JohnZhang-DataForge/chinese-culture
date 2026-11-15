@@ -5,7 +5,7 @@ import { parseFrontmatter, validateVariant } from "../scripts/validate-content.m
 const valid = {
   metadata: {
     contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2",
-    locale: "zh-TW",
+    locale: "en",
     title: "A living culture",
     description: "An introduction.",
     category: "Foundations",
@@ -14,15 +14,15 @@ const valid = {
     imageAlt: "A traditional building"
   },
   bodyMarkdown: "## Introduction\n\nCulture changes over time.",
-  filePath: "src/content/zh-tw/lessons/example.md",
-  localeFromPath: "zh-TW",
+  filePath: "src/content/lessons/example.md",
+  localeFromPath: "en",
   collection: "lessons",
   slug: "example"
 };
 
 test("parses the scalar YAML frontmatter used by the published content contract", () => {
-  const parsed = parseFrontmatter('---\nlocale: "zh-TW"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
-  assert.equal(parsed.metadata.locale, "zh-CN");
+  const parsed = parseFrontmatter('---\nlocale: "zh-CN"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
+  assert.equal(parsed.metadata.locale, "zh-TW");
   assert.equal(parsed.metadata.featured, false);
   assert.equal(parsed.metadata.order, 2);
   assert.equal(parsed.bodyMarkdown, "正文");
@@ -41,7 +41,7 @@ test("rejects an invalid immutable content ID", () => {
 });
 
 test("rejects locale metadata that disagrees with its directory", () => {
-  assert.throws(() => validateVariant({ ...valid, localeFromPath: "zh-TW" }), /does not match/);
+  assert.throws(() => validateVariant({ ...valid, localeFromPath: "es" }), /does not match/);
 });
 
 test("rejects malformed slugs and frontmatter slug drift", () => {
@@ -59,10 +59,10 @@ test("rejects invalid publication status and timestamps", () => {
   assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, updatedAt: "not-a-date" } }), /updatedAt/);
 });
 
-test("requires Simplified Chinese text for zh-CN variants", () => {
+test("rejects non-Traditional Chinese locale variants", () => {
   assert.throws(() => validateVariant({
     ...valid,
-    metadata: { ...valid.metadata, locale: "zh-CN", title: "Only English" },
-    localeFromPath: "zh-CN"
-  }), /Simplified Chinese/);
+    metadata: { ...valid.metadata, locale: "en", title: "Only English" },
+    localeFromPath: "en"
+  }), /Unsupported locale/);
 });

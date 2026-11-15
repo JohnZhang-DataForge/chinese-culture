@@ -1,7 +1,7 @@
-import { filterContent, paginate, parseTags, translationStatus, wordCount, localizedSeoPayload } from "../lib/admin-ui.mjs";
+import { filterContent, paginate, parseTags, wordCount, localizedSeoPayload } from "../lib/admin-ui.mjs";
 import {
   AdminApiError, clearAdminCsrfToken, getAdminSession, listContent,
-  getContent, createContent, saveDraft, previewContent,
+  getContent, createContent, createTranslation, saveDraft, previewContent,
   uploadMedia, submitContent, discardDraft, getPullRequestStatus, syncPullRequest
 } from "../lib/admin-api.mjs";
 
@@ -9,11 +9,11 @@ const root = document.querySelector("[data-admin-app]");
 if (root) {
   const demoMode = root.dataset.demo === "true";
   const demoItems = demoMode ? [
-    {id:"story-calligraphy",slug:"calligraphy-and-the-brush",type:"articles",title:{en:"The art of calligraphy",zh:"书法艺术"},description:{en:"Explore the expressive tradition of Chinese brush writing.",zh:"探索中国毛笔书写的表现力与传统。"},body:{en:"## A living art\n\nCalligraphy brings movement, balance and intention together.",zh:"## 一门鲜活的艺术\n\n书法将笔势、平衡与意念融为一体。"},category:"Arts & traditions",tags:["calligraphy","art"],status:"published",featured:true,updatedAt:"Nov 4, 2026"},
-    {id:"guide-first-steps",slug:"a-living-culture",type:"lessons",title:{en:"A living culture",zh:"活态文化"},description:{en:"A welcoming first step into Chinese culture.",zh:"认识中国文化的入门指南。"},body:{en:"## Begin with curiosity\n\nCulture is lived, shared and continually changing.",zh:"## 从好奇开始\n\n文化在生活与分享中不断发展。"},category:"Beginner",tags:["learning","introduction"],status:"published",featured:false,updatedAt:"Nov 3, 2026"},
-    {id:"festival-mid-autumn",slug:"mid-autumn-festival",type:"festivals",title:{en:"The Mid-Autumn Festival",zh:"中秋节"},description:{en:"A festival of the moon, reunion and seasonal food.",zh:"关于月亮、团圆与时令美食的节日。"},body:{en:"## A time to gather\n\nFamilies share food and stories under the autumn moon.",zh:"## 团聚的时刻\n\n家人们在秋月下分享美食与故事。"},category:"Festivals",tags:["moon","family"],status:"draft",featured:true,updatedAt:"Nov 2, 2026"},
-    {id:"book-analects",slug:"the-analects",type:"books",title:{en:"A guide to the Analects",zh:"《论语》阅读指南"},description:{en:"A reader-friendly introduction to the conversations of Confucius.",zh:"以易读的方式介绍孔子及其弟子的对话。"},body:{en:"## Reading the Analects\n\nRead slowly and consider the historical context.",zh:"## 阅读《论语》\n\n慢慢阅读，并结合历史背景理解。"},category:"Reading guides",tags:["classics","philosophy"],status:"published",featured:false,updatedAt:"Oct 31, 2026"},
-    {id:"event-autumn-talk",slug:"autumn-culture-talk",type:"events",title:{en:"Autumn culture talk",zh:"秋季文化讲座"},description:{en:"A sample event draft for editorial review.",zh:"供编辑审核的活动草稿示例。"},body:{en:"Event details are pending verification.",zh:"活动详情有待核实。"},category:"Community",tags:["event"],status:"unpublished",featured:false,updatedAt:"Oct 29, 2026"}
+    {id:"story-calligraphy",slug:"calligraphy-and-the-brush",type:"articles",title:{zh:"書法藝術"},description:{zh:"探索中國毛筆書寫的表現力與傳統。"},body:{zh:"## 一門鮮活的藝術\n\n書法將筆勢、平衡與意念融為一體。"},category:"藝術與傳統",tags:["書法","藝術"],status:"published",featured:true,updatedAt:"2026年11月4日"},
+    {id:"guide-first-steps",slug:"a-living-culture",type:"lessons",title:{zh:"認識活態文化"},description:{zh:"認識中國文化的入門指南。"},body:{zh:"## 從好奇開始\n\n文化在生活與分享中不斷發展。"},category:"入門",tags:["學習","文化"],status:"published",featured:false,updatedAt:"2026年11月3日"},
+    {id:"festival-mid-autumn",slug:"mid-autumn-festival",type:"festivals",title:{zh:"中秋節"},description:{zh:"關於月亮、團圓與時令美食的節日。"},body:{zh:"## 團聚的時刻\n\n家人們在秋月下分享美食與故事。"},category:"節慶",tags:["月亮","家庭"],status:"draft",featured:true,updatedAt:"2026年11月2日"},
+    {id:"book-analects",slug:"the-analects",type:"books",title:{zh:"《論語》閱讀指南"},description:{zh:"以易讀的方式介紹孔子及其弟子的對話。"},body:{zh:"## 閱讀《論語》\n\n慢慢閱讀，並結合歷史背景理解。"},category:"閱讀指南",tags:["經典","哲學"],status:"published",featured:false,updatedAt:"2026年10月31日"},
+    {id:"event-autumn-talk",slug:"autumn-culture-talk",type:"events",title:{zh:"秋季文化講座"},description:{zh:"供編輯審核的活動草稿示例。"},body:{zh:"活動詳情有待核實。"},category:"社群",tags:["活動"],status:"unpublished",featured:false,updatedAt:"2026年10月29日"}
   ] : [];
   const collectionNames = {
     articles:{title:"Articles",singular:"article",apiCollection:"culture",subtitle:"Manage culture stories, editorial metadata and publication status."},
@@ -22,7 +22,7 @@ if (root) {
     books:{title:"Books",singular:"book",apiCollection:"books",subtitle:"Manage book introductions and reading guides."},
     events:{title:"Events",singular:"event",apiCollection:"events",subtitle:"Publish verified events and community announcements."}
   };
-  const state = {items:demoItems.slice(),capabilities:{publish:false,mediaUpload:false,preview:true},page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"zh",media:[],returnPage:null,returnDirty:false,session:null,variants:{"zh-TW":null},etags:{"zh-TW":null},submissions:[]};
+  const state = {items:demoItems.slice(),capabilities:{publish:false,mediaUpload:false,preview:true},page:"dashboard",collection:"articles",pageNumber:1,pageSize:8,selectedId:null,isNew:false,dirty:false,pendingDelete:null,previewLocale:"en",media:[],returnPage:null,returnDirty:false,session:null,variants:{en:null,"zh-CN":null,es:null},etags:{en:null,"zh-CN":null,es:null},submissions:[]};
   const $ = (selector, scope = root) => scope.querySelector(selector);
   const $$ = (selector, scope = root) => [...scope.querySelectorAll(selector)];
   const form = $("[data-content-form]");
@@ -74,7 +74,7 @@ if (root) {
     });
     const published = state.items.filter((item) => item.statuses?.includes("published") || item.status === "published").length;
     const drafts = state.items.filter((item) => item.statuses?.includes("draft") || item.status === "draft").length;
-    const incomplete = 0;
+    const incomplete = state.items.filter((item) => { const t = translationStatus(item); return !t.en || !t.zh || !t.es; }).length;
     const setStat = (name, value) => { const node = $("[data-stat='" + name + "']"); if (node) node.textContent = String(value); };
     setStat("total", state.items.length);
     setStat("published", published);
@@ -83,7 +83,10 @@ if (root) {
     setStat("coverage", state.items.length ? Math.round((state.items.length - incomplete) / state.items.length * 100) + "%" : "0%");
     setStat("missing", incomplete);
   };
-  const languagePills = () => '<div class="language-pills"><span class="language-pill">繁體中文</span></div>';
+  const languagePills = (item) => {
+    const t = translationStatus(item);
+    return '<div class="language-pills"><span class="language-pill ' + (t.en ? "" : "missing") + '">EN</span><span class="language-pill ' + (t.zh ? "" : "missing") + '">中文</span><span class="language-pill ' + (t.es ? "" : "missing") + '">ES</span></div>';
+  };
   const statusPill = (status) => '<span class="status-pill status-' + escapeHtml(status) + '">' + escapeHtml(status) + '</span>';
   const renderList = () => {
     updateCounts();
@@ -97,7 +100,7 @@ if (root) {
     if (!result.items.length) {
       rows.innerHTML = '<tr><td colspan="8" class="table-empty">No content matches these filters. Try another search or create a new item.</td></tr>';
     } else {
-      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.zh) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
+      rows.innerHTML = result.items.map((item) => '<tr data-row-id="' + escapeHtml(item.id) + '"><td><input type="checkbox" aria-label="Select ' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '" /></td><td><div class="content-cell"><span class="content-thumb">' + (item.type === "books" ? "冊" : item.type === "festivals" ? "節" : item.type === "lessons" ? "學" : "文") + '</span><span><strong>' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + languagePills(item) + '</td><td>' + escapeHtml(item.category || "—") + '</td><td>' + statusPill(item.status) + '</td><td><button class="row-action" type="button" data-action="feature" data-id="' + escapeHtml(item.id) + '" aria-label="Toggle featured">' + (item.featured ? '<span class="featured-star">★</span>' : "☆") + '</button></td><td>' + escapeHtml(item.updatedAt || "—") + '</td><td><div class="row-actions"><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '" aria-label="Edit content">✎</button><button class="row-action" type="button" data-action="delete" data-id="' + escapeHtml(item.id) + '" aria-label="Delete content">⌫</button></div></td></tr>').join("");
     }
     const summary = $("[data-pagination-summary]");
     if (summary) summary.textContent = "Showing " + result.start + "–" + result.end + " of " + result.total + " items";
@@ -112,19 +115,23 @@ if (root) {
     const recent = state.items.slice().sort((a,b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).slice(0,5);
     const rows = $("[data-recent-rows]");
     if (!recent.length) { rows.innerHTML = '<tr><td colspan="5" class="table-empty">No content has been added yet.</td></tr>'; return; }
-    rows.innerHTML = recent.map((item) => '<tr><td><div class="content-cell"><span class="content-thumb">文</span><span><strong>' + escapeHtml(item.title.zh) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + escapeHtml(collectionNames[item.type].title) + '</td><td>' + statusPill(item.status) + '</td><td>' + escapeHtml(item.updatedAt) + '</td><td><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '">→</button></td></tr>').join("");
+    rows.innerHTML = recent.map((item) => '<tr><td><div class="content-cell"><span class="content-thumb">文</span><span><strong>' + escapeHtml(item.title.en || item.title.zh || item.title.es) + '</strong><small>' + escapeHtml(item.id) + '</small></span></div></td><td>' + escapeHtml(collectionNames[item.type].title) + '</td><td>' + statusPill(item.status) + '</td><td>' + escapeHtml(item.updatedAt) + '</td><td><button class="row-action" type="button" data-action="edit" data-id="' + escapeHtml(item.id) + '">→</button></td></tr>').join("");
   };
   const renderLanguages = () => {
     const tbody = $("[data-language-rows]");
     if (!state.items.length) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No content has been added yet.</td></tr>'; return; }
     tbody.innerHTML = Object.keys(collectionNames).map((name) => {
       const items = state.items.filter((item) => item.type === name);
-      return '<tr><td>' + collectionNames[name].title + '</td><td>' + items.length + '</td></tr>';
+      const en = items.filter((item) => translationStatus(item).en).length;
+      const zh = items.filter((item) => translationStatus(item).zh).length;
+      const es = items.filter((item) => translationStatus(item).es).length;
+      const paired = items.filter((item) => { const t = translationStatus(item); return t.en && t.zh && t.es; }).length;
+      return '<tr><td>' + collectionNames[name].title + '</td><td>' + en + ' / ' + items.length + '</td><td>' + zh + ' / ' + items.length + '</td><td>' + es + ' / ' + items.length + '</td><td>' + paired + '</td><td>' + (items.length - paired) + '</td></tr>';
     }).join("");
   };
   const formValue = (name) => form.elements.namedItem(name)?.value || "";
   const formChecked = (name) => Boolean(form.elements.namedItem(name)?.checked);
-  const uiLocale = () => "zh";
+  const uiLocale = (locale) => locale === "zh-CN" ? "zh" : locale === "es" ? "es" : "en";
   const showAdminBanner = (message, kind = "warning") => {
     const banner = $("[data-admin-banner]");
     banner.hidden = !message;
@@ -143,8 +150,8 @@ if (root) {
       featured:formChecked("featured." + suffix),
       readingMinutes:Number(formValue("readingMinutes." + suffix) || 5),
       level:formValue("level." + suffix).trim(),
-      chinese:"",
-      pinyin:"",
+      chinese:locale === "en" ? formValue("chinese.en").trim() : "",
+      pinyin:locale === "en" ? formValue("pinyin.en").trim() : "",
       imageUrl:formValue("imageUrl." + suffix).trim(),
       imageAlt:formValue("imageAlt." + suffix).trim(),
       mediaSrc:formValue("mediaSrc." + suffix).trim(),
@@ -160,8 +167,8 @@ if (root) {
   const formData = () => ({
     id:formValue("id"),
     type:formValue("type") || state.collection,
-    locales:{"zh-TW":localeFormData("zh-TW")},
-    seo:{title:{"zh-TW":formValue("seoTitle.zh")},description:{"zh-TW":formValue("seoDescription.zh")}}
+    locales:{en:localeFormData("en"),"zh-CN":localeFormData("zh-CN"),es:localeFormData("es")},
+    seo:{title:{en:formValue("seoTitle.en"),"zh-CN":formValue("seoTitle.zh"),es:formValue("seoTitle.es")},description:{en:formValue("seoDescription.en"),"zh-CN":formValue("seoDescription.zh"),es:formValue("seoDescription.es")}}
   });
   const setField = (name,value) => { const field = form.elements.namedItem(name); if (!field) return; if (field.type === "checkbox") field.checked = Boolean(value); else field.value = value ?? ""; };
   const markClean = () => { state.dirty = false; $("[data-save-state]").textContent = "All changes saved"; $("[data-save-state]").classList.remove("is-dirty"); };
@@ -172,7 +179,7 @@ if (root) {
     const value = localeFormData(locale);
     const existing = state.variants[locale];
     if (!localeIsComplete(value)) {
-      throw new Error("繁體中文文章需要標題、網址代稱、簡介、分類與正文才能儲存。");
+      throw new Error((locale === "en" ? "English" : locale === "es" ? "Spanish" : "简体中文") + " needs a title, URL slug, description, category and article body before it can be saved.");
     }
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug)) {
       throw new Error("URL slug must use lowercase letters, numbers and hyphens.");
@@ -221,7 +228,7 @@ if (root) {
     const merged = new Map();
     const add = (summary) => {
       const id = summary.contentId;
-      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{zh:""},description:{zh:""},body:{zh:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:["zh-TW"],variants:{"zh-TW":null},categories:{zh:""},pullRequest:null,pullRequestState:null});
+      if (!merged.has(id)) merged.set(id,{id,slug:"",type:mapCollectionToUi(summary.collection),title:{en:"",zh:"",es:""},description:{en:"",zh:"",es:""},body:{en:"",zh:"",es:""},category:"",tags:[],status:"draft",statuses:[],featured:false,updatedAt:summary.updatedAt,translationLocales:summary.translationLocales || [],variants:{en:null,"zh-CN":null,es:null},categories:{en:"",zh:"",es:""},pullRequest:null,pullRequestState:null});
       const item = merged.get(id);
       const locale = summary.locale;
       const suffix = uiLocale(locale);
@@ -259,14 +266,15 @@ if (root) {
     return items;
   };
   const loadAllContent = async () => {
-    const zhItems = await fetchAllSummaries("zh-TW");
-    state.items = mergeSummaries(zhItems);
+    const loadLocales = () => Promise.all([fetchAllSummaries("en"),fetchAllSummaries("zh-CN"),fetchAllSummaries("es")]);
+    let [enItems,zhItems,esItems] = await loadLocales();
+    state.items = mergeSummaries(enItems,zhItems,esItems);
     const trackedPullRequests = [...new Set(state.items.filter((item)=>item.pullRequest && ["pending","open"].includes(item.pullRequestState)).map((item)=>item.pullRequest))];
     if (trackedPullRequests.length) {
       const statuses = await Promise.all(trackedPullRequests.map(async (number)=>{const status=await getPullRequestStatus(number).catch(()=>null);if(status && ["merged","closed"].includes(status.state)) await syncPullRequest(number).catch(()=>null);return status;}));
       if (statuses.some((status)=>status && ["merged","closed"].includes(status.state))) {
-        const refreshed = await fetchAllSummaries("zh-TW");
-        state.items = mergeSummaries(refreshed);
+        [enItems,zhItems,esItems] = await loadLocales();
+        state.items = mergeSummaries(enItems,zhItems,esItems);
         if (state.page === "editor" && state.selectedId) {
           await loadVariantDetails(state.selectedId);
           renderVariantMedia();
@@ -280,7 +288,7 @@ if (root) {
     if (state.page === "languages") renderLanguages();
   };
   const loadVariantDetails = async (contentId) => {
-    const locales = ["zh-TW"];
+    const locales = ["en","zh-CN","es"];
     const results = await Promise.all(locales.map(async (locale) => {
       try {
         const result = await getContent(contentId,locale);
@@ -290,8 +298,8 @@ if (root) {
         throw error;
       }
     }));
-    state.variants = {"zh-TW":null};
-    state.etags = {"zh-TW":null};
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     results.forEach((result) => {
       state.variants[result.locale] = result.data;
       state.etags[result.locale] = result.etag;
@@ -303,7 +311,7 @@ if (root) {
     const value = item || {};
     setField("id",value.id || "");
     setField("type",value.type || state.collection);
-    ["zh-TW"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const suffix = uiLocale(locale);
       const variant = value.variants?.[locale] || null;
       const demo = value.locales?.[locale] || null;
@@ -325,12 +333,12 @@ if (root) {
       setField("mediaCredit." + suffix,variant?.media?.[0]?.credit ?? demo?.mediaCredit ?? "");
       setField("mediaLicense." + suffix,variant?.media?.[0]?.license ?? demo?.mediaLicense ?? "");
       setField("mediaSource." + suffix,variant?.media?.[0]?.sourceUrl ?? demo?.mediaSource ?? "");
-      
+      if (locale === "en") { setField("chinese.en",variant?.chinese ?? demo?.chinese ?? ""); setField("pinyin.en",variant?.pinyin ?? demo?.pinyin ?? ""); }
     });
     setField("status","draft");
   };
   const renderVariantMedia = () => {
-    ["zh-TW"].forEach((locale) => {
+    ["en","zh-CN","es"].forEach((locale) => {
       const node=$('[data-variant-media-list="' + uiLocale(locale) + '"]');
       if(!node) return;
       const variant=state.variants[locale];
@@ -367,14 +375,18 @@ if (root) {
     state.isNew = !item;
     state.dirty = false;
     form.querySelectorAll("input,textarea,select").forEach((field)=>{if(!field.hasAttribute("data-variant-media-input"))field.disabled=false;});
-    state.variants = {"zh-TW":null};
-    state.etags = {"zh-TW":null};
+    state.variants = {en:null,"zh-CN":null,es:null};
+    state.etags = {en:null,"zh-CN":null,es:null};
     if (!demoMode && item) {
       setConnection("Loading content");
       try { await loadVariantDetails(item.id); }
       catch (error) { handleApiError(error); return; }
     } else if (demoMode && item) {
-      state.variants = {"zh-TW":item.title?.zh ? {status:item.status,featured:item.featured} : null};
+      state.variants = {
+        en:item.title?.en ? {status:item.status,featured:item.featured} : null,
+        "zh-CN":item.title?.zh ? {status:item.status,featured:item.featured} : null,
+        es:item.title?.es ? {status:item.status,featured:item.featured} : null
+      };
     }
     const editorItem = item ? {...item,variants:state.variants} : null;
     populateEditor(editorItem);
@@ -392,12 +404,18 @@ if (root) {
     if (!demoMode) setConnection(state.session ? "Connected as " + state.session.email : "API session pending");
   };
   const updateTranslationIndicators = () => {
-    const title=formValue("title.zh"),desc=formValue("description.zh"),body=formValue("body.zh");
-    const complete=Boolean(title.trim()&&desc.trim()&&body.trim());
-    const node=$("[data-language-state='zh']");
-    if(node){node.textContent=complete?"已完成":(title||desc||body?"編輯中":"尚未開始");node.classList.toggle("is-missing",!complete);}
-    const count=$("[data-word-count='zh']");
-    if(count)count.textContent=wordCount(body)+" 字";
+    ["en","zh-CN","es"].forEach((locale) => {
+      const suffix = uiLocale(locale);
+      const title = formValue("title." + suffix);
+      const desc = formValue("description." + suffix);
+      const body = formValue("body." + suffix);
+      const complete = Boolean(title.trim() && desc.trim() && body.trim());
+      const node = $("[data-language-state='" + suffix + "']");
+      node.textContent = complete ? "Complete" : (title || desc || body ? "In progress" : "Not started");
+      node.classList.toggle("is-missing",!complete);
+      const count = $("[data-word-count='" + suffix + "']");
+      if (count) count.textContent = wordCount(body) + (suffix === "zh" ? " 字" : " words");
+    });
   };
   const refreshVariant = async (locale) => {
     const result = await getContent(state.selectedId,locale);
@@ -406,8 +424,8 @@ if (root) {
     return result;
   };
   const saveLiveDrafts = async () => {
-    const locales = ["zh-TW"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
-    if (!locales.length) throw new Error("請先填寫繁體中文文章內容。");
+    const locales = ["en","zh-CN","es"].filter((locale) => localeHasAnyContent(localeFormData(locale)));
+    if (!locales.length) throw new Error("Add content in English, 简体中文 or Spanish before saving.");
     for (const locale of locales) {
       const payload = toApiPayload(locale);
       if (!state.selectedId) {
@@ -436,7 +454,7 @@ if (root) {
   };
   const preview = async (openDialog = true) => {
     const value = formData();
-    const locale = "zh-TW";
+    const locale = state.previewLocale === "zh" ? "zh-CN" : state.previewLocale === "es" ? "es" : "en";
     const variant = value.locales[locale];
     if (!variant.title || !variant.description || !variant.bodyMarkdown.trim()) {
       showToast("Complete the selected language before previewing it.","error");
@@ -469,17 +487,17 @@ if (root) {
   const saveContent = async () => {
     if (demoMode) {
       const value = formData();
-      const complete = ["zh-TW"].filter((locale)=>localeIsComplete(value.locales[locale]));
-      if (!complete.length) { showToast("請先完成繁體中文文章欄位。","error"); return; }
+      const complete = ["en","zh-CN","es"].filter((locale)=>localeIsComplete(value.locales[locale]));
+      if (!complete.length) { showToast("Complete at least one language version before saving.","error"); return; }
       const item = {
         id:state.selectedId || "demo-" + Date.now().toString(36),
         type:value.type,
-        title:{zh:value.locales["zh-TW"].title},
-        description:{zh:value.locales["zh-TW"].description},
-        body:{zh:value.locales["zh-TW"].bodyMarkdown},
-        slug:value.locales["zh-TW"].slug,
-        category:value.locales["zh-TW"].category,
-        tags:value.locales["zh-TW"].tags,status:"draft",featured:value.locales["zh-TW"].featured,
+        title:{en:value.locales.en.title,zh:value.locales["zh-CN"].title},
+        description:{en:value.locales.en.description,zh:value.locales["zh-CN"].description},
+        body:{en:value.locales.en.bodyMarkdown,zh:value.locales["zh-CN"].bodyMarkdown},
+        slug:value.locales.en.slug || value.locales["zh-CN"].slug,
+        category:value.locales.en.category || value.locales["zh-CN"].category,
+        tags:[...new Set([...value.locales.en.tags,...value.locales["zh-CN"].tags])],status:"draft",featured:value.locales.en.featured || value.locales["zh-CN"].featured,
         updatedAt:new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}),
         translationLocales:complete.map((locale)=>locale)
       };
@@ -517,20 +535,20 @@ if (root) {
     buttons.forEach((button) => { button.disabled = true; button.setAttribute("aria-busy", "true"); });
     let stage = "Preparing publication";
     try {
-      const previouslyPublished = ["zh-TW"].filter((locale)=>state.variants[locale]?.status === "published");
+      const previouslyPublished = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "published");
       if (state.dirty || !state.selectedId) {
         stage = "Saving edited language variants";
         setPublicationProgress(stage + "…");
         await saveLiveDrafts();
       }
-      const locales = ["zh-TW"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
-      if (!locales.length) throw new Error(intent === "unpublish" ? "目前沒有已發布的繁體中文文章可供下架。" : "請先儲存繁體中文文章，再提交發布。");
+      const locales = ["en","zh-CN","es"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
+      if (!locales.length) throw new Error(intent === "unpublish" ? "There are no published language variants to unpublish." : "Save at least one language version before requesting publication.");
       const results = [];
       for (const locale of locales) {
         stage = "Creating GitHub review PR for " + locale;
         setPublicationProgress(stage + " (" + (results.length + 1) + "/" + locales.length + ")…");
         if (!state.etags[locale]) await refreshVariant(locale);
-        const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"由繁體中文編輯系統提交。");
+        const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"Submitted from the bilingual editorial CMS.");
         results.push(result);
       }
       state.submissions = results;
@@ -572,7 +590,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(id);
-      const locales=["zh-TW"].filter((locale)=>state.variants[locale]);
+      const locales=["en","zh-CN","es"].filter((locale)=>state.variants[locale]);
       if(!locales.length) throw new Error("No editable language variants were found.");
       for(const locale of locales){
         const variant=state.variants[locale];
@@ -626,7 +644,7 @@ if (root) {
     }
     try {
       await loadVariantDetails(state.pendingDelete);
-      const drafts = ["zh-TW"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
+      const drafts = ["en","zh-CN","es"].filter((locale)=>state.variants[locale]?.status === "draft" && !state.variants[locale]?.pullRequest);
       if (!drafts.length) throw new Error("Only an unsubmitted draft variant can be discarded. Published content must go through a reviewed unpublish workflow.");
       for (const locale of drafts) await discardDraft(state.pendingDelete,locale);
       state.pendingDelete = null;
@@ -758,7 +776,7 @@ if (root) {
     }
     if (name === "choose-upload") $("[data-media-input]").click();
     if (name === "upload-variant-media") {
-      const locale=action.dataset.locale || "zh-TW";
+      const locale=action.dataset.locale;
       const fileInput=root.querySelector('[data-variant-media-input="' + locale + '"]');
       if (!fileInput) return;
       if (!demoMode) {
@@ -768,7 +786,7 @@ if (root) {
       fileInput.click();
     }
     if (name === "select-variant-media") {
-      const suffix=uiLocale(action.dataset.locale || "zh-TW");
+      const suffix=uiLocale(action.dataset.locale);
       setField("mediaSrc."+suffix,action.dataset.src);
       setField("mediaAlt."+suffix,action.dataset.alt);
       setField("mediaCredit."+suffix,action.dataset.credit);
@@ -805,10 +823,10 @@ if (root) {
     const grid = $("[data-media-grid]");
     if (demoMode) {
       $("[data-media-count]").textContent = state.media.length + " local preview asset(s)";
-      grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '" data-locale="zh-TW">使用圖片</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Local preview library is empty</strong><p>Demo uploads are not sent to a server.</p></div>';
+      grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '" data-locale="en">Use image</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Local preview library is empty</strong><p>Demo uploads are not sent to a server.</p></div>';
       return;
     }
-    const locale=$("[data-media-locale]").value || "zh-TW";
+    const locale=$("[data-media-locale]").value || "en";
     const media=state.variants[locale]?.media || [];
     $("[data-media-count]").textContent = media.length + " asset(s) attached to this language variant";
     grid.innerHTML = media.length ? media.map((item,index) => '<article class="media-card" data-name="' + escapeHtml((item.src || "").toLocaleLowerCase()) + '"><img src="' + escapeHtml(item.src) + '" alt="' + escapeHtml(item.alt || "") + '" /><div><strong>' + escapeHtml(item.src.split("/").pop()) + '</strong><small>' + escapeHtml(item.license || "License not supplied") + '</small><button class="text-button" type="button" data-action="select-media" data-url="' + escapeHtml(item.src) + '" data-locale="' + locale + '" data-alt="' + escapeHtml(item.alt || "") + '" data-credit="' + escapeHtml(item.credit || "") + '" data-license="' + escapeHtml(item.license || "") + '" data-source="' + escapeHtml(item.sourceUrl || "") + '">Use as cover</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>No media attached to this variant</strong><p>Upload an image after saving this language as a draft.</p></div>';
@@ -824,7 +842,7 @@ if (root) {
     if (choose) {
       if (state.returnPage === "editor") { state.dirty=false; setPage("editor"); state.returnPage=null; }
       if (state.page !== "editor") { showToast("Open a content editor to select a cover image.","info"); return; }
-      const suffix=uiLocale(choose.dataset.locale || "zh-TW");
+      const suffix=uiLocale(choose.dataset.locale || "en");
       setField("mediaSrc."+suffix,choose.dataset.url);
       if(choose.dataset.alt) setField("mediaAlt."+suffix,choose.dataset.alt);
       if(choose.dataset.credit) setField("mediaCredit."+suffix,choose.dataset.credit);
@@ -835,7 +853,7 @@ if (root) {
     }
     const previewLocale = event.target.closest("[data-preview-language]");
     if (previewLocale) {
-      state.previewLocale = "zh";
+      state.previewLocale = previewLocale.dataset.previewLanguage;
       $$("[data-preview-language]", document).forEach((button) => button.classList.toggle("is-selected",button === previewLocale));
       preview(false);
     }
