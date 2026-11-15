@@ -43,7 +43,7 @@ if (root) {
     state.page = page;
     $$("[data-page]").forEach((node) => { node.hidden = node.dataset.page !== page; });
     $$("[data-nav]").forEach((node) => node.classList.toggle("is-active", node.dataset.nav === (page === "content" || page === "editor" ? state.collection : page)));
-    const title = page === "content" ? collectionNames[state.collection].title : page === "editor" ? "Content editor" : ({dashboard:"Overview",homepage:"Homepage",settings:"Navigation & settings",media:"Media library",languages:"Languages"}[page] || "Overview");
+    const title = page === "content" ? collectionNames[state.collection].title : page === "editor" ? "繁體中文文章編輯" : ({dashboard:"Overview",homepage:"Homepage",settings:"Navigation & settings",media:"Media library",languages:"內容語言"}[page] || "Overview");
     const crumb = $("[data-breadcrumb]", document);
     if (crumb) crumb.textContent = title;
     if (page === "content") renderList();
@@ -417,9 +417,7 @@ if (root) {
         state.variants[locale] = created;
         await refreshVariant(locale);
       } else if (!state.variants[locale]) {
-        const created = await createTranslation(state.selectedId,payload);
-        state.variants[locale] = created;
-        await refreshVariant(locale);
+        throw new Error("This article has no Traditional Chinese variant. Reload the article or create a new one.");
       } else {
         let etag = state.etags[locale];
         if (!etag) etag = (await refreshVariant(locale)).etag;
@@ -439,7 +437,7 @@ if (root) {
     const locale = "zh-TW";
     const variant = value.locales[locale];
     if (!variant.title || !variant.description || !variant.bodyMarkdown.trim()) {
-      showToast("Complete the selected language before previewing it.","error");
+      showToast("請先完成繁體中文文章，再進行預覽。","error");
       return;
     }
     if (demoMode) {
@@ -519,18 +517,18 @@ if (root) {
     try {
       const previouslyPublished = ["zh-TW"].filter((locale)=>state.variants[locale]?.status === "published");
       if (state.dirty || !state.selectedId) {
-        stage = "Saving edited language variants";
+        stage = "Saving the Traditional Chinese article";
         setPublicationProgress(stage + "…");
         await saveLiveDrafts();
       }
-      const locales = ["zh-TW"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale));
+      const locales = ["zh-TW"].filter((locale)=>state.variants[locale] && (intent !== "unpublish" || previouslyPublished.includes(locale)));
       if (!locales.length) throw new Error(intent === "unpublish" ? "目前沒有已發布的繁體中文文章可供下架。" : "請先儲存繁體中文文章，再提交發布。");
       const results = [];
       for (const locale of locales) {
         stage = "Creating GitHub review PR for " + locale;
         setPublicationProgress(stage + " (" + (results.length + 1) + "/" + locales.length + ")…");
         if (!state.etags[locale]) await refreshVariant(locale);
-        const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"Submitted from the bilingual editorial CMS.");
+        const result = await submitContent(state.selectedId,locale,state.etags[locale],intent,"由繁體中文編輯系統提交。");
         results.push(result);
       }
       state.submissions = results;
@@ -573,7 +571,7 @@ if (root) {
     try {
       await loadVariantDetails(id);
       const locales=["zh-TW"].filter((locale)=>state.variants[locale]);
-      if(!locales.length) throw new Error("No editable language variants were found.");
+      if(!locales.length) throw new Error("找不到可編輯的繁體中文文章版本。");
       for(const locale of locales){
         const variant=state.variants[locale];
         let etag=state.etags[locale];
@@ -692,7 +690,7 @@ if (root) {
       return;
     }
     if (!state.selectedId || !state.variants[locale] || !state.etags[locale]) {
-      showToast("Save a draft for this language before uploading its cover image.","error");
+      showToast("請先儲存繁體中文文章草稿，再上傳封面圖片。","error");
       return;
     }
     const suffix=uiLocale(locale);
@@ -775,7 +773,7 @@ if (root) {
       setField("mediaLicense."+suffix,action.dataset.license);
       setField("mediaSource."+suffix,action.dataset.source);
       markDirty();
-      showToast("Existing image selected for this language variant.","info");
+      showToast("已選取繁體中文文章圖片。","info");
     }
     if (name === "add-navigation") { if (demoMode) showToast("Navigation preview only in development mode.","info"); else showToast("Navigation API is not defined in the approved contract yet.","info"); }
     if (name === "back-to-editor") { state.dirty=false; setPage("editor"); if(state.returnDirty) markDirty(); }

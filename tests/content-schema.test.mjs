@@ -5,10 +5,10 @@ import { parseFrontmatter, validateVariant } from "../scripts/validate-content.m
 const valid = {
   metadata: {
     contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2",
-    locale: "en",
-    title: "A living culture",
-    description: "An introduction.",
-    category: "Foundations",
+    locale: "zh-TW",
+    title: "活態文化",
+    description: "認識文化的入門介紹。",
+    category: "文化基礎",
     featured: true,
     image: "https://images.example.test/cover.jpg",
     imageAlt: "A traditional building"

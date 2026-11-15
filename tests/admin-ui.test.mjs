@@ -13,7 +13,7 @@ const records = [
 ];
 
 test("filters content by Traditional Chinese title, ID and status", () => {
-  assert.equal(filterContent(records,{query:"brush"}).length,1);
+  assert.equal(filterContent(records,{query:"書法藝術"}).length,1);
   assert.equal(filterContent(records,{query:"two"}).length,1);
   assert.equal(filterContent(records,{status:"draft"}).length,1);
   assert.equal(filterContent([{...records[0],status:"mixed",statuses:["published","draft"]}],{status:"published"}).length,1);
@@ -80,13 +80,13 @@ test("session bootstrap stores the short-lived CSRF token in memory", async () =
 test("GET requests do not send a CSRF token", async () => {
   clearAdminCsrfToken();
   let headers;
-  await requestAdminApi(ADMIN_API_BASE+"/content?locale=en",{},async(path,options)=>{headers=options.headers;return {status:200,ok:true,headers:new Headers(),text:async()=>'{"items":[]}'};});
+  await requestAdminApi(ADMIN_API_BASE+"/content?locale=zh-TW",{},async(path,options)=>{headers=options.headers;return {status:200,ok:true,headers:new Headers(),text:async()=>'{"items":[]}'};});
   assert.equal(headers.has("X-CSRF-Token"),false);
 });
 
 test("API transport exposes the ETag required for optimistic concurrency", async () => {
   const response = {status:200,ok:true,headers:new Headers({ETag:'"rev-2"'}),text:async()=>'{"title":"Saved"}'};
-  const result = await requestAdminApiWithMeta(ADMIN_API_BASE+"/content/abc?locale=en",{},async()=>response);
+  const result = await requestAdminApiWithMeta(ADMIN_API_BASE+"/content/abc?locale=zh-TW",{},async()=>response);
   assert.equal(result.etag,'"rev-2"');
   assert.deepEqual(result.data,{title:"Saved"});
 });
@@ -101,7 +101,7 @@ test("API transport distinguishes 401 and 403 and clears expired session token",
 test("API transport surfaces RFC 9457 problem details and request ID", async () => {
   const problem = {title:"Conflict",detail:"The revision is stale.",status:409,code:"revision_conflict",requestId:"req-123"};
   await assert.rejects(
-    ()=>requestAdminApi(ADMIN_API_BASE+"/content/abc?locale=en",{},async()=>({status:409,ok:false,headers:new Headers(),text:async()=>JSON.stringify(problem)})),
+    ()=>requestAdminApi(ADMIN_API_BASE+"/content/abc?locale=zh-TW",{},async()=>({status:409,ok:false,headers:new Headers(),text:async()=>JSON.stringify(problem)})),
     (error)=>error instanceof AdminApiError && error.status===409 && error.message==="The revision is stale." && error.requestId==="req-123"
   );
 });
@@ -117,9 +117,9 @@ test("media upload uses multipart metadata, CSRF and the variant ETag", async ()
   let observed;
   const file = new Blob(["fake-image"],{type:"image/png"});
   const response = {status:201,ok:true,headers:new Headers(),text:async()=>JSON.stringify({src:"/media/test.webp"})};
-  const result = await uploadMedia("content-1","zh-CN",'"4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
+  const result = await uploadMedia("content-1","zh-TW",'"4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
   assert.equal(result.src,"/media/test.webp");
-  assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-CN$/);
+  assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-TW$/);
   assert.equal(observed.options.headers.get("X-CSRF-Token"),"media-csrf");
   assert.equal(observed.options.headers.get("If-Match"),'"4"');
   assert.equal(observed.options.headers.has("Content-Type"),false);
