@@ -14,6 +14,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <p class="lead">页面可能已经移动，或者链接地址输入有误。</p>
       <p><a class="button" href="/zh-cn/">返回中文首页 ↗</a></p>
     </section>
+    <section data-not-found-locale="zh-tw" lang="zh-TW">
+      <h1>這個頁面目前還沒有故事。</h1><p class="lead">頁面可能已經移動，或是連結網址輸入有誤。</p>
+      <p><a class="button" href="/zh-tw/">返回繁體中文首頁 ↗</a></p>
+    </section>
     <section data-not-found-locale="es" lang="es">
       <h1>Esta historia aún no está aquí.</h1>
       <p class="lead">La página puede haberse movido o el enlace puede contener un error.</p>
@@ -24,10 +28,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     (() => {
       const pathLocale = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
       const browserLocale = (navigator.language || "en").toLowerCase();
-      const locale = ["en", "zh-cn", "es"].includes(pathLocale)
+      const locale = ["en", "zh-cn", "zh-tw", "es"].includes(pathLocale)
         ? pathLocale
-        : browserLocale.startsWith("zh") ? "zh-cn" : browserLocale.startsWith("es") ? "es" : "en";
-      document.documentElement.lang = locale === "zh-cn" ? "zh-CN" : locale;
+        : browserLocale.startsWith("zh") ? "zh-tw" : browserLocale.startsWith("es") ? "es" : "en";
+      document.documentElement.lang = locale === "zh-cn" ? "zh-CN" : locale === "zh-tw" ? "zh-TW" : locale;
       document.querySelectorAll("[data-not-found-locale]").forEach((section) => {
         section.hidden = section.getAttribute("data-not-found-locale") !== locale;
       });

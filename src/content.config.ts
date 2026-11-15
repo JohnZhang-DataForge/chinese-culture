@@ -3,7 +3,7 @@ import { glob } from "astro/loaders";
 
 const schema = z.object({
   contentId: z.string().uuid(),
-  locale: z.enum(["en", "zh-CN", "es"]),
+  locale: z.enum(["en", "zh-CN", "zh-TW", "es"]),
   title: z.string(),
   description: z.string(),
   category: z.string(),
@@ -33,6 +33,10 @@ export const collections = {
   cultureZh: fromFolder("zh-cn/culture"),
   festivalsZh: fromFolder("zh-cn/festivals"),
   booksZh: fromFolder("zh-cn/books"),
+  lessonsTw: fromFolder("zh-tw/lessons"),
+  cultureTw: fromFolder("zh-tw/culture"),
+  festivalsTw: fromFolder("zh-tw/festivals"),
+  booksTw: fromFolder("zh-tw/books"),
   lessonsEs: fromFolder("es/lessons"),
   cultureEs: fromFolder("es/culture"),
   festivalsEs: fromFolder("es/festivals"),

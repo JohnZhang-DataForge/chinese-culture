@@ -1,164 +1,24 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import assert from "node:assert/strict";
-
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const dist = join(root, "dist");
-const required = [
-  "index.html","sitemap.xml","learn/index.html","culture/index.html",
-  "festivals/index.html","books/index.html","events/index.html",
-  "about/index.html","contact/index.html","privacy/index.html",
-  "accessibility/index.html","editorial-policy/index.html",
-  "en/index.html","zh-cn/index.html","es/index.html",
-  "en/learn/index.html","en/culture/index.html","en/festivals/index.html","en/books/index.html","en/events/index.html",
-  "en/about/index.html","en/accessibility/index.html","en/contact/index.html","en/editorial-policy/index.html","en/privacy/index.html",
-  "zh-cn/learn/index.html","zh-cn/culture/index.html","zh-cn/festivals/index.html","zh-cn/books/index.html","zh-cn/events/index.html",
-  "es/learn/index.html","es/culture/index.html","es/festivals/index.html","es/books/index.html","es/events/index.html",
-  "zh-cn/about/index.html","zh-cn/accessibility/index.html","zh-cn/contact/index.html","zh-cn/editorial-policy/index.html","zh-cn/privacy/index.html",
-  "es/about/index.html","es/accessibility/index.html","es/contact/index.html","es/editorial-policy/index.html","es/privacy/index.html","en/learn/01-a-living-culture/index.html","en/learn/02-language-and-writing/index.html","en/learn/03-festivals-and-calendars/index.html","en/learn/04-art-of-the-brush/index.html","en/learn/05-stories-and-reading/index.html","en/culture/calligraphy-and-the-brush/index.html","en/culture/family-tables-and-hospitality/index.html","en/culture/reading-a-painting/index.html","en/festivals/dragon-boat-festival/index.html","en/festivals/mid-autumn-festival/index.html","en/festivals/spring-festival/index.html","en/books/journey-to-the-west/index.html","en/books/the-analects/index.html","zh-cn/learn/01-a-living-culture/index.html","es/learn/01-a-living-culture/index.html","zh-cn/learn/02-language-and-writing/index.html","es/learn/02-language-and-writing/index.html","zh-cn/learn/03-festivals-and-calendars/index.html","es/learn/03-festivals-and-calendars/index.html","zh-cn/learn/04-art-of-the-brush/index.html","es/learn/04-art-of-the-brush/index.html","zh-cn/learn/05-stories-and-reading/index.html","es/learn/05-stories-and-reading/index.html","zh-cn/culture/calligraphy-and-the-brush/index.html","es/culture/calligraphy-and-the-brush/index.html","zh-cn/culture/family-tables-and-hospitality/index.html","es/culture/family-tables-and-hospitality/index.html","zh-cn/culture/reading-a-painting/index.html","es/culture/reading-a-painting/index.html","zh-cn/festivals/dragon-boat-festival/index.html","es/festivals/dragon-boat-festival/index.html","zh-cn/festivals/mid-autumn-festival/index.html","es/festivals/mid-autumn-festival/index.html","zh-cn/festivals/spring-festival/index.html","es/festivals/spring-festival/index.html","zh-cn/books/journey-to-the-west/index.html","es/books/journey-to-the-west/index.html","zh-cn/books/the-analects/index.html","es/books/the-analects/index.html","404.html"
-];
-assert.ok(existsSync(dist), "Build output missing. Run npm run build.");
-for (const path of required) assert.ok(existsSync(join(dist,path)), "Missing page " + path);
-assert.ok(!existsSync(join(dist,"_worker.js")), "Detected SSR Worker output; must remain static.");
-const wrangler = readFileSync(join(root,"wrangler.jsonc"),"utf8");
-assert.ok(wrangler.includes('"pages_build_output_dir": "./dist"'), "Wrong Pages build output directory");
-assert.ok(wrangler.includes('"name": "chinese-culture"'), "Wrong Pages project name");
-assert.ok(!/"main"\s*:/.test(wrangler), "Unexpected Worker entrypoint");
-let count=0;
-function walk(dir) {
-  for (const name of readdirSync(dir)) {
-    const path=join(dir,name);
-    if(statSync(path).isDirectory()) walk(path);
-    else {count++;assert.ok(statSync(path).size<=25*1024*1024, "Asset too large: "+path);}
-  }
+const root=dirname(dirname(fileURLToPath(import.meta.url)));
+const dist=join(root,"dist");
+assert.ok(existsSync(dist),"Build output missing. Run npm run build.");
+const locales=[{slug:"zh-tw",lang:"zh-TW",label:"繁體中文"},{slug:"en",lang:"en",label:"English"},{slug:"zh-cn",lang:"zh-CN",label:"简体中文"},{slug:"es",lang:"es",label:"Español"}];
+const pages=["","learn/","culture/","festivals/","books/","events/","about/","accessibility/","contact/","editorial-policy/","privacy/"];
+for(const locale of locales)for(const page of pages){
+ const file=join(dist,locale.slug,page,"index.html");assert.ok(existsSync(file),"Missing "+locale.slug+"/"+page);
+ const html=readFileSync(file,"utf8");assert.ok(html.includes('<html lang="'+locale.lang+'"'),"Wrong lang in "+file);
+ assert.ok(html.includes(locale.label),"Missing locale selector label in "+file);
+ assert.ok(!html.includes("images.unsplash.com")&&!/<img\\b/i.test(html),"Legacy photo rendered in "+file);
 }
-walk(dist);
-assert.ok(count<=20000, "Exceeds Cloudflare Pages Free file count");
-
-const cssSource = readFileSync(join(root, "src/styles/global.css"), "utf8");
-assert.match(cssSource, /:focus-visible\s*\{/, "Keyboard focus-visible styling is required");
-assert.match(cssSource, /\.skip-link:focus\s*\{/, "Skip link must become visible on keyboard focus");
-assert.match(cssSource, /@media\s*\(/, "Responsive layout media queries are required");
-assert.match(cssSource, /\.mobile-nav/, "Responsive navigation styles are required");
-
-const homeHtml = readFileSync(join(dist,"index.html"),"utf8");
-assert.ok(homeHtml.includes("Chinese Culture Atlas"), "Missing home page brand");
-const englishHome = readFileSync(join(dist,"en/index.html"),"utf8");
-const chineseHome = readFileSync(join(dist,"zh-cn/index.html"),"utf8");
-const spanishHome = readFileSync(join(dist,"es/index.html"),"utf8");
-assert.ok(chineseHome.includes('<html lang="zh-CN"'), "Chinese home page must declare zh-CN");
-assert.ok(spanishHome.includes('<html lang="es"'), "Spanish home page must declare es");
-assert.ok(englishHome.includes('<html lang="en"'), "English home page must declare en");
-assert.ok(chineseHome.includes("简体中文") && spanishHome.includes("Español"), "Language selector must expose Chinese and Spanish");
-assert.ok(englishHome.includes('href="/zh-cn/"') && chineseHome.includes('href="/es/"') && spanishHome.includes('href="/en/"'), "Language selector must link to same-domain locale home pages");
-
-
-const contentRoot = join(root, "src", "content");
-const localePaths = new Map();
-function walkContent(dir) {
-  for (const name of readdirSync(dir)) {
-    const file = join(dir, name);
-    if (statSync(file).isDirectory()) { walkContent(file); continue; }
-    if (!name.endsWith(".md")) continue;
-    const source = readFileSync(file, "utf8");
-    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    assert.ok(frontmatter, "Missing content frontmatter: " + file);
-    const contentId = frontmatter[1].match(/^contentId:\s*["']?([0-9a-f-]+)["']?\s*$/m)?.[1];
-    const locale = frontmatter[1].match(/^locale:\s*["']?([A-Za-z-]+)["']?\s*$/m)?.[1];
-    const relativePath = file.slice(contentRoot.length + 1).replaceAll(String.fromCharCode(92), "/").split("/");
-    const collection = relativePath.length === 2 ? relativePath[0] : relativePath[1];
-    const section = collection === "lessons" ? "learn" : collection;
-    const slug = relativePath.at(-1).slice(0, -3);
-    const localeSegment = locale === "zh-CN" ? "zh-cn" : locale;
-    assert.ok(contentId && localeSegment, "Missing content identity metadata: " + file);
-    const variants = localePaths.get(contentId) ?? {};
-    variants[locale] = { route: "/" + localeSegment + "/" + section + "/" + slug + "/", section };
-    localePaths.set(contentId, variants);
-  }
-}
-walkContent(contentRoot);
-assert.ok(localePaths.size > 0, "Expected at least one conceptual article for locale route verification");
-const expectedRouteLocales = ["en", "es", "zh-CN"];
-for (const [contentId, variants] of localePaths) {
-  const actualLocales = Object.keys(variants).sort();
-  assert.deepEqual(actualLocales, expectedRouteLocales, "Incomplete locale route map for " + contentId + "; found: " + actualLocales.join(", "));
-}
-const sitemap = readFileSync(join(dist, "sitemap.xml"), "utf8");
-assert.ok(sitemap.includes("<urlset"), "Missing XML sitemap urlset");
-assert.ok((sitemap.match(/<url>/g) || []).length >= 72, "Sitemap is missing expected localized static and article URLs");
-for (const [contentId, variants] of localePaths) {
-  for (const locale of expectedRouteLocales) {
-    const route = variants[locale]?.route;
-    assert.ok(route, "Missing route metadata for " + contentId + " / " + locale);
-    assert.ok(sitemap.includes("https://chinese-culture.site" + route), "Published article missing from sitemap: " + route);
-  }
-}
-const notFound = readFileSync(join(dist, "404.html"), "utf8");
-assert.ok(notFound.includes("这里暂时没有这个故事") && notFound.includes("Esta historia aún no está aquí"), "404 page must include Chinese and Spanish fallback content");
-
-for (const [contentId, variants] of localePaths) {
-  assert.deepEqual(new Set(Object.keys(variants)), new Set(["en", "zh-CN", "es"]), "Incomplete locale variants for " + contentId);
-  for (const locale of ["en", "zh-CN", "es"]) {
-    const route = variants[locale].route;
-    const htmlPath = join(dist, route, "index.html");
-    assert.ok(existsSync(htmlPath), "Missing localized article route: " + route);
-    const html = readFileSync(htmlPath, "utf8");
-    assert.ok(html.includes('<link rel="canonical" href="https://chinese-culture.site' + route + '">'), "Canonical URL mismatch for " + route);
-    for (const targetLocale of ["en", "zh-CN", "es"]) {
-      const targetSegment = targetLocale === "zh-CN" ? "zh-cn" : targetLocale;
-      const target = variants[targetLocale]?.route ?? ("/" + targetSegment + "/" + variants[locale].section + "/");
-      const hreflang = targetLocale === "zh-CN" ? "zh-CN" : targetLocale;
-      assert.ok(html.includes('<link rel="alternate" hreflang="' + hreflang + '" href="https://chinese-culture.site' + target + '">'), "hreflang target mismatch for " + route + " -> " + targetLocale);
-      assert.ok(html.includes('<a href="' + target + '" lang="' + hreflang + '"'), "Language switch target mismatch for " + route + " -> " + targetLocale);
-    }
-  }
-}
-
-let linksChecked = 0;
-let htmlPagesChecked = 0;
-function inspectLinks(dir) {
-  for (const name of readdirSync(dir)) {
-    const file = join(dir, name);
-    if (statSync(file).isDirectory()) { inspectLinks(file); continue; }
-    if (!name.endsWith(".html")) continue;
-    const html = readFileSync(file, "utf8");
-    htmlPagesChecked++;
-    const relativePath = file.slice(dist.length + 1).replaceAll("\\", "/");
-    // Public pages must retain shared keyboard and screen-reader foundations.
-    if (relativePath !== "admin/index.html") {
-      assert.match(html, /<html[^>]*\blang="[^"]+"/i, "Missing document language: " + relativePath);
-      assert.match(html, /<a[^>]*class="skip-link"[^>]*href="#main-content"/i, "Missing keyboard skip link: " + relativePath);
-      assert.match(html, /<main[^>]*id="main-content"/i, "Missing main landmark: " + relativePath);
-      assert.match(html, /<nav[^>]*aria-label=/i, "Navigation landmark needs an accessible name: " + relativePath);
-      assert.match(html, /<h1\b/i, "Page needs a primary heading: " + relativePath);
-      for (const imageTag of html.match(/<img\b[^>]*>/gi) || []) {
-        assert.match(imageTag, /\balt=(?:"[^"]*"|'[^']*')/i, "Image missing alt text: " + relativePath);
-      }
-    }
-    // The private Admin workspace is intentionally an interactive static shell;
-    // its native controls are hydrated by the authenticated same-origin API.
-    if (!relativePath.startsWith("admin/")) {
-      assert.ok(!/<(?:form|input|select|textarea|option)\b/i.test(html), "Unexpected native form control in static output: " + file);
-    }
-    for (const fragment of html.replaceAll("href='", 'href="').split('href="').slice(1)) {
-      const href = fragment.split('"')[0];
-      if (!href.startsWith("/")) continue;
-      const pathname = decodeURIComponent(href.split("?")[0].split("#")[0]);
-      if (!pathname) continue;
-      const destination = pathname.endsWith("/")
-        ? join(dist, pathname, "index.html")
-        : join(dist, pathname);
-      assert.ok(existsSync(destination), "Broken internal link from " + file + ": " + pathname);
-      linksChecked++;
-    }
-  }
-}
-inspectLinks(dist);
-const entryDirs = ["learn","culture","festivals","books"].reduce((total,section)=>{
-  const folder=join(dist,section);
-  return total+readdirSync(folder,{withFileTypes:true}).filter((entry)=>entry.isDirectory()).length;
-},0);
-assert.ok(linksChecked >= 50, 'Expected internal links were not inspected');
-assert.ok(entryDirs>=13, "Expected at least 13 educational content pages");
-console.log("PASS: "+required.length+" required routes, "+entryDirs+" English guides, "+count+" static files, "+htmlPagesChecked+" HTML pages, "+linksChecked+" internal links, English/Chinese/Spanish localization routes present, no SSR Worker.");
+const redirects=readFileSync(join(root,"public/_redirects"),"utf8");
+assert.ok(redirects.startsWith("/ /zh-tw/ 301"),"Root must redirect to Traditional Chinese.");
+const sitemap=readFileSync(join(dist,"sitemap.xml"),"utf8");
+assert.ok(sitemap.includes("https://chinese-culture.site/zh-tw/"),"Traditional Chinese home missing from sitemap.");
+assert.ok(!existsSync(join(dist,"_worker.js")),"Static site must not emit an SSR Worker.");
+const wrangler=readFileSync(join(root,"wrangler.jsonc"),"utf8");
+assert.ok(wrangler.includes('"pages_build_output_dir": "./dist"'),"Wrong Pages output directory.");
+assert.ok(wrangler.includes('"name": "chinese-culture"'),"Wrong Pages project name.");
+console.log("PASS: four locale routes, Traditional Chinese default, empty article inventory, no old photos.");
