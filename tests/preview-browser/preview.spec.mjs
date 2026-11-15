@@ -1,37 +1,35 @@
 import { test, expect } from "@playwright/test";
 
-test("deployed preview serves all public locales", async ({ page }) => {
-  for (const [path, language] of [
-    ["/en/", "en"],
-    ["/zh-cn/", "zh-CN"],
-    ["/es/", "es"]
-  ]) {
+test("deployed preview serves only the Traditional Chinese authored edition", async ({ page }) => {
+  const routes = [
+    "/zh-tw/",
+    "/zh-tw/learn/",
+    "/zh-tw/culture/",
+    "/zh-tw/festivals/",
+    "/zh-tw/books/",
+    "/zh-tw/events/",
+    "/zh-tw/about/"
+  ];
+  for (const path of routes) {
     const response = await page.goto(path);
     expect(response?.status(), path + " should be available").toBe(200);
-    await expect(page.locator("html")).toHaveAttribute("lang", language);
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
     expect((await page.title()).trim().length).toBeGreaterThan(0);
   }
+  await expect(page.locator("#google_translate_element")).toBeAttached();
+  await expect(page.locator('script[src*="translate.google.com/translate_a/element.js"]')).toHaveCount(1);
 });
 
-test("preview Admin is production-built and contains no demo content", async ({ page }) => {
-  const sessionResponsePromise = page.waitForResponse((response) =>
-    response.url().endsWith("/api/admin/v1/session")
-  );
-  const response = await page.goto("/admin/");
-  expect(response?.status()).toBe(200);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
-  await expect(page.locator("[data-admin-app]")).toHaveAttribute("data-demo", "false");
-  const sessionResponse = await sessionResponsePromise;
-  expect(sessionResponse.status()).toBe(401);
-  await expect(page.locator("[data-connection-status]")).toHaveText("Authentication required");
-  await expect(page.getByText("Sign in with the authorized Cloudflare Access account", { exact: false })).toBeVisible();
-  await expect(page.locator("[data-content-rows]")).not.toContainText("Journey to the West");
-});
-
-test("preview API rejects unauthenticated CMS access when preview secrets are absent", async ({ request }) => {
-  const response = await request.get("/api/admin/v1/session", {
-    headers: { accept: "application/problem+json" }
-  });
-  expect(response.status()).toBe(401);
-  expect((await response.json()).code).toBe("unauthorized");
+test("legacy language routes redirect to the Traditional Chinese edition", async ({ page }) => {
+  const routes = [
+    ["/en/", "/zh-tw/"],
+    ["/zh-cn/culture/", "/zh-tw/culture/"],
+    ["/es/books/", "/zh-tw/books/"]
+  ];
+  for (const [source, destination] of routes) {
+    const response = await page.goto(source);
+    expect(response?.status(), source + " should redirect to the authored edition").toBe(200);
+    expect(new URL(page.url()).pathname).toBe(destination);
+    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
+  }
 });

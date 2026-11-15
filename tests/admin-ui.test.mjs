@@ -7,19 +7,17 @@ import {
 } from "../src/lib/admin-api.mjs";
 
 const records = [
-  {id:"one",slug:"one",type:"articles",title:{en:"Brush art",zh:"书法"},description:{en:"A guide",zh:"指南"},body:{en:"Text",zh:"正文"},status:"published",tags:["art"],translationLocales:["en","zh-CN","es"]},
-  {id:"two",slug:"two",type:"articles",title:{en:"Festival guide",zh:""},description:{en:"A guide",zh:""},body:{en:"Text",zh:""},status:"draft",tags:["festival"],translationLocales:["en"]},
-  {id:"three",slug:"three",type:"books",title:{en:"The Analects",zh:"论语"},description:{en:"A book",zh:"一本书"},body:{en:"Text",zh:"正文"},status:"published",tags:["classic"],translationLocales:["en","zh-CN","es"]}
+  {id:"one",slug:"one",type:"articles",title:{zh:"書法藝術"},description:{zh:"指南"},body:{zh:"正文"},status:"published",tags:["art"],translationLocales:["zh-TW"]},
+  {id:"two",slug:"two",type:"articles",title:{zh:""},description:{zh:""},body:{zh:""},status:"draft",tags:["festival"],translationLocales:[]},
+  {id:"three",slug:"three",type:"books",title:{zh:"《論語》"},description:{zh:"一本書"},body:{zh:"正文"},status:"published",tags:["classic"],translationLocales:["zh-TW"]}
 ];
 
-test("filters content by title, ID, status and translation completeness", () => {
-  assert.equal(filterContent(records,{query:"brush"}).length,1);
+test("filters content by Traditional Chinese title, ID and status", () => {
+  assert.equal(filterContent(records,{query:"書法藝術"}).length,1);
   assert.equal(filterContent(records,{query:"two"}).length,1);
   assert.equal(filterContent(records,{status:"draft"}).length,1);
   assert.equal(filterContent([{...records[0],status:"mixed",statuses:["published","draft"]}],{status:"published"}).length,1);
-  assert.equal(filterContent(records,{language:"complete"}).length,2);
-  assert.equal(filterContent(records,{language:"missing-zh"}).length,1);
-  assert.equal(filterContent(records,{language:"missing-es"}).length,1);
+
 });
 
 test("pagination clamps page bounds and returns stable summary", () => {
@@ -32,9 +30,9 @@ test("pagination clamps page bounds and returns stable summary", () => {
   assert.equal(paginate([],1,10).start,0);
 });
 
-test("translation status uses canonical zh-CN and Spanish locales", () => {
-  assert.deepEqual(translationStatus(records[0]),{en:true,zh:true,es:true});
-  assert.deepEqual(translationStatus(records[1]),{en:true,zh:false,es:false});
+test("translation status tracks the sole authored Traditional Chinese locale", () => {
+  assert.deepEqual(translationStatus(records[0]),{zh:true});
+  assert.deepEqual(translationStatus(records[1]),{zh:false});
 });
 
 test("tags are trimmed, de-duplicated and empty entries removed", () => {
@@ -47,17 +45,11 @@ test("word count supports Latin words and Chinese characters", () => {
   assert.equal(wordCount(""),0);
 });
 
-test("localized SEO fields map independently for English and Simplified Chinese", () => {
-  assert.deepEqual(localizedSeoPayload("en","Chinese culture guide","Explore traditions and history."),{
-    locale:"en",seoTitle:"Chinese culture guide",seoDescription:"Explore traditions and history."
+test("localized SEO fields are stored only for Traditional Chinese", () => {
+  assert.deepEqual(localizedSeoPayload("zh-TW","中國文化指南","認識中國傳統與歷史。"),{
+    locale:"zh-TW",seoTitle:"中國文化指南",seoDescription:"認識中國傳統與歷史。"
   });
-  assert.deepEqual(localizedSeoPayload("zh-CN","中国文化指南","了解中国传统与历史。"),{
-    locale:"zh-CN",seoTitle:"中国文化指南",seoDescription:"了解中国传统与历史。"
-  });
-  assert.deepEqual(localizedSeoPayload("es","Guía de cultura china","Explore tradiciones e historia."),{
-    locale:"es",seoTitle:"Guía de cultura china",seoDescription:"Explore tradiciones e historia."
-  });
-  assert.deepEqual(localizedSeoPayload("zh-CN","",""),{locale:"zh-CN"});
+  assert.deepEqual(localizedSeoPayload("zh-TW","",""),{locale:"zh-TW"});
 });
 
 test("API transport sends same-origin cookies and CSRF token for writes", async () => {
@@ -88,13 +80,13 @@ test("session bootstrap stores the short-lived CSRF token in memory", async () =
 test("GET requests do not send a CSRF token", async () => {
   clearAdminCsrfToken();
   let headers;
-  await requestAdminApi(ADMIN_API_BASE+"/content?locale=en",{},async(path,options)=>{headers=options.headers;return {status:200,ok:true,headers:new Headers(),text:async()=>'{"items":[]}'};});
+  await requestAdminApi(ADMIN_API_BASE+"/content?locale=zh-TW",{},async(path,options)=>{headers=options.headers;return {status:200,ok:true,headers:new Headers(),text:async()=>'{"items":[]}'};});
   assert.equal(headers.has("X-CSRF-Token"),false);
 });
 
 test("API transport exposes the ETag required for optimistic concurrency", async () => {
   const response = {status:200,ok:true,headers:new Headers({ETag:'"rev-2"'}),text:async()=>'{"title":"Saved"}'};
-  const result = await requestAdminApiWithMeta(ADMIN_API_BASE+"/content/abc?locale=en",{},async()=>response);
+  const result = await requestAdminApiWithMeta(ADMIN_API_BASE+"/content/abc?locale=zh-TW",{},async()=>response);
   assert.equal(result.etag,'"rev-2"');
   assert.deepEqual(result.data,{title:"Saved"});
 });
@@ -109,7 +101,7 @@ test("API transport distinguishes 401 and 403 and clears expired session token",
 test("API transport surfaces RFC 9457 problem details and request ID", async () => {
   const problem = {title:"Conflict",detail:"The revision is stale.",status:409,code:"revision_conflict",requestId:"req-123"};
   await assert.rejects(
-    ()=>requestAdminApi(ADMIN_API_BASE+"/content/abc?locale=en",{},async()=>({status:409,ok:false,headers:new Headers(),text:async()=>JSON.stringify(problem)})),
+    ()=>requestAdminApi(ADMIN_API_BASE+"/content/abc?locale=zh-TW",{},async()=>({status:409,ok:false,headers:new Headers(),text:async()=>JSON.stringify(problem)})),
     (error)=>error instanceof AdminApiError && error.status===409 && error.message==="The revision is stale." && error.requestId==="req-123"
   );
 });
@@ -125,9 +117,9 @@ test("media upload uses multipart metadata, CSRF and the variant ETag", async ()
   let observed;
   const file = new Blob(["fake-image"],{type:"image/png"});
   const response = {status:201,ok:true,headers:new Headers(),text:async()=>JSON.stringify({src:"/media/test.webp"})};
-  const result = await uploadMedia("content-1","zh-CN",'"4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
+  const result = await uploadMedia("content-1","zh-TW",'"4"',file,{alt:"测试图片",decorative:false,credit:"Studio",license:"CC BY 4.0"},async(path,options)=>{observed={path,options};return response;});
   assert.equal(result.src,"/media/test.webp");
-  assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-CN$/);
+  assert.match(observed.path,/\/content\/content-1\/media\?locale=zh-TW$/);
   assert.equal(observed.options.headers.get("X-CSRF-Token"),"media-csrf");
   assert.equal(observed.options.headers.get("If-Match"),'"4"');
   assert.equal(observed.options.headers.has("Content-Type"),false);

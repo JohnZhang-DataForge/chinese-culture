@@ -9,10 +9,7 @@ const SOURCE_COMMIT = process.env.CMS_SOURCE_COMMIT || process.env.GITHUB_SHA;
 const ROOT = process.cwd();
 const IMPORTED_AT = new Date().toISOString();
 const LOCALE_ROOTS = [
-  { root: "src/content", locale: "en" },
-  { root: "src/content/zh-cn", locale: "zh-CN" },
-  { root: "src/content/zh-tw", locale: "zh-TW" },
-  { root: "src/content/es", locale: "es" }
+  { root: "src/content/zh-tw", locale: "zh-TW" }
 ];
 const COLLECTIONS = new Set(["lessons", "culture", "festivals", "books", "events"]);
 
@@ -198,7 +195,7 @@ const verifyPayload = await verify.json();
 if (!verify.ok || !verifyPayload?.success) throw new Error("D1 verification query failed.");
 const counts = verifyPayload.result?.[0]?.results || [];
 const countByLocale = new Map(counts.map((row) => [row.locale, Number(row.total)]));
-for (const locale of ["en", "zh-CN", "zh-TW", "es"]) {
+for (const locale of ["zh-TW"]) {
   const expected = variants.filter((variant) => variant.locale === locale).length;
   if ((countByLocale.get(locale) || 0) !== expected) throw new Error("D1 import verification mismatch for " + locale + ".");
 }

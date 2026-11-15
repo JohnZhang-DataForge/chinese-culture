@@ -13,7 +13,7 @@ tags:
   - name: Session
     description: Authenticated CMS session and role information.
   - name: Content
-    description: Read, create, update and translate locale-specific content variants.
+    description: Read, create and update Traditional Chinese content variants.
   - name: Preview
     description: Render sanitized previews of unsaved Markdown.
   - name: Media
@@ -197,41 +197,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/Conflict'
-        '422':
-          $ref: '#/components/responses/ValidationFailure'
-        '503':
-          $ref: '#/components/responses/ServiceUnavailable'
-  /content/{contentId}/translations:
-    parameters:
-      - $ref: '#/components/parameters/ContentId'
-    post:
-      tags: [Content]
-      operationId: createTranslation
-      summary: Create another locale variant linked to the same contentId
-      security:
-        - CloudflareAccess: []
-          CsrfToken: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TranslationWrite'
-      responses:
-        '201':
-          description: Translation draft created in D1
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ContentVariant'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
         '409':
           $ref: '#/components/responses/Conflict'
         '422':
@@ -538,7 +503,7 @@ components:
   schemas:
     Locale:
       type: string
-      enum: [en, zh-CN, zh-TW, es]
+      enum: [zh-TW]
     Collection:
       type: string
       enum: [lessons, culture, festivals, books, events]

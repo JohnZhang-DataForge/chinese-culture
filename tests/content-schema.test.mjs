@@ -5,24 +5,24 @@ import { parseFrontmatter, validateVariant } from "../scripts/validate-content.m
 const valid = {
   metadata: {
     contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2",
-    locale: "en",
-    title: "A living culture",
-    description: "An introduction.",
-    category: "Foundations",
+    locale: "zh-TW",
+    title: "活態文化",
+    description: "認識文化的入門介紹。",
+    category: "文化基礎",
     featured: true,
     image: "https://images.example.test/cover.jpg",
-    imageAlt: "A traditional building"
+    imageAlt: "傳統建築"
   },
-  bodyMarkdown: "## Introduction\n\nCulture changes over time.",
-  filePath: "src/content/lessons/example.md",
-  localeFromPath: "en",
+  bodyMarkdown: "## 引言\n\n文化隨時間不斷發展。",
+  filePath: "src/content/zh-tw/lessons/example.md",
+  localeFromPath: "zh-TW",
   collection: "lessons",
   slug: "example"
 };
 
 test("parses the scalar YAML frontmatter used by the published content contract", () => {
-  const parsed = parseFrontmatter('---\nlocale: "zh-CN"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
-  assert.equal(parsed.metadata.locale, "zh-CN");
+  const parsed = parseFrontmatter('---\nlocale: "zh-TW"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
+  assert.equal(parsed.metadata.locale, "zh-TW");
   assert.equal(parsed.metadata.featured, false);
   assert.equal(parsed.metadata.order, 2);
   assert.equal(parsed.bodyMarkdown, "正文");
@@ -41,7 +41,7 @@ test("rejects an invalid immutable content ID", () => {
 });
 
 test("rejects locale metadata that disagrees with its directory", () => {
-  assert.throws(() => validateVariant({ ...valid, localeFromPath: "es" }), /does not match/);
+  assert.throws(() => validateVariant({ ...valid, localeFromPath: "en" }), /does not match/);
 });
 
 test("rejects malformed slugs and frontmatter slug drift", () => {
@@ -59,10 +59,10 @@ test("rejects invalid publication status and timestamps", () => {
   assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, updatedAt: "not-a-date" } }), /updatedAt/);
 });
 
-test("requires Simplified Chinese text for zh-CN variants", () => {
+test("rejects non-Traditional Chinese locale variants", () => {
   assert.throws(() => validateVariant({
     ...valid,
-    metadata: { ...valid.metadata, locale: "zh-CN", title: "Only English" },
-    localeFromPath: "zh-CN"
-  }), /Simplified Chinese/);
+    metadata: { ...valid.metadata, locale: "en", title: "Only English" },
+    localeFromPath: "en"
+  }), /Unsupported locale/);
 });

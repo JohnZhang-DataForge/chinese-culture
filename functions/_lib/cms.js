@@ -1,7 +1,7 @@
 import { RequestValidationError, readJsonBody } from "./http.js";
 
 const COLLECTIONS = new Set(["lessons", "culture", "festivals", "books", "events"]);
-const LOCALES = new Set(["en", "zh-CN", "zh-TW", "es"]);
+const LOCALES = new Set(["zh-TW"]);
 const STATUSES = new Set(["draft", "published", "unpublished"]);
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -54,7 +54,7 @@ export function requireContentId(value) {
 
 export function requireLocale(value) {
   if (!LOCALES.has(value)) {
-    throw new CmsError(400, "invalid_locale", "Bad Request", "locale must be en, zh-CN, zh-TW or es.");
+    throw new CmsError(400, "invalid_locale", "Bad Request", "locale must be zh-TW.");
   }
   return value;
 }

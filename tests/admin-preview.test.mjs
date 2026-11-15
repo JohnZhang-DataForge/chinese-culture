@@ -4,13 +4,13 @@ import { renderSafePreview } from "../functions/_lib/preview.js";
 
 test("preview renders headings, paragraphs, lists and safe HTTPS links", () => {
   const html = renderSafePreview({
-    locale: "es",
+    locale: "zh-TW",
     title: "Una cultura viva",
     description: "Una introducción breve.",
     category: "Cultura",
     bodyMarkdown: "## Tradiciones\n\nUna **historia** y [una fuente](https://example.org/story).\n\n- Uno\n- Dos"
   });
-  assert.match(html, /<html lang="es">/);
+  assert.match(html, /<html lang="zh-TW">/);
   assert.match(html, /<h2>Tradiciones<\/h2>/);
   assert.match(html, /<strong>historia<\/strong>/);
   assert.match(html, /href="https:\/\/example\.org\/story"/);
@@ -19,7 +19,7 @@ test("preview renders headings, paragraphs, lists and safe HTTPS links", () => {
 
 test("preview escapes HTML and does not allow script or javascript URL injection", () => {
   const html = renderSafePreview({
-    locale: "en",
+    locale: "zh-TW",
     title: "<img src=x onerror=alert(1)>",
     description: "safe",
     category: "Test",

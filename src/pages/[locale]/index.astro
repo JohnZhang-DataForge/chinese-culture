@@ -11,7 +11,7 @@ const copy = homeCopy[locale];
 const contentSections = sections.filter((section) => section.collection);
 const collections = await Promise.all(contentSections.map((section) => getCollection(section.collection as any)));
 const counts = Object.fromEntries(contentSections.map((section,index)=>[section.route,collections[index].filter((entry:any)=>(entry.data.status??"published")==="published").length]));
-const emptyCopy = {en:"A fresh collection of articles and photographs is on the way.","zh-cn":"全新的文章和图片正在准备中，敬请期待。","zh-tw":"全新的文章與圖片正在籌備中，敬請期待。",es:"Una nueva colección de artículos e imágenes llegará pronto."}[locale];
+const emptyCopy = "全新的文章與圖片正在籌備中，敬請期待。";
 const storyCount = Object.values(counts).reduce((total:number,count:any)=>total+count,0);
 ---
 <BaseLayout title="Discover Chinese culture" description={copy.intro} locale={locale}>

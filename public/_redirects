@@ -1,4 +1,13 @@
 / /zh-tw/ 301
+/en /zh-tw/ 301
+/en/ /zh-tw/ 301
+/en/* /zh-tw/:splat 301
+/zh-cn /zh-tw/ 301
+/zh-cn/ /zh-tw/ 301
+/zh-cn/* /zh-tw/:splat 301
+/es /zh-tw/ 301
+/es/ /zh-tw/ 301
+/es/* /zh-tw/:splat 301
 /learn /zh-tw/learn/ 301
 /learn/ /zh-tw/learn/ 301
 /learn/* /zh-tw/learn/:splat 301

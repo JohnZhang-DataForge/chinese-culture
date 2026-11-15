@@ -24,7 +24,7 @@ function publicContentPath(variant) {
   if (!["lessons", "culture", "festivals", "books"].includes(variant.collection)) {
     throw new CmsError(422, "unsupported_public_collection", "Validation Failed", "Events are not yet backed by a public Markdown collection.");
   }
-  const prefix = variant.locale === "en" ? "" : variant.locale === "zh-CN" ? "zh-cn/" : "es/";
+  const prefix = variant.locale === "zh-TW" ? "zh-tw/" : "";
   return "src/content/" + prefix + variant.collection + "/" + variant.slug + ".md";
 }
 
@@ -32,7 +32,7 @@ export function toPublicMarkdown(variant) {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(variant.contentId || ""))) {
     throw new CmsError(422, "invalid_content_id", "Validation Failed", "A valid immutable contentId is required for public snapshots.");
   }
-  if (!["en", "zh-CN", "es"].includes(variant.locale)) {
+  if (variant.locale !== "zh-TW") {
     throw new CmsError(422, "invalid_locale", "Validation Failed", "A supported locale is required for public snapshots.");
   }
   const lines = [

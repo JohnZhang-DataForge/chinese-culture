@@ -1,7 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
-const LOCALES = new Set(["en", "zh-CN", "zh-TW", "es"]);
+const LOCALES = new Set(["zh-TW"]);
 const COLLECTIONS = new Set(["lessons", "culture", "festivals", "books", "events"]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -95,8 +95,8 @@ export function validateVariant({ metadata, bodyMarkdown, filePath, localeFromPa
   if (metadata.tags !== undefined && (!Array.isArray(metadata.tags) || metadata.tags.some((tag) => typeof tag !== "string"))) {
     throw new Error("tags must be an array of strings in " + filePath);
   }
-  if (metadata.locale === "zh-CN" && !/[\u3400-\u9fff]/u.test(metadata.title + bodyMarkdown)) {
-    throw new Error("zh-CN content must contain Simplified Chinese text in " + filePath);
+  if (metadata.locale === "zh-TW" && !/[\u3400-\u9fff]/u.test(metadata.title + bodyMarkdown)) {
+    throw new Error("zh-TW content must contain Chinese text in " + filePath);
   }
 
   return { contentId: id.toLowerCase(), locale: metadata.locale, collection, slug, status };
@@ -119,11 +119,11 @@ export async function validateContentTree(root = process.cwd()) {
 
   const byIdentity = new Map();
   const routeKeys = new Set();
-  const counts = { en: 0, "zh-CN": 0, "zh-TW": 0, es: 0 };
+  const counts = { "zh-TW": 0 };
   for (const filePath of files) {
     const rel = relative(contentRoot, filePath).replaceAll("\\", "/").split("/");
-    const locale = rel[0] === "zh-cn" ? "zh-CN" : rel[0] === "zh-tw" ? "zh-TW" : rel[0] === "es" ? "es" : "en";
-    const collection = locale === "en" ? rel[0] : rel[1];
+    const locale = rel[0] === "zh-tw" ? "zh-TW" : "unsupported";
+    const collection = rel[1];
     if (rel.length !== 2 && rel.length !== 3) throw new Error("Unexpected content path depth: " + filePath);
     const slug = rel.at(-1).replace(/\.md$/i, "");
     const source = await readFile(filePath, "utf8");

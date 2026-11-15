@@ -97,13 +97,13 @@ async function main() {
     "X-CSRF-Token": session.csrfToken
   };
   const payload = {
-    locale: "en",
+    locale: "zh-TW",
     collection: "culture",
     slug: "cms-integration-smoke",
-    title: "CMS integration smoke test",
-    description: "A temporary article used to verify D1 CRUD.",
-    category: "Testing",
-    bodyMarkdown: "## D1 round trip\n\nThis article verifies create, read, update and preview.",
+    title: "CMS 整合測試",
+    description: "用於驗證 D1 新增、讀取與更新的暫存文章。",
+    category: "測試",
+    bodyMarkdown: "## D1 往返測試\n\n這篇文章用於驗證新增、讀取、更新與預覽功能。",
     featured: false,
     readingMinutes: 3,
     tags: [],
@@ -118,16 +118,16 @@ async function main() {
   if (!etag) throw new Error("Create content did not return an ETag.");
   const originalEtag = etag;
 
-  const read = await request("/api/admin/v1/content/" + id + "?locale=en");
+  const read = await request("/api/admin/v1/content/" + id + "?locale=zh-TW");
   if (!read.response.ok || read.data?.title !== payload.title) throw new Error("Read content failed: " + JSON.stringify(read.data));
 
-  const updatedPayload = { ...payload, title: "CMS integration smoke test updated", bodyMarkdown: payload.bodyMarkdown + "\n\nUpdated revision." };
-  const updated = await request("/api/admin/v1/content/" + id + "?locale=en", { method: "PUT", headers: { ...headers, "If-Match": etag }, body: JSON.stringify(updatedPayload) });
+  const updatedPayload = { ...payload, title: "CMS 整合測試（更新版）", bodyMarkdown: payload.bodyMarkdown + "\n\nUpdated revision." };
+  const updated = await request("/api/admin/v1/content/" + id + "?locale=zh-TW", { method: "PUT", headers: { ...headers, "If-Match": etag }, body: JSON.stringify(updatedPayload) });
   if (!updated.response.ok || updated.data?.title !== updatedPayload.title) throw new Error("Update content failed: " + JSON.stringify(updated.data));
   etag = updated.response.headers.get("etag");
   if (!etag || etag === '"1"') throw new Error("Draft update did not advance the revision ETag.");
 
-  const staleWrite = await request("/api/admin/v1/content/" + id + "?locale=en", {
+  const staleWrite = await request("/api/admin/v1/content/" + id + "?locale=zh-TW", {
     method: "PUT",
     headers: { ...headers, "If-Match": originalEtag },
     body: JSON.stringify({ ...updatedPayload, title: "This stale write must be rejected." })
@@ -135,12 +135,12 @@ async function main() {
   if (staleWrite.response.status !== 409 || staleWrite.data?.code !== "revision_conflict") {
     throw new Error("A stale If-Match write must return 409 revision_conflict: " + JSON.stringify(staleWrite.data));
   }
-  const afterStaleWrite = await request("/api/admin/v1/content/" + id + "?locale=en");
+  const afterStaleWrite = await request("/api/admin/v1/content/" + id + "?locale=zh-TW");
   if (!afterStaleWrite.response.ok || afterStaleWrite.data?.title !== updatedPayload.title || afterStaleWrite.data?.revision !== "2") {
     throw new Error("A rejected stale write must not alter the latest D1 revision: " + JSON.stringify(afterStaleWrite.data));
   }
 
-  const revisionHistory = readLocalRevisionHistory(id, "en");
+  const revisionHistory = readLocalRevisionHistory(id, "zh-TW");
   if (revisionHistory.length !== 2 ||
       revisionHistory[0].revision !== 1 ||
       revisionHistory[1].revision !== 2 ||
@@ -150,30 +150,23 @@ async function main() {
       JSON.stringify(revisionHistory));
   }
 
-  const spanish = {
-    ...payload,
-    locale: "es",
-    slug: "cms-integration-smoke-es",
-    title: "Prueba de integración del CMS",
-    description: "Artículo temporal para comprobar las traducciones.",
-    category: "Pruebas",
-    bodyMarkdown: "## Prueba D1\n\nContenido en español."
-  };
-  const translation = await request("/api/admin/v1/content/" + id + "/translations", { method: "POST", headers, body: JSON.stringify(spanish) });
-  if (translation.response.status !== 201 || translation.data?.locale !== "es") throw new Error("Create Spanish translation failed: " + JSON.stringify(translation.data));
+  const unsupported = await request("/api/admin/v1/content", { method: "POST", headers, body: JSON.stringify({ ...payload, locale: "en", slug: "cms-integration-unsupported" }) });
+  if (unsupported.response.status !== 400 || unsupported.data?.code !== "invalid_locale") {
+    throw new Error("The CMS must reject non-Traditional authored locales: " + JSON.stringify(unsupported.data));
+  }
 
   const preview = await request("/api/admin/v1/content/" + id + "/preview", { method: "POST", headers, body: JSON.stringify({ content: updatedPayload }) });
-  if (!preview.response.ok || !String(preview.data?.html || "").includes("<h2>D1 round trip</h2>")) {
+  if (!preview.response.ok || !String(preview.data?.html || "").includes("<h2>D1 往返測試</h2>")) {
     throw new Error("Safe preview failed: " + JSON.stringify(preview.data));
   }
 
-  const list = await request("/api/admin/v1/content?locale=es&page=1&pageSize=100");
+  const list = await request("/api/admin/v1/content?locale=zh-TW&page=1&pageSize=100");
   if (!list.response.ok || !list.data?.items?.some((item) => item.contentId === id)) throw new Error("Spanish content list failed: " + JSON.stringify(list.data));
 
   const mediaForm = new FormData();
   mediaForm.append("file", new Blob([Uint8Array.of(0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a)], { type: "image/png" }), "smoke.png");
   mediaForm.append("metadata", new Blob([JSON.stringify({ alt: "Test image", credit: "CMS integration test", license: "original" })], { type: "application/json" }), "metadata.json");
-  const mediaUpload = await request("/api/admin/v1/content/" + id + "/media?locale=en", {
+  const mediaUpload = await request("/api/admin/v1/content/" + id + "/media?locale=zh-TW", {
     method: "POST",
     headers: { Origin: origin, "X-CSRF-Token": session.csrfToken, "If-Match": etag },
     body: mediaForm
@@ -182,17 +175,15 @@ async function main() {
     throw new Error("Media upload should fail closed without GitHub App credentials: " + JSON.stringify(mediaUpload.data));
   }
 
-  const submit = await request("/api/admin/v1/content/" + id + "/submit?locale=en", { method: "POST", headers: { ...headers, "If-Match": etag }, body: JSON.stringify({ intent: "review", summary: "CI verifies publication fails closed without a GitHub App." }) });
+  const submit = await request("/api/admin/v1/content/" + id + "/submit?locale=zh-TW", { method: "POST", headers: { ...headers, "If-Match": etag }, body: JSON.stringify({ intent: "review", summary: "CI verifies publication fails closed without a GitHub App." }) });
   if (submit.response.status !== 503 || submit.data?.code !== "github_app_not_configured") {
     throw new Error("Publication should fail closed without GitHub App credentials: " + JSON.stringify(submit.data));
   }
 
-  const deleteSpanish = await request("/api/admin/v1/content/" + id + "/draft?locale=es", { method: "DELETE", headers });
-  if (deleteSpanish.response.status !== 204) throw new Error("Delete Spanish draft failed: " + JSON.stringify(deleteSpanish.data));
-  const deleteEnglish = await request("/api/admin/v1/content/" + id + "/draft?locale=en", { method: "DELETE", headers });
-  if (deleteEnglish.response.status !== 204) throw new Error("Delete English draft failed: " + JSON.stringify(deleteEnglish.data));
+  const deleteTraditional = await request("/api/admin/v1/content/" + id + "/draft?locale=zh-TW", { method: "DELETE", headers });
+  if (deleteTraditional.response.status !== 204) throw new Error("Delete Traditional Chinese draft failed: " + JSON.stringify(deleteTraditional.data));
 
-  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, immutable D1 revision snapshots, stale-write conflict protection, Spanish translation, safe preview, list, media/publication fail-closed and draft deletion.");
+  console.log("PASS: local Pages Functions session, D1 create/read/update, ETags, immutable D1 revision snapshots, stale-write conflict protection, Traditional Chinese-only locale enforcement, safe preview, list, media/publication fail-closed and draft deletion.");
 }
 
 try {
