@@ -5,7 +5,7 @@ import { parseFrontmatter, validateVariant } from "../scripts/validate-content.m
 const valid = {
   metadata: {
     contentId: "8023e03a-5f06-5f7a-80b3-e3b4ffa97cd2",
-    locale: "en",
+    locale: "zh-TW",
     title: "A living culture",
     description: "An introduction.",
     category: "Foundations",
@@ -14,14 +14,14 @@ const valid = {
     imageAlt: "A traditional building"
   },
   bodyMarkdown: "## Introduction\n\nCulture changes over time.",
-  filePath: "src/content/lessons/example.md",
-  localeFromPath: "en",
+  filePath: "src/content/zh-tw/lessons/example.md",
+  localeFromPath: "zh-TW",
   collection: "lessons",
   slug: "example"
 };
 
 test("parses the scalar YAML frontmatter used by the published content contract", () => {
-  const parsed = parseFrontmatter('---\nlocale: "zh-CN"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
+  const parsed = parseFrontmatter('---\nlocale: "zh-TW"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
   assert.equal(parsed.metadata.locale, "zh-CN");
   assert.equal(parsed.metadata.featured, false);
   assert.equal(parsed.metadata.order, 2);
@@ -41,7 +41,7 @@ test("rejects an invalid immutable content ID", () => {
 });
 
 test("rejects locale metadata that disagrees with its directory", () => {
-  assert.throws(() => validateVariant({ ...valid, localeFromPath: "es" }), /does not match/);
+  assert.throws(() => validateVariant({ ...valid, localeFromPath: "zh-TW" }), /does not match/);
 });
 
 test("rejects malformed slugs and frontmatter slug drift", () => {
