@@ -13,7 +13,7 @@ test("publication action shows persistent progress and failure with the failed s
 });
 
 test("publication does not rewrite unchanged published variants into drafts", () => {
-  assert.match(source, /if \(state\.dirty \|\| !state\.selectedId\) \{\s*stage = "Saving edited language variants";[\s\S]*?await saveLiveDrafts\(\)/);
+  assert.match(source, /if \(state\.dirty \|\| !state\.selectedId\) \{\s*stage = "Saving the Traditional Chinese article";[\s\S]*?await saveLiveDrafts\(\)/);
 });
 
 test("publish retains the API revision and waits for a human reviewer", () => {
