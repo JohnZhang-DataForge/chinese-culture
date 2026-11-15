@@ -367,8 +367,8 @@ if (root) {
     state.isNew = !item;
     state.dirty = false;
     form.querySelectorAll("input,textarea,select").forEach((field)=>{if(!field.hasAttribute("data-variant-media-input"))field.disabled=false;});
-    state.variants = {en:null,"zh-CN":null,es:null};
-    state.etags = {en:null,"zh-CN":null,es:null};
+    state.variants = {"zh-TW":null};
+    state.etags = {"zh-TW":null};
     if (!demoMode && item) {
       setConnection("Loading content");
       try { await loadVariantDetails(item.id); }
@@ -805,7 +805,7 @@ if (root) {
     const grid = $("[data-media-grid]");
     if (demoMode) {
       $("[data-media-count]").textContent = state.media.length + " local preview asset(s)";
-      grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '" data-locale="en">Use image</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Local preview library is empty</strong><p>Demo uploads are not sent to a server.</p></div>';
+      grid.innerHTML = state.media.length ? state.media.map((file) => '<article class="media-card" data-name="' + escapeHtml(file.name.toLocaleLowerCase()) + '"><img src="' + file.url + '" alt="" /><div><strong>' + escapeHtml(file.name) + '</strong><small>' + Math.round(file.size/1024) + ' KB · local preview</small><button class="text-button" type="button" data-action="select-media" data-url="' + file.url + '" data-locale="zh-TW">使用圖片</button></div></article>').join("") : '<div class="media-empty"><span>▧</span><strong>Local preview library is empty</strong><p>Demo uploads are not sent to a server.</p></div>';
       return;
     }
     const locale=$("[data-media-locale]").value || "zh-TW";

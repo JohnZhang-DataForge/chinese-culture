@@ -15,7 +15,7 @@ const valid = {
   },
   bodyMarkdown: "## Introduction\n\nCulture changes over time.",
   filePath: "src/content/lessons/example.md",
-  localeFromPath: "en",
+  localeFromPath: "zh-TW",
   collection: "lessons",
   slug: "example"
 };
@@ -41,7 +41,7 @@ test("rejects an invalid immutable content ID", () => {
 });
 
 test("rejects locale metadata that disagrees with its directory", () => {
-  assert.throws(() => validateVariant({ ...valid, localeFromPath: "es" }), /does not match/);
+  assert.throws(() => validateVariant({ ...valid, localeFromPath: "en" }), /does not match/);
 });
 
 test("rejects malformed slugs and frontmatter slug drift", () => {
