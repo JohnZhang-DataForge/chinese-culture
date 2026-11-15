@@ -92,7 +92,7 @@ for (const [path, destination] of legacyRedirects) {
 
 const sitemapResponse = await request("/sitemap.xml");
 assert.equal(sitemapResponse.status, 200, "sitemap.xml should be publicly available");
-assert.match(sitemapResponse.headers.get("content-type") || "", /application\\/xml|text\\/xml/i, "sitemap should use an XML content type");
+assert.match(sitemapResponse.headers.get("content-type") || "", /application\/xml|text\/xml/i, "sitemap should use an XML content type");
 const sitemap = await sitemapResponse.text();
 assert.ok(sitemap.includes("<urlset"), "sitemap should contain a urlset");
 assert.ok(sitemap.includes("https://chinese-culture.site/zh-tw/"), "sitemap should include the Traditional Chinese home page");
