@@ -11,10 +11,10 @@ const valid = {
     category: "文化基礎",
     featured: true,
     image: "https://images.example.test/cover.jpg",
-    imageAlt: "A traditional building"
+    imageAlt: "傳統建築"
   },
-  bodyMarkdown: "## Introduction\n\nCulture changes over time.",
-  filePath: "src/content/lessons/example.md",
+  bodyMarkdown: "## 引言\n\n文化隨時間不斷發展。",
+  filePath: "src/content/zh-tw/lessons/example.md",
   localeFromPath: "zh-TW",
   collection: "lessons",
   slug: "example"
