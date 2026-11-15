@@ -95,8 +95,8 @@ export function validateVariant({ metadata, bodyMarkdown, filePath, localeFromPa
   if (metadata.tags !== undefined && (!Array.isArray(metadata.tags) || metadata.tags.some((tag) => typeof tag !== "string"))) {
     throw new Error("tags must be an array of strings in " + filePath);
   }
-  if (metadata.locale === "zh-CN" && !/[\u3400-\u9fff]/u.test(metadata.title + bodyMarkdown)) {
-    throw new Error("zh-CN content must contain Simplified Chinese text in " + filePath);
+  if (metadata.locale === "zh-TW" && !/[\u3400-\u9fff]/u.test(metadata.title + bodyMarkdown)) {
+    throw new Error("zh-TW content must contain Chinese text in " + filePath);
   }
 
   return { contentId: id.toLowerCase(), locale: metadata.locale, collection, slug, status };

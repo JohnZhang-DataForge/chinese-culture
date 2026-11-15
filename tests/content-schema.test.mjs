@@ -21,7 +21,7 @@ const valid = {
 };
 
 test("parses the scalar YAML frontmatter used by the published content contract", () => {
-  const parsed = parseFrontmatter('---\nlocale: "zh-CN"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
+  const parsed = parseFrontmatter('---\nlocale: "zh-TW"\nfeatured: false\norder: 2\ntitle: "文化"\n---\n正文');
   assert.equal(parsed.metadata.locale, "zh-TW");
   assert.equal(parsed.metadata.featured, false);
   assert.equal(parsed.metadata.order, 2);
