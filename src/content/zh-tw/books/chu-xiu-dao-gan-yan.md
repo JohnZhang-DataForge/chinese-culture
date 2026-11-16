@@ -9,7 +9,7 @@ chinese: "初修道感言"
 readingMinutes: 60
 featured: true
 order: 5
-image: "/books/chu-xiu-dao-gan-yan-cover.webp"
+image: "/assets/books/chu-xiu-dao-gan-yan-cover.webp"
 imageAlt: "《初修道感言》原書封面"
 imageCredit: "封面圖片取自讀者提供的原書電子版；杜素珍 著。"
 ---
