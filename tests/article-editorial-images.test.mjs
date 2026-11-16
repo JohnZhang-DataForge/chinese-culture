@@ -12,7 +12,7 @@ const articles = [
 test("each Traditional Chinese culture article has three credited in-body editorial images", async () => {
   for (const slug of articles) {
     const source = await readFile(new URL(`../src/content/zh-tw/culture/${slug}.md`, import.meta.url), "utf8");
-    const figures = [...source.matchAll(/<figure class="article-figure">([\s\S]*?)<\/figure>/g)];
+    const figures = [...source.matchAll(/<figure class="article-figure(?: [^"]*)?">([\s\S]*?)<\/figure>/g)];
     assert.equal(figures.length, 3, `${slug} should contain exactly three in-body images`);
     for (const [index, figure] of figures.entries()) {
       const block = figure[1];
