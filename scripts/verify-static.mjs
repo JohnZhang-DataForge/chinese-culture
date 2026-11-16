@@ -20,6 +20,7 @@ const books=[
   ["chu-xiu-dao-gan-yan","初修道感言"]
 ];
 for(const [slug,title] of books){
+  assert.ok(existsSync(join(dist,"assets","books",slug+"-cover.webp")),"Missing original book cover asset: "+slug);
   const file=join(dist,"zh-tw","books",slug,"index.html");
   assert.ok(existsSync(file),"Missing source-book reading page: "+slug);
   const html=readFileSync(file,"utf8");
