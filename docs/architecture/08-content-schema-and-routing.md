@@ -50,3 +50,15 @@ Normal editorial changes should use the Admin workspace. Direct Markdown edits a
 ## Editorial quality
 
 Traditional Chinese is the only authored source language. Visitors may use the in-page Google Translate widget for machine translation; machine output is not treated as an editorially reviewed language edition.
+
+
+## Dedicated source-book library (D1)
+
+The five original Traditional Chinese books use the dedicated `book_catalog` and `book_sections` tables, separate from the general CMS article variants:
+
+- `book_catalog` stores the stable book identity, reading order, source PDF filename/page count/byte size, cover asset key, content-import status, rights-review status, and publication status.
+- `book_sections` stores ordered prefaces, tables of contents, chapters, appendices, and their Markdown text, with optional source PDF page ranges.
+- The catalog is seeded as draft-only. The initial records intentionally use `content_status='pending_import'` and `rights_status='pending_review'`; no book is publicly published by this schema migration.
+- Original PDFs are tracked as source assets, not embedded as large D1 BLOBs. Store binaries in object storage and keep object keys/metadata in D1.
+
+The five seeded titles, in reading order, are 道德經淺易、論語淺易、大學淺易、中庸淺易、初修道感言.
