@@ -9,7 +9,6 @@ chinese: "道德經淺易"
 readingMinutes: 60
 featured: true
 order: 1
-imageCredit: "封面圖片取自讀者提供的原書電子版；編註／作者：杜素珍 編註。"
 ---
 
 本頁依據讀者提供的《道德經淺易》電子版整理，保留原書文字與章節先後。
