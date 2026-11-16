@@ -47,7 +47,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinese_Tea_Ceremony.jp
 
 <figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/A_tea_plantation_in_China_with_workers_carrying_and_picking_Wellcome_V0019203.jpg/960px-A_tea_plantation_in_China_with_workers_carrying_and_picking_Wellcome_V0019203.jpg" alt="描繪中國茶園採摘茶葉的歷史水粉畫" loading="lazy" />
-  <figcaption>這幅歷史圖像描繪中國茶園採摘茶葉的情景。圖片：Wellcome Collection／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>。</figcaption>
+  <figcaption>這幅歷史圖像描繪中國茶園採摘茶葉的情景。圖片：Wellcome Collection／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>。<a href="https://commons.wikimedia.org/wiki/File:A_tea_plantation_in_China_with_workers_carrying_and_picking_Wellcome_V0019203.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
 
 <figure class="article-figure">

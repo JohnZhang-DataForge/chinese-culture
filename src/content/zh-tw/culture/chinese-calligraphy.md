@@ -39,7 +39,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 <figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Chinese_Brush_for_Writing_Calligraphy.jpg/960px-Chinese_Brush_for_Writing_Calligraphy.jpg" alt="放在桌面上的中國毛筆與筆架" loading="lazy" />
-  <figcaption>毛筆是書法與中國傳統繪畫的重要工具。圖片：epSos.de／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。</figcaption>
+  <figcaption>毛筆是書法與中國傳統繪畫的重要工具。圖片：epSos.de／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Chinese_Brush_for_Writing_Calligraphy.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
 
 ## 一筆之中有什麼？

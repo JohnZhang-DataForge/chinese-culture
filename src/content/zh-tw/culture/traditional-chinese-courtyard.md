@@ -45,7 +45,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Peking_Hutong_courtyard
 
 <figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG/1280px-%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG" alt="北京故宮太和殿屋簷下層疊排列的斗栱木構件" loading="lazy" />
-  <figcaption>故宮太和殿的斗栱細節。攝影：Gisling／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>。</figcaption>
+  <figcaption>故宮太和殿的斗栱細節。攝影：Gisling／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>。<a href="https://commons.wikimedia.org/wiki/File:%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
 
 ## 建築也是社會與地方的記錄
