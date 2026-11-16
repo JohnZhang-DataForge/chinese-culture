@@ -26,7 +26,7 @@ for(const [slug,title] of books){
   const html=readFileSync(file,"utf8");
   assert.ok(html.includes(title),"Book title missing: "+title);
   assert.ok(html.length>12000,"Book source text is unexpectedly short: "+slug);
-  assert.ok(booksPage.includes("/zh-tw/books/"+slug+"/"),"Book missing from collection: "+slug);
+  assert.ok(booksPage.includes("#"+slug),"Book missing from unified reading page: "+slug);
 }
 
 const redirects=readFileSync(join(root,"public/_redirects"),"utf8");
