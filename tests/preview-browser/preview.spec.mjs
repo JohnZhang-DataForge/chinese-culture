@@ -61,6 +61,28 @@ test("Google Translate keeps its selector but hides translation banners and hove
   expect(overlaysHidden).toBe(true);
 });
 
+test("Google Translate banner injected after page load is suppressed", async ({ page }) => {
+  await page.goto("/zh-tw/culture/");
+  const result = await page.evaluate(async () => {
+    const banner = document.createElement("iframe");
+    banner.className = "goog-te-banner-frame skiptranslate";
+    banner.style.setProperty("display", "block", "important");
+    banner.style.setProperty("visibility", "visible", "important");
+    document.body.append(banner);
+    document.body.style.setProperty("top", "40px", "important");
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    const bannerStyle = getComputedStyle(banner);
+    const hidden = bannerStyle.display === "none" || bannerStyle.visibility === "hidden";
+    const bodyTop = document.body.style.getPropertyValue("top");
+    banner.remove();
+    return { hidden, bodyTop };
+  });
+
+  expect(result.hidden).toBe(true);
+  expect(result.bodyTop).toBe("0px");
+});
+
 test("legacy language routes redirect to the Traditional Chinese edition", async ({ page }) => {
   const routes = [
     ["/en/", "/zh-tw/"],
