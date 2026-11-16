@@ -23,6 +23,11 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 大都會藝術博物館指出，書法在傳統中國藝術中具有極高地位，並且與繪畫共享筆與墨等工具。書法作品的價值，不只在於文字內容，也在於線條如何呈現力量、速度、平衡與個人風格。
 
+<figure class="article-figure">
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Regular-script-samples.svg/960px-Regular-script-samples.svg.png" alt="六組不同歷代楷書碑刻字例，呈現歐陽詢、顏真卿、柳公權與趙孟頫等書家的結體差異" loading="lazy" />
+  <figcaption>楷書字例取自不同年代的碑刻，可比較字形結構與筆畫風格的變化。作者：Quinlan718（依據古代碑刻製作向量描摹）；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0 1.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Regular-script-samples.svg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+</figure>
+
 ## 文房四寶：書寫的四件基本工具
 
 傳統書畫常以「文房四寶」概括主要工具：
@@ -42,6 +47,11 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 練習書法時，可以先觀察起筆、行筆和收筆。起筆決定線條如何進入紙面；行筆呈現速度、方向與力度；收筆則讓筆畫自然結束。提按、轉折、停頓與留白，會使相同的字產生不同氣質。
 
 欣賞作品時，不妨先不要急著辨認每一個字。試著看看線條是否有節奏、字與字之間是否呼應，以及整幅作品如何安排空間。這些觀察能幫助初學者理解，為什麼書法不只是字形的複製。
+
+<figure class="article-figure">
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png?width=1280" alt="故宮博物院藏明代許世奇行楷書五律詩頁，墨色筆畫在紙面上連貫舒展" loading="lazy" />
+  <figcaption>明代許世奇《行楷書五律詩頁》，可觀察行書與楷書之間兼具流動與辨識度的筆勢。作品：故宮博物院藏（新00076990-33/40）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
+</figure>
 
 ## 從哪裡開始欣賞？
 

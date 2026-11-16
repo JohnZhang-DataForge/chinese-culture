@@ -41,8 +41,18 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinese_Tea_Ceremony.jp
 茶具不只是盛裝茶湯的容器。蓋碗、茶壺、公道杯、聞香杯與小茶杯，各有不同用途；水溫、浸泡時間、茶葉用量，也會影響最後的風味。所謂工夫茶，常見於潮汕、閩南及其他華人社群的飲茶實踐，重視器具、沖泡節奏與多人分享，但不同家庭和茶席並沒有完全相同的固定規則。
 
 <figure class="article-figure">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Chinese_tea_set_and_three_gaiwan.jpg" alt="博物館展櫃中的三只中國蓋碗，展示不同釉色與裝飾紋樣" loading="lazy" />
+  <figcaption>三只蓋碗呈現茶具在器形、釉色與裝飾上的差異。攝影：Gary Stevens；Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Chinese_tea_set_and_three_gaiwan.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+</figure>
+
+<figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/A_tea_plantation_in_China_with_workers_carrying_and_picking_Wellcome_V0019203.jpg/960px-A_tea_plantation_in_China_with_workers_carrying_and_picking_Wellcome_V0019203.jpg" alt="描繪中國茶園採摘茶葉的歷史水粉畫" loading="lazy" />
   <figcaption>這幅歷史圖像描繪中國茶園採摘茶葉的情景。圖片：Wellcome Collection／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>。</figcaption>
+</figure>
+
+<figure class="article-figure">
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Yixing_ware_teapot_and_Lapsang_tea.jpg/960px-Yixing_ware_teapot_and_Lapsang_tea.jpg" alt="宜興紫砂小茶壺與正山小種茶葉、茶湯並置，呈現茶壺與茶品的搭配" loading="lazy" />
+  <figcaption>宜興紫砂茶壺與正山小種茶。攝影：Markus Kniebes；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0 1.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Yixing_ware_teapot_and_Lapsang_tea.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
 
 聯合國教科文組織將中國傳統製茶技藝及相關社會實踐列入人類非物質文化遺產代表作名錄，涵蓋茶園管理、採摘、加工、飲用與分享。這提醒我們，茶文化不只存在於茶杯裡，也存在於茶農、製茶者、茶館、家庭和社群的知識傳承之中。
