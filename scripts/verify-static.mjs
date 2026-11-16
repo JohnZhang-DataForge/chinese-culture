@@ -46,7 +46,8 @@ for(const illustration of bookIllustrations)assert.ok(existsSync(join(root,"publ
 for(const slug of books.map(([slug])=>slug)){
   assert.ok(redirects.includes("/zh-tw/books/"+slug+"/ /zh-tw/books/#"+slug+" 301"),"Missing legacy book anchor redirect: "+slug);
 }
-\nconst translateComponent=readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
+
+const translateComponent=readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
 assert.ok(translateComponent.includes("InlineLayout.HORIZONTAL"),"Google Translate must use the native horizontal dropdown.");
 assert.ok(!translateComponent.includes("InlineLayout.SIMPLE"),"Google Translate must not use the expanded Simple language panel.");
 assert.ok(redirects.startsWith("/ /zh-tw/ 301"),"Root must default to Traditional Chinese.");
