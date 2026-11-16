@@ -38,9 +38,10 @@ for(const [slug,title] of books){
 }
 assert.equal((unifiedBooks.match(/data-slide(?:\s|>)/g)||[]).length,5,"Carousel must contain exactly five slides.");
 assert.equal((unifiedBooks.match(/data-dot(?:\s|>)/g)||[]).length,5,"Carousel must contain exactly five indicators.");
-assert.ok(unifiedBooks.includes("setInterval") && unifiedBooks.includes("6000"),"Carousel auto-rotation timer missing.");
-assert.ok(unifiedBooks.includes("prefers-reduced-motion"),"Carousel must respect reduced-motion preference.");
-assert.ok(unifiedBooks.includes("data-chapters"),"Chapter navigation generation missing.");
+const bookPageSource=readFileSync(join(root,"src/pages/[locale]/[section]/index.astro"),"utf8");
+assert.ok(bookPageSource.includes("setInterval") && bookPageSource.includes("6000"),"Carousel auto-rotation timer missing.");
+assert.ok(bookPageSource.includes("prefers-reduced-motion"),"Carousel must respect reduced-motion preference.");
+assert.ok(bookPageSource.includes("data-chapters"),"Chapter navigation generation missing.");
 const bookIllustrations=["books-hero.svg","dao-de-jing.svg","lun-yu.svg","da-xue.svg","zhong-yong.svg","chu-xiu-dao-gan-yan.svg"];
 for(const illustration of bookIllustrations)assert.ok(existsSync(join(root,"public","assets","books","illustrations",illustration)),"Missing illustration "+illustration);
 for(const slug of books.map(([slug])=>slug)){
