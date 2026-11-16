@@ -473,3 +473,26 @@ body.culture-playful{background:#f4f5f7}
 .prose .article-figure figcaption{margin-top:.65rem;color:#70766f;font-size:.74rem;line-height:1.6}
 .prose .article-figure figcaption a{color:var(--red)}
 @media(max-width:760px){.article-image-credit{text-align:left;font-size:.68rem}.prose .article-figure{margin:1.8rem 0 2rem}.prose .article-figure img{max-height:340px;border-radius:10px}}
+
+
+/* Keep the Google Translate language selector, but suppress the injected
+   translation banner and hover/original-text balloon overlays. */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-tooltip {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+body,
+body.skiptranslate {
+  top: 0 !important;
+  position: static !important;
+}
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+}
