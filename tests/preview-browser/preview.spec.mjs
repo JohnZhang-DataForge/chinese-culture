@@ -31,7 +31,7 @@ test("culture section displays four illustrated articles and licensed image cred
   expect(articleResponse?.status()).toBe(200);
   await expect(page.locator(".article-cover img")).toHaveAttribute("src", /wikimedia\.org/);
   await expect(page.locator(".article-image-credit a")).toHaveAttribute("href", /commons\.wikimedia\.org/);
-  await expect(page.locator(".article-figure img")).toHaveCount(1);
+  await expect(page.locator(".article-figure img")).toHaveCount(3);
 });
 
 test("Google Translate keeps its selector but hides translation banners and hover balloons", async ({ page }) => {
@@ -95,4 +95,34 @@ test("legacy language routes redirect to the Traditional Chinese edition", async
     expect(new URL(page.url()).pathname).toBe(destination);
     await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
   }
+});
+
+
+test("all four culture articles load three credited in-body images without mobile overflow", async ({ page }) => {
+  const articles = [
+    "/zh-tw/culture/chinese-calligraphy/",
+    "/zh-tw/culture/chinese-tea-culture/",
+    "/zh-tw/culture/jingdezhen-blue-white-porcelain/",
+    "/zh-tw/culture/traditional-chinese-courtyard/"
+  ];
+
+  for (const route of articles) {
+    const response = await page.goto(route);
+    expect(response?.status(), route + " should be available").toBe(200);
+    const images = page.locator(".article-figure img");
+    await expect(images).toHaveCount(3);
+    await expect(page.locator(".article-figure figcaption a[href*='creativecommons.org']")).toHaveCount(3);
+    for (let index = 0; index < 3; index += 1) {
+      const image = images.nth(index);
+      await expect(image).toHaveAttribute("alt", /.+/);
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((element) => element.naturalWidth)).toBeGreaterThan(0);
+    }
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/zh-tw/culture/chinese-calligraphy/");
+  await expect(page.locator(".article-figure img")).toHaveCount(3);
+  const fitsViewport = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+  expect(fitsViewport).toBe(true);
 });
