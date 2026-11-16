@@ -44,7 +44,7 @@ test("all five source-book reading pages load their Traditional Chinese text", a
     await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
     await expect(page.locator("h1")).toHaveText(title);
     const cover = page.locator(".article-cover img");
-    await expect(cover).toHaveAttribute("src", /^\/books\//);
+    await expect(cover).toHaveAttribute("src", /^\/assets\/books\//);
     await cover.scrollIntoViewIfNeeded();
     const coverUrl = await cover.getAttribute("src");
     const assetResponse = await page.request.get(new URL(coverUrl, page.url()).toString());
