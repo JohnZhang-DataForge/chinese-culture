@@ -35,8 +35,8 @@ for(const [slug,title] of books){
   assert.ok(unifiedBooks.includes(title),"Unified book title missing: "+title);
   assert.ok(unifiedBooks.includes('/assets/books/illustrations/'+({ "dao-de-jing-qian-yi":"dao-de-jing.svg","lun-yu-qian-yi":"lun-yu.svg","da-xue-qian-yi":"da-xue.svg","zhong-yong-qian-yi":"zhong-yong.svg","chu-xiu-dao-gan-yan":"chu-xiu-dao-gan-yan.svg" }[slug])),"Book illustration missing: "+slug);
 }
-assert.equal((unifiedBooks.match(/data-slide/g)||[]).length,5,"Carousel must contain exactly five slides.");
-assert.equal((unifiedBooks.match(/data-dot/g)||[]).length,5,"Carousel must contain exactly five indicators.");
+assert.equal((unifiedBooks.match(/data-slide(?:\\s|>)/g)||[]).length,5,"Carousel must contain exactly five slides.");
+assert.equal((unifiedBooks.match(/data-dot(?:\\s|>)/g)||[]).length,5,"Carousel must contain exactly five indicators.");
 assert.ok(unifiedBooks.includes("setInterval") && unifiedBooks.includes("6000"),"Carousel auto-rotation timer missing.");
 assert.ok(unifiedBooks.includes("prefers-reduced-motion"),"Carousel must respect reduced-motion preference.");
 assert.ok(unifiedBooks.includes("data-chapters"),"Chapter navigation generation missing.");
