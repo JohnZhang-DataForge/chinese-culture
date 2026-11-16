@@ -28,6 +28,11 @@ test("books collection lists exactly the five requested source books", async ({ 
   for (let index = 0; index < books.length; index += 1) {
     await expect(page.getByRole("heading", { name: books[index][1] })).toBeVisible();
     await expect(covers.nth(index)).toHaveAttribute("alt", /原書封面/);
+    await covers.nth(index).scrollIntoViewIfNeeded();
+    const coverUrl = await covers.nth(index).getAttribute("src");
+    const assetResponse = await page.request.get(new URL(coverUrl, page.url()).toString());
+    console.log("Book cover asset:", coverUrl, assetResponse.status(), assetResponse.headers()["content-type"]);
+    expect(assetResponse.status()).toBe(200);
     await expect.poll(() => covers.nth(index).evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
   }
 });
@@ -40,6 +45,11 @@ test("all five source-book reading pages load their Traditional Chinese text", a
     await expect(page.locator("h1")).toHaveText(title);
     const cover = page.locator(".article-cover img");
     await expect(cover).toHaveAttribute("src", /^\/books\//);
+    await cover.scrollIntoViewIfNeeded();
+    const coverUrl = await cover.getAttribute("src");
+    const assetResponse = await page.request.get(new URL(coverUrl, page.url()).toString());
+    console.log("Article cover asset:", coverUrl, assetResponse.status(), assetResponse.headers()["content-type"]);
+    expect(assetResponse.status()).toBe(200);
     await expect.poll(() => cover.evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
     const prose = page.locator(".prose");
     await expect(prose).toBeVisible();
