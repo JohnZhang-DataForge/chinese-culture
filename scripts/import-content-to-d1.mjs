@@ -70,7 +70,7 @@ function buildVariant(filePath, localeRoot) {
     const publishedAt = status === "published" ? asText(metadata.publishedAt || IMPORTED_AT) : "";
     const updatedAt = asText(metadata.updatedAt || IMPORTED_AT);
     const imageUrl = asText(metadata.image);
-    if (imageUrl && !imageUrl.startsWith("https://")) throw new Error("Legacy image URL must use HTTPS: " + filePath);
+    if (imageUrl && !(imageUrl.startsWith("https://") || (imageUrl.startsWith("/") && !imageUrl.startsWith("//")))) throw new Error("Legacy image URL must be HTTPS or a root-relative site asset: " + filePath);
     return {
       contentId, locale: localeRoot.locale, collection, slug,
       title: asText(metadata.title), description: asText(metadata.description),
