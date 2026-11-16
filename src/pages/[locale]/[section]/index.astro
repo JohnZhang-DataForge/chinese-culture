@@ -4,7 +4,8 @@ import StoryCard from "../../../components/StoryCard.astro";
 import {getCollection,render} from "astro:content";
 import {supportedLocales,localizedSections,ui} from "../../../i18n/site";
 export function getStaticPaths(){return supportedLocales.flatMap(locale=>localizedSections[locale].map(config=>({params:{locale,section:config.route},props:{locale,config}})));}
-const {locale,config}=Astro.props,labels=ui[locale];\nconst cultureHeroImage="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Peking_Hutong_courtyard.JPG/960px-Peking_Hutong_courtyard.JPG";
+const {locale,config}=Astro.props,labels=ui[locale];
+const cultureHeroImage="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Peking_Hutong_courtyard.JPG/960px-Peking_Hutong_courtyard.JPG";
 const entries=config.collection?(await getCollection(config.collection as any)).filter((e:any)=>(e.data.status??"published")==="published").sort((a:any,b:any)=>(a.data.order??99)-(b.data.order??99)||a.data.title.localeCompare(b.data.title)):[];
 const books=config.route==="books"?await Promise.all(entries.map(async(entry:any,index:number)=>({entry,index,Content:(await render(entry)).Content}))):[];
 const art=[["dao-de-jing.svg","水墨山水、流水與竹簡，象徵道法自然。"],["lun-yu.svg","古代書院、講席與展卷問學。"],["da-xue.svg","庭院階梯與書卷，象徵修身齊家。"],["zhong-yong.svg","石橋、靜水與遠山，象徵中和之道。"],["chu-xiu-dao-gan-yan.svg","晨霧中的靜修小屋與松樹，象徵日常省思。"]];
