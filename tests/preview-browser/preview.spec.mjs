@@ -34,6 +34,33 @@ test("culture section displays four illustrated articles and licensed image cred
   await expect(page.locator(".article-figure img")).toHaveCount(1);
 });
 
+test("Google Translate keeps its selector but hides translation banners and hover balloons", async ({ page }) => {
+  await page.goto("/zh-tw/culture/");
+  await expect(page.locator("#google_translate_element")).toBeAttached();
+
+  const overlaysHidden = await page.evaluate(() => {
+    const banner = document.createElement("iframe");
+    banner.className = "goog-te-banner-frame skiptranslate";
+    document.body.append(banner);
+    const balloon = document.createElement("div");
+    balloon.id = "goog-gt-tt";
+    document.body.append(balloon);
+    const frame = document.createElement("iframe");
+    frame.className = "goog-te-balloon-frame";
+    document.body.append(frame);
+
+    const hidden = [banner, balloon, frame].every((element) => {
+      const style = getComputedStyle(element);
+      return style.display === "none" || style.visibility === "hidden";
+    });
+    banner.remove();
+    balloon.remove();
+    frame.remove();
+    return hidden && getComputedStyle(document.body).top === "0px";
+  });
+  expect(overlaysHidden).toBe(true);
+});
+
 test("legacy language routes redirect to the Traditional Chinese edition", async ({ page }) => {
   const routes = [
     ["/en/", "/zh-tw/"],
