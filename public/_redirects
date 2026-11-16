@@ -19,6 +19,11 @@
 /festivals/* /zh-tw/festivals/:splat 301
 /books /zh-tw/books/ 301
 /books/ /zh-tw/books/ 301
+/zh-tw/books/dao-de-jing-qian-yi/ /zh-tw/books/#dao-de-jing-qian-yi 301
+/zh-tw/books/lun-yu-qian-yi/ /zh-tw/books/#lun-yu-qian-yi 301
+/zh-tw/books/da-xue-qian-yi/ /zh-tw/books/#da-xue-qian-yi 301
+/zh-tw/books/zhong-yong-qian-yi/ /zh-tw/books/#zhong-yong-qian-yi 301
+/zh-tw/books/chu-xiu-dao-gan-yan/ /zh-tw/books/#chu-xiu-dao-gan-yan 301
 /books/* /zh-tw/books/:splat 301
 /events /zh-tw/events/ 301
 /events/ /zh-tw/events/ 301
