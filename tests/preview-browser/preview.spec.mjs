@@ -39,6 +39,7 @@ test("one unified reading page contains all five complete books, original covers
     expect(coverResponse.status()).toBe(200);
     await expect.poll(()=>cover.evaluate(img=>img.naturalWidth)).toBeGreaterThan(0);
     const illustration = section.locator("figure img");
+    await illustration.scrollIntoViewIfNeeded();
     await expect(illustration).toHaveAttribute("alt",/原創文化編輯插畫/);
     const illustrationUrl = await illustration.getAttribute("src");
     const illustrationResponse = await page.request.get(new URL(illustrationUrl,page.url()).toString());
@@ -130,6 +131,8 @@ test("legacy language routes redirect to the Traditional Chinese edition", async
 test("unified book page and sticky book navigation fit a mobile viewport", async ({ page }) => {
   await page.setViewportSize({width:390,height:844});
   await page.goto("/zh-tw/books/");
+  const diagnostic=await page.evaluate(()=>{const width=document.documentElement.clientWidth;return [...document.querySelectorAll("body *")].map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName,cls:typeof el.className==="string"?el.className:"",id:el.id,left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}}).filter(x=>x.width>0&&(x.right>width+1||x.left< -1)).sort((a,b)=>b.right-a.right).slice(0,25)});
+  console.log("Mobile horizontal overflow elements",JSON.stringify(diagnostic));
   const layout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth}));
   expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width+1);
   for(const [slug] of books){
