@@ -24,8 +24,8 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 大都會藝術博物館指出，書法在傳統中國藝術中具有極高地位，並且與繪畫共享筆與墨等工具。書法作品的價值，不只在於文字內容，也在於線條如何呈現力量、速度、平衡與個人風格。
 
 <figure class="article-figure">
-  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Regular-script-samples.svg/960px-Regular-script-samples.svg.png" alt="六組不同歷代楷書碑刻字例，呈現歐陽詢、顏真卿、柳公權與趙孟頫等書家的結體差異" loading="lazy" />
-  <figcaption>楷書字例取自不同年代的碑刻，可比較字形結構與筆畫風格的變化。作者：Quinlan718（依據古代碑刻製作向量描摹）；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0 1.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Regular-script-samples.svg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png/960px-%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" alt="清代黃慎草書五律詩軸，墨色字跡連綿奔放，呈現草書快速運筆與筆勢連接的特徵" loading="lazy" />
+  <figcaption>清代黃慎《草書五律詩軸》，可觀察草書連綿的筆勢、字形簡化與行氣。作品：故宮博物院藏（新00151451）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
 </figure>
 
 ## 文房四寶：書寫的四件基本工具
