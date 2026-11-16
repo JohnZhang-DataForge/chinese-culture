@@ -14,9 +14,23 @@ function markdownFiles(directory) {
   });
 }
 
-test("editorial source tree is intentionally empty after the approved reset", () => {
-  const files = markdownFiles(contentRoot);
-  assert.equal(files.length, 0, "Old Markdown article snapshots must not remain in the public source tree.");
+test("editorial source tree contains only the reviewed Traditional Chinese culture starter guides", () => {
+  const files = markdownFiles(contentRoot).map((path) => relative(contentRoot, path).replaceAll("\\\\", "/")).sort();
+  const expected = [
+    "zh-tw/culture/chinese-calligraphy.md",
+    "zh-tw/culture/chinese-tea-culture.md",
+    "zh-tw/culture/jingdezhen-blue-white-porcelain.md",
+    "zh-tw/culture/traditional-chinese-courtyard.md"
+  ];
+  assert.deepEqual(files, expected, "Only the four approved culture starter guides should be public editorial Markdown.");
+
+  for (const file of files) {
+    const source = readFileSync(join(contentRoot, file), "utf8");
+    assert.match(source, /^locale: "zh-TW"$/m, file + " must be Traditional Chinese.");
+    assert.match(source, /^status: "published"$/m, file + " must have an explicit reviewed publication status.");
+    assert.match(source, /^image: "https:\\/\\//m, file + " must include an HTTPS cover image.");
+    assert.match(source, /^imageCreditUrl: "https:\\/\\/commons\\.wikimedia\\.org\\/wiki\\/File:/m, file + " must include a verifiable Wikimedia Commons image-credit page.");
+  }
 });
 
 import { deterministicContentId, resolveContentIdentity } from "../scripts/content-identity.mjs";
