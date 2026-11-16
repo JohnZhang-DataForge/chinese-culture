@@ -54,6 +54,11 @@ test("rejects non-HTTPS legacy image URLs and missing alternative text", () => {
   assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, imageAlt: "" } }), /imageAlt/);
 });
 
+test("accepts root-relative site assets and rejects protocol-relative image URLs", () => {
+  assert.equal(validateVariant({ ...valid, metadata: { ...valid.metadata, image: "/books/source-cover.webp" } }).status, "published");
+  assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, image: "//cdn.example.test/cover.webp" } }), /Protocol-relative/);
+});
+
 test("rejects invalid publication status and timestamps", () => {
   assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, status: "queued" } }), /Invalid status/);
   assert.throws(() => validateVariant({ ...valid, metadata: { ...valid.metadata, updatedAt: "not-a-date" } }), /updatedAt/);
