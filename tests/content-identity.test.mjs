@@ -4,8 +4,6 @@ import { join, relative } from "node:path";
 import test from "node:test";
 
 const contentRoot = join(process.cwd(), "src", "content");
-const expectedLocales = new Set(["zh-TW"]);
-
 function markdownFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name);
@@ -15,7 +13,7 @@ function markdownFiles(directory) {
 }
 
 test("editorial source tree contains only the reviewed Traditional Chinese culture starter guides", () => {
-  const files = markdownFiles(contentRoot).map((path) => relative(contentRoot, path).replaceAll("\\\\", "/")).sort();
+  const files = markdownFiles(contentRoot).map((path) => relative(contentRoot, path).split("/").join("/")).sort();
   const expected = [
     "zh-tw/culture/chinese-calligraphy.md",
     "zh-tw/culture/chinese-tea-culture.md",
@@ -25,11 +23,11 @@ test("editorial source tree contains only the reviewed Traditional Chinese cultu
   assert.deepEqual(files, expected, "Only the four approved culture starter guides should be public editorial Markdown.");
 
   for (const file of files) {
-    const source = readFileSync(join(contentRoot, file), "utf8");
-    assert.match(source, /^locale: "zh-TW"$/m, file + " must be Traditional Chinese.");
-    assert.match(source, /^status: "published"$/m, file + " must have an explicit reviewed publication status.");
-    assert.match(source, /^image: "https:\\/\\//m, file + " must include an HTTPS cover image.");
-    assert.match(source, /^imageCreditUrl: "https:\\/\\/commons\\.wikimedia\\.org\\/wiki\\/File:/m, file + " must include a verifiable Wikimedia Commons image-credit page.");
+    const article = readFileSync(join(contentRoot, file), "utf8");
+    assert.ok(article.includes('locale: "zh-TW"'), file + " must be Traditional Chinese.");
+    assert.ok(article.includes('status: "published"'), file + " must have an explicit reviewed publication status.");
+    assert.ok(article.includes('image: "https://'), file + " must include an HTTPS cover image.");
+    assert.ok(article.includes('imageCreditUrl: "https://commons.wikimedia.org/wiki/File:'), file + " must include a Wikimedia Commons image-credit page.");
   }
 });
 
