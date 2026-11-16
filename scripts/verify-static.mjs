@@ -6,6 +6,12 @@ const root=dirname(dirname(fileURLToPath(import.meta.url))),dist=join(root,"dist
 assert.ok(existsSync(dist),"Build output missing. Run npm run build.");
 const pages=["","learn/","culture/","festivals/","books/","events/","about/","accessibility/","contact/","editorial-policy/","privacy/"];
 for(const page of pages){const file=join(dist,"zh-tw",page,"index.html");assert.ok(existsSync(file),"Missing Traditional Chinese page "+page);const html=readFileSync(file,"utf8");assert.ok(html.includes('<html lang="zh-TW"'),"Wrong document language: "+file);assert.ok(!html.includes("images.unsplash.com"),"Old photo URL remains: "+file);}
+const culturePage=readFileSync(join(dist,"zh-tw","culture","index.html"),"utf8");
+for(const slug of ["chinese-calligraphy","chinese-tea-culture","jingdezhen-blue-white-porcelain","traditional-chinese-courtyard"])assert.ok(culturePage.includes("/zh-tw/culture/"+slug+"/"),"Culture article missing: "+slug);
+assert.ok((culturePage.match(/class="story-card-image"/g)||[]).length>=4,"Culture cards must display article photographs.");
+const translateComponent=readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
+assert.ok(translateComponent.includes("InlineLayout.HORIZONTAL"),"Google Translate must use the native horizontal dropdown.");
+assert.ok(!translateComponent.includes("InlineLayout.SIMPLE"),"Google Translate must not use the expanded Simple language panel.");
 const redirects=readFileSync(join(root,"public/_redirects"),"utf8");
 assert.ok(redirects.startsWith("/ /zh-tw/ 301"),"Root must default to Traditional Chinese.");
 for(const path of ["/en/* /zh-tw/:splat 301","/zh-cn/* /zh-tw/:splat 301","/es/* /zh-tw/:splat 301"])assert.ok(redirects.includes(path),"Missing legacy redirect "+path);

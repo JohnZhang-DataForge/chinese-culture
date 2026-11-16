@@ -5,7 +5,7 @@ const schema=z.object({
  status:z.enum(["draft","published","unpublished"]).default("published"),
  chinese:z.string().optional(),pinyin:z.string().optional(),level:z.string().optional(),order:z.number().optional(),
  readingMinutes:z.number().int().positive().default(5),featured:z.boolean().default(false),
- image:z.string().url().optional(),imageAlt:z.string().optional()
+ image:z.string().url().optional(),imageAlt:z.string().optional(),imageCredit:z.string().optional(),imageCreditUrl:z.string().url().optional()
 });
 function fromFolder(name:string){return defineCollection({loader:glob({pattern:"**/*.md",base:"./src/content/zh-tw/"+name}),schema});}
 export const collections={lessonsTw:fromFolder("lessons"),cultureTw:fromFolder("culture"),festivalsTw:fromFolder("festivals"),booksTw:fromFolder("books")};
