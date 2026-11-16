@@ -23,7 +23,13 @@ test("books collection lists exactly the five requested source books", async ({ 
   const response = await page.goto("/zh-tw/books/");
   expect(response?.status()).toBe(200);
   await expect(page.locator(".story-card")).toHaveCount(5);
-  for (const [, title] of books) await expect(page.getByRole("heading", { name: title })).toBeVisible();
+  const covers = page.locator(".story-card-image img");
+  await expect(covers).toHaveCount(5);
+  for (let index = 0; index < books.length; index += 1) {
+    await expect(page.getByRole("heading", { name: books[index][1] })).toBeVisible();
+    await expect(covers.nth(index)).toHaveAttribute("alt", /原書封面/);
+    await expect.poll(() => covers.nth(index).evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
+  }
 });
 
 test("all five source-book reading pages load their Traditional Chinese text", async ({ page }) => {
@@ -32,6 +38,9 @@ test("all five source-book reading pages load their Traditional Chinese text", a
     expect(response?.status(), slug + " should be available").toBe(200);
     await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
     await expect(page.locator("h1")).toHaveText(title);
+    const cover = page.locator(".article-cover img");
+    await expect(cover).toHaveAttribute("src", /^\/books\//);
+    await expect.poll(() => cover.evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
     const prose = page.locator(".prose");
     await expect(prose).toBeVisible();
     expect((await prose.innerText()).length, title + " should include the transcribed source text").toBeGreaterThan(10000);
