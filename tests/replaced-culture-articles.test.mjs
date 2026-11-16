@@ -16,7 +16,7 @@ test("interim culture guides are removed from the public Traditional Chinese col
 });
 
 test("D1 cleanup migration removes the same four superseded CMS records", () => {
-  const migration = readFileSync(new URL("../database/migrations/0005_remove_replaced_culture_articles.sql", import.meta.url), "utf8");
+  const migration = readFileSync(new URL("../database/migrations/0005_remove-replaced-culture-articles.sql", import.meta.url), "utf8");
   for (const id of [
     "4a1d7a52-6c5d-4d4c-9c8a-1f6d1a2b1001",
     "4a1d7a52-6c5d-4d4c-9c8a-1f6d1a2b1002",
