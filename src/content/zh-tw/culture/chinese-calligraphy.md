@@ -23,7 +23,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 大都會藝術博物館指出，書法在傳統中國藝術中具有極高地位，並且與繪畫共享筆與墨等工具。書法作品的價值，不只在於文字內容，也在於線條如何呈現力量、速度、平衡與個人風格。
 
-<figure class="article-figure">
+<figure class="article-figure article-figure--portrait">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png/960px-%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" alt="清代黃慎草書五律詩軸，墨色字跡連綿奔放，呈現草書快速運筆與筆勢連接的特徵" loading="lazy" />
   <figcaption>清代黃慎《草書五律詩軸》，可觀察草書連綿的筆勢、字形簡化與行氣。作品：故宮博物院藏（新00151451）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
 </figure>
@@ -37,7 +37,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 - **紙：** 紙張的吸水性、厚薄與表面質地，會改變墨色暈染和筆畫邊緣。
 - **硯：** 硯台用來研墨，也讓書寫者控制墨汁的濃度。
 
-<figure class="article-figure">
+<figure class="article-figure article-figure--portrait">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Chinese_Brush_for_Writing_Calligraphy.jpg/960px-Chinese_Brush_for_Writing_Calligraphy.jpg" alt="放在桌面上的中國毛筆與筆架" loading="lazy" />
   <figcaption>毛筆是書法與中國傳統繪畫的重要工具。圖片：epSos.de／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Chinese_Brush_for_Writing_Calligraphy.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
@@ -48,7 +48,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 欣賞作品時，不妨先不要急著辨認每一個字。試著看看線條是否有節奏、字與字之間是否呼應，以及整幅作品如何安排空間。這些觀察能幫助初學者理解，為什麼書法不只是字形的複製。
 
-<figure class="article-figure">
+<figure class="article-figure article-figure--portrait">
   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png?width=1280" alt="故宮博物院藏明代許世奇行楷書五律詩頁，墨色筆畫在紙面上連貫舒展" loading="lazy" />
   <figcaption>明代許世奇《行楷書五律詩頁》，可觀察行書與楷書之間兼具流動與辨識度的筆勢。作品：故宮博物院藏（新00076990-33/40）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
 </figure>
