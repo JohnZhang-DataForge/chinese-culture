@@ -9,6 +9,8 @@ chinese: "大學淺易"
 readingMinutes: 60
 featured: true
 order: 3
+image: "/books/da-xue-qian-yi-cover.webp"
+imageAlt: "《大學淺易》原書封面"
 imageCredit: "封面圖片取自讀者提供的原書電子版；杜素珍 編註。"
 ---
 
