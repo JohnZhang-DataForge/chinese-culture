@@ -20,6 +20,20 @@ test("deployed preview serves only the Traditional Chinese authored edition", as
   await expect(page.locator('script[src*="translate.google.com/translate_a/element.js"]')).toHaveCount(1);
 });
 
+test("culture section displays four illustrated articles and licensed image credits", async ({ page }) => {
+  const response = await page.goto("/zh-tw/culture/");
+  expect(response?.status()).toBe(200);
+  await expect(page.locator(".story-card")).toHaveCount(4);
+  await expect(page.locator(".story-card-image img")).toHaveCount(4);
+  await expect(page.getByRole("heading", { name: "筆墨之間：認識中國書法的線條與氣韻" })).toBeVisible();
+
+  const articleResponse = await page.goto("/zh-tw/culture/chinese-calligraphy/");
+  expect(articleResponse?.status()).toBe(200);
+  await expect(page.locator(".article-cover img")).toHaveAttribute("src", /wikimedia\.org/);
+  await expect(page.locator(".article-image-credit a")).toHaveAttribute("href", /commons\.wikimedia\.org/);
+  await expect(page.locator(".article-figure img")).toHaveCount(1);
+});
+
 test("legacy language routes redirect to the Traditional Chinese edition", async ({ page }) => {
   const routes = [
     ["/en/", "/zh-tw/"],
