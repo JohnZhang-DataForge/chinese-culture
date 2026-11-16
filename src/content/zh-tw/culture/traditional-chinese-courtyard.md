@@ -23,11 +23,21 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Peking_Hutong_courtyard
 
 不過，四合院並不能代表所有中國住宅。南方的天井式住宅、福建土樓、徽州民居以及各地少數民族建築，都發展出不同的空間方案。氣候、地形、材料、家庭結構與地方習俗，會共同影響住宅形態。
 
+<figure class="article-figure">
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Siheyuan_model.jpg/960px-Siheyuan_model.jpg" alt="四合院建築模型的俯視圖，房屋沿四邊圍合中央庭院，呈現正房與廂房的空間關係" loading="lazy" />
+  <figcaption>四合院模型以俯視角度呈現房屋圍繞中央院落的基本布局。作者：Pubuhan；Wikimedia Commons，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Siheyuan_model.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+</figure>
+
 ## 木構架：柱、梁與榫卯
 
 許多傳統建築使用木材作為主要結構材料。柱子承托梁架，梁與檁條再支撐屋頂。木構件之間可使用榫卯等方式連接，讓構架形成相互配合的整體。這種做法需要工匠精確掌握尺寸、受力與木材特性。
 
 屋頂不只是遮風避雨的部分。屋面坡度、出檐深度、瓦件排列和屋脊裝飾，都會影響建築外觀與排水方式。不同地區會依降雨、日照、風勢和材料條件調整屋頂形式。
+
+<figure class="article-figure">
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Interlocking_wooden_brackets.jpg/960px-Interlocking_wooden_brackets.jpg" alt="故宮建築內部彩繪木構件交錯咬合，展示傳統木作托架與梁架的細部" loading="lazy" />
+  <figcaption>故宮建築內部的交錯木構托架與彩繪細節。攝影：The war moose；Wikimedia Commons，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Interlocking_wooden_brackets.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+</figure>
 
 ## 斗栱：屋簷下的木構件組合
 
@@ -35,7 +45,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Peking_Hutong_courtyard
 
 <figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG/1280px-%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG" alt="北京故宮太和殿屋簷下層疊排列的斗栱木構件" loading="lazy" />
-  <figcaption>故宮太和殿的斗栱細節。攝影：Gisling／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>。</figcaption>
+  <figcaption>故宮太和殿的斗栱細節。攝影：Gisling／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>。<a href="https://commons.wikimedia.org/wiki/File:%E5%A4%AA%E5%92%8C%E6%AE%BF%E6%96%97%E6%8B%B1.JPG" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
 </figure>
 
 ## 建築也是社會與地方的記錄

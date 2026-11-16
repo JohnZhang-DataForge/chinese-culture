@@ -496,3 +496,7 @@ body.skiptranslate {
   background: transparent !important;
   box-shadow: none !important;
 }
+
+/* Preserve the full composition of portrait-format calligraphy scrolls. */
+.prose .article-figure--portrait img{width:auto;max-width:100%;max-height:640px;margin-inline:auto;object-fit:contain}
+@media(max-width:760px){.prose .article-figure--portrait img{max-height:560px}}
