@@ -23,26 +23,16 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Blue_%26_white_vase,_C.
 
 青花裝飾在中國陶瓷史上有較早的發展，但元代（1271—1368）景德鎮的製瓷技術與產品品質有重要進展。維多利亞與亞伯特博物館指出，景德鎮工匠改良瓷土配方與燒製技術，使青花瓷的色澤和裝飾表現更為成熟。
 
-<figure class="article-figure">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Blue_and_White_Jingdezhen_Porcelain_%2810180340525%29.jpg" alt="上海博物館陶瓷展廳中的景德鎮青花瓷器，展示白瓷胎上濃淡分明的釉下藍彩" loading="lazy" />
-  <figcaption>上海博物館陶瓷展廳中的景德鎮青花瓷器。攝影：Gary Todd；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener noreferrer">CC0 1.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Blue_and_White_Jingdezhen_Porcelain_(10180340525).jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
-</figure>
-
 ## 景德鎮：一座由陶瓷塑造的城市
 
 景德鎮位於江西省。當地的瓷石、高嶺土、水路交通與燃料資源，為長期製瓷提供了條件。聯合國教科文組織對景德鎮手工瓷業遺址的介紹，將原料開採、運輸、窯爐、作坊、行會與商業活動視為彼此連結的產業系統。
 
 <figure class="article-figure">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/A_kiln_at_Jingdezhen.jpg/960px-A_kiln_at_Jingdezhen.jpg" alt="江西景德鎮的一座傳統陶瓷窯爐" loading="lazy" />
-  <figcaption>景德鎮窯爐是陶瓷製作流程的一部分。圖片：Pauloleong2002／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>。<a href="https://commons.wikimedia.org/wiki/File:A_kiln_at_Jingdezhen.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
+  <figcaption>景德鎮窯爐是陶瓷製作流程的一部分。圖片：Pauloleong2002／Wikimedia Commons，<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>。</figcaption>
 </figure>
 
 製瓷並非單一工匠獨立完成。從採料、淘洗、練泥、成形、修坯、繪畫、施釉到裝窯燒成，各個環節需要不同技能。長期而細緻的分工，讓景德鎮能夠生產種類繁多、品質穩定的瓷器。
-
-<figure class="article-figure">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Brush_holder_with_Zhang_Qian_on_a_trunk_above_the_waves%3B_Jingdezhen%3B_Ming_Dynasty_%281368-1644%29%2C_reign_of_Xuande_%281426-1435%29%3B_biscuit_and_porcelain_decorated_with_cobalt_blue_under_colourless_glaze.jpg/1280px-thumbnail.jpg" alt="明代宣德年間景德鎮青花瓷筆山，器物以鈷藍描繪人物與海浪紋飾" loading="lazy" />
-  <figcaption>明代宣德年間景德鎮青花瓷筆山，展示鈷料在透明釉下呈現的藍色紋飾。攝影：Neoclassicism Enthusiast；Wikimedia Commons，<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>。<a href="https://commons.wikimedia.org/wiki/File:Brush_holder_with_Zhang_Qian_on_a_trunk_above_the_waves;_Jingdezhen;_Ming_Dynasty_(1368-1644),_reign_of_Xuande_(1426-1435);_biscuit_and_porcelain_decorated_with_cobalt_blue_under_colourless_glaze.jpg" target="_blank" rel="noopener noreferrer">查看原始作品</a>。</figcaption>
-</figure>
 
 ## 為什麼青花瓷會走向世界？
 
