@@ -25,7 +25,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 <figure class="article-figure article-figure--portrait">
   <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png/960px-%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" alt="清代黃慎草書五律詩軸，墨色字跡連綿奔放，呈現草書快速運筆與筆勢連接的特徵" loading="lazy" />
-  <figcaption>清代黃慎《草書五律詩軸》，可觀察草書連綿的筆勢、字形簡化與行氣。作品：故宮博物院藏（新00151451）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
+  <figcaption>清代黃慎《草書五律詩軸》，可觀察草書連綿的筆勢、字形簡化與行氣。作品：故宮博物院藏（新00151451）；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/mark/1.0/" target="_blank" rel="noopener noreferrer">公有領域標示（PDM 1.0）</a>。<a href="https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%85%8E%E8%8D%89%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E8%BD%B4.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
 </figure>
 
 ## 文房四寶：書寫的四件基本工具
