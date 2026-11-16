@@ -9,6 +9,8 @@ chinese: "論語淺易"
 readingMinutes: 60
 featured: true
 order: 2
+image: "/books/lun-yu-qian-yi-cover.webp"
+imageAlt: "《論語淺易》原書封面"
 imageCredit: "封面圖片取自讀者提供的原書電子版；杜素珍 編註。"
 ---
 
