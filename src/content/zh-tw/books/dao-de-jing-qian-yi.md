@@ -9,6 +9,8 @@ chinese: "道德經淺易"
 readingMinutes: 60
 featured: true
 order: 1
+image: "/books/dao-de-jing-qian-yi-cover.webp"
+imageAlt: "《道德經淺易》原書封面"
 imageCredit: "封面圖片取自讀者提供的原書電子版；杜素珍 編註。"
 ---
 
