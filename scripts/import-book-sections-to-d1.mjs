@@ -78,6 +78,14 @@ const expected = new Map([
   ["chu-xiu-dao-gan-yan", "6681b124-5679-46fa-bfa1-d2190f69eeaf"]
 ]);
 
+const catalogCheck = await query("SELECT book_id, slug FROM book_catalog");
+const catalogIds = new Set((catalogCheck?.results || []).map((row) => row.book_id));
+const missingCatalog = [...expected.entries()].filter(([, id]) => !catalogIds.has(id)).map(([slug]) => slug);
+console.log(JSON.stringify({ bookCatalogRows: catalogIds.size, expectedBooks: expected.size, missingCatalogBooks: missingCatalog }));
+if (missingCatalog.length) {
+  throw new Error("D1 book_catalog is missing required parent records: " + missingCatalog.join(", ") + ". Apply the idempotent book catalog seed migration before importing book_sections.");
+}
+
 const imported = [];
 for (const file of await markdownFiles(ROOT)) {
   const slug = basename(file, ".md");
@@ -95,7 +103,7 @@ for (const file of await markdownFiles(ROOT)) {
   for (let order = 0; order < sections.length; order++) {
     const section = sections[order];
     await query(
-      "INSERT OR REPLACE INTO book_sections (section_id, book_id, section_order, section_type, title, body_markdown, source_page_start, source_page_end) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL)",
+      "INSERT INTO book_sections (section_id, book_id, section_order, section_type, title, body_markdown, source_page_start, source_page_end) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL) ON CONFLICT(section_id) DO UPDATE SET book_id=excluded.book_id, section_order=excluded.section_order, section_type=excluded.section_type, title=excluded.title, body_markdown=excluded.body_markdown, source_page_start=NULL, source_page_end=NULL",
       [stableId(expectedId, order), expectedId, order, section.type, section.title.slice(0, 300), section.body]
     );
   }
