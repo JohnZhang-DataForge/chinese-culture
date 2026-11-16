@@ -37,6 +37,8 @@ test("D1 book section importer covers all five catalog identities", async () => 
   for (const [slug, id] of expected) {
     assert.ok(script.includes('["' + slug.replace(".md", "") + '", "' + id + '"]'));
   }
-  assert.match(script, /INSERT INTO book_sections/);\n  assert.match(script, /ON CONFLICT\\(section_id\\) DO UPDATE/);\n  assert.match(script, /missing required parent records/);
+  assert.match(script, /INSERT INTO book_sections/);
+  assert.match(script, /ON CONFLICT\(section_id\) DO UPDATE/);
+  assert.match(script, /missing required parent records/);
   assert.match(script, /content_status = 'text_imported'/);
 });
