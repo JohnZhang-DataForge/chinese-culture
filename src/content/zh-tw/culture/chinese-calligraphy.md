@@ -50,7 +50,7 @@ imageCreditUrl: "https://commons.wikimedia.org/wiki/File:Chinesecalligraphywater
 
 <figure class="article-figure article-figure--portrait">
   <img src="https://commons.wikimedia.org/wiki/Special:FilePath/%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png?width=1280" alt="故宮博物院藏明代許世奇行楷書五律詩頁，墨色筆畫在紙面上連貫舒展" loading="lazy" />
-  <figcaption>明代許世奇《行楷書五律詩頁》，可觀察行書與楷書之間兼具流動與辨識度的筆勢。作品：故宮博物院藏（新00076990-33/40）；Wikimedia Commons，公有領域標示（PDM 1.0）。<a href="https://commons.wikimedia.org/wiki/File:%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
+  <figcaption>明代許世奇《行楷書五律詩頁》，可觀察行書與楷書之間兼具流動與辨識度的筆勢。作品：故宮博物院藏（新00076990-33/40）；Wikimedia Commons，<a href="https://creativecommons.org/publicdomain/mark/1.0/" target="_blank" rel="noopener noreferrer">公有領域標示（PDM 1.0）</a>。<a href="https://commons.wikimedia.org/wiki/File:%E8%AE%B8%E4%B8%96%E5%A5%87%E8%A1%8C%E6%A5%B7%E4%B9%A6%E4%BA%94%E5%BE%8B%E8%AF%97%E9%A1%B5.png" target="_blank" rel="noopener noreferrer">查看作品與來源</a>。</figcaption>
 </figure>
 
 ## 從哪裡開始欣賞？
