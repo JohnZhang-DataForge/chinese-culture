@@ -12,22 +12,22 @@ function markdownFiles(directory) {
   });
 }
 
-test("editorial source tree contains only the reviewed Traditional Chinese culture starter guides", () => {
+test("editorial source tree contains only the five approved Traditional Chinese source books", () => {
   const files = markdownFiles(contentRoot).map((path) => relative(contentRoot, path).split("/").join("/")).sort();
   const expected = [
-    "zh-tw/culture/chinese-calligraphy.md",
-    "zh-tw/culture/chinese-tea-culture.md",
-    "zh-tw/culture/jingdezhen-blue-white-porcelain.md",
-    "zh-tw/culture/traditional-chinese-courtyard.md"
+    "zh-tw/books/chu-xiu-dao-gan-yan.md",
+    "zh-tw/books/da-xue-qian-yi.md",
+    "zh-tw/books/dao-de-jing-qian-yi.md",
+    "zh-tw/books/lun-yu-qian-yi.md",
+    "zh-tw/books/zhong-yong-qian-yi.md"
   ];
-  assert.deepEqual(files, expected, "Only the four approved culture starter guides should be public editorial Markdown.");
+  assert.deepEqual(files, expected, "Only the five requested source books should be public editorial Markdown.");
 
   for (const file of files) {
     const article = readFileSync(join(contentRoot, file), "utf8");
     assert.ok(article.includes('locale: "zh-TW"'), file + " must be Traditional Chinese.");
-    assert.ok(article.includes('status: "published"'), file + " must have an explicit reviewed publication status.");
-    assert.ok(article.includes('image: "https://'), file + " must include an HTTPS cover image.");
-    assert.ok(article.includes('imageCreditUrl: "https://commons.wikimedia.org/wiki/File:'), file + " must include a Wikimedia Commons image-credit page.");
+    assert.ok(article.includes('status: "published"'), file + " must have an explicit publication status.");
+    assert.ok(article.includes("## "), file + " must retain the source book's section structure.");
   }
 });
 
