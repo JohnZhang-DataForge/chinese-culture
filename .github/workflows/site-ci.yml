@@ -26,6 +26,7 @@ jobs:
       - name: Detect OpenAPI and Pages Functions contract drift
         run: npm run validate:openapi
       - run: node --check scripts/import-content-to-d1.mjs
+      - run: node --check scripts/import-book-sections-to-d1.mjs
       - run: node --check scripts/smoke-production.mjs
       - run: node --check scripts/rehearse-d1-backup-restore.mjs
       - name: Check protected CMS draft importer syntax
