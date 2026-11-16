@@ -4,8 +4,6 @@ import { join, relative } from "node:path";
 import test from "node:test";
 
 const contentRoot = join(process.cwd(), "src", "content");
-const expectedLocales = new Set(["zh-TW"]);
-
 function markdownFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name);
@@ -14,9 +12,23 @@ function markdownFiles(directory) {
   });
 }
 
-test("editorial source tree is intentionally empty after the approved reset", () => {
-  const files = markdownFiles(contentRoot);
-  assert.equal(files.length, 0, "Old Markdown article snapshots must not remain in the public source tree.");
+test("editorial source tree contains only the reviewed Traditional Chinese culture starter guides", () => {
+  const files = markdownFiles(contentRoot).map((path) => relative(contentRoot, path).split("/").join("/")).sort();
+  const expected = [
+    "zh-tw/culture/chinese-calligraphy.md",
+    "zh-tw/culture/chinese-tea-culture.md",
+    "zh-tw/culture/jingdezhen-blue-white-porcelain.md",
+    "zh-tw/culture/traditional-chinese-courtyard.md"
+  ];
+  assert.deepEqual(files, expected, "Only the four approved culture starter guides should be public editorial Markdown.");
+
+  for (const file of files) {
+    const article = readFileSync(join(contentRoot, file), "utf8");
+    assert.ok(article.includes('locale: "zh-TW"'), file + " must be Traditional Chinese.");
+    assert.ok(article.includes('status: "published"'), file + " must have an explicit reviewed publication status.");
+    assert.ok(article.includes('image: "https://'), file + " must include an HTTPS cover image.");
+    assert.ok(article.includes('imageCreditUrl: "https://commons.wikimedia.org/wiki/File:'), file + " must include a Wikimedia Commons image-credit page.");
+  }
 });
 
 import { deterministicContentId, resolveContentIdentity } from "../scripts/content-identity.mjs";
