@@ -20,7 +20,7 @@ export const localizedSections = { "zh-tw": [
     { route: "learn", collection: "lessonsTw", nav: "學習", eyebrow: "循序學習", title: "從基礎開始。", description: "以清楚易懂的方式認識語言、習俗、節慶與藝術傳統，一次探索一個主題。", note: "可以依序閱讀，也可以從感興趣的主題開始。" },
     { route: "culture", collection: "cultureTw", nav: "文化", eyebrow: "跟隨好奇心探索", title: "多元傳統，多元觀點。", description: "探索連結過去與現在的器物、思想與創作實踐。", note: "每個主題都是深入探索的起點。" },
     { route: "festivals", collection: "festivalsTw", nav: "節慶", eyebrow: "文化的歲時日曆", title: "值得分享的時刻。", description: "認識一年之中各種慶典背後的故事與社群習俗。", note: "許多節慶依循傳統陰陽合曆，因此公曆日期每年不同。" },
-    { route: "books", collection: "booksTw", nav: "書籍", eyebrow: "閱讀空間", title: "好故事，開啟新視野。", description: "透過閱讀指南，走近中國文學經典、思想與多彩世界。", note: "本站提供原創閱讀指南，不提供未經授權的書籍下載。" },
+    { route: "books", collection: "booksTw", nav: "書籍", eyebrow: "閱讀空間", title: "五本原書，循章閱讀。", description: "以繁體中文閱讀《道德經淺易》、《論語淺易》、《大學淺易》、《中庸淺易》與《初修道感言》。", note: "以下為依讀者提供的原書 PDF 轉錄之文字閱讀版；原書圖像頁未臆測補寫，請以原始版本為準。" },
     { route: "events", collection: null, nav: "活動", eyebrow: "相聚與學習", title: "文化因分享而生。", description: "展覽、講座、工作坊與慶典，能讓書頁上的故事走進日常生活。", note: "目前尚無經過查證的活動。" }
   ] } as const;
 export const homeCopy = { "zh-tw": {

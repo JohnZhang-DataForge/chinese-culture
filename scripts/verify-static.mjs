@@ -7,8 +7,27 @@ assert.ok(existsSync(dist),"Build output missing. Run npm run build.");
 const pages=["","learn/","culture/","festivals/","books/","events/","about/","accessibility/","contact/","editorial-policy/","privacy/"];
 for(const page of pages){const file=join(dist,"zh-tw",page,"index.html");assert.ok(existsSync(file),"Missing Traditional Chinese page "+page);const html=readFileSync(file,"utf8");assert.ok(html.includes('<html lang="zh-TW"'),"Wrong document language: "+file);assert.ok(!html.includes("images.unsplash.com"),"Old photo URL remains: "+file);}
 const culturePage=readFileSync(join(dist,"zh-tw","culture","index.html"),"utf8");
-for(const slug of ["chinese-calligraphy","chinese-tea-culture","jingdezhen-blue-white-porcelain","traditional-chinese-courtyard"])assert.ok(culturePage.includes("/zh-tw/culture/"+slug+"/"),"Culture article missing: "+slug);
-assert.ok((culturePage.match(/class="story-card-image"/g)||[]).length>=4,"Culture cards must display article photographs.");
+for(const slug of ["chinese-calligraphy","chinese-tea-culture","jingdezhen-blue-white-porcelain","traditional-chinese-courtyard"]) {
+  assert.ok(!existsSync(join(dist,"zh-tw","culture",slug,"index.html")),"Superseded culture article still published: "+slug);
+  assert.ok(!culturePage.includes("/zh-tw/culture/"+slug+"/"),"Superseded culture article remains linked: "+slug);
+}
+const booksPage=readFileSync(join(dist,"zh-tw","books","index.html"),"utf8");
+const books=[
+  ["dao-de-jing-qian-yi","道德經淺易"],
+  ["lun-yu-qian-yi","論語淺易"],
+  ["da-xue-qian-yi","大學淺易"],
+  ["zhong-yong-qian-yi","中庸淺易"],
+  ["chu-xiu-dao-gan-yan","初修道感言"]
+];
+for(const [slug,title] of books){
+  assert.ok(existsSync(join(dist,"assets","books",slug+"-cover.webp")),"Missing original book cover asset: "+slug);
+  const file=join(dist,"zh-tw","books",slug,"index.html");
+  assert.ok(existsSync(file),"Missing source-book reading page: "+slug);
+  const html=readFileSync(file,"utf8");
+  assert.ok(html.includes(title),"Book title missing: "+title);
+  assert.ok(html.length>12000,"Book source text is unexpectedly short: "+slug);
+  assert.ok(booksPage.includes("/zh-tw/books/"+slug+"/"),"Book missing from collection: "+slug);
+}
 const translateComponent=readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
 assert.ok(translateComponent.includes("InlineLayout.HORIZONTAL"),"Google Translate must use the native horizontal dropdown.");
 assert.ok(!translateComponent.includes("InlineLayout.SIMPLE"),"Google Translate must not use the expanded Simple language panel.");
@@ -18,4 +37,4 @@ for(const path of ["/en/* /zh-tw/:splat 301","/zh-cn/* /zh-tw/:splat 301","/es/*
 const sitemap=readFileSync(join(dist,"sitemap.xml"),"utf8");
 assert.ok(sitemap.includes("https://chinese-culture.site/zh-tw/"),"Traditional Chinese home missing from sitemap.");
 assert.ok(!/https:\/\/chinese-culture\.site\/(en|zh-cn|es)\//.test(sitemap),"Non-Traditional authored locale remains in sitemap.");
-console.log("PASS: Traditional Chinese is the only authored locale; legacy paths redirect; old photos are absent.");
+console.log("PASS: Traditional Chinese is the only authored locale; five source books are published; superseded culture guides are absent; legacy paths redirect.");

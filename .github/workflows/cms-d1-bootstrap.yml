@@ -7,6 +7,8 @@ on:
     paths:
       - "database/migrations/**"
       - "scripts/import-content-to-d1.mjs"
+      - "scripts/import-book-sections-to-d1.mjs"
+      - "src/content/zh-tw/books/**"
 
 permissions:
   contents: read
@@ -47,3 +49,10 @@ jobs:
           CMS_D1_DATABASE_ID: 8b6f6c98-06fe-49eb-adbc-690d4b57c058
           CMS_SOURCE_COMMIT: ${{ github.sha }}
         run: node scripts/import-content-to-d1.mjs
+
+      - name: Import full book text into ordered D1 sections
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: dff021f8489d2c316a14575c76de16d4
+          CMS_D1_DATABASE_ID: 8b6f6c98-06fe-49eb-adbc-690d4b57c058
+        run: node scripts/import-book-sections-to-d1.mjs

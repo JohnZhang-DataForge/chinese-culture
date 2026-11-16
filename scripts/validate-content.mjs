@@ -84,9 +84,13 @@ export function validateVariant({ metadata, bodyMarkdown, filePath, localeFromPa
 
   const legacyImage = metadata.imageUrl ?? metadata.image;
   if (legacyImage !== undefined && legacyImage !== null) {
-    let url;
-    try { url = new URL(legacyImage); } catch { throw new Error("Legacy image must be an absolute URL in " + filePath); }
-    if (url.protocol !== "https:") throw new Error("Legacy image URL must use HTTPS in " + filePath);
+    if (legacyImage.startsWith("/")) {
+      if (legacyImage.startsWith("//")) throw new Error("Protocol-relative image URLs are not allowed in " + filePath);
+    } else {
+      let url;
+      try { url = new URL(legacyImage); } catch { throw new Error("Legacy image must be a root-relative path or absolute HTTPS URL in " + filePath); }
+      if (url.protocol !== "https:") throw new Error("Legacy image URL must use HTTPS in " + filePath);
+    }
     requireNonEmptyString(metadata.imageAlt, "imageAlt", filePath);
   }
 
