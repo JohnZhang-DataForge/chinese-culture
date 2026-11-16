@@ -9,7 +9,6 @@ chinese: "初修道感言"
 readingMinutes: 60
 featured: true
 order: 5
-imageCredit: "封面圖片取自讀者提供的原書電子版；編註／作者：杜素珍 著。"
 ---
 
 本頁依據讀者提供的《初修道感言》電子版整理，保留原書文字與章節先後。
