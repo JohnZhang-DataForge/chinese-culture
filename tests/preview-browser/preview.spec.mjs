@@ -122,7 +122,33 @@ test("all four culture articles load three credited in-body images without mobil
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/zh-tw/culture/chinese-calligraphy/");
-  await expect(page.locator(".article-figure img")).toHaveCount(3);
-  const fitsViewport = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
-  expect(fitsViewport).toBe(true);
+  const calligraphyImages = page.locator(".article-figure img");
+  await expect(calligraphyImages).toHaveCount(3);
+  await calligraphyImages.evaluateAll(async (images) => {
+    await Promise.all(images.map((image) => image.decode().catch(() => undefined)));
+  });
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(150);
+  const overflow = await page.evaluate(() => ({
+    documentWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth,
+    elements: [...document.querySelectorAll("body *")]
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          tag: element.tagName.toLowerCase(),
+          className: typeof element.className === "string" ? element.className : "",
+          id: element.id,
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          scrollWidth: element.scrollWidth,
+          clientWidth: element.clientWidth
+        };
+      })
+      .filter((element) => element.width > 0 && (element.right > window.innerWidth + 1 || element.left < -1))
+      .slice(0, 12)
+  }));
+  console.log("Mobile layout inspection:", JSON.stringify(overflow));
+  expect(overflow.documentWidth).toBeLessThanOrEqual(overflow.viewportWidth);
 });
