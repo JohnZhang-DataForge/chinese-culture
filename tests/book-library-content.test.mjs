@@ -25,9 +25,9 @@ test("all five source books are present as complete Traditional Chinese content 
     assert.match(frontmatter[1], /status: "published"/);
     assert.ok(source.slice(frontmatter[0].length).trim().length > 10000, filename + " includes substantial source text");
     const slug = filename.replace(/\.md$/, "");
-    const cover = new URL("../public/books/" + slug + "-cover.webp", import.meta.url);
+    const cover = new URL("../public/assets/books/" + slug + "-cover.webp", import.meta.url);
     assert.ok(existsSync(cover), filename + " has its original cover asset");
-    assert.ok(frontmatter[1].includes('image: "/books/' + slug + '-cover.webp"'), filename + " references its local cover");
+    assert.ok(frontmatter[1].includes('image: "/assets/books/' + slug + '-cover.webp"'), filename + " references its local cover");
     assert.ok(frontmatter[1].includes("imageAlt:"), filename + " has descriptive cover alt text");
   }
 });
