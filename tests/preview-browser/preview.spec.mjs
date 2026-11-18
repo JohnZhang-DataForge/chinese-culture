@@ -19,43 +19,56 @@ test("deployed preview serves only the Traditional Chinese authored edition", as
   await expect(page.locator('script[src*="translate.google.com/translate_a/element.js"]')).toHaveCount(1);
 });
 
-test("books collection lists exactly the five requested source books", async ({ page }) => {
+test("one unified reading page contains all five complete books, original covers and attributed illustrations", async ({ page }) => {
   const response = await page.goto("/zh-tw/books/");
   expect(response?.status()).toBe(200);
-  await expect(page.locator(".story-card")).toHaveCount(5);
-  const covers = page.locator(".story-card-image img");
-  await expect(covers).toHaveCount(5);
+  await expect(page.locator("[data-slide]")).toHaveCount(5);
+  await expect(page.locator("[data-dot]")).toHaveCount(5);
+  const illustrationNames = ["dao-de-jing.svg","lun-yu.svg","da-xue.svg","zhong-yong.svg","chu-xiu-dao-gan-yan.svg"];
   for (let index = 0; index < books.length; index += 1) {
-    await expect(page.getByRole("heading", { name: books[index][1] })).toBeVisible();
-    await expect(covers.nth(index)).toHaveAttribute("alt", /原書封面/);
-    await covers.nth(index).scrollIntoViewIfNeeded();
-    const coverUrl = await covers.nth(index).getAttribute("src");
-    const assetResponse = await page.request.get(new URL(coverUrl, page.url()).toString());
-    console.log("Book cover asset:", coverUrl, assetResponse.status(), assetResponse.headers()["content-type"]);
-    expect(assetResponse.status()).toBe(200);
-    await expect.poll(() => covers.nth(index).evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
+    const [slug,title] = books[index];
+    const section = page.locator(".book#" + slug);
+    await expect(section).toBeAttached();
+    await expect(section.locator("h2").first()).toHaveText(title);
+    const prose = section.locator(".prose");
+    expect((await prose.innerText()).length,title+" must retain the available source text").toBeGreaterThan(10000);
+    const cover = section.locator(".book-cover");
+    await cover.scrollIntoViewIfNeeded();
+    await expect(cover).toHaveAttribute("alt",/原書封面/);
+    const coverUrl = await cover.getAttribute("src");
+    const coverResponse = await page.request.get(new URL(coverUrl,page.url()).toString());
+    expect(coverResponse.status()).toBe(200);
+    await expect.poll(()=>cover.evaluate(img=>img.naturalWidth)).toBeGreaterThan(0);
+    const illustration = section.locator("figure img");
+    await illustration.scrollIntoViewIfNeeded();
+    await expect(illustration).toHaveAttribute("alt",/原創文化編輯插畫/);
+    const illustrationUrl = await illustration.getAttribute("src");
+    const illustrationResponse = await page.request.get(new URL(illustrationUrl,page.url()).toString());
+    expect(illustrationResponse.status()).toBe(200);
+    expect(illustrationResponse.headers()["content-type"]).toContain("image/svg+xml");
+    await expect.poll(()=>illustration.evaluate(img=>img.naturalWidth)).toBeGreaterThan(0);
+    await expect(section.locator("figcaption")).toContainText("原創編輯插畫");
+    await expect(section.locator("[data-chapters]")).toBeAttached();
   }
 });
 
-test("all five source-book reading pages load their Traditional Chinese text", async ({ page }) => {
-  for (const [slug, title] of books) {
-    const response = await page.goto("/zh-tw/books/" + slug + "/");
-    expect(response?.status(), slug + " should be available").toBe(200);
-    await expect(page.locator("html")).toHaveAttribute("lang", "zh-TW");
-    await expect(page.locator("h1")).toHaveText(title);
-    const cover = page.locator(".article-cover img");
-    await expect(cover).toHaveAttribute("src", /^\/assets\/books\//);
-    await cover.scrollIntoViewIfNeeded();
-    const coverUrl = await cover.getAttribute("src");
-    const assetResponse = await page.request.get(new URL(coverUrl, page.url()).toString());
-    console.log("Article cover asset:", coverUrl, assetResponse.status(), assetResponse.headers()["content-type"]);
-    expect(assetResponse.status()).toBe(200);
-    await expect.poll(() => cover.evaluate((image) => image.naturalWidth)).toBeGreaterThan(0);
-    const prose = page.locator(".prose");
-    await expect(prose).toBeVisible();
-    expect((await prose.innerText()).length, title + " should include the transcribed source text").toBeGreaterThan(10000);
-    await expect(prose.locator("h2").first()).toBeVisible();
-  }
+test("carousel rotates, supports manual controls, and stops for reduced motion", async ({ page }) => {
+  await page.goto("/zh-tw/books/");
+  const track = page.locator("[data-track]");
+  await expect(track).toHaveCSS("transform",/matrix/);
+  const initial = await track.evaluate(el=>getComputedStyle(el).transform);
+  await page.waitForTimeout(6200);
+  const rotated = await track.evaluate(el=>getComputedStyle(el).transform);
+  expect(rotated).not.toBe(initial);
+  await page.locator("[data-next]").click();
+  const manual = await track.evaluate(el=>getComputedStyle(el).transform);
+  expect(manual).not.toBe(rotated);
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await page.reload();
+  const reducedInitial = await track.evaluate(el=>getComputedStyle(el).transform);
+  await page.waitForTimeout(6200);
+  const reducedAfter = await page.locator("[data-track]").evaluate(el=>getComputedStyle(el).transform);
+  expect(reducedAfter).toBe(reducedInitial);
 });
 
 test("the four interim culture guide routes are no longer published", async ({ page }) => {
@@ -78,11 +91,16 @@ test("Google Translate keeps its selector but hides translation banners and hove
     const frame = document.createElement("iframe");
     frame.className = "goog-te-balloon-frame";
     document.body.append(frame);
-    const hidden = [banner, balloon, frame].every((element) => {
+    const translateLink = document.createElement("a");
+    translateLink.className = "VIpgJd-ZVi9od-l4eHX-hSRGPd";
+    translateLink.href = "#translate-overlay-test";
+    translateLink.textContent = "Google Translate overlay";
+    document.body.append(translateLink);
+    const hidden = [banner, balloon, frame, translateLink].every((element) => {
       const style = getComputedStyle(element);
       return style.display === "none" || style.visibility === "hidden";
     });
-    banner.remove(); balloon.remove(); frame.remove();
+    banner.remove(); balloon.remove(); frame.remove(); translateLink.remove();
     return hidden && getComputedStyle(document.body).top === "0px";
   });
   expect(overlaysHidden).toBe(true);
@@ -116,16 +134,27 @@ test("legacy language routes redirect to the Traditional Chinese edition", async
   }
 });
 
-test("book reading pages fit a mobile viewport without horizontal article overflow", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  for (const [slug] of books) {
-    await page.goto("/zh-tw/books/" + slug + "/");
-    const layout = await page.locator(".prose").evaluate((article) => ({
-      width: article.clientWidth,
-      scrollWidth: article.scrollWidth,
-      right: Math.round(article.getBoundingClientRect().right)
-    }));
-    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width + 1);
-    expect(layout.right).toBeLessThanOrEqual(391);
+test("unified book page and sticky book navigation fit a mobile viewport", async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/zh-tw/books/");
+  const diagnostic=await page.evaluate(()=>{const width=document.documentElement.clientWidth;return [...document.querySelectorAll("body *")].filter(el=>!el.closest(".viewport")).map(el=>{const r=el.getBoundingClientRect();return {tag:el.tagName,cls:typeof el.className==="string"?el.className:"",id:el.id,left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}}).filter(x=>x.width>0&&(x.right>width+1||x.left< -1)).sort((a,b)=>b.right-a.right).slice(0,25)});
+  console.log("Mobile horizontal overflow elements",JSON.stringify(diagnostic));
+  const layout=await page.evaluate(()=>({width:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth}));
+  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width+1);
+  for(const [slug] of books){
+    const section=page.locator(".book#"+slug);
+    await expect(section).toBeAttached();
+    const box=await section.evaluate(el=>({width:el.clientWidth,scrollWidth:el.scrollWidth,right:Math.round(el.getBoundingClientRect().right)}));
+    expect(box.scrollWidth).toBeLessThanOrEqual(box.width+1);
+    expect(box.right).toBeLessThanOrEqual(391);
+  }
+});
+
+test("legacy individual book URLs redirect to their matching unified page anchors", async ({page})=>{
+  for(const [slug] of books){
+    const response=await page.goto("/zh-tw/books/"+slug+"/");
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe("/zh-tw/books/");
+    expect(new URL(page.url()).hash).toBe("#"+slug);
   }
 });

@@ -26,12 +26,31 @@ for(const [slug,title] of books){
   const html=readFileSync(file,"utf8");
   assert.ok(html.includes(title),"Book title missing: "+title);
   assert.ok(html.length>12000,"Book source text is unexpectedly short: "+slug);
-  assert.ok(booksPage.includes("/zh-tw/books/"+slug+"/"),"Book missing from collection: "+slug);
+  assert.ok(booksPage.includes("#"+slug),"Book missing from unified reading page: "+slug);
 }
+
+const redirects=readFileSync(join(root,"public/_redirects"),"utf8");
+const unifiedBooks=booksPage;
+for(const [slug,title] of books){
+  assert.ok(unifiedBooks.includes('id="'+slug+'"'),"Unified book anchor missing: "+slug);
+  assert.ok(unifiedBooks.includes(title),"Unified book title missing: "+title);
+  assert.ok(unifiedBooks.includes('/assets/books/illustrations/'+({ "dao-de-jing-qian-yi":"dao-de-jing.svg","lun-yu-qian-yi":"lun-yu.svg","da-xue-qian-yi":"da-xue.svg","zhong-yong-qian-yi":"zhong-yong.svg","chu-xiu-dao-gan-yan":"chu-xiu-dao-gan-yan.svg" }[slug])),"Book illustration missing: "+slug);
+}
+assert.equal((unifiedBooks.match(/data-slide(?:\s|>)/g)||[]).length,5,"Carousel must contain exactly five slides.");
+assert.equal((unifiedBooks.match(/data-dot(?:\s|>)/g)||[]).length,5,"Carousel must contain exactly five indicators.");
+const bookPageSource=readFileSync(join(root,"src/pages/[locale]/[section]/index.astro"),"utf8");
+assert.ok(bookPageSource.includes("setInterval") && bookPageSource.includes("6000"),"Carousel auto-rotation timer missing.");
+assert.ok(bookPageSource.includes("prefers-reduced-motion"),"Carousel must respect reduced-motion preference.");
+assert.ok(bookPageSource.includes("data-chapters"),"Chapter navigation generation missing.");
+const bookIllustrations=["books-hero.svg","dao-de-jing.svg","lun-yu.svg","da-xue.svg","zhong-yong.svg","chu-xiu-dao-gan-yan.svg"];
+for(const illustration of bookIllustrations)assert.ok(existsSync(join(root,"public","assets","books","illustrations",illustration)),"Missing illustration "+illustration);
+for(const slug of books.map(([slug])=>slug)){
+  assert.ok(redirects.includes("/zh-tw/books/"+slug+"/ /zh-tw/books/#"+slug+" 301"),"Missing legacy book anchor redirect: "+slug);
+}
+
 const translateComponent=readFileSync(join(root,"src/components/GoogleTranslate.astro"),"utf8");
 assert.ok(translateComponent.includes("InlineLayout.HORIZONTAL"),"Google Translate must use the native horizontal dropdown.");
 assert.ok(!translateComponent.includes("InlineLayout.SIMPLE"),"Google Translate must not use the expanded Simple language panel.");
-const redirects=readFileSync(join(root,"public/_redirects"),"utf8");
 assert.ok(redirects.startsWith("/ /zh-tw/ 301"),"Root must default to Traditional Chinese.");
 for(const path of ["/en/* /zh-tw/:splat 301","/zh-cn/* /zh-tw/:splat 301","/es/* /zh-tw/:splat 301"])assert.ok(redirects.includes(path),"Missing legacy redirect "+path);
 const sitemap=readFileSync(join(dist,"sitemap.xml"),"utf8");
