@@ -91,11 +91,16 @@ test("Google Translate keeps its selector but hides translation banners and hove
     const frame = document.createElement("iframe");
     frame.className = "goog-te-balloon-frame";
     document.body.append(frame);
-    const hidden = [banner, balloon, frame].every((element) => {
+    const translateLink = document.createElement("a");
+    translateLink.className = "VIpgJd-ZVi9od-l4eHX-hSRGPd";
+    translateLink.href = "#translate-overlay-test";
+    translateLink.textContent = "Google Translate overlay";
+    document.body.append(translateLink);
+    const hidden = [banner, balloon, frame, translateLink].every((element) => {
       const style = getComputedStyle(element);
       return style.display === "none" || style.visibility === "hidden";
     });
-    banner.remove(); balloon.remove(); frame.remove();
+    banner.remove(); balloon.remove(); frame.remove(); translateLink.remove();
     return hidden && getComputedStyle(document.body).top === "0px";
   });
   expect(overlaysHidden).toBe(true);
