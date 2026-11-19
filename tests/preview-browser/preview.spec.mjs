@@ -77,6 +77,24 @@ test("one unified reading page contains all five complete books, original covers
   }
 });
 
+test("books page hero is a five-book editorial slider", async ({ page }) => {
+  await page.goto("/zh-tw/books/");
+  const hero = page.locator("[data-hero-slider]");
+  await expect(hero.locator("[data-hero-slide]")).toHaveCount(5);
+  await expect(hero.locator("[data-hero-dot]")).toHaveCount(5);
+  await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
+  await expect(hero.locator("[data-hero-slide].active a").first()).toHaveAttribute("href", /#dao-de-jing-qian-yi/);
+  await hero.locator("[data-hero-next]").click();
+  await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("論語淺易");
+  await hero.locator("[data-hero-dot][data-index="0]").click();
+  await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
+  await page.setViewportSize({width:390,height:844});
+  await expect(hero).toBeVisible();
+  await expect(hero.locator("[data-hero-slide].active .hero-slide-cover img")).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+  expect(overflow).toBe(false);
+});
+
 test("carousel rotates, supports manual controls, and stops for reduced motion", async ({ page }) => {
   await page.goto("/zh-tw/books/");
   const track = page.locator("[data-track]");
