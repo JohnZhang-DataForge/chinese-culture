@@ -86,7 +86,7 @@ test("books page hero is a five-book editorial slider", async ({ page }) => {
   await expect(hero.locator("[data-hero-slide].active a").first()).toHaveAttribute("href", /#dao-de-jing-qian-yi/);
   await hero.locator("[data-hero-next]").click();
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("論語淺易");
-  await hero.locator("[data-hero-dot][data-index="0]").click();
+  await hero.locator('[data-hero-dot][data-index="0"]').click();
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
   await page.setViewportSize({width:390,height:844});
   await expect(hero).toBeVisible();
