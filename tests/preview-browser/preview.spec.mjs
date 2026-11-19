@@ -33,6 +33,14 @@ test("five-book homepage loads visible original hero and book-card illustrations
     await image.scrollIntoViewIfNeeded();
     await expect(image).toBeVisible();
     await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+    const art = card.locator(".choice-art");
+    const artBox = await art.boundingBox();
+    const imageBox = await image.boundingBox();
+    expect(artBox).not.toBeNull();
+    expect(imageBox).not.toBeNull();
+    expect(Math.abs(imageBox.y - artBox.y)).toBeLessThanOrEqual(2);
+    expect(Math.abs(imageBox.height - artBox.height)).toBeLessThanOrEqual(2);
+    await expect(card.locator("a a")).toHaveCount(0);
   }
 });
 
