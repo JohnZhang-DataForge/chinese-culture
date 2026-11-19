@@ -19,6 +19,23 @@ test("deployed preview serves only the Traditional Chinese authored edition", as
   await expect(page.locator('script[src*="translate.google.com/translate_a/element.js"]')).toHaveCount(1);
 });
 
+test("five-book homepage loads visible original hero and book-card illustrations", async ({ page }) => {
+  const response = await page.goto("/zh-tw/");
+  expect(response?.status()).toBe(200);
+  const hero = page.locator(".books-home-hero-image");
+  await expect(hero).toBeVisible();
+  await expect.poll(() => hero.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+  const cards = page.locator(".book-choice");
+  await expect(cards).toHaveCount(5);
+  for (let index = 0; index < 5; index += 1) {
+    const card = cards.nth(index);
+    const image = card.locator(".books-home-card-image");
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toBeVisible();
+    await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+});
+
 test("one unified reading page contains all five complete books, original covers and attributed illustrations", async ({ page }) => {
   const response = await page.goto("/zh-tw/books/");
   expect(response?.status()).toBe(200);
