@@ -8,11 +8,28 @@ const {locale,config}=Astro.props,labels=ui[locale];
 const cultureHeroImage="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Peking_Hutong_courtyard.JPG/960px-Peking_Hutong_courtyard.JPG";
 const entries=config.collection?(await getCollection(config.collection as any)).filter((e:any)=>(e.data.status??"published")==="published").sort((a:any,b:any)=>(a.data.order??99)-(b.data.order??99)||a.data.title.localeCompare(b.data.title)):[];
 const books=config.route==="books"?await Promise.all(entries.map(async(entry:any,index:number)=>({entry,index,Content:(await render(entry)).Content}))):[];
+const heroArt=[
+"https://upload.wikimedia.org/wikipedia/commons/2/27/Gong_Xian_-_Landscape.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/3/32/Chinese_-_Landscape_-_Walters_35101K.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/d/df/Shen_Zhou_%E6%B2%88%E5%91%A8_-_Landscape%2C_in_Ming_style_-_y1949-85_-_Princeton_University_Art_Museum.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/1/12/Chinese_-_Country-scenes_in_Mountain_Landscape_-_Walters_354.jpg",
+"https://upload.wikimedia.org/wikipedia/commons/b/ba/Wang_Hui%2C_landscape_painting.jpg"
+];
 const art=[["dao-de-jing.svg","水墨山水、流水與竹簡，象徵道法自然。"],["lun-yu.svg","古代書院、講席與展卷問學。"],["da-xue.svg","庭院階梯與書卷，象徵修身齊家。"],["zhong-yong.svg","石橋、靜水與遠山，象徵中和之道。"],["chu-xiu-dao-gan-yan.svg","晨霧中的靜修小屋與松樹，象徵日常省思。"]];
 ---
 <BaseLayout title={config.nav} description={config.description} locale={locale}>
 {config.route==="books"?<div class="books">
-<section class="hero"><img src="/assets/books/illustrations/books-hero.svg" alt="原創水墨插畫：遠山、江河、竹林、亭台與古籍書案。" fetchpriority="high"/><div class="hero-overlay"></div><div class="wrap hero-copy"><span class="eyebrow">典籍閱讀・繁體中文</span><h1>經典傳承<br/><em>智慧長存</em></h1><p>在經典中尋找智慧，在閱讀中傳承文化。</p><a href="#book-carousel">走進五本典籍 ↓</a></div></section>
+<section class="hero hero-slider" data-hero-slider aria-label="五本經典專題輪播">
+<div class="hero-slides" data-hero-track>
+{books.map(({entry,index})=><article class:list={["hero-slide",index===0&&"active"]} data-hero-slide aria-hidden={index===0?"false":"true"}>
+<img class="hero-slide-art" src={heroArt[index]} alt={["龔賢山水畫，層巒與林木","華特斯藝術博物館藏中國山水畫","沈周明代山水畫，山徑與松樹","華特斯藝術博物館藏山中村景","王翬清代山水畫"][index]} loading={index===0?"eager":"lazy"}/>
+<div class="hero-slide-shade"></div>
+<div class="wrap hero-slide-content"><span class="eyebrow">典籍專題・0{index+1} / 05</span><h1>{entry.data.title}</h1><p>{entry.data.description}</p><a href={"#"+entry.id}>開始閱讀 <span aria-hidden="true">↗</span></a></div>
+<a class="hero-slide-cover" href={"#"+entry.id} aria-label={"閱讀《"+entry.data.title+"》"}><img src={entry.data.image} alt={entry.data.imageAlt??entry.data.title} width="360" height="500"/></a>
+</article>)}
+</div>
+<div class="hero-slider-controls"><button type="button" data-hero-prev aria-label="上一部典籍">←</button><div class="hero-slider-dots">{books.map(({entry,index})=><button type="button" data-hero-dot data-index={index} class:active={index===0} aria-label={"顯示"+entry.data.title}></button>)}</div><button type="button" data-hero-next aria-label="下一部典籍">→</button><span>五部典籍・每 6 秒自動切換</span></div>
+</section>
 <section class="carousel-wrap" id="book-carousel"><div class="wrap"><div class="section-head"><div><span class="eyebrow">五部原書・一頁閱讀</span><h2>循著書頁，展開閱讀</h2></div><p>選擇一本書，直接前往本頁相應篇章。</p></div><div class="carousel" data-carousel><div class="viewport"><div class="track" data-track>{books.map(({entry,index})=><article class:list={["slide",index===0&&"active"]} data-slide aria-hidden={index===0?"false":"true"}><a class="cover" href={"#"+entry.id} tabindex={index===0?0:-1}><img src={entry.data.image} alt={entry.data.imageAlt??entry.data.title} loading={index===0?"eager":"lazy"} width="360" height="500"/></a><div><small>0{index+1} / 05・{entry.data.category}</small><h3>{entry.data.title}</h3><p>{entry.data.description}</p><a class="start" href={"#"+entry.id}>開始閱讀 ↗</a></div></article>)}</div></div><div class="controls"><button type="button" data-prev aria-label="上一部書">←</button><button type="button" data-next aria-label="下一部書">→</button><div class="dots">{books.map(({entry,index})=><button type="button" data-dot data-index={index} class:active={index===0} aria-label={"顯示"+entry.data.title}></button>)}</div><small>每 6 秒切換</small></div></div></div></section>
 <nav class="toc" aria-label="五本書目錄"><div class="wrap"><b>本頁目錄</b><div>{books.map(({entry,index})=><a href={"#"+entry.id}>0{index+1}　{entry.data.title}</a>)}</div></div></nav>
 <section class="intro wrap"><span class="eyebrow">閱讀說明</span><h2>五本原書，依序展讀</h2><p>{config.note}</p><p>以下保留原書可擷取文字、章節順序與段落。原書圖像頁或無法擷取的文字不作臆測補寫；如需核對，請以原始版本為準。</p></section>
