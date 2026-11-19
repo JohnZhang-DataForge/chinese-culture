@@ -77,17 +77,16 @@ test("one unified reading page contains all five complete books, original covers
   }
 });
 
-test("books page hero is a five-book editorial slider", async ({ page }) => {
+test("books page hero auto-rotates five books without manual controls or helper text", async ({ page }) => {
   await page.goto("/zh-tw/books/");
   const hero = page.locator("[data-hero-slider]");
   await expect(hero.locator("[data-hero-slide]")).toHaveCount(5);
-  await expect(hero.locator("[data-hero-dot]")).toHaveCount(5);
+  await expect(hero.locator("[data-hero-prev], [data-hero-next], [data-hero-dot]")).toHaveCount(0);
+  await expect(hero.getByText(/每\s*6\s*秒|手動切換|自動切換/)).toHaveCount(0);
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
   await expect(hero.locator("[data-hero-slide].active a").first()).toHaveAttribute("href", /#dao-de-jing-qian-yi/);
-  await hero.locator("[data-hero-next]").click();
+  await page.waitForTimeout(6500);
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("論語淺易");
-  await hero.locator('[data-hero-dot][data-index="0"]').click();
-  await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
   await page.setViewportSize({width:390,height:844});
   await expect(hero).toBeVisible();
   await expect(hero.locator("[data-hero-slide].active .hero-slide-cover img")).toBeVisible();
