@@ -190,7 +190,7 @@ body.culture-playful .callout{background:#e8ebe3;border-color:var(--atlas-jade)}
 @media(max-width:1000px){
  body.culture-playful .books-home .book-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
  body.culture-playful .books-home .choice-art{height:300px}
- body.culture-playful .article-layout{gap:2.2rem}
+ body.culture-playful .article-layout{grid-template-columns:minmax(0,1fr) minmax(180px,220px);gap:2.2rem}
 }
 @media(max-width:760px){
  body.culture-playful .wrap{width:min(100% - 36px,1240px)}
