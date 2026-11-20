@@ -85,6 +85,7 @@ test("books page hero auto-rotates five books without manual controls or helper 
   await expect(hero.getByText(/每\\s*6\\s*秒|手動切換|自動切換/)).toHaveCount(0);
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("道德經淺易");
   await expect(hero.locator("[data-hero-slide].active a").first()).toHaveAttribute("href", /#dao-de-jing-qian-yi/);
+  await hero.hover();
   await page.waitForTimeout(6500);
   await expect(hero.locator("[data-hero-slide].active h1")).toHaveText("論語淺易");
   await page.setViewportSize({width:390,height:844});
