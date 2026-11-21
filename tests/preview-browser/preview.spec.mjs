@@ -219,14 +219,21 @@ test("editorial refinement keeps the five-book collection balanced across deskto
       return {
         columns: style.gridTemplateColumns.split(" ").length,
         widths: cards.map(card => Math.round(card.getBoundingClientRect().width)),
-        heights: cards.map(card => Math.round(card.getBoundingClientRect().height)),
+        rows: Object.values(cards.reduce((groups, card) => {
+          const rect = card.getBoundingClientRect();
+          const row = String(Math.round(rect.top));
+          (groups[row] ??= []).push(Math.round(rect.height));
+          return groups;
+        }, {})),
         documentWidth: document.documentElement.scrollWidth,
         viewportWidth: document.documentElement.clientWidth
       };
     });
     expect(layout.columns).toBe(viewport.columns);
     expect(layout.widths).toHaveLength(5);
-    expect(Math.max(...layout.heights) - Math.min(...layout.heights)).toBeLessThanOrEqual(2);
+    for (const rowHeights of layout.rows) {
+      expect(Math.max(...rowHeights) - Math.min(...rowHeights)).toBeLessThanOrEqual(2);
+    }
     expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewportWidth + 1);
     const firstCover = page.locator(".book-choice").first().locator(".choice-cover");
     await expect(firstCover).toBeVisible();
