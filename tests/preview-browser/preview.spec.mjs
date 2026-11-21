@@ -201,3 +201,60 @@ test("legacy individual book URLs redirect to their matching unified page anchor
     expect(new URL(page.url()).hash).toBe("#"+slug);
   }
 });
+
+test("editorial refinement keeps the five-book collection balanced across desktop, tablet, and phone widths", async ({ page }) => {
+  const viewports = [
+    { width: 1440, columns: 5 },
+    { width: 768, columns: 3 },
+    { width: 390, columns: 2 }
+  ];
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: 900 });
+    await page.goto("/zh-tw/");
+    const grid = page.locator(".books-home .book-grid");
+    await expect(grid).toBeVisible();
+    const layout = await grid.evaluate(el => {
+      const style = getComputedStyle(el);
+      const cards = [...el.querySelectorAll(".book-choice")];
+      return {
+        columns: style.gridTemplateColumns.split(" ").length,
+        widths: cards.map(card => Math.round(card.getBoundingClientRect().width)),
+        rows: Object.values(cards.reduce((groups, card) => {
+          const rect = card.getBoundingClientRect();
+          const row = String(Math.round(rect.top));
+          (groups[row] ??= []).push(Math.round(rect.height));
+          return groups;
+        }, {})),
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: document.documentElement.clientWidth
+      };
+    });
+    expect(layout.columns).toBe(viewport.columns);
+    expect(layout.widths).toHaveLength(5);
+    for (const rowHeights of layout.rows) {
+      expect(Math.max(...rowHeights) - Math.min(...rowHeights)).toBeLessThanOrEqual(2);
+    }
+    expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewportWidth + 1);
+    const firstCover = page.locator(".book-choice").first().locator(".choice-cover");
+    await expect(firstCover).toBeVisible();
+    await expect.poll(() => firstCover.evaluate(img => img.complete && img.naturalWidth > 0)).toBe(true);
+  }
+});
+
+test("editorial information pages keep a readable measure and matching browser theme", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/zh-tw/about/");
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#1c302a");
+  const prose = page.locator(".static-page .prose");
+  await expect(prose).toBeVisible();
+  const desktopWidth = await prose.evaluate(el => el.getBoundingClientRect().width);
+  expect(desktopWidth).toBeLessThanOrEqual(800);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobile = await page.evaluate(() => ({
+    width: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth
+  }));
+  expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.width + 1);
+  const mobileProse = await prose.evaluate(el => el.getBoundingClientRect().width);
+  expect(mobileProse).toBeLessThanOrEqual(390);
+});

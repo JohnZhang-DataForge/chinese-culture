@@ -1,0 +1,429 @@
+/* Editorial refinement — visual hierarchy, image framing, and responsive book cards. */
+body.culture-playful .books-home .welcome-hero{
+  min-height:660px;
+  background:#1c302a;
+}
+body.culture-playful .books-home .books-home-hero-image{
+  object-position:center 43%;
+  filter:saturate(.76) contrast(1.06);
+}
+body.culture-playful .books-home .books-home-hero-overlay{
+  background:
+    linear-gradient(90deg,rgba(18,34,29,.94) 0%,rgba(18,34,29,.78) 42%,rgba(18,34,29,.34) 76%,rgba(18,34,29,.12) 100%),
+    linear-gradient(0deg,rgba(18,34,29,.35),transparent 42%);
+}
+body.culture-playful .books-home .welcome-copy{
+  max-width:1280px;
+  padding:8rem 0 9rem;
+}
+body.culture-playful .books-home .welcome-copy .eyebrow{
+  color:#e4c397;
+  letter-spacing:.24em;
+}
+body.culture-playful .books-home .welcome-copy h1{
+  max-width:780px;
+  font-size:clamp(4.3rem,8.4vw,8rem);
+  line-height:1.08;
+  letter-spacing:.055em;
+  color:#fffaf0;
+  text-shadow:0 3px 26px #07130f55;
+}
+body.culture-playful .books-home .welcome-copy h1 em{color:#e8c393}
+body.culture-playful .books-home .welcome-copy p{
+  color:#eee8dc;
+  font-size:1.16rem;
+  letter-spacing:.15em;
+}
+body.culture-playful .books-home .welcome-copy>a{
+  color:#f0d2a5;
+  border-color:#c9a77a;
+  letter-spacing:.04em;
+}
+body.culture-playful .books-home .welcome-copy>a:hover{color:#fff}
+body.culture-playful .books-home .hero-seal{
+  width:76px;height:76px;
+  border:1px solid #e0bd8d;
+  outline:1px solid #e0bd8d;
+  outline-offset:5px;
+  color:#f0d2a5;
+  background:#20382f66;
+}
+body.culture-playful .books-home .hero-art-credit{
+  background:#172820c9;
+  color:#e9e1d2;
+  border:1px solid #ffffff30;
+  padding:.35rem .6rem;
+  letter-spacing:.025em;
+}
+body.culture-playful .books-home .book-picker{
+  padding:6rem 0 5rem;
+  background:linear-gradient(180deg,#fbf9f3 0%,#f4f0e7 100%);
+}
+body.culture-playful .books-home .picker-heading{
+  margin-bottom:2.5rem;
+  align-items:end;
+}
+body.culture-playful .books-home .picker-heading .eyebrow{
+  margin-bottom:.8rem;
+}
+body.culture-playful .books-home .picker-heading h2{
+  font-size:clamp(2.5rem,4.4vw,4.1rem);
+  line-height:1.13;
+  letter-spacing:-.045em;
+}
+body.culture-playful .books-home .picker-heading p{
+  max-width:620px;
+  font-size:.96rem;
+}
+body.culture-playful .books-home .book-grid{
+  align-items:stretch;
+  gap:1.15rem;
+}
+body.culture-playful .books-home .book-choice{
+  display:flex;
+  min-width:0;
+  overflow:hidden;
+  border:1px solid #ded6c8;
+  border-radius:3px;
+  background:#fffdf8;
+  box-shadow:0 8px 24px #28271f0a;
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+}
+body.culture-playful .books-home .book-choice:hover{
+  transform:translateY(-5px);
+  border-color:#c7b395;
+  box-shadow:0 18px 34px #28271f18;
+}
+body.culture-playful .books-home .choice-link{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+}
+body.culture-playful .books-home .choice-art{
+  height:auto;
+  aspect-ratio:4/5;
+  flex:none;
+  background:#d9d0c0;
+}
+body.culture-playful .books-home .books-home-card-image{
+  object-position:center;
+  filter:saturate(.82);
+  transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .35s ease;
+}
+body.culture-playful .books-home .choice-art:after{
+  background:linear-gradient(180deg,rgba(16,29,24,.08) 20%,rgba(16,29,24,.58) 100%);
+}
+body.culture-playful .books-home .book-choice:hover .books-home-card-image{
+  transform:scale(1.055);
+  filter:saturate(1);
+}
+body.culture-playful .books-home .choice-number{
+  top:.9rem;left:.9rem;
+  font-size:1.05rem;
+  letter-spacing:.08em;
+  color:#fff7e8;
+}
+body.culture-playful .books-home .choice-cover{
+  width:40%;
+  height:60%;
+  right:9%;
+  bottom:8%;
+  border:3px solid #f8f1e3;
+  outline:1px solid #ffffff80;
+  box-shadow:7px 12px 25px #10181266;
+  transform:rotate(2deg);
+}
+body.culture-playful .books-home .book-choice:hover .choice-cover{
+  transform:rotate(0) translateY(-4px);
+}
+body.culture-playful .books-home .art-credit{
+  max-width:72%;
+  font-size:.55rem;
+  color:#fff8ec;
+}
+body.culture-playful .books-home .choice-copy{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  padding:1.2rem 1.05rem 1.1rem;
+}
+body.culture-playful .books-home .choice-category{
+  font-size:.64rem;
+  font-weight:800;
+  letter-spacing:.13em;
+}
+body.culture-playful .books-home .choice-copy h3{
+  font-size:1.24rem;
+  line-height:1.35;
+  margin:.55rem 0 .65rem;
+}
+body.culture-playful .books-home .choice-copy p{
+  flex:1;
+  min-height:0;
+  margin-bottom:1rem;
+  font-size:.82rem;
+  line-height:1.8;
+  color:#6b7169;
+}
+body.culture-playful .books-home .choice-cta{
+  margin-top:auto;
+  padding-top:.85rem;
+  border-color:#e8e1d6;
+}
+body.culture-playful .books-home .reading-note{
+  background:#e8e1d5;
+  border-top:1px solid #ded5c6;
+}
+body.culture-playful .books-home .reading-note .note-mark{
+  border-radius:50%;
+  outline:1px solid #b88f69;
+  outline-offset:4px;
+}
+body.culture-playful .books-home .reading-note h2{font-size:2rem}
+
+/* Editorial cards: real image crops, stable card rhythm, and a clear reading action. */
+body.culture-playful .story-card{
+  padding:0;
+  overflow:hidden;
+  border-radius:3px;
+  min-height:430px;
+  background:#fffdf8;
+  display:flex;
+  flex-direction:column;
+}
+body.culture-playful .story-card-image{
+  position:relative;
+  height:auto;
+  aspect-ratio:16/10;
+  flex:none;
+  overflow:hidden;
+  background:#e6dfd1;
+}
+body.culture-playful .story-card-image:after{
+  content:"";
+  position:absolute;
+  inset:55% 0 0;
+  background:linear-gradient(180deg,transparent,rgba(24,34,28,.2));
+  pointer-events:none;
+}
+body.culture-playful .story-card-image img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+body.culture-playful .story-card .card-upper,
+body.culture-playful .story-card .card-body,
+body.culture-playful .story-card .card-foot{
+  margin-left:1.45rem;
+  margin-right:1.45rem;
+}
+body.culture-playful .story-card .card-upper{padding-top:1.25rem}
+body.culture-playful .story-card .card-body{
+  flex:1;
+  padding-top:.85rem;
+}
+body.culture-playful .story-card .card-body h3{
+  font-size:1.55rem;
+  line-height:1.3;
+}
+body.culture-playful .story-card .card-body p{
+  font-size:.91rem;
+  line-height:1.8;
+}
+body.culture-playful .story-card .card-foot{
+  padding:1rem 0 1.2rem;
+  margin-top:1rem;
+}
+
+/* Article reading pages: editorial masthead, comfortable measure, restrained artwork. */
+body.culture-playful .entry-hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 88% 30%,rgba(191,163,121,.2) 0 1px,transparent 2px 100%),
+    linear-gradient(112deg,#eee8dc 0%,#e8ece5 58%,#f2e6d9 100%);
+  padding:5.5rem 0 4.25rem;
+}
+body.culture-playful .entry-hero:after{
+  content:"文";
+  position:absolute;
+  z-index:-1;
+  right:max(5%,calc((100vw - 1180px)/2));
+  top:50%;
+  transform:translateY(-50%) rotate(8deg);
+  display:grid;
+  place-items:center;
+  width:clamp(130px,18vw,250px);
+  aspect-ratio:1;
+  border:1px solid rgba(137,91,66,.2);
+  outline:1px solid rgba(137,91,66,.12);
+  outline-offset:9px;
+  border-radius:50%;
+  color:rgba(137,91,66,.12);
+  font:clamp(5rem,11vw,9rem) var(--atlas-serif);
+  pointer-events:none;
+}
+body.culture-playful .entry-hero .wrap{position:relative;z-index:1}
+body.culture-playful .entry-hero .breadcrumbs{margin-bottom:2.6rem}
+body.culture-playful .entry-hero .eyebrow{
+  color:var(--atlas-vermilion);
+  letter-spacing:.18em;
+}
+body.culture-playful .entry-hero h1{
+  max-width:850px;
+  font-size:clamp(3rem,6vw,5.7rem);
+  line-height:1.12;
+}
+body.culture-playful .entry-hero .lead{
+  max-width:700px;
+  font-size:1.1rem;
+  line-height:1.9;
+}
+body.culture-playful .entry-meta{
+  gap:1rem;
+  flex-wrap:wrap;
+}
+body.culture-playful .article-cover{
+  padding-top:2.4rem;
+}
+body.culture-playful .article-cover img{
+  display:block;
+  width:100%;
+  max-height:560px;
+  object-fit:cover;
+  object-position:center 42%;
+  border:5px solid #fffdf7;
+  box-shadow:0 18px 42px #30291e1c;
+}
+body.culture-playful .article-image-credit{
+  margin:.8rem 0 0;
+  text-align:right;
+  font-size:.72rem;
+  color:#77796f;
+}
+body.culture-playful .article-image-credit a{color:var(--atlas-vermilion)}
+body.culture-playful .article-layout{
+  grid-template-columns:minmax(0,780px) minmax(190px,240px);
+  justify-content:space-between;
+  gap:clamp(2rem,5vw,4.5rem);
+}
+body.culture-playful .article-layout .prose{
+  max-width:760px;
+  font-size:1.1rem;
+  line-height:2.12;
+  letter-spacing:.015em;
+}
+body.culture-playful .article-layout .prose h2{
+  margin-top:3.5rem;
+  padding-bottom:.45rem;
+  border-bottom:1px solid #ded5c6;
+  border-left:3px solid var(--atlas-vermilion);
+  padding-left:1rem;
+}
+body.culture-playful .article-layout .prose h3{margin-top:2.2rem}
+body.culture-playful .article-aside{
+  top:110px;
+  border-top:3px solid var(--atlas-vermilion);
+  box-shadow:0 8px 24px #30291e08;
+}
+body.culture-playful .article-aside h2{font-size:1.35rem}
+body.culture-playful .article-aside li{padding:.7rem 0}
+
+/* The books remain the primary product: unify book-jacket framing without editing originals. */
+body.culture-playful .books .hero-slide-cover{
+  width:clamp(160px,15vw,215px);
+  height:clamp(225px,21vw,300px);
+  border:5px solid #f8f1e4;
+  outline:1px solid #ffffff70;
+  box-shadow:0 22px 46px #07130f66;
+}
+body.culture-playful .books .hero-slide-cover img{display:block}
+body.culture-playful .books .carousel{
+  border-radius:3px;
+  overflow:hidden;
+  box-shadow:0 16px 34px #30291e0d;
+}
+body.culture-playful .books .cover{
+  border:5px solid #fffaf0;
+  outline:1px solid #c9b99f;
+}
+body.culture-playful .books .book header{
+  padding-bottom:1.5rem;
+  border-bottom:1px solid #e2d9ca;
+}
+body.culture-playful .books .book figure{
+  max-width:860px;
+  padding:1rem;
+  background:#fffdf8;
+  border:1px solid #e4ddd0;
+  box-shadow:0 10px 26px #30291e0a;
+}
+body.culture-playful .books .book figure img{
+  display:block;
+  width:100%;
+  max-height:390px;
+  object-fit:contain;
+  background:#eee8dc;
+}
+body.culture-playful .books .book figcaption{
+  padding:.65rem .2rem .1rem;
+  line-height:1.6;
+}
+
+/* Keep the editorial composition balanced on tablet and narrow phones. */
+@media(max-width:1000px){
+  body.culture-playful .books-home .book-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.culture-playful .books-home .choice-art{aspect-ratio:4/5}
+  body.culture-playful .article-layout{
+    grid-template-columns:minmax(0,1fr) minmax(180px,220px);
+    gap:2rem;
+  }
+}
+@media(max-width:760px){
+  body.culture-playful .books-home .welcome-hero{min-height:540px}
+  body.culture-playful .books-home .welcome-copy{padding:5.5rem 0 6.5rem}
+  body.culture-playful .books-home .welcome-copy h1{font-size:clamp(3.4rem,13vw,5.2rem)}
+  body.culture-playful .books-home .welcome-copy p{font-size:.98rem;max-width:21rem}
+  body.culture-playful .books-home .hero-seal{right:9%;bottom:10%}
+  body.culture-playful .books-home .book-picker{padding:4rem 0 3.5rem}
+  body.culture-playful .books-home .book-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem}
+  body.culture-playful .books-home .choice-art{aspect-ratio:4/5}
+  body.culture-playful .books-home .choice-copy{padding:1rem .85rem}
+  body.culture-playful .books-home .choice-copy h3{font-size:1.08rem}
+  body.culture-playful .books-home .choice-copy p{font-size:.77rem}
+  body.culture-playful .books-home .reading-note .wrap{grid-template-columns:48px minmax(0,1fr);gap:1rem}
+  body.culture-playful .books-home .reading-note .wrap>a{grid-column:2}
+  body.culture-playful .story-card{min-height:0}
+  body.culture-playful .story-card-image{aspect-ratio:16/9}
+  body.culture-playful .story-card .card-upper,
+  body.culture-playful .story-card .card-body,
+  body.culture-playful .story-card .card-foot{margin-left:1.1rem;margin-right:1.1rem}
+  body.culture-playful .entry-hero{padding:3.6rem 0 2.8rem}
+  body.culture-playful .entry-hero:after{right:5%;top:24%;width:110px;opacity:.65}
+  body.culture-playful .entry-hero .breadcrumbs{margin-bottom:1.8rem}
+  body.culture-playful .article-cover{padding-top:1.4rem}
+  body.culture-playful .article-cover img{max-height:360px;border-width:3px}
+  body.culture-playful .article-layout{grid-template-columns:1fr;gap:2rem}
+  body.culture-playful .article-layout .prose{font-size:1.02rem;line-height:2}
+  body.culture-playful .article-aside{order:2;position:static}
+  body.culture-playful .books .hero-slide-cover{width:104px;height:148px}
+  body.culture-playful .books .book figure{padding:.55rem}
+}
+@media(max-width:420px){
+  body.culture-playful .books-home .book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.culture-playful .books-home .choice-art{aspect-ratio:3/4}
+  body.culture-playful .books-home .choice-cover{width:43%;height:56%;right:7%;bottom:8%}
+  body.culture-playful .books-home .choice-copy{padding:.85rem .72rem}
+  body.culture-playful .books-home .choice-copy h3{font-size:1rem}
+  body.culture-playful .books-home .choice-copy p{font-size:.73rem}
+  body.culture-playful .entry-hero:after{width:82px;right:8%}
+}
+@media(prefers-reduced-motion:reduce){
+  body.culture-playful .books-home .book-choice,
+  body.culture-playful .books-home .books-home-card-image,
+  body.culture-playful .books-home .choice-cover,
+  body.culture-playful .story-card-image img{transition:none}
+}

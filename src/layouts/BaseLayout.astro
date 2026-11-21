@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import "../styles/no-photo.css";
 import "../styles/editorial-refresh.css";
+import "../styles/editorial-refinement.css";
 import { ui } from "../i18n/site";
 import GoogleTranslate from "../components/GoogleTranslate.astro";
 const { title = "Discover Chinese culture", description = "以繁體中文認識中國文化、節慶、藝術、文學與日常生活。" } = Astro.props;
@@ -15,7 +16,7 @@ const nav = ["learn","culture","festivals","books","events"].map((route,index)=>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={description} />
-  <meta name="theme-color" content="#e60012" />
+  <meta name="theme-color" content="#1c302a" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>{pageTitle}</title>
   <link rel="canonical" href={"https://chinese-culture.site" + Astro.url.pathname} />
